@@ -1,4 +1,5 @@
-/* ================================================================================================
+/* 
+ * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 17th, 2022
  * Last Edited - October 17th, 2022 by Ben Schuster
@@ -16,17 +17,16 @@ namespace Masters.CoreUpgradeVariables
     public abstract class UpgradableValue<T> where T : notnull
     {
         /// <summary>
-        /// Initialize the current value to the starting value
-        /// </summary>
-        protected UpgradableValue()
-        {
-            current = startingValue;
-        }
-
-        /// <summary>
         /// The current value
         /// </summary>
         protected T current;
+        /// <summary>
+        /// Get the current value
+        /// </summary>
+        public T Current
+        {
+            get { return current; }
+        }
 
         [Tooltip("What does this value start at?")]
         [SerializeField] protected T startingValue;
@@ -38,11 +38,12 @@ namespace Masters.CoreUpgradeVariables
         [SerializeField] protected T upperLimit;
 
         /// <summary>
-        /// Get the current value
+        /// Initialize the current value to the starting value
+        /// TODO - Call via CSV system
         /// </summary>
-        public T Current
+        public void Initialize()
         {
-            get { return current; }
+            current = startingValue;
         }
 
         /// <summary>

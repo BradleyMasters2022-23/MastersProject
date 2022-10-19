@@ -1,4 +1,5 @@
-/* ================================================================================================
+/*
+ * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 17th, 2022
  * Last Edited - October 17th, 2022 by Ben Schuster
@@ -20,12 +21,12 @@ public class TimeManager : MonoBehaviour
     {
         Idle,
         Slowing,
-        Regenerating,
+        Recharging,
         Frozen,
         Emptied
     }
 
-    private TimeGaugeState currentState;
+    [ShowInInspector] private TimeGaugeState currentState;
 
     #region Inputs
 
@@ -40,27 +41,49 @@ public class TimeManager : MonoBehaviour
 
     #endregion
 
-    /// <summary>
-    /// Current timescale
-    /// </summary>
-    private static float worldTime;
-
-    public static float WorldTime
-    {
-        get { return worldTime; }
-    }
+    #region Time-related Variables
 
     [Header("=== Slowing ===")]
 
     [Tooltip("The slowest possible time slow value")]
     [SerializeField, Range(0, 1)] private float slowestTime;
     [Tooltip("Time it takes to switch between the two time states")]
-    [SerializeField, Range(0, 2)] private float slowTransitionSpeed;
+    [SerializeField, Range(0.01f, 1)] private float slowTransitionTime;
 
     /// <summary>
-    /// Whether or not the time manager is slowing time
+    /// Normal time value
     /// </summary>
-    private bool slowing;
+    private readonly float NormalTime = 1;
+
+    /// <summary>
+    /// Current time scale the player controls
+    /// </summary>
+    private static float worlTimeScale;
+
+    /// <summary>
+    /// Current time scale the player controls
+    /// </summary>
+    public static float WorlTimeScale
+    {
+        get { return worlTimeScale; }
+    }
+
+    /// <summary>
+    /// The current deltaTime adjusted with player-controlled timescale
+    /// </summary>
+    public static float WorldDeltaTime
+    {
+        get { return worlTimeScale * Time.deltaTime; }
+    }
+
+    /// <summary>
+    /// Time float to track transition lerp
+    /// </summary>
+    private float transitionLerp;
+
+    #endregion
+
+    #region Gauge-related Variables
 
     [Header("=== Gauge Values ===")]
 
@@ -79,35 +102,113 @@ public class TimeManager : MonoBehaviour
     [Tooltip("When gauge is fully depleted, how long before player can use this gauge again?")]
     [SerializeField, Space(3)] private UpgradableFloat emptiedDelay;
 
-    /// <summary>
-    /// Whether or not the time gauge has been fully emptied
-    /// </summary>
-    private bool emptied;
-
+    #endregion
 
     /// <summary>
     /// Initialize controls and starting values
     /// </summary>
     private void Awake()
     {
+        // Initialize controls
         controller = new GameControls();
         slowInput = controller.PlayerGameplay.SlowTime;
+        slowInput.started += ToggleSlow;
+        slowInput.canceled += ToggleSlow;
+        slowInput.Enable();
 
-        slowing = false;
+        // Initialize variables
+        worlTimeScale = NormalTime;
+
+        slowDuration.Initialize();
+        depleteRate.Initialize();
+        replenishRate.Initialize();
+        replenishDelay.Initialize();
+        emptiedDelay.Initialize();
     }
 
-    
-    private void ToggleSlow()
+    private void OnDisable()
     {
-        // Don't toggle if gauge in empty state
-        if(!emptied)
-        {
-            slowing = !slowing;
-        }
+        slowInput.Disable();
     }
 
     private void FixedUpdate()
     {
-        
+        StateFunctionCall();
+
+
+    }
+
+    /// <summary>
+    /// Change state based on player input
+    /// </summary>
+    /// <param name="c">callback context [ignorable]</param>
+    private void ToggleSlow(InputAction.CallbackContext c)
+    {
+        // Switch to appropriate state
+        switch (currentState)
+        {
+            case TimeGaugeState.Idle:
+                {
+                    currentState = TimeGaugeState.Slowing;
+                    break;
+                }
+            case TimeGaugeState.Slowing:
+                {
+                    currentState = TimeGaugeState.Idle;
+                    break;
+                }
+        }
+    }
+
+    /// <summary>
+    /// Call appropriate functionality based on current state.
+    /// </summary>
+    private void StateFunctionCall()
+    {
+        switch(currentState)
+        {
+            case TimeGaugeState.Slowing:
+                {
+                    TrySlow();
+                    break;
+                }
+            case TimeGaugeState.Idle:
+                {
+                    TryResume();
+                    break;
+                }
+        }
+    }
+
+    /// <summary>
+    /// Try to slow down time to the slowest time value
+    /// </summary>
+    private void TrySlow()
+    {
+        // Increment lerp variable, clamp
+        transitionLerp += Time.deltaTime;
+        transitionLerp = Mathf.Clamp(transitionLerp, 0, slowTransitionTime);
+
+        // If not yet at slowest time, continue lerping
+        if (worlTimeScale != slowestTime)
+        {
+            worlTimeScale = Mathf.Lerp(NormalTime, slowestTime, transitionLerp / slowTransitionTime);
+        }
+    }
+
+    /// <summary>
+    /// Try to resume down time to the normal time value
+    /// </summary>
+    private void TryResume()
+    {
+        // Decrement lerp variable, clamp
+        transitionLerp -= Time.deltaTime;
+        transitionLerp = Mathf.Clamp(transitionLerp, 0, slowTransitionTime);
+
+        // If not yet at normal time, continue lerping
+        if (worlTimeScale != NormalTime)
+        {
+            worlTimeScale = Mathf.Lerp(NormalTime, slowestTime, transitionLerp / slowTransitionTime);
+        }
     }
 }
