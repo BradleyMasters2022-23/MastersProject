@@ -41,6 +41,7 @@ public class ScaledTimer
         }
         else
         {
+            // TODO - make using non real time value and delta time instead
             startTime = Time.realtimeSinceStartup;
         }
 
