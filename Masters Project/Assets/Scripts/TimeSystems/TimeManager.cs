@@ -6,11 +6,8 @@
  * Description - Manages the global time value with player controls
  * ================================================================================================
  */
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Sirenix.OdinInspector;
 
 /// <summary>
 /// Manages player-controlled time abilities
@@ -117,7 +114,7 @@ public class TimeManager : MonoBehaviour
     /// <summary>
     /// How many times is fixed update called per second
     /// </summary>
-    private readonly float FixedUpdateCalls = 50;
+    public const float FixedUpdateCalls = 50;
 
     /// <summary>
     /// Rate at which the gauge depletes while slowing.
@@ -132,7 +129,6 @@ public class TimeManager : MonoBehaviour
     /// <summary>
     /// Timer for tracking emptied delay [EMPTIED state]
     /// </summary>
-    //private float emptiedDelayTimer;
     private ScaledTimer emptiedDelayTimer;
     #endregion
 
