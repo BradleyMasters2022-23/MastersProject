@@ -23,12 +23,28 @@ public class ScaledTimer
     private float startTime;
 
     /// <summary>
+    /// whether or not this timer is actually scaled
+    /// </summary>
+    private bool scaled;
+
+    /// <summary>
     /// Create a new timer with 
     /// </summary>
     /// <param name="_targetTime">Target time for this value</param>
-    public ScaledTimer(float _targetTime)
+    /// <param name="_scaled">Whether this timer is scaled or not. Default true.</param>
+    public ScaledTimer(float _targetTime, bool _scaled = true)
     {
-        ResetTimer(_targetTime);
+        scaled = _scaled;
+        if (scaled)
+        {
+            startTime = CoreTimeline.instance.ScaledTimeline;
+        }
+        else
+        {
+            startTime = Time.realtimeSinceStartup;
+        }
+
+        targetTime = _targetTime;
     }
 
     /// <summary>
@@ -36,8 +52,17 @@ public class ScaledTimer
     /// </summary>
     public void ResetTimer()
     {
+        if (scaled)
+        {
+            startTime = CoreTimeline.instance.ScaledTimeline;
+        }
+        else
+        {
+            startTime = Time.realtimeSinceStartup;
+        }
+
+
         ResetTimer(targetTime);
-        startTime = CoreTimeline.instance.ScaledTimeline;
     }
 
     /// <summary>
@@ -64,6 +89,13 @@ public class ScaledTimer
     /// <returns>Whether or not this timer has finished</returns>
     public bool TimerDone()
     {
-        return (CoreTimeline.instance.ScaledTimeline - startTime) >= targetTime;
+        if(scaled)
+        {
+            return (CoreTimeline.instance.ScaledTimeline - startTime) >= targetTime;
+        }
+        else
+        {
+            return (Time.realtimeSinceStartup - startTime) >= targetTime;
+        }
     }
 }
