@@ -10,6 +10,8 @@ using UnityEngine;
 
 public class PlayerHealth : Damagable
 {
+    [Header("=====Player Health=====")]
+
     [Tooltip("Amount of health each section has")]
     [SerializeField] private UpgradableInt healthPerSection;
 
@@ -38,7 +40,7 @@ public class PlayerHealth : Damagable
     /// <summary>
     /// Initialize values and healthbars
     /// </summary>
-    private void Awake()
+    protected void Awake()
     {
         healthPerSection.Initialize();
         numOfSections.Initialize();
