@@ -6,8 +6,6 @@
  * Description - An independent timer class. Tracks its own time automatically.
  * ================================================================================================
  */
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Masters.TimerSystem;
 

@@ -6,11 +6,8 @@
  * Description - Manages the global time value with player controls
  * ================================================================================================
  */
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Sirenix.OdinInspector;
 
 /// <summary>
 /// Manages player-controlled time abilities
@@ -29,7 +26,7 @@ public class TimeManager : MonoBehaviour
     /// <summary>
     /// Current state of the Time Gauge
     /// </summary>
-    private TimeGaugeState currentState;
+    [SerializeField] private TimeGaugeState currentState;
 
     #region Inputs
 
@@ -61,14 +58,14 @@ public class TimeManager : MonoBehaviour
     /// <summary>
     /// Current time scale the player controls
     /// </summary>
-    private static float worlTimeScale;
+    private static float worldTimeScale;
 
     /// <summary>
     /// Current time scale the player controls
     /// </summary>
-    public static float WorlTimeScale
+    public static float WorldTimeScale
     {
-        get { return worlTimeScale; }
+        get { return worldTimeScale; }
     }
 
     /// <summary>
@@ -76,7 +73,7 @@ public class TimeManager : MonoBehaviour
     /// </summary>
     public static float WorldDeltaTime
     {
-        get { return worlTimeScale * Time.deltaTime; }
+        get { return worldTimeScale * Time.deltaTime; }
     }
 
     /// <summary>
@@ -117,7 +114,7 @@ public class TimeManager : MonoBehaviour
     /// <summary>
     /// How many times is fixed update called per second
     /// </summary>
-    private readonly float FixedUpdateCalls = 50;
+    public const float FixedUpdateCalls = 50;
 
     /// <summary>
     /// Rate at which the gauge depletes while slowing.
@@ -132,10 +129,9 @@ public class TimeManager : MonoBehaviour
     /// <summary>
     /// Timer for tracking emptied delay [EMPTIED state]
     /// </summary>
-    //private float emptiedDelayTimer;
     private ScaledTimer emptiedDelayTimer;
-    #endregion
 
+    #endregion
 
     /// <summary>
     /// Initialize controls and starting values
@@ -150,7 +146,7 @@ public class TimeManager : MonoBehaviour
         slowInput.Enable();
 
         // Initialize variables
-        worlTimeScale = NormalTime;
+        worldTimeScale = NormalTime;
 
         slowDuration.Initialize();
         replenishTime.Initialize();
@@ -166,6 +162,7 @@ public class TimeManager : MonoBehaviour
     
     private void OnDisable()
     {
+        // Disable input to prevent crashing
         slowInput.Disable();
     }
 
@@ -174,36 +171,48 @@ public class TimeManager : MonoBehaviour
         StateFunctionCall();
     }
 
+    #region State Management
+
     /// <summary>
     /// Change state based on player input
     /// </summary>
     /// <param name="c">callback context [ignorable]</param>
     private void ToggleSlow(InputAction.CallbackContext c)
     {
-        // Switch to appropriate state
-        switch (currentState)
+        // If started input, then can only slow
+        if(c.started)
         {
-            case TimeGaugeState.IDLE:
-                {
-                    ChangeState(TimeGaugeState.SLOWING);
-                    break;
-                }
-            case TimeGaugeState.SLOWING:
-                {
-                    ChangeState(TimeGaugeState.FROZEN);
-                    break;
-                }
-            case TimeGaugeState.RECHARGING:
-                {
-                    ChangeState(TimeGaugeState.SLOWING);
-                    break;
-                }
-            case TimeGaugeState.FROZEN:
-                {
-                    ChangeState(TimeGaugeState.SLOWING);
-                    break;
-                }
-
+            // Switch to appropriate state
+            switch (currentState)
+            {
+                case TimeGaugeState.IDLE:
+                    {
+                        ChangeState(TimeGaugeState.SLOWING);
+                        break;
+                    }
+                case TimeGaugeState.RECHARGING:
+                    {
+                        ChangeState(TimeGaugeState.SLOWING);
+                        break;
+                    }
+                case TimeGaugeState.FROZEN:
+                    {
+                        ChangeState(TimeGaugeState.SLOWING);
+                        break;
+                    }
+            }
+        }
+        // If canceled input, then can only resume
+        else if(c.canceled)
+        {
+            switch (currentState)
+            {
+                case TimeGaugeState.SLOWING:
+                    {
+                        ChangeState(TimeGaugeState.FROZEN);
+                        break;
+                    }
+            }
         }
     }
 
@@ -265,28 +274,16 @@ public class TimeManager : MonoBehaviour
     /// <param name="_newState">The new state to move to</param>
     private void ChangeState(TimeGaugeState _newState)
     {
-        Debug.Log("[TimeManager] Switching from "  + currentState + " to " + _newState);
+        //Debug.Log("[TimeManager] Switching from "  + currentState + " to " + _newState);
 
-        switch (currentState)
+        switch (_newState)
         {
             case TimeGaugeState.IDLE:
                 {
-                    
                     break;
                 }
             case TimeGaugeState.SLOWING:
                 {
-                    if(_newState == TimeGaugeState.FROZEN)
-                    {
-                        replenishDelayTimer.ResetTimer();
-                    }
-
-                    // If emptied, disable input and set timer
-                    else if(_newState == TimeGaugeState.EMPTIED)
-                    {
-                        emptiedDelayTimer.ResetTimer();
-                    }
-
                     break;
                 }
             case TimeGaugeState.RECHARGING:
@@ -295,16 +292,24 @@ public class TimeManager : MonoBehaviour
                 }
             case TimeGaugeState.FROZEN:
                 {
+                    // If entering frozen state, reset timer
+                    replenishDelayTimer.ResetTimer();
+
                     break;
                 }
             case TimeGaugeState.EMPTIED:
                 {
+                    // If entering emptied state, reset timer
+                    emptiedDelayTimer.ResetTimer();
+
                     break;
                 }
         }
 
         currentState = _newState;
     }
+
+    #endregion
 
     /// <summary>
     /// Try to slow down time to the slowest time value
@@ -316,9 +321,9 @@ public class TimeManager : MonoBehaviour
         transitionLerp = Mathf.Clamp(transitionLerp, 0, slowTransitionTime);
 
         // If not yet at slowest time, continue lerping
-        if (worlTimeScale != slowestTime)
+        if (worldTimeScale != slowestTime)
         {
-            worlTimeScale = Mathf.Lerp(NormalTime, slowestTime, transitionLerp / slowTransitionTime);
+            worldTimeScale = Mathf.Lerp(NormalTime, slowestTime, transitionLerp / slowTransitionTime);
         }
     }
 
@@ -332,9 +337,9 @@ public class TimeManager : MonoBehaviour
         transitionLerp = Mathf.Clamp(transitionLerp, 0, slowTransitionTime);
 
         // If not yet at normal time, continue lerping
-        if (worlTimeScale != NormalTime)
+        if (worldTimeScale != NormalTime)
         {
-            worlTimeScale = Mathf.Lerp(NormalTime, slowestTime, transitionLerp / slowTransitionTime);
+            worldTimeScale = Mathf.Lerp(NormalTime, slowestTime, transitionLerp / slowTransitionTime);
         }
     }
 
