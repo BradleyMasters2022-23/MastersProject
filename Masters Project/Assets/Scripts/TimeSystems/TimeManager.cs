@@ -26,7 +26,7 @@ public class TimeManager : MonoBehaviour
     /// <summary>
     /// Current state of the Time Gauge
     /// </summary>
-    private TimeGaugeState currentState;
+    [SerializeField] private TimeGaugeState currentState;
 
     #region Inputs
 
@@ -58,14 +58,14 @@ public class TimeManager : MonoBehaviour
     /// <summary>
     /// Current time scale the player controls
     /// </summary>
-    private static float worlTimeScale;
+    private static float worldTimeScale;
 
     /// <summary>
     /// Current time scale the player controls
     /// </summary>
-    public static float WorlTimeScale
+    public static float WorldTimeScale
     {
-        get { return worlTimeScale; }
+        get { return worldTimeScale; }
     }
 
     /// <summary>
@@ -73,7 +73,7 @@ public class TimeManager : MonoBehaviour
     /// </summary>
     public static float WorldDeltaTime
     {
-        get { return worlTimeScale * Time.deltaTime; }
+        get { return worldTimeScale * Time.deltaTime; }
     }
 
     /// <summary>
@@ -146,7 +146,7 @@ public class TimeManager : MonoBehaviour
         slowInput.Enable();
 
         // Initialize variables
-        worlTimeScale = NormalTime;
+        worldTimeScale = NormalTime;
 
         slowDuration.Initialize();
         replenishTime.Initialize();
@@ -321,9 +321,9 @@ public class TimeManager : MonoBehaviour
         transitionLerp = Mathf.Clamp(transitionLerp, 0, slowTransitionTime);
 
         // If not yet at slowest time, continue lerping
-        if (worlTimeScale != slowestTime)
+        if (worldTimeScale != slowestTime)
         {
-            worlTimeScale = Mathf.Lerp(NormalTime, slowestTime, transitionLerp / slowTransitionTime);
+            worldTimeScale = Mathf.Lerp(NormalTime, slowestTime, transitionLerp / slowTransitionTime);
         }
     }
 
@@ -337,9 +337,9 @@ public class TimeManager : MonoBehaviour
         transitionLerp = Mathf.Clamp(transitionLerp, 0, slowTransitionTime);
 
         // If not yet at normal time, continue lerping
-        if (worlTimeScale != NormalTime)
+        if (worldTimeScale != NormalTime)
         {
-            worlTimeScale = Mathf.Lerp(NormalTime, slowestTime, transitionLerp / slowTransitionTime);
+            worldTimeScale = Mathf.Lerp(NormalTime, slowestTime, transitionLerp / slowTransitionTime);
         }
     }
 

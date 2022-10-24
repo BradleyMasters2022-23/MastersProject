@@ -35,7 +35,6 @@ public class AimController : MonoBehaviour
     /// </summary>
     private InputAction aim;
 
-
     private void Awake()
     {
         // Initialize aim controls
@@ -47,7 +46,7 @@ public class AimController : MonoBehaviour
         verticalLookRotation = cameraLook.localRotation.x;
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         ManageCamera();
     }
@@ -75,5 +74,13 @@ public class AimController : MonoBehaviour
     private void OnDisable()
     {
         aim.Disable();
+    }
+
+    private void OnApplicationFocus(bool focus)
+    {
+        if (focus)
+            Cursor.lockState = CursorLockMode.Locked;
+        else
+            Cursor.lockState = CursorLockMode.None;
     }
 }
