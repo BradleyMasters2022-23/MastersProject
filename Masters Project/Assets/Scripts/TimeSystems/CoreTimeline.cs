@@ -20,7 +20,8 @@ namespace Masters.TimerSystem
         /// <summary>
         /// The current internal timer, adjusted with timescale. 
         /// </summary>
-        [SerializeField] private float scaledTimeline;
+        private float scaledTimeline;
+
         /// <summary>
         /// The current internal timer, adjusted with timescale. 
         /// </summary>

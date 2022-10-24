@@ -6,11 +6,8 @@
  * Description - Manages the global time value with player controls
  * ================================================================================================
  */
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Sirenix.OdinInspector;
 
 /// <summary>
 /// Manages player-controlled time abilities
@@ -19,14 +16,17 @@ public class TimeManager : MonoBehaviour
 {
     public enum TimeGaugeState
     {
-        Idle,
-        Slowing,
-        Recharging,
-        Frozen,
-        Emptied
+        IDLE,
+        SLOWING,
+        RECHARGING,
+        FROZEN,
+        EMPTIED
     }
 
-    [ShowInInspector] private TimeGaugeState currentState;
+    /// <summary>
+    /// Current state of the Time Gauge
+    /// </summary>
+    private TimeGaugeState currentState;
 
     #region Inputs
 
@@ -83,18 +83,15 @@ public class TimeManager : MonoBehaviour
 
     #endregion
 
-    #region Gauge-related Variables
+    #region Gauge Gameplay Variables
 
     [Header("=== Gauge Values ===")]
 
     [Tooltip("Duration the player can slow time for with full gauge. Input in seconds.")]
     [SerializeField, Space(3)] private UpgradableFloat slowDuration;
 
-    [Tooltip("How quickly does this value deplete.")]
-    [SerializeField, Space(3)] private UpgradableFloat depleteRate;
-
-    [Tooltip("How quickly does this value replenish.")]
-    [SerializeField, Space(3)] private UpgradableFloat replenishRate;
+    [Tooltip("Time it takes for this gauge take to replenish.")]
+    [SerializeField, Space(3)] private UpgradableFloat replenishTime;
 
     [Tooltip("How long does it take before time gauge begins refilling?")]
     [SerializeField, Space(3)] private UpgradableFloat replenishDelay;
@@ -102,7 +99,39 @@ public class TimeManager : MonoBehaviour
     [Tooltip("When gauge is fully depleted, how long before player can use this gauge again?")]
     [SerializeField, Space(3)] private UpgradableFloat emptiedDelay;
 
+    /// <summary>
+    /// Current amount of slow gauge
+    /// </summary>
+    private float currSlowGauge;
+    /// <summary>
+    /// Current amount of slow gauge
+    /// </summary>
+    public float CurrSlowGauge
+    {
+        get { return currSlowGauge; }
+    }
+
+    /// <summary>
+    /// How many times is fixed update called per second
+    /// </summary>
+    public const float FixedUpdateCalls = 50;
+
+    /// <summary>
+    /// Rate at which the gauge depletes while slowing.
+    /// </summary>
+    private const float DepleteAmount = 1;
+
+    /// <summary>
+    /// Timer for tracking replenish delay [FROZEN state]
+    /// </summary>
+    private ScaledTimer replenishDelayTimer;
+
+    /// <summary>
+    /// Timer for tracking emptied delay [EMPTIED state]
+    /// </summary>
+    private ScaledTimer emptiedDelayTimer;
     #endregion
+
 
     /// <summary>
     /// Initialize controls and starting values
@@ -120,12 +149,17 @@ public class TimeManager : MonoBehaviour
         worlTimeScale = NormalTime;
 
         slowDuration.Initialize();
-        depleteRate.Initialize();
-        replenishRate.Initialize();
+        replenishTime.Initialize();
         replenishDelay.Initialize();
         emptiedDelay.Initialize();
-    }
 
+        replenishDelayTimer = new ScaledTimer(replenishDelay.Current, false);
+        emptiedDelayTimer = new ScaledTimer(emptiedDelay.Current, false);
+
+        // Multiply slow duration seconds by update calls per second
+        currSlowGauge = slowDuration.Current * FixedUpdateCalls;
+    }
+    
     private void OnDisable()
     {
         slowInput.Disable();
@@ -134,8 +168,6 @@ public class TimeManager : MonoBehaviour
     private void FixedUpdate()
     {
         StateFunctionCall();
-
-
     }
 
     /// <summary>
@@ -147,16 +179,27 @@ public class TimeManager : MonoBehaviour
         // Switch to appropriate state
         switch (currentState)
         {
-            case TimeGaugeState.Idle:
+            case TimeGaugeState.IDLE:
                 {
-                    currentState = TimeGaugeState.Slowing;
+                    ChangeState(TimeGaugeState.SLOWING);
                     break;
                 }
-            case TimeGaugeState.Slowing:
+            case TimeGaugeState.SLOWING:
                 {
-                    currentState = TimeGaugeState.Idle;
+                    ChangeState(TimeGaugeState.FROZEN);
                     break;
                 }
+            case TimeGaugeState.RECHARGING:
+                {
+                    ChangeState(TimeGaugeState.SLOWING);
+                    break;
+                }
+            case TimeGaugeState.FROZEN:
+                {
+                    ChangeState(TimeGaugeState.SLOWING);
+                    break;
+                }
+
         }
     }
 
@@ -167,17 +210,96 @@ public class TimeManager : MonoBehaviour
     {
         switch(currentState)
         {
-            case TimeGaugeState.Slowing:
-                {
-                    TrySlow();
-                    break;
-                }
-            case TimeGaugeState.Idle:
+            case TimeGaugeState.IDLE:
                 {
                     TryResume();
                     break;
                 }
+            case TimeGaugeState.SLOWING:
+                {
+                    TrySlow();
+                    DrainGauge();
+                    break;
+                }
+            case TimeGaugeState.RECHARGING:
+                {
+                    TryResume();
+                    RefillGauge();
+                    break;
+                }
+            case TimeGaugeState.FROZEN:
+                {
+                    TryResume();
+
+                    // If timer is up, begin recharging
+                    if (replenishDelayTimer.TimerDone())
+                    {
+                        ChangeState(TimeGaugeState.RECHARGING);
+                    }
+
+                    break;
+                }
+            case TimeGaugeState.EMPTIED:
+                {
+                    TryResume();
+
+                    // If timer is up, begin recharging
+                    if (emptiedDelayTimer.TimerDone())
+                    {
+                        ChangeState(TimeGaugeState.RECHARGING);
+                    }
+
+                    break;
+                }
+
         }
+    }
+
+    /// <summary>
+    /// Change the state of the time gauge. Trigger any state-transition events.
+    /// </summary>
+    /// <param name="_newState">The new state to move to</param>
+    private void ChangeState(TimeGaugeState _newState)
+    {
+        Debug.Log("[TimeManager] Switching from "  + currentState + " to " + _newState);
+
+        switch (currentState)
+        {
+            case TimeGaugeState.IDLE:
+                {
+                    
+                    break;
+                }
+            case TimeGaugeState.SLOWING:
+                {
+                    if(_newState == TimeGaugeState.FROZEN)
+                    {
+                        replenishDelayTimer.ResetTimer();
+                    }
+
+                    // If emptied, disable input and set timer
+                    else if(_newState == TimeGaugeState.EMPTIED)
+                    {
+                        emptiedDelayTimer.ResetTimer();
+                    }
+
+                    break;
+                }
+            case TimeGaugeState.RECHARGING:
+                {
+                    break;
+                }
+            case TimeGaugeState.FROZEN:
+                {
+                    break;
+                }
+            case TimeGaugeState.EMPTIED:
+                {
+                    break;
+                }
+        }
+
+        currentState = _newState;
     }
 
     /// <summary>
@@ -209,6 +331,44 @@ public class TimeManager : MonoBehaviour
         if (worlTimeScale != NormalTime)
         {
             worlTimeScale = Mathf.Lerp(NormalTime, slowestTime, transitionLerp / slowTransitionTime);
+        }
+    }
+
+    /// <summary>
+    /// Drain the slow time gauge
+    /// </summary>
+    private void DrainGauge()
+    {
+        // Drain the gauge, determine if state should change
+        if(currSlowGauge - DepleteAmount <= 0)
+        {
+            currSlowGauge = 0;
+            ChangeState(TimeGaugeState.EMPTIED);
+        }
+        else
+        {
+            currSlowGauge -= DepleteAmount;
+        }
+    }
+
+    /// <summary>
+    /// Refill the slow time gauge
+    /// </summary>
+    private void RefillGauge()
+    {
+        // Calculate how much to replenish
+        float maxGauge = slowDuration.Current * FixedUpdateCalls;
+        float replenishAmount = (maxGauge / replenishTime.Current) / FixedUpdateCalls;
+
+        // Replenish the gauge, determine if state should change
+        if (currSlowGauge + replenishAmount >= maxGauge)
+        {
+            currSlowGauge = maxGauge;
+            ChangeState(TimeGaugeState.IDLE);
+        }
+        else
+        {
+            currSlowGauge += replenishAmount;
         }
     }
 }
