@@ -8,4 +8,11 @@ public class UpgradableInt : UpgradableValue<int>
     {
         current = Mathf.Clamp(_newValue, lowerLimit, upperLimit);
     }
+
+    public bool AtMax() {
+      if(current == upperLimit) {
+        return true;
+      }
+      return false;
+    }
 }

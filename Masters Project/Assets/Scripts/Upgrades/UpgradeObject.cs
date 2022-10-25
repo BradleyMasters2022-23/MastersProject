@@ -16,8 +16,5 @@ public class UpgradeObject : ScriptableObject {
   public string displayDesc;
   public int ID;
   public UpgradableInt lvl;
-
-  public virtual void Activate() {
-
-  }
+  public GameObject upgradePrefab;
 }
