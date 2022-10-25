@@ -50,5 +50,9 @@ public class UnpackScript : MonoBehaviour
         // Destroy self if set
         if (selfDestruct)
             Destroy(gameObject);
+        else
+            Destroy(this);
+
+        
     }
 }

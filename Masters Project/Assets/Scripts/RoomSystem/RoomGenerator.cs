@@ -39,7 +39,7 @@ public class RoomGenerator : MonoBehaviour
     /// <summary>
     /// Current floor count tracker
     /// </summary>
-    private int count;
+    [SerializeField] private int count;
     
     /// <summary>
     /// Prepare singleton, initialize
@@ -50,7 +50,7 @@ public class RoomGenerator : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(instance);
-            instance.count = 1;
+            instance.count = 0;
         }
         else
         {

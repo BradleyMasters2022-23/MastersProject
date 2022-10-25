@@ -28,8 +28,13 @@ public class DoorManager : MonoBehaviour
     /// <summary>
     /// Whether or not this is already locked
     /// </summary>
-    private bool locked = false;
+    // private bool locked = false;
 
+    private void Awake()
+    {
+        doorways = new List<Door>();
+        exits = new List<Door>();
+    }
 
     private void Start()
     {
@@ -80,7 +85,7 @@ public class DoorManager : MonoBehaviour
         }
 
         // Lock all doors set to exits
-        locked = true;
+        // locked = true;
         foreach (Door f in exits)
         {
             f.LockDoor();

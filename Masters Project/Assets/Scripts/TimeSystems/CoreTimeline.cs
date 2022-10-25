@@ -33,17 +33,18 @@ namespace Masters.TimerSystem
         /// <summary>
         /// Prepare instance, initialize timer
         /// </summary>
-        private void Awake()
+        private void Start()
         {
-            if (CoreTimeline.instance != null && CoreTimeline.instance != this)
+            if (instance == null)
+            {
+                CoreTimeline.instance = this;
+                DontDestroyOnLoad(this);
+                scaledTimeline = 0;
+            }
+            else
             {
                 Destroy(this);
             }
-
-            CoreTimeline.instance = this;
-            DontDestroyOnLoad(this);
-
-            scaledTimeline = 0;
         }
 
         /// <summary>
