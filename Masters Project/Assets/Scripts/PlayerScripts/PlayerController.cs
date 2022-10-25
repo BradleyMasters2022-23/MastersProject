@@ -2,7 +2,7 @@
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 21th, 2022
- * Last Edited - October 21th, 2022 by Ben Schuster
+ * Last Edited - October 25, 2022 by Soma Hannon - add getters section and 1 getter for upgrade tests
  * Description - Manage the movement for the player
  * ================================================================================================
  */
@@ -509,11 +509,17 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
-    #region Misc
-
+    #region Getters
+    /// <summary>
+    /// get # of jumps
+    /// </summary>
     public UpgradableInt GetJumps() {
       return jumps;
     }
+
+    #endregion
+
+    #region Misc
 
     /// <summary>
     /// Disable inputs to prevent crashing
