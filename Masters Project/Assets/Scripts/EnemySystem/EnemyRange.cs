@@ -175,7 +175,7 @@ public class EnemyRange : EnemyBase
             case EnemyState.Moving:
                 {
                     // Switch to attacking if line of sight and within ideal range
-                    if (LineOfSight(player) && currDist <= idealRange)
+                    if (LineOfSight(playerCenter.gameObject) && currDist <= idealRange)
                     {
                         state = EnemyState.Attacking;
 
@@ -191,7 +191,7 @@ public class EnemyRange : EnemyBase
             case EnemyState.Attacking:
                 {
                     // Resume moving if outside of attack range and not already attacking
-                    if (!LineOfSight(player) && attackRoutine == null)
+                    if (!LineOfSight(playerCenter.gameObject) && attackRoutine == null)
                     {
                         state = EnemyState.Moving;
                     }
