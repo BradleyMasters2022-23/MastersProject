@@ -6,7 +6,11 @@ public class UpgradableInt : UpgradableValue<int>
 {
     public override void ChangeVal(int _newValue)
     {
+      if(lowerLimit == 0 && upperLimit == 0) {
+          current = _newValue;
+      } else {
         current = Mathf.Clamp(_newValue, lowerLimit, upperLimit);
+      }
     }
 
     public bool AtMax() {

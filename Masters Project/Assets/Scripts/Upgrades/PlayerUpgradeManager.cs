@@ -10,7 +10,7 @@
  using UnityEngine;
  using UnityEngine.SceneManagement;
 
-public abstract class PlayerUpgradeManager : MonoBehaviour {
+public class PlayerUpgradeManager : MonoBehaviour {
   // TODO: connect to PlayerController when implemented
   // TODO: write this class lol
 
@@ -25,11 +25,13 @@ public abstract class PlayerUpgradeManager : MonoBehaviour {
     player = FindObjectOfType<PlayerController>();
     // ensures only one instance ever exists
     if(instance == null) {
-        instance = this;
-        DontDestroyOnLoad(this.gameObject);
+        PlayerUpgradeManager.instance = this;
+        DontDestroyOnLoad(this);
     } else {
-        Destroy(this.gameObject);
+        Destroy(this);
     }
+
+    SceneManager.sceneLoaded += OnLevelLoad;
   }
 
   /// <summary>
@@ -53,6 +55,41 @@ public abstract class PlayerUpgradeManager : MonoBehaviour {
   /// </summary>
   public List<UpgradeObject> GetUpgrades() {
     return new List<UpgradeObject>(upgrades);
+  }
+
+  public void OnLevelLoad(Scene scene, LoadSceneMode mode) {
+      if (scene.name == "Hub") {
+          DestroyPUM();
+          return;
+      }
+
+      int c = 0;
+      do {
+          c++;
+          if (c >= 10000)
+              break;
+
+          player = FindObjectOfType<PlayerController>();
+      } while (player == null);
+
+      if (player == null)
+      {
+          Debug.LogError("cannot load player upgrades; no player instance found!");
+          return;
+      }
+
+      foreach(UpgradeObject up in upgrades) {
+          InitializeUpgrade(up);
+      }
+  }
+
+  public void DestroyPUM() {
+      PlayerUpgradeManager.instance = null;
+      Destroy(gameObject);
+  }
+
+  private void OnDisable() {
+      SceneManager.sceneLoaded -= OnLevelLoad;
   }
 
 }

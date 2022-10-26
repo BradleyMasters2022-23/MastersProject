@@ -510,6 +510,7 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Getters
+    
     /// <summary>
     /// get # of jumps
     /// </summary>

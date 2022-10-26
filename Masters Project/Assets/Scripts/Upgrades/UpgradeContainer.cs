@@ -11,16 +11,15 @@ using UnityEngine;
 using TMPro;
 
 public class UpgradeContainer : MonoBehaviour {
-  public UpgradeObject upgrade;
-  public Color color;
-  public TextMeshProUGUI nameText;
+  [SerializeField] private UpgradeObject upgrade;
+  [SerializeField] private Color color;
 
   /// <summary>
   /// ensures that upgrade is not null and calls SetUp
   /// </summary>
   private void Start() {
       if (upgrade is null) {
-        Destroy(this.gameObject);
+        Destroy(this);
       }
 
       if(upgrade != null) {
@@ -34,7 +33,6 @@ public class UpgradeContainer : MonoBehaviour {
   public void SetUp(UpgradeObject obj) {
       upgrade = obj;
       GetComponent<Renderer>().material.color = color;
-      nameText.text = upgrade.displayName;
   }
 
   /// <summary>
@@ -44,6 +42,8 @@ public class UpgradeContainer : MonoBehaviour {
       if(other.CompareTag("Player")) {
           // TODO: trigger upgrade select screen.
           // buttons on USS call PlayerUpgradeManager.AddUpgrade() for the linked upgrade
+          PlayerUpgradeManager.instance.AddUpgrade(upgrade);
+          Destroy(this.gameObject);
       }
   }
 }

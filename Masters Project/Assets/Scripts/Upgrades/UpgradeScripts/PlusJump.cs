@@ -4,6 +4,6 @@ using UnityEngine;
 
 public class PlusJump : IUpgrade {
   public override void LoadUpgrade(PlayerController player) {
-      player.GetJumps().ChangeVal(player.GetJumps().Current + 1);
+    player.GetJumps().ChangeVal(player.GetJumps().Current + 1);
   }
 }
