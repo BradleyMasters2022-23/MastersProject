@@ -35,6 +35,8 @@ public class AimController : MonoBehaviour
     /// </summary>
     private InputAction aim;
 
+    private Vector2 lookDelta;
+
     private void Awake()
     {
         // Initialize aim controls
@@ -46,7 +48,13 @@ public class AimController : MonoBehaviour
         verticalLookRotation = cameraLook.localRotation.x;
     }
 
-    private void LateUpdate()
+    private void Update()
+    {
+        // Get new delta based on update
+        lookDelta = aim.ReadValue<Vector2>();
+    }
+
+    private void FixedUpdate()
     {
         ManageCamera();
     }
@@ -56,9 +64,6 @@ public class AimController : MonoBehaviour
     /// </summary>
     private void ManageCamera()
     {
-        // Get new aim inputs
-        Vector2 lookDelta = aim.ReadValue<Vector2>();
-
         // look left and right
         transform.Rotate(new Vector3(0, lookDelta.x, 0) * Time.deltaTime * lookSensitivity);
 
