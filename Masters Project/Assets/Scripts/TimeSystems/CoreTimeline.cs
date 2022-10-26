@@ -33,7 +33,7 @@ namespace Masters.TimerSystem
         /// <summary>
         /// Prepare instance, initialize timer
         /// </summary>
-        private void Start()
+        private void Awake()
         {
             if (instance == null)
             {
