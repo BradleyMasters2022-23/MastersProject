@@ -54,6 +54,8 @@ public class EnemyRange : EnemyBase
     [Header("---Core Info---")]
     [Tooltip("Projectile that this enemy shoots")]
     [SerializeField] private GameObject shotPrefab;
+    [Tooltip("Where the bullet(s) spawn from")]
+    [SerializeField] private Transform[] shootPoints;
     [Tooltip("How many shots the attack fire")]
     [SerializeField][Range(0, 50)] private int numberOfShots;
     [Tooltip("What is the radius of the cone this enemy can see in")]
@@ -113,19 +115,19 @@ public class EnemyRange : EnemyBase
         // Get current time state
         currTime = TimeManager.WorldTimeScale;
 
-        currDist = Vector3.Distance(player.transform.position, transform.position);
+        currDist = Vector3.Distance(playerCenter.position, transform.position);
         agent.speed = walkSpeed * currTime;
 
         // Move towards player when out of range and out of threshold
         if (Mathf.Abs(currDist - idealRange) > moveThreshold && currDist > idealRange)
         {
             agent.speed = walkSpeed * currTime;
-            agent.SetDestination(player.transform.position);
+            agent.SetDestination(playerCenter.position);
         }
         // flee from player when too close
         else if (fleeWhileAttacking && Mathf.Abs(currDist - idealRange) > moveThreshold && currDist < idealRange)
         {
-            Vector3 awayDir = ((transform.position + Vector3.up) - player.transform.position).normalized * walkSpeed * fleeMoveModifier;
+            Vector3 awayDir = ((transform.position + Vector3.up) - playerCenter.position).normalized * walkSpeed * fleeMoveModifier;
             agent.speed = walkSpeed * currTime;
             agent.SetDestination(transform.position + awayDir);
         }
@@ -156,7 +158,7 @@ public class EnemyRange : EnemyBase
         }
 
         // Get direction of player, rotate towards them
-        Vector3 direction = player.transform.position - (transform.position + Vector3.up);
+        Vector3 direction = playerCenter.position - (transform.position + Vector3.up);
         float angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
         float nextAng = Mathf.LerpAngle(transform.rotation.eulerAngles.y, angle, rotationSpeed * currTime);
         transform.rotation = Quaternion.Euler(0, nextAng, 0);
@@ -226,26 +228,33 @@ public class EnemyRange : EnemyBase
 
     private bool InVision()
     {
-        Vector3 temp = (player.transform.position - (transform.position + Vector3.up)).normalized;
+        Vector3 temp = (playerCenter.position - (transform.position + Vector3.up)).normalized;
         float angle = Vector3.SignedAngle(temp, transform.forward, Vector3.up);
         return (Mathf.Abs(angle) <= lookRadius);
     }
 
     private void Shoot(Vector3 targetPos)
     {
-        // Spawn projectile, get its range component
-        GameObject o = Instantiate(shotPrefab, (transform.position + Vector3.up), shotPrefab.transform.rotation);
-        RangeAttack temp = o.GetComponent<RangeAttack>();
+        // Spawn projectile for each barrel
+        List<GameObject> spawnedProjectiles = new List<GameObject>();
+        foreach(Transform barrel in shootPoints)
+        {
+            GameObject o = Instantiate(shotPrefab, barrel.position, shotPrefab.transform.rotation);
+            spawnedProjectiles.Add(o);
+        }
+        RangeAttack temp = spawnedProjectiles[0].GetComponent<RangeAttack>();
 
-        
         // Calculate lead aim
         float travelTime = (targetPos - transform.position).magnitude / temp.Speed;
         float strength = Random.Range(leadStrength.x, leadStrength.y);
-        Vector3 leadPos = player.transform.position + (player.GetComponent<Rigidbody>().velocity * travelTime * strength);
+        Vector3 leadPos = playerCenter.position + (player.GetComponent<Rigidbody>().velocity * travelTime * strength);
 
         // Aim shot at target position, activate
-        o.transform.LookAt(leadPos);
-        temp.Activate();
+        foreach (GameObject shot in spawnedProjectiles)
+        {
+            shot.transform.LookAt(leadPos);
+            shot.GetComponent<RangeAttack>().Activate();
+        }
     }
 
 
@@ -266,7 +275,7 @@ public class EnemyRange : EnemyBase
         }
 
         // Get player position to target
-        Vector3 targetPos = player.transform.position;
+        Vector3 targetPos = playerCenter.position;
 
         // Shoot Substate
         walkSpeed = (_originalMovement * shootMoveModifier);
@@ -283,7 +292,7 @@ public class EnemyRange : EnemyBase
 
             // If not locked, update the target position
             if (!lockAiming)
-                targetPos = player.transform.position;
+                targetPos = playerCenter.position;
         }
 
         // Recover/Reload Substate

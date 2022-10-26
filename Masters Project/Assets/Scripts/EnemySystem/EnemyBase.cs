@@ -27,6 +27,10 @@ public abstract class EnemyBase : MonoBehaviour
     /// Player object
     /// </summary>
     protected GameObject player;
+    /// <summary>
+    /// Center of the player
+    /// </summary>
+    protected Transform playerCenter;
 
     //[Tooltip("Current state of the enemy")]
     //[SerializeField] protected EnemyState currentState;
@@ -54,5 +58,6 @@ public abstract class EnemyBase : MonoBehaviour
     protected virtual void Awake()
     {
         player = FindObjectOfType<PlayerController>().gameObject;
+        playerCenter = FindObjectOfType<PlayerController>().CenterMass;
     }
 }

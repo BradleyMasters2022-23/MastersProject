@@ -309,11 +309,13 @@ MonoBehaviour:
   moveThreshold: 3
   fleeMoveModifier: 1
   shotPrefab: {fileID: 8727397786430278917, guid: 72ddf08186379004e8a2d2b56de45efb, type: 3}
+  shootPoints:
+  - {fileID: 5853184305980095116}
   numberOfShots: 1
   lookRadius: 30
-  aimDuration: 0.5
-  shootDuration: 0.5
-  reloadDuration: 0.5
+  aimDuration: 0
+  shootDuration: 0.2
+  reloadDuration: 0.1
   aimMoveModifier: 0.8
   shootMoveModifier: 0.8
   reloadMoveModifier: 0.8
@@ -322,7 +324,7 @@ MonoBehaviour:
   reloadRotModifier: 0
   lockAiming: 0
   fleeWhileAttacking: 1
-  leadStrength: {x: 0, y: 0}
+  leadStrength: {x: -1.2, y: 1.2}
 --- !u!195 &6878320425555973780
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -591,6 +593,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0d959cf0332014f47ae8201f3c4fd1cc, type: 3}
+--- !u!4 &5853184305980095116 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6118090141852911774, guid: 0d959cf0332014f47ae8201f3c4fd1cc, type: 3}
+  m_PrefabInstance: {fileID: 422602296868991506}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7477611687535966666 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7068596131281767384, guid: 0d959cf0332014f47ae8201f3c4fd1cc, type: 3}
