@@ -20,10 +20,8 @@ public class Door : MonoBehaviour
         Exit
     }
 
-    /// <summary>
-    /// What type of door is this
-    /// </summary>
-    private PlayerDoorType type;
+    [Tooltip("What type of door is this")]
+    [SerializeField] private PlayerDoorType type;
     /// <summary>
     /// What type of door is this
     /// </summary>
@@ -40,25 +38,21 @@ public class Door : MonoBehaviour
     /// </summary>
     private Animator animator;
 
-    /// <summary>
-    /// The light used to indicate if locked or unlocked
-    /// </summary>
-    private Light indicatorLight;
+    [Tooltip("Panel that will change color when locked or unlocked")]
+    [SerializeField] private GameObject doorLight;
     [Tooltip("Color of the light when door is locked")]
-    [SerializeField] private Color lockedColor;
+    [SerializeField] private Material lockedColor;
     [Tooltip("Color of the light when door is unlocked")]
-    [SerializeField] private Color unlockedColor;
-    [Tooltip("The collider for the actual door object")]
-    [SerializeField] private Collider doorCollider;
+    [SerializeField] private Material unlockedColor;
+    [Tooltip("The actual door object")]
+    [SerializeField] private GameObject door;
 
-
+    /// <summary>
+    /// Get any internal references
+    /// </summary>
     private void Awake()
     {
         animator = GetComponent<Animator>();
-
-        // Get light, disable dev image
-        indicatorLight = GetComponentInChildren<Light>();
-        Destroy(FindObjectOfType<Image>());
     }
 
     /// <summary>
@@ -67,8 +61,7 @@ public class Door : MonoBehaviour
     public void SetEntrance()
     {
         // Lock door, turn to locked color
-        doorCollider.isTrigger = false;
-        indicatorLight.color = lockedColor;
+        LockDoor();
 
         // Spawn player to entrance position
         GameObject p = FindObjectOfType<PlayerController>().gameObject;
@@ -89,8 +82,8 @@ public class Door : MonoBehaviour
     /// </summary>
     public void LockDoor()
     {
-        indicatorLight.color = lockedColor;
-        doorCollider.isTrigger = false;
+        doorLight.GetComponent<Renderer>().material = lockedColor;
+        door.SetActive(true);
     }
 
     /// <summary>
@@ -98,10 +91,14 @@ public class Door : MonoBehaviour
     /// </summary>
     public void UnlockDoor()
     {
-        indicatorLight.color = lockedColor;
-        doorCollider.isTrigger = true;
+        doorLight.GetComponent<Renderer>().material = unlockedColor;
+        door.SetActive(false);
     }
 
+    /// <summary>
+    /// When player enters, tell the room generator to load next room
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
