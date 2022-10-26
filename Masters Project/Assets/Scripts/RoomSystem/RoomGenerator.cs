@@ -105,8 +105,8 @@ public class RoomGenerator : MonoBehaviour
     public void LoadRoom()
     {
         instance.count++;
-        SceneManager.UnloadSceneAsync(lastRoom);
-        SceneManager.LoadSceneAsync(currRoom);
+        SceneManager.LoadScene(currRoom);
+        //SceneManager.UnloadSceneAsync(lastRoom);
     }
 
     /// <summary>
