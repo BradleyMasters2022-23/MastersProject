@@ -14,8 +14,8 @@ GameObject:
   - component: {fileID: 3033903955474802212}
   - component: {fileID: 6917116579656316654}
   - component: {fileID: 1854241841643496755}
-  m_Layer: 7
-  m_Name: ProjectilePlayer
+  m_Layer: 9
+  m_Name: ProjectileEnemy_Small
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 8727397786430278917}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.52, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a01629709c465194994b6da9e0df3ff6, type: 2}
+  - {fileID: 2100000, guid: a4105cb5395f54b419ae19a0fa0df742, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -127,12 +127,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83837c8b4b5a4d344afd789cbfd3cc3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 20
+  damage: 3
   knockback: 0
   addativeKnockback: 0
-  speed: 150
-  range: 200
+  speed: 30
+  range: 100
   onHitEffect: {fileID: 8310898044211945277, guid: 011a9baa743b55648b354e6aaf58a345, type: 3}
   layersToIgnore:
     serializedVersion: 2
-    m_Bits: 198
+    m_Bits: 806

@@ -32,6 +32,9 @@ public class Projectile : RangeAttack
     [Tooltip("What spawns when this his something")]
     [SerializeField] public GameObject onHitEffect;
 
+    [Tooltip("What layers should this projectile ignore")]
+    [SerializeField] private LayerMask layersToIgnore;
+
     /// <summary>
     /// Distance covered to calculate when to despawn
     /// </summary>
@@ -48,7 +51,7 @@ public class Projectile : RangeAttack
 
         // Check if it passed target
         RaycastHit target;
-        if(Physics.CapsuleCast(lastPos, transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, (Vector3.Distance(lastPos, transform.position))))
+        if(Physics.CapsuleCast(lastPos, transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, (Vector3.Distance(lastPos, transform.position)), ~layersToIgnore))
         {
             TriggerTarget(target.collider);
         }
@@ -68,7 +71,7 @@ public class Projectile : RangeAttack
         // Spawn in whatever its told to, if able
         if(onHitEffect != null)
         {
-            Instantiate(onHitEffect);
+            Instantiate(onHitEffect, transform.position, Quaternion.identity);
             
         }
 
