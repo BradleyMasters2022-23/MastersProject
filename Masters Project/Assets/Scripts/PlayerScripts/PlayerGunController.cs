@@ -27,6 +27,10 @@ public class PlayerGunController : MonoBehaviour
         "Prevents weird aiming when too close to a wall")]
     [SerializeField] private float minAimRange;
 
+    [Tooltip("Sound that happens when gun go pew pew")]
+    [SerializeField] private AudioClip[] gunshotSound;
+    private AudioSource source;
+
     [Header("=====Setup=====")]
 
     [Tooltip("Where the shot fires from")]
@@ -76,6 +80,8 @@ public class PlayerGunController : MonoBehaviour
 
         // Initialize timers
         fireTimer = new ScaledTimer(fireDelay.Current, false);
+
+        source = gameObject.AddComponent<AudioSource>();
     }
 
     /// <summary>
@@ -106,6 +112,9 @@ public class PlayerGunController : MonoBehaviour
         GameObject newShot = Instantiate(shotPrefab, shootPoint.position, transform.rotation);
         newShot.transform.LookAt(shootCam.TargetPos);
         newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current);
+
+        
+        source.PlayOneShot(gunshotSound[Random.Range(0, gunshotSound.Length)],0.5f);
     }
 
     /// <summary>
