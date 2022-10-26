@@ -114,7 +114,7 @@ public class PlayerGunController : MonoBehaviour
         newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current);
 
         
-        source.PlayOneShot(gunshotSound[Random.Range(0, gunshotSound.Length)],0.5f);
+        source.PlayOneShot(gunshotSound[Random.Range(0, gunshotSound.Length)],0.3f);
     }
 
     /// <summary>
