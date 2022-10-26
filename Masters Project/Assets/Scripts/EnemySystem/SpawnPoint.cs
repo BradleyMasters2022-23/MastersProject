@@ -22,6 +22,11 @@ public class SpawnPoint : MonoBehaviour
     [SerializeField] private Vector2 distanceRange;
 
     /// <summary>
+    /// Linked spawn manager
+    /// </summary>
+    private SpawnManager spawnManager;
+
+    /// <summary>
     /// What particle plays when spawning
     /// </summary>
     private ParticleSystem spawnParticles;
@@ -98,6 +103,7 @@ public class SpawnPoint : MonoBehaviour
     private void Start()
     {
         player = FindObjectOfType<PlayerController>().transform;
+        spawnManager = FindObjectOfType<SpawnManager>();
     }
 
     /// <summary>
@@ -179,7 +185,7 @@ public class SpawnPoint : MonoBehaviour
     {
         if (!spawning && IsLoaded() && spawnOverrideTimer.TimerDone())
         {
-            FindObjectOfType<SpawnManager>().ReturnEnemy(enemyStorage);
+            spawnManager.ReturnEnemy(enemyStorage);
             enemyStorage = null;
         }
 
@@ -209,7 +215,8 @@ public class SpawnPoint : MonoBehaviour
         if (spawnSound != null)
             s.Play();
         spawnLight.enabled = true;
-        spawnParticles.Play();
+        if(spawnParticles != null)
+            spawnParticles.Play();
 
         // Reset the timer and wait for the delay
         spawnDelayTimer.ResetTimer();
@@ -223,10 +230,12 @@ public class SpawnPoint : MonoBehaviour
         enemyStorage = null;
         spawnRoutine = null;
         spawnLight.enabled = false;
-        spawnParticles.Stop();
+        if(spawnParticles != null)
+            spawnParticles.Stop();
         if (spawnSound != null)
             s.Stop();
         spawning = false;
+        spawnManager.SpawnedEnemy();
     }
 
     /// <summary>

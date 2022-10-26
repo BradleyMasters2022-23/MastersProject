@@ -57,6 +57,16 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private Animator animator;
 
+    [Tooltip("Center of the player")]
+    [SerializeField] private Transform centerMass;
+    /// <summary>
+    /// Center of the player
+    /// </summary>
+    public Transform CenterMass
+    {
+        get { return centerMass;  }
+    }
+
     #endregion
 
     #region Inputs

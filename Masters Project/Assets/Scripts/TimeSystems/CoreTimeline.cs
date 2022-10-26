@@ -33,18 +33,13 @@ namespace Masters.TimerSystem
         /// <summary>
         /// Prepare instance, initialize timer
         /// </summary>
-        private void Start()
+        private void Awake()
         {
-            if (instance == null)
-            {
-                CoreTimeline.instance = this;
-                DontDestroyOnLoad(this);
-                scaledTimeline = 0;
-            }
-            else
-            {
-                Destroy(this);
-            }
+            if (instance != null)
+                Destroy(gameObject);
+
+            CoreTimeline.instance = this;
+            scaledTimeline = 0;
         }
 
         /// <summary>
@@ -56,6 +51,11 @@ namespace Masters.TimerSystem
             
             if (scaledTimeline == float.MaxValue)
                 Debug.LogError("Timeline reached max float value, what the fuck???");
+        }
+
+        private void OnDisable()
+        {
+            instance = null;
         }
     }
 }

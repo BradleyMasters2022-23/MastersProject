@@ -24,8 +24,16 @@ public class Projectile : RangeAttack
     /// </summary>
     private Vector3 targetVelocity;
 
+    /// <summary>
+    /// The position of this object last frame
+    /// </summary>
+    private Vector3 lastPos;
+
     [Tooltip("What spawns when this his something")]
     [SerializeField] public GameObject onHitEffect;
+
+    [Tooltip("What layers should this projectile ignore")]
+    [SerializeField] private LayerMask layersToIgnore;
 
     /// <summary>
     /// Distance covered to calculate when to despawn
@@ -38,7 +46,15 @@ public class Projectile : RangeAttack
         if (!active)
             return;
 
+        // Update velocity with world timescale
         rb.velocity = targetVelocity * TimeManager.WorldTimeScale;
+
+        // Check if it passed target
+        RaycastHit target;
+        if(Physics.CapsuleCast(lastPos, transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, (Vector3.Distance(lastPos, transform.position)), ~layersToIgnore))
+        {
+            TriggerTarget(target.collider);
+        }
 
         // Check if projectile reached its max range
         distanceCovered += targetVelocity.magnitude * TimeManager.WorldDeltaTime;
@@ -47,14 +63,7 @@ public class Projectile : RangeAttack
             Hit();
         }
 
-    }
-
-    /// <summary>
-    /// Get necessary components
-    /// </summary>
-    protected override void Awake()
-    {
-        
+        lastPos = transform.position;
     }
 
     protected override void Hit()
@@ -62,7 +71,7 @@ public class Projectile : RangeAttack
         // Spawn in whatever its told to, if able
         if(onHitEffect != null)
         {
-            Instantiate(onHitEffect);
+            Instantiate(onHitEffect, transform.position, Quaternion.identity);
             
         }
 
@@ -78,5 +87,10 @@ public class Projectile : RangeAttack
         rb = GetComponent<Rigidbody>();
         targetVelocity = transform.forward * speed;
         active = true;
+    }
+
+    protected override void Awake()
+    {
+        lastPos = transform.position;
     }
 }
