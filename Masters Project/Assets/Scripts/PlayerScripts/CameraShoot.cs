@@ -39,6 +39,12 @@ public class CameraShoot : MonoBehaviour
         get { return targetPos; }
     }
 
+    // Planes for the camera
+    private Plane[] planes;
+
+    [Tooltip("How accurate is the 'in camera' system. 0 is perfect accuracy")]
+    [SerializeField] private float viewPlanesTolerance;
+
     /// <summary>
     /// initialize the shoot camera with necessary variables
     /// </summary>
@@ -56,6 +62,8 @@ public class CameraShoot : MonoBehaviour
 
     private void Update()
     {
+        planes = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+
         // Dont fire if not initialized
         if(defaultTarget != null)
         {
@@ -90,5 +98,23 @@ public class CameraShoot : MonoBehaviour
             // If no hit, use default target
             targetPos = defaultTarget.position;
         }
+    }
+
+    /// <summary>
+    /// Check if a point is in vision of the camera
+    /// </summary>
+    /// <param name="pos">point to check</param>
+    /// <returns>In camera vision</returns>
+    public bool InCamVision(Vector3 pos)
+    {
+        foreach (Plane plane in planes)
+        {
+            if (plane.GetDistanceToPoint(pos) <= viewPlanesTolerance)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
