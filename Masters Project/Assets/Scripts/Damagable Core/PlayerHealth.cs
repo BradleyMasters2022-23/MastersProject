@@ -7,6 +7,8 @@
  * ================================================================================================
  */
 using UnityEngine;
+using static Cinemachine.DocumentationSortingAttribute;
+using UnityEngine.Rendering;
 
 public class PlayerHealth : Damagable
 {
@@ -26,6 +28,10 @@ public class PlayerHealth : Damagable
 
     [Tooltip("Time it takes to actively regenerate a segment [Such as healthkit]")]
     [SerializeField] private UpgradableFloat activeRegenTime;
+
+    [Tooltip("Sound when player takes damage")]
+    [SerializeField] private AudioClip playerDamage;
+    private AudioSource source;
 
     /// <summary>
     /// All health sections for the player
@@ -58,6 +64,8 @@ public class PlayerHealth : Damagable
         }
         healthSectionIndex = healthSections.Length-1;
 
+        source = gameObject.AddComponent<AudioSource>();
+
     }
 
     /// <summary>
@@ -87,6 +95,8 @@ public class PlayerHealth : Damagable
                 healthSectionIndex--;
             }
         }
+
+        source.PlayOneShot(playerDamage, 0.5f);
     }
 
     /// <summary>

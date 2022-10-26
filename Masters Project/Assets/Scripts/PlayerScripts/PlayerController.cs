@@ -10,10 +10,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using static Cinemachine.DocumentationSortingAttribute;
+using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviour
 {
+
+    [Tooltip("Sound when the player jumps")]
+    [SerializeField] private AudioClip jumpSound;
+
+    [Tooltip("Sound when the player lands")]
+    [SerializeField] private AudioClip landSound;
+
+    private AudioSource source;
+
+
     public enum PlayerState
     {
         GROUNDED,
@@ -189,6 +200,8 @@ public class PlayerController : MonoBehaviour
         jumpTimer = new ScaledTimer(jumpCooldown, false);
         currentJumps = jumps.Current;
         targetMaxSpeed = maxMoveSpeed.Current;
+
+        source = gameObject.AddComponent<AudioSource>();
     }
 
     /// <summary>
@@ -219,6 +232,9 @@ public class PlayerController : MonoBehaviour
         // Limit any velocity to prevent player going too fast
         LimitVelocity();
     }
+
+
+
 
     #region State Functionality
 
@@ -288,6 +304,7 @@ public class PlayerController : MonoBehaviour
 
                     // When entering grounded state, reset target max speed
                     targetMaxSpeed = maxMoveSpeed.Current;
+                    source.PlayOneShot(landSound, 0.5f);
 
                     break;
                 }
@@ -432,7 +449,10 @@ public class PlayerController : MonoBehaviour
 
             // Apply vertical velocity 
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
+            source.PlayOneShot(jumpSound, 0.5f);
         }
+        
     }
 
     /// <summary>

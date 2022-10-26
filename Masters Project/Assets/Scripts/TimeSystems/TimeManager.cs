@@ -8,6 +8,8 @@
  */
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static Cinemachine.DocumentationSortingAttribute;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// Manages player-controlled time abilities
@@ -49,6 +51,11 @@ public class TimeManager : MonoBehaviour
     [SerializeField, Range(0, 1)] private float slowestTime;
     [Tooltip("Time it takes to switch between the two time states")]
     [SerializeField, Range(0.01f, 1)] private float slowTransitionTime;
+    [Tooltip("Sound if player stops time")]
+    [SerializeField] private AudioClip stopTime;
+    [Tooltip("Sound if player starts time")]
+    [SerializeField] private AudioClip startTime;
+    private AudioSource source;
 
     /// <summary>
     /// Normal time value
@@ -158,6 +165,8 @@ public class TimeManager : MonoBehaviour
 
         // Multiply slow duration seconds by update calls per second
         currSlowGauge = slowDuration.Current * FixedUpdateCalls;
+
+        source = gameObject.AddComponent<AudioSource>();
     }
     
     private void OnDisable()
@@ -188,16 +197,19 @@ public class TimeManager : MonoBehaviour
                 case TimeGaugeState.IDLE:
                     {
                         ChangeState(TimeGaugeState.SLOWING);
+                        source.PlayOneShot(stopTime, 0.5f);
                         break;
                     }
                 case TimeGaugeState.RECHARGING:
                     {
                         ChangeState(TimeGaugeState.SLOWING);
+                        source.PlayOneShot(stopTime, 0.5f);
                         break;
                     }
                 case TimeGaugeState.FROZEN:
                     {
                         ChangeState(TimeGaugeState.SLOWING);
+                        source.PlayOneShot(stopTime, 0.5f);
                         break;
                     }
             }
@@ -295,12 +307,16 @@ public class TimeManager : MonoBehaviour
                     // If entering frozen state, reset timer
                     replenishDelayTimer.ResetTimer();
 
+                    source.PlayOneShot(startTime, 0.5f);
+
                     break;
                 }
             case TimeGaugeState.EMPTIED:
                 {
                     // If entering emptied state, reset timer
                     emptiedDelayTimer.ResetTimer();
+
+                    source.PlayOneShot(startTime, 0.5f);
 
                     break;
                 }
