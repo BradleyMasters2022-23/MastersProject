@@ -45,6 +45,11 @@ public class CameraShoot : MonoBehaviour
     [Tooltip("How accurate is the 'in camera' system. 0 is perfect accuracy")]
     [SerializeField] private float viewPlanesTolerance;
 
+    private void Awake()
+    {
+        planes = GeometryUtility.CalculateFrustumPlanes(Camera.main);
+    }
+
     /// <summary>
     /// initialize the shoot camera with necessary variables
     /// </summary>
