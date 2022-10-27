@@ -15,6 +15,7 @@ public class PlayerUpgradeManager : MonoBehaviour {
   // TODO: write this class lol
 
   public PlayerController player;
+  public PlayerGunController gun;
   public List<UpgradeObject> upgrades = new List<UpgradeObject>();
   public static PlayerUpgradeManager instance;
 
@@ -33,6 +34,7 @@ public class PlayerUpgradeManager : MonoBehaviour {
   /// </summary>
   private void Start() {
     player = FindObjectOfType<PlayerController>();
+    gun = FindObjectOfType<PlayerGunController>();
     SceneManager.sceneLoaded += OnLevelLoad;
   }
 

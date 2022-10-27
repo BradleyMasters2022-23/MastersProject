@@ -1,4 +1,4 @@
-/* 
+/*
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 21th, 2022
@@ -154,5 +154,13 @@ public class PlayerHealth : Damagable
         {
             healthSectionIndex--;
         }
+    }
+
+    public UpgradableInt GetHealthPerSection() {
+      return healthPerSection;
+    }
+
+    public UpgradableInt GetNumSections() {
+      return numOfSections;
     }
 }
