@@ -14,7 +14,7 @@ public class RewardsManager : MonoBehaviour {
     }
 
     private void Start() {
-      for(int i = 0; i < numChoices-1; i++) {
+      for(int i = 0; i < numChoices.Current; i++) {
         UpgradeObject tempUpgrade = AllUpgradeManager.instance.GetRandomOption();
         choices.Add(tempUpgrade);
       }
@@ -22,16 +22,16 @@ public class RewardsManager : MonoBehaviour {
 
     public void SpawnUpgrades() {
       // Spawn all upgrades cascading to the right
-      for(int i = 0; i < numChoices-1; i++) {
+      for(int i = 0; i < numChoices.Current; i++) {
         Vector3 temp = rewardSpawnPoint.transform.position;
         temp += Vector3.right * (i * 5);
         GameObject obj = Instantiate(container, temp, rewardSpawnPoint.rotation);
-        obj.GetComponent<UpgradeContainer>().SetUp(chosenUpgrades[i]);
+        obj.GetComponent<UpgradeContainer>().SetUp(choices[i]);
         containers.Add(obj.GetComponent<UpgradeContainer>());
       }
 
-      foreach (UpgradeContainer upgrade in containers) {
-          upgrade.GetComponent<Collider>().enabled = true;
+      foreach (UpgradeContainer container in containers) {
+          container.GetComponent<Collider>().enabled = true;
       }
     }
 }
