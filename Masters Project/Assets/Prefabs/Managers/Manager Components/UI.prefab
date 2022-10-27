@@ -985,6 +985,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseScreen: {fileID: 9162863425974380147}
+  onStateChangeChannel: {fileID: 11400000, guid: 2770aed5fbc083e4d8279c944f0242e2, type: 2}
+  requestStateChangeChannel: {fileID: 11400000, guid: 7965538e6fee4714ab66c759207f0e6d, type: 2}
 --- !u!1 &826146753154281123
 GameObject:
   m_ObjectHideFlags: 0
@@ -1973,7 +1975,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 620634016268659417}
         m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
-        m_MethodName: UnpauseGame
+        m_MethodName: ResumeGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -2147,6 +2147,7 @@ MonoBehaviour:
   lookSensitivity: 10
   angleClamp: {x: -80, y: 80}
   cameraLook: {fileID: 8810997312557230426}
+  onStateChangedChannel: {fileID: 11400000, guid: 2770aed5fbc083e4d8279c944f0242e2, type: 2}
 --- !u!114 &8810997313966297022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2159,8 +2160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bd7ba54329bf274c99896c89f06f8c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpSound: {fileID: 8300000, guid: 2bb9e30607604ed4192c34c68ac28cc9, type: 3}
-  landSound: {fileID: 8300000, guid: 5bacf464ba2449d4789b7bf5f9bfce62, type: 3}
+  onStateChangeChannel: {fileID: 11400000, guid: 2770aed5fbc083e4d8279c944f0242e2, type: 2}
   centerMass: {fileID: 8728288572005836809}
   maxMoveSpeed:
     startingValue: 25
@@ -2185,6 +2185,8 @@ MonoBehaviour:
   jumpCooldown: 0.2
   disableFirstJumpOnFall: 1
   jumpPivot: 1
+  jumpSound: {fileID: 8300000, guid: 2bb9e30607604ed4192c34c68ac28cc9, type: 3}
+  landSound: {fileID: 8300000, guid: 5bacf464ba2449d4789b7bf5f9bfce62, type: 3}
   gravityMultiplier: 2.4
   groundMask:
     serializedVersion: 2
@@ -2202,6 +2204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb46481b1a78fd54db5ec5c0df3b4e95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onStateChangeChannel: {fileID: 11400000, guid: 2770aed5fbc083e4d8279c944f0242e2, type: 2}
   damageMultiplier:
     startingValue: 1
     lowerLimit: 0

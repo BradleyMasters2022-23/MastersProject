@@ -104,9 +104,13 @@ public class RoomGenerator : MonoBehaviour
     /// </summary>
     public void LoadRoom()
     {
-        instance.count++;
+        // If gameplay, load room
+        if(GameManager.instance.CurrentState == GameManager.States.GAMEPLAY)
+        {
+            instance.count++;
+        }
+        
         SceneManager.LoadScene(currRoom);
-        //SceneManager.UnloadSceneAsync(lastRoom);
     }
 
     /// <summary>
@@ -120,8 +124,8 @@ public class RoomGenerator : MonoBehaviour
         //PlayerUpgradeManager.instance.DestroyPUM();
         //RewardStorage.instance.DestroyRS();
 
-        SceneManager.UnloadSceneAsync(currRoom);
-        SceneManager.LoadSceneAsync(returnRoom);
+
+        SceneManager.LoadScene(returnRoom);
         Destroy(gameObject);
     }
 }
