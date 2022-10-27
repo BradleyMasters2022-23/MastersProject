@@ -396,4 +396,9 @@ public class TimeManager : MonoBehaviour
             currSlowGauge += replenishAmount;
         }
     }
+
+    public float MaxGauge()
+    {
+        return slowDuration.Current * FixedUpdateCalls;
+    }
 }
