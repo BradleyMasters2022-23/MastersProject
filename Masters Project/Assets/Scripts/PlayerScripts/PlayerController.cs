@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
     [Header("---Game Flow---")]
     [SerializeField] private ChannelGMStates onStateChangeChannel;
 
+    public static GameObject instance;
+
     /// <summary>
     /// Current state of the player
     /// </summary>
@@ -177,6 +179,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+
+
+
         // Initialize controls
         controller = new GameControls();
         move = controller.PlayerGameplay.Move;

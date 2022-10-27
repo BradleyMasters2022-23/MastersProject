@@ -57,9 +57,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ChannelVoid onGameOverChannel;
 
     /// <summary>
+    /// Last health of the player
+    /// </summary>
+    [HideInInspector] public int lastPlayerHealth;
+
+    /// <summary>
     /// Initialize internal systems
     /// </summary>
-    private void Awake()
+    private void Start()
     {
         // Create singleton, initialize instane
         if(instance == null)
@@ -81,6 +86,7 @@ public class GameManager : MonoBehaviour
 
         // Subscribe change state function to channel
         requestStateChangeChannel.OnEventRaised += ChangeState;
+
     }
 
     #region State Management
@@ -112,6 +118,9 @@ public class GameManager : MonoBehaviour
                 }
             case States.HUB:
                 {
+                    // Reset player health in hub
+                    lastPlayerHealth = 0;
+
                     UnPause();
                     break;
                 }
@@ -262,4 +271,5 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+
 }
