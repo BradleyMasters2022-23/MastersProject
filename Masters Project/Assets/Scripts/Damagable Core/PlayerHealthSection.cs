@@ -45,7 +45,7 @@ public class PlayerHealthSection : MonoBehaviour
     /// <summary>
     /// current health of this segment
     /// </summary>
-    private float currHealth;
+    [SerializeField] private float currHealth;
     /// <summary>
     /// current health of this segment
     /// </summary>

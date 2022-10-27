@@ -7,6 +7,8 @@
  * ================================================================================================
  */
 using UnityEngine;
+using static Cinemachine.DocumentationSortingAttribute;
+using UnityEngine.Rendering;
 
 public class PlayerHealth : Damagable
 {
@@ -27,6 +29,10 @@ public class PlayerHealth : Damagable
     [Tooltip("Time it takes to actively regenerate a segment [Such as healthkit]")]
     [SerializeField] private UpgradableFloat activeRegenTime;
 
+    [Tooltip("Sound when player takes damage")]
+    [SerializeField] private AudioClip playerDamage;
+    private AudioSource source;
+
     /// <summary>
     /// All health sections for the player
     /// </summary>
@@ -36,6 +42,18 @@ public class PlayerHealth : Damagable
     /// Index for the current player's health
     /// </summary>
     private int healthSectionIndex;
+    
+    /// <summary>
+    /// Get current health
+    /// </summary>
+    private int currHealth;
+    /// <summary>
+    /// Get current health
+    /// </summary>
+    public int CurrHealth
+    {
+        get { return currHealth;  }
+    }
 
     /// <summary>
     /// Initialize values and healthbars
@@ -55,9 +73,12 @@ public class PlayerHealth : Damagable
             healthSections[i] = gameObject.AddComponent<PlayerHealthSection>();
             healthSections[i].InitializeSection(this, healthPerSection.Current,
                 passiveRegenTime.Current, passiveRegenDelay.Current, activeRegenTime.Current);
+
+            currHealth += healthPerSection.Current;
         }
         healthSectionIndex = healthSections.Length-1;
 
+        source = gameObject.AddComponent<AudioSource>();
     }
 
     /// <summary>
@@ -87,6 +108,16 @@ public class PlayerHealth : Damagable
                 healthSectionIndex--;
             }
         }
+
+        // Update total health
+        float hpCount = 0;
+        for(int i = 0; i <= healthSectionIndex; i++)
+        {
+            hpCount += healthSections[i].CurrHealth;
+        }
+        currHealth = Mathf.CeilToInt(hpCount);
+
+        source.PlayOneShot(playerDamage, 0.5f);
     }
 
     /// <summary>
@@ -154,5 +185,14 @@ public class PlayerHealth : Damagable
         {
             healthSectionIndex--;
         }
+    }
+
+    /// <summary>
+    /// Get players max health
+    /// </summary>
+    /// <returns>max health this can have</returns>
+    public int MaxHealth()
+    {
+        return healthPerSection.Current * numOfSections.Current;
     }
 }

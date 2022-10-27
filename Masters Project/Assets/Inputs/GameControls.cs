@@ -107,6 +107,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause1"",
+                    ""type"": ""Button"",
+                    ""id"": ""a2617451-0d8a-4341-b57d-6ce9b60f7ea7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -252,6 +261,17 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""Reset"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""50f449d1-dfeb-43a6-a097-f2564166cd8a"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -269,6 +289,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_PlayerGameplay_SlowTime = m_PlayerGameplay.FindAction("SlowTime", throwIfNotFound: true);
         m_PlayerGameplay_Heal = m_PlayerGameplay.FindAction("Heal", throwIfNotFound: true);
         m_PlayerGameplay_Reset = m_PlayerGameplay.FindAction("Reset", throwIfNotFound: true);
+        m_PlayerGameplay_Pause1 = m_PlayerGameplay.FindAction("Pause1", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -337,6 +358,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_SlowTime;
     private readonly InputAction m_PlayerGameplay_Heal;
     private readonly InputAction m_PlayerGameplay_Reset;
+    private readonly InputAction m_PlayerGameplay_Pause1;
     public struct PlayerGameplayActions
     {
         private @GameControls m_Wrapper;
@@ -350,6 +372,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @SlowTime => m_Wrapper.m_PlayerGameplay_SlowTime;
         public InputAction @Heal => m_Wrapper.m_PlayerGameplay_Heal;
         public InputAction @Reset => m_Wrapper.m_PlayerGameplay_Reset;
+        public InputAction @Pause1 => m_Wrapper.m_PlayerGameplay_Pause1;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -386,6 +409,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Reset.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnReset;
                 @Reset.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnReset;
                 @Reset.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnReset;
+                @Pause1.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnPause1;
+                @Pause1.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnPause1;
+                @Pause1.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnPause1;
             }
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -417,6 +443,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Reset.started += instance.OnReset;
                 @Reset.performed += instance.OnReset;
                 @Reset.canceled += instance.OnReset;
+                @Pause1.started += instance.OnPause1;
+                @Pause1.performed += instance.OnPause1;
+                @Pause1.canceled += instance.OnPause1;
             }
         }
     }
@@ -432,5 +461,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnSlowTime(InputAction.CallbackContext context);
         void OnHeal(InputAction.CallbackContext context);
         void OnReset(InputAction.CallbackContext context);
+        void OnPause1(InputAction.CallbackContext context);
     }
 }
