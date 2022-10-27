@@ -13,4 +13,7 @@ using UnityEngine;
 
 public class NotesManager : MonoBehaviour {
   public List<NoteObject> notes = new List<NoteObject>();
+  public List<Fragment> collectedFragments = new List<Fragment>();
+
+
 }

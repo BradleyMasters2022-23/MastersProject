@@ -13,6 +13,6 @@ using UnityEngine;
 public class NoteObject : ScriptableObject {
   public int ID;
   public string displayName;
-  public string content;
+  public List<Fragment> fragments;
   public GameObject notePrefab;
 }
