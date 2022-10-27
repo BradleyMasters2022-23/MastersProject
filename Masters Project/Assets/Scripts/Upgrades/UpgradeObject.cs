@@ -14,6 +14,7 @@ using Masters.CoreUpgradeVariables;
 public class UpgradeObject : ScriptableObject {
   public string displayName;
   public string displayDesc;
+  public Color upgradeColor;
   public int ID;
   public UpgradableInt lvl;
   public GameObject upgradePrefab;

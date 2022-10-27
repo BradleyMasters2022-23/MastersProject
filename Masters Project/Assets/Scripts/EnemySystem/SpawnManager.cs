@@ -1,4 +1,4 @@
-/* 
+/*
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 24th, 2022
@@ -34,7 +34,7 @@ public class SpawnManager : MonoBehaviour
 
     [Tooltip("Maximum amount of enemies allowed to be spawned at once")]
     [SerializeField, Range(1, 50)] private int maxEnemies = 10;
-    
+
     /// <summary>
     /// Current number of enemies spawned
     /// </summary>
@@ -53,11 +53,11 @@ public class SpawnManager : MonoBehaviour
     private bool spawning;
 
     /// <summary>
-    /// Timer for spawning 
+    /// Timer for spawning
     /// </summary>
     private ScaledTimer spawnDelayTimer;
     /// <summary>
-    /// Timer for spawning 
+    /// Timer for spawning
     /// </summary>
     private ScaledTimer startDelayTimer;
     /// <summary>
@@ -99,7 +99,7 @@ public class SpawnManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Get external references. 
+    /// Get external references.
     /// </summary>
     private void Start()
     {
@@ -271,8 +271,8 @@ public class SpawnManager : MonoBehaviour
 
         FindObjectOfType<DoorManager>().UnlockAllDoors();
 
-        //if (chosenEncounter != null)
-        //    FindObjectOfType<RewardManager>().DisplayUpgrades();
+        if (chosenEncounter != null)
+           FindObjectOfType<RewardsManager>().SpawnUpgrades();
     }
 
     /// <summary>

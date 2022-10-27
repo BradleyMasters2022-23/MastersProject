@@ -18,10 +18,7 @@ public class PlayerUpgradeManager : MonoBehaviour {
   public List<UpgradeObject> upgrades = new List<UpgradeObject>();
   public static PlayerUpgradeManager instance;
 
-  /// <summary>
-  /// called exactly once, initializes PlayerUpgradeManager
-  /// </summary>
-  private void Start() {
+  private void Awake() {
     // ensures only one instance ever exists
     if(instance == null) {
         PlayerUpgradeManager.instance = this;
@@ -29,7 +26,12 @@ public class PlayerUpgradeManager : MonoBehaviour {
     } else {
         Destroy(this);
     }
+  }
 
+  /// <summary>
+  /// called exactly once, initializes PlayerUpgradeManager
+  /// </summary>
+  private void Start() {
     player = FindObjectOfType<PlayerController>();
     SceneManager.sceneLoaded += OnLevelLoad;
   }
@@ -62,6 +64,15 @@ public class PlayerUpgradeManager : MonoBehaviour {
           DestroyPUM();
           return;
       }
+
+      int c = 0;
+      do {
+          c++;
+          if (c >= 10000)
+              break;
+
+          player = FindObjectOfType<PlayerController>();
+      } while (player == null);
 
       if (player == null)
       {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class RewardsManager : MonoBehaviour {
+    public static RewardsManager instance;
     private List<UpgradeObject> choices = new List<UpgradeObject>();
     private List<UpgradeContainer> containers = new List<UpgradeContainer>();
     [SerializeField] private UpgradableInt numChoices;
@@ -10,6 +11,13 @@ public class RewardsManager : MonoBehaviour {
     public Transform rewardSpawnPoint;
 
     private void Awake() {
+      if(instance == null) {
+          RewardsManager.instance = this;
+          DontDestroyOnLoad(this);
+      } else {
+          Destroy(this);
+      }
+
       numChoices.Initialize();
     }
 

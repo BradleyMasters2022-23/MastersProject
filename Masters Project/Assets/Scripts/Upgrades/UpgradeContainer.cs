@@ -12,7 +12,7 @@ using TMPro;
 
 public class UpgradeContainer : MonoBehaviour {
   [SerializeField] private UpgradeObject upgrade;
-  [SerializeField] private Color color;
+  private Color color;
 
   /// <summary>
   /// ensures that upgrade is not null and calls SetUp
@@ -32,6 +32,7 @@ public class UpgradeContainer : MonoBehaviour {
   /// </summary>
   public void SetUp(UpgradeObject obj) {
       upgrade = obj;
+      color = upgrade.upgradeColor;
       GetComponent<Renderer>().material.color = color;
   }
 
