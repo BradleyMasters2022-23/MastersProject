@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fragment : MonoBehaviour {
+[CreateAssetMenu(menuName = "Gameplay/Fragment Data")]
+public class Fragment : ScriptableObject {
   public int fragmentID;
   public int noteID;
   public string content;

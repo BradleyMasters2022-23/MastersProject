@@ -14,5 +14,5 @@ public class NoteObject : ScriptableObject {
   public int ID;
   public string displayName;
   public List<Fragment> fragments;
-  public GameObject notePrefab;
+  public bool completed;
 }
