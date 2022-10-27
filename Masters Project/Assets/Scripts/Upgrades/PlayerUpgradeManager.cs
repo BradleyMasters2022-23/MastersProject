@@ -15,7 +15,6 @@ public class PlayerUpgradeManager : MonoBehaviour {
   // TODO: write this class lol
 
   public PlayerController player;
-  public PlayerGunController gun;
   public List<UpgradeObject> upgrades = new List<UpgradeObject>();
   public static PlayerUpgradeManager instance;
 
