@@ -11,12 +11,12 @@ public class RewardsManager : MonoBehaviour {
     public Transform rewardSpawnPoint;
 
     private void Awake() {
-      if(instance == null) {
-          RewardsManager.instance = this;
-          DontDestroyOnLoad(this);
-      } else {
-          Destroy(this);
-      }
+      // if(instance == null) {
+      //     RewardsManager.instance = this;
+      //     DontDestroyOnLoad(this);
+      // } else {
+      //     Destroy(this);
+      // }
 
       numChoices.Initialize();
     }
