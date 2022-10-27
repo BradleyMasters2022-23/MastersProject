@@ -63,15 +63,6 @@ public class PlayerUpgradeManager : MonoBehaviour {
           return;
       }
 
-      int c = 0;
-      do {
-        c++;
-        if (c >= 10000)
-          break;
-
-        player = FindObjectOfType<PlayerController>();
-      } while (player == null);
-
       if (player == null)
       {
           Debug.LogError("cannot load player upgrades; no player instance found!");
