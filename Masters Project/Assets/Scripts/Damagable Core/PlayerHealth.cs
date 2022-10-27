@@ -110,12 +110,7 @@ public class PlayerHealth : Damagable
         }
 
         // Update total health
-        float hpCount = 0;
-        for(int i = 0; i <= healthSectionIndex; i++)
-        {
-            hpCount += healthSections[i].CurrHealth;
-        }
-        currHealth = Mathf.CeilToInt(hpCount);
+        UpdateHealth();
 
         source.PlayOneShot(playerDamage, 0.5f);
     }
@@ -185,6 +180,7 @@ public class PlayerHealth : Damagable
         {
             healthSectionIndex--;
         }
+        UpdateHealth();
     }
 
     /// <summary>
@@ -194,5 +190,16 @@ public class PlayerHealth : Damagable
     public int MaxHealth()
     {
         return healthPerSection.Current * numOfSections.Current;
+    }
+
+    private void UpdateHealth()
+    {
+        // Update total health
+        float hpCount = 0;
+        for (int i = 0; i <= healthSectionIndex; i++)
+        {
+            hpCount += healthSections[i].CurrHealth;
+        }
+        currHealth = Mathf.CeilToInt(hpCount);
     }
 }
