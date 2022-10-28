@@ -41,8 +41,7 @@ public class HealthbarVisual : MonoBehaviour
     }
     private void Update()
     {
-        if (healthbar != null)
-            healthbar.value = health.CurrHealth;
+        healthbar.value = health.CurrHealth;
 
         ParseNum((int)healthbar.value);
     }

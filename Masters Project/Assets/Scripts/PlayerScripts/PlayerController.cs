@@ -15,16 +15,6 @@ using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviour
 {
-
-    [Tooltip("Sound when the player jumps")]
-    [SerializeField] private AudioClip jumpSound;
-
-    [Tooltip("Sound when the player lands")]
-    [SerializeField] private AudioClip landSound;
-
-    private AudioSource source;
-
-
     public enum PlayerState
     {
         GROUNDED,
@@ -34,6 +24,11 @@ public class PlayerController : MonoBehaviour
     }
 
     #region Core References
+
+    [Header("---Game Flow---")]
+    [SerializeField] private ChannelGMStates onStateChangeChannel;
+
+    public static GameObject instance;
 
     /// <summary>
     /// Current state of the player
@@ -87,10 +82,6 @@ public class PlayerController : MonoBehaviour
     /// Input for sprinting
     /// </summary>
     private InputAction sprint;
-    /// <summary>
-    /// Input for restarting the scene
-    /// </summary>
-    private InputAction debugRestart;
 
     #endregion
 
@@ -151,6 +142,12 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Whether the player can pivot movement when jumping")]
     [SerializeField] private bool jumpPivot;
 
+    [Tooltip("Sound when the player jumps")]
+    [SerializeField] private AudioClip jumpSound;
+    [Tooltip("Sound when the player lands")]
+    [SerializeField] private AudioClip landSound;
+    private AudioSource source;
+
     /// <summary>
     /// Amount of jumps remaining
     /// </summary>
@@ -195,10 +192,6 @@ public class PlayerController : MonoBehaviour
         sprint.started += ToggleSprint;
         sprint.canceled += ToggleSprint;
         sprint.Enable();
-
-        debugRestart = controller.PlayerGameplay.Reset;
-        debugRestart.performed += DebugRestartScene;
-        debugRestart.Enable();
 
         // Initialize upgradable variables
         maxMoveSpeed.Initialize();
@@ -556,24 +549,45 @@ public class PlayerController : MonoBehaviour
 
     #region Misc
 
+    private void OnEnable()
+    {
+        onStateChangeChannel.OnEventRaised += ToggleInputs;
+    }
+
     /// <summary>
     /// Disable inputs to prevent crashing
     /// </summary>
     private void OnDisable()
     {
-        move.Disable();
-        jump.Disable();
-        debugRestart.Disable();
-        sprint.Disable();
+        onStateChangeChannel.OnEventRaised -= ToggleInputs;
+        
+        if(move.enabled)
+            move.Disable();
+        if(jump.enabled)
+            jump.Disable();
+        if(jump.enabled)
+            sprint.Disable();
     }
 
     /// <summary>
-    /// Reload the current scene, reset timescale. TEMP
+    /// Toggle inputs if game pauses
     /// </summary>
-    /// <param name="ctx"></param>
-    private void DebugRestartScene(InputAction.CallbackContext ctx)
+    /// <param name="_newState">new state</param>
+    private void ToggleInputs(GameManager.States _newState)
     {
-        Time.timeScale = 1;
+        if (_newState == GameManager.States.GAMEPLAY
+            || _newState == GameManager.States.HUB)
+        {
+            move.Enable();
+            jump.Enable();
+            sprint.Enable();
+        }
+        else
+        {
+            move.Disable();
+            jump.Disable();
+            sprint.Disable();
+        }
     }
 
     #endregion

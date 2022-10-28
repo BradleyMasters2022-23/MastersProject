@@ -21,6 +21,11 @@ public class AimController : MonoBehaviour
     [Tooltip("Primary point the camera looks at and pivots from. Should be around the player's shoulders.")]
     [SerializeField] private Transform cameraLook;
 
+
+    [Header("---Game flow---")]
+    [Tooltip("Channel that watches the game manager states")]
+    [SerializeField] private ChannelGMStates onStateChangedChannel;
+
     /// <summary>
     /// Internal tracker for the current vertical rotation
     /// </summary>
@@ -52,6 +57,7 @@ public class AimController : MonoBehaviour
     {
         // Get new delta based on update
         lookDelta = aim.ReadValue<Vector2>();
+
     }
 
     private void FixedUpdate()
@@ -74,18 +80,38 @@ public class AimController : MonoBehaviour
     }
 
     /// <summary>
-    /// Disable any inputs to prevent crashes
+    /// Subscribe channels 
+    /// </summary>
+    private void OnEnable()
+    {
+        onStateChangedChannel.OnEventRaised += ToggleInputs;
+    }
+
+    /// <summary>
+    /// Disable any inputs and subcscriptions to prevent crashes
     /// </summary>
     private void OnDisable()
     {
-        aim.Disable();
+        onStateChangedChannel.OnEventRaised -= ToggleInputs;
+
+        if (aim.enabled)
+            aim.Disable();
     }
 
-    private void OnApplicationFocus(bool focus)
+    /// <summary>
+    /// Toggle inputs if game pauses
+    /// </summary>
+    /// <param name="_newState">new state</param>
+    private void ToggleInputs(GameManager.States _newState)
     {
-        if (focus)
-            Cursor.lockState = CursorLockMode.Locked;
+        if(_newState == GameManager.States.GAMEPLAY
+            || _newState == GameManager.States.HUB)
+        {
+            aim.Enable();
+        }
         else
-            Cursor.lockState = CursorLockMode.None;
+        {
+            aim.Disable();
+        }
     }
 }

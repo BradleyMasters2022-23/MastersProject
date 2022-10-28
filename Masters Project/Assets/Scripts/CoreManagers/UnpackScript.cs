@@ -25,9 +25,13 @@ public class UnpackScript : MonoBehaviour
     [Tooltip("Whether anything should be deleted on start")]
     [SerializeField] private bool unparentOnStart;
 
+    [ShowIf("unparentOnStart")]
+    [Tooltip("Whether anything should be deleted on start")]
+    [SerializeField] private bool unparentAll;
+
     [Tooltip("What items should be unparented on start. " +
         "Useful for managers that need to have no parent")]
-    [ShowIf("unparentOnStart")]
+    [ShowIf("@this.unparentOnStart && !unparentAll")]
     [SerializeField] private GameObject[] itemsToUnparent;
 
     [Tooltip("Whether this gameobject should be destroyed after this executes.")]
@@ -39,6 +43,13 @@ public class UnpackScript : MonoBehaviour
         for(int i = itemsToDelete.Length-1; i >= 0; i--)
         {
             Destroy(itemsToDelete[i]);
+        }
+
+        itemsToUnparent = new GameObject[transform.childCount];
+
+        for(int i = 0; i < itemsToUnparent.Length; i++)
+        {
+            itemsToUnparent[i] = transform.GetChild(i).gameObject;
         }
 
         // Unparent marked items

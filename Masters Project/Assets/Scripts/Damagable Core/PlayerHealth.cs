@@ -66,19 +66,70 @@ public class PlayerHealth : Damagable
         passiveRegenDelay.Initialize();
         activeRegenTime.Initialize();
 
-        // Create all segments necessary, initialize them
         healthSections = new PlayerHealthSection[numOfSections.Current];
-        for (int i = 0; i < numOfSections.Current; i++)
-        {
-            healthSections[i] = gameObject.AddComponent<PlayerHealthSection>();
-            healthSections[i].InitializeSection(this, healthPerSection.Current,
-                passiveRegenTime.Current, passiveRegenDelay.Current, activeRegenTime.Current);
-
-            currHealth += healthPerSection.Current;
-        }
-        healthSectionIndex = healthSections.Length-1;
 
         source = gameObject.AddComponent<AudioSource>();
+    }
+
+    /// <summary>
+    /// Load in health from game manager
+    /// </summary>
+    private void Start()
+    {
+        
+        // If last health not saved, load fresh health
+        if (GameManager.instance.lastPlayerHealth <= 0)
+        {
+            // Create all segments necessary, initialize them
+            for (int i = 0; i < numOfSections.Current; i++)
+            {
+                healthSections[i] = gameObject.AddComponent<PlayerHealthSection>();
+                healthSections[i].InitializeSection(this, healthPerSection.Current, healthPerSection.Current,
+                    passiveRegenTime.Current, passiveRegenDelay.Current, activeRegenTime.Current);
+
+                currHealth += healthPerSection.Current;
+            }
+            healthSectionIndex = healthSections.Length - 1;
+        }
+        // If last health was saved, load that instead
+        else
+        {
+            currHealth = GameManager.instance.lastPlayerHealth;
+            int amountLoaded = 0;
+
+            // Create all segments necessary
+            for (int i = 0; i < numOfSections.Current; i++)
+            {
+                healthSections[i] = gameObject.AddComponent<PlayerHealthSection>();
+
+                // If loading in will exceed amount, then load in the differnece
+                if (amountLoaded + healthPerSection.Current >= currHealth)
+                {
+                    //Debug.Log("Loading partial section");
+                    healthSections[i].InitializeSection(this, currHealth - amountLoaded, healthPerSection.Current,
+                    passiveRegenTime.Current, passiveRegenDelay.Current, activeRegenTime.Current);
+
+                    amountLoaded = currHealth;
+                    healthSectionIndex = i;
+                }
+                // If already maxed, then load in at 0
+                else if (amountLoaded == currHealth)
+                {
+                    //Debug.Log("Loading empty section");
+                    healthSections[i].InitializeSection(this, 0, healthPerSection.Current, 
+                    passiveRegenTime.Current, passiveRegenDelay.Current, activeRegenTime.Current);
+                }
+                // Otherwise, load in to full
+                else
+                {
+                    //Debug.Log("Loading full section");
+                    healthSections[i].InitializeSection(this, healthPerSection.Current, healthPerSection.Current,
+                    passiveRegenTime.Current, passiveRegenDelay.Current, activeRegenTime.Current);
+
+                    amountLoaded += healthPerSection.Current;
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -120,10 +171,14 @@ public class PlayerHealth : Damagable
     /// </summary>
     protected override void Die()
     {
+        if (killed)
+            return;
+
+
         killed = true;
         Debug.Log("[PlayerHealth] Player has died! Game over!");
 
-        // TODO - Tie in with other systems for handling game over!
+        GameManager.instance.ChangeState(GameManager.States.GAMEOVER);
     }
 
     /// <summary>
@@ -209,5 +264,10 @@ public class PlayerHealth : Damagable
 
     public void HealthPerSectionUp(int increment) {
       healthPerSection.Increment(increment);
+    }
+
+    private void OnDisable()
+    {
+        GameManager.instance.lastPlayerHealth = currHealth;
     }
 }
