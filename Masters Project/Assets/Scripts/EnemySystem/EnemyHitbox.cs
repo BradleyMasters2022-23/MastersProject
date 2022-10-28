@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyHitbox : Damagable
 {
+    [Range(0f, 5f)]
     [SerializeField] private float damageMultiplier = 1;
 
     private EnemyHealth enemy;
@@ -16,9 +17,15 @@ public class EnemyHitbox : Damagable
     public override void Damage(int _dmg)
     {
         // Buff damage, send to host
-        int buffedDmg = Mathf.CeilToInt(_dmg);
+        int modifiedDamage = Mathf.CeilToInt(_dmg * damageMultiplier);
 
-        enemy.Damage(buffedDmg);
+        // Testing logs
+        //if (damageMultiplier > 1)
+        //    Debug.Log("enemy taking extra damage from vulnerable point!");
+        //else if (damageMultiplier < 1)
+        //    Debug.Log("enemy taking less damage from armored point!");
+
+        enemy.Damage(modifiedDamage);
     }
 
     protected override void Die()
