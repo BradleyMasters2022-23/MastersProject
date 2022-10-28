@@ -7,5 +7,5 @@ public class Fragment : ScriptableObject {
   public int fragmentID;
   public int noteID;
   public string content;
-  public bool collected;
+  public bool found;
 }
