@@ -55,9 +55,11 @@ public class Projectile : RangeAttack
         // Update velocity with world timescale
         rb.velocity = targetVelocity * TimeManager.WorldTimeScale;
 
+        Vector3 futurePos = transform.position + Vector3.forward * rb.velocity.magnitude * TimeManager.WorldDeltaTime;
+
         // Check if it passed target
         RaycastHit target;
-        if(Physics.CapsuleCast(lastPos, transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, (Vector3.Distance(lastPos, transform.position)), ~layersToIgnore))
+        if(Physics.CapsuleCast(transform.position, futurePos, GetComponent<SphereCollider>().radius, transform.forward, out target, (Vector3.Distance(lastPos, transform.position)), ~layersToIgnore))
         {
             TriggerTarget(target.collider);
         }

@@ -78,7 +78,7 @@ public class PlayerHealth : Damagable
     {
         
         // If last health not saved, load fresh health
-        if (GameManager.instance.lastPlayerHealth <= 0)
+        if (GameManager.instance.lastPlayerHealth <= 0 || GameManager.instance.CurrentState == GameManager.States.HUB)
         {
             // Create all segments necessary, initialize them
             for (int i = 0; i < numOfSections.Current; i++)
@@ -255,6 +255,7 @@ public class PlayerHealth : Damagable
         {
             hpCount += healthSections[i].CurrHealth;
         }
+        
         currHealth = Mathf.CeilToInt(hpCount);
     }
 

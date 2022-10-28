@@ -877,6 +877,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1507397779482361308}
+  - component: {fileID: 5923026812833104112}
+  - component: {fileID: 8981170767149628115}
   m_Layer: 8
   m_Name: Turret_Body
   m_TagString: Untagged
@@ -906,6 +908,33 @@ Transform:
   m_Father: {fileID: 8651062488430711040}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5923026812833104112
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3969844471145239991}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 5.186575, y: 1.4010388, z: 1.4305964}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8981170767149628115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3969844471145239991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3649e819e4c27cc42b6a37214fb092ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxVerticalKnockback: 0
+  damageMultiplier: 2.5
 --- !u!1 &4023416972079359486
 GameObject:
   m_ObjectHideFlags: 0
@@ -1083,6 +1112,8 @@ GameObject:
   - component: {fileID: 7713951920544048424}
   - component: {fileID: 2798204368683948508}
   - component: {fileID: 1676873341392042678}
+  - component: {fileID: 4605232887133936228}
+  - component: {fileID: 2984301313959885863}
   m_Layer: 8
   m_Name: Body_out_rings
   m_TagString: Untagged
@@ -1155,6 +1186,33 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &4605232887133936228
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4431778765448287957}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.739007, y: 2.436842, z: 2.6612732}
+  m_Center: {x: -0.00000023841858, y: 0, z: 0}
+--- !u!114 &2984301313959885863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4431778765448287957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3649e819e4c27cc42b6a37214fb092ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxVerticalKnockback: 0
+  damageMultiplier: 1
 --- !u!1 &5003247233654642399
 GameObject:
   m_ObjectHideFlags: 0
@@ -1558,6 +1616,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5768885069824692211}
+  - component: {fileID: 4487346360668434347}
+  - component: {fileID: 587926939423233801}
   m_Layer: 8
   m_Name: Turret_Barrel
   m_TagString: Untagged
@@ -1586,6 +1646,33 @@ Transform:
   m_Father: {fileID: 1507397779482361308}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4487346360668434347
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5892547042746725537}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.1904129, y: 1.5014956, z: 2.5467007}
+  m_Center: {x: 0, y: 0.07822502, z: 2.6185765}
+--- !u!114 &587926939423233801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5892547042746725537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3649e819e4c27cc42b6a37214fb092ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxVerticalKnockback: 0
+  damageMultiplier: 1
 --- !u!1 &6623589855858674742
 GameObject:
   m_ObjectHideFlags: 0
@@ -1680,7 +1767,6 @@ GameObject:
   - component: {fileID: 4414304536593535097}
   - component: {fileID: 4603290966354397059}
   - component: {fileID: 9056216701145678119}
-  - component: {fileID: 3897523884335312268}
   - component: {fileID: 8746456781000397376}
   m_Layer: 8
   m_Name: Turret
@@ -1739,19 +1825,6 @@ MonoBehaviour:
   immortal: 0
   deathVFX: {fileID: 8273445605695135385, guid: 3c02a13cc5fc9994f8787e38cd6a77ea, type: 3}
   hideUIDelay: 0
---- !u!65 &3897523884335312268
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7307720276574085364}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 5.2630625, y: 5.6456695, z: 4.8779526}
-  m_Center: {x: 0, y: 2.755905, z: 0}
 --- !u!114 &8746456781000397376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1768,7 +1841,7 @@ MonoBehaviour:
   turretPoint: {fileID: 3969844471145239991}
   shootPoints:
   - {fileID: 1315929774350081781}
-  rotationSpeed: 0.2
+  rotationSpeed: 0.12
   shotPrefab: {fileID: 8727397786430278917, guid: 406069cb0a402f342af7f980f4ed2f6c, type: 3}
   shootTime: 0.6
   attackRange: 999
