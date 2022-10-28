@@ -45,9 +45,11 @@ public class UnpackScript : MonoBehaviour
             Destroy(itemsToDelete[i]);
         }
 
-        if(unparentAll)
+        itemsToUnparent = new GameObject[transform.childCount];
+
+        for(int i = 0; i < itemsToUnparent.Length; i++)
         {
-            itemsToUnparent = GetComponentsInChildren<GameObject>();
+            itemsToUnparent[i] = transform.GetChild(i).gameObject;
         }
 
         // Unparent marked items

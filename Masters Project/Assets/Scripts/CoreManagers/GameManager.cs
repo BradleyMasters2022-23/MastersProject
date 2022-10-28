@@ -210,6 +210,7 @@ public class GameManager : MonoBehaviour
                     // Gameplay can go into paused, game menu, game over, and loading
                     return (_newState == States.PAUSED
                         || _newState == States.GAMEMENU
+                        || _newState == States.HUB
                         || _newState == States.GAMEOVER
                         || _newState == States.LOADING);
                 }
