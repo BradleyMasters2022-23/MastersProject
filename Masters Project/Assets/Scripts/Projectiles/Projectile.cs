@@ -46,6 +46,11 @@ public class Projectile : RangeAttack
     /// </summary>
     private float distanceCovered;
 
+    /// <summary>
+    /// point where the contact was made
+    /// </summary>
+    private Vector3 hitPoint;
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -59,9 +64,14 @@ public class Projectile : RangeAttack
 
         // Check if it passed target
         RaycastHit target;
-        if(Physics.CapsuleCast(transform.position, futurePos, GetComponent<SphereCollider>().radius, transform.forward, out target, (Vector3.Distance(lastPos, transform.position)), ~layersToIgnore))
+        if(Physics.CapsuleCast(transform.position, futurePos, GetComponent<SphereCollider>().radius/2, transform.forward, out target, (Vector3.Distance(lastPos, transform.position)), ~layersToIgnore))
         {
+            hitPoint = target.point;
             TriggerTarget(target.collider);
+        }
+        else
+        {
+            hitPoint = transform.position;
         }
 
         // Check if projectile reached its max range
@@ -79,7 +89,7 @@ public class Projectile : RangeAttack
         // Spawn in whatever its told to, if able
         if(onHitEffect != null)
         {
-            Instantiate(onHitEffect, transform.position, Quaternion.identity);
+            Instantiate(onHitEffect, hitPoint, Quaternion.identity);
             
         }
 

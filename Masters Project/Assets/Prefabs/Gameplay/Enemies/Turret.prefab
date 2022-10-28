@@ -1459,6 +1459,8 @@ GameObject:
   - component: {fileID: 7496585730030219224}
   - component: {fileID: 7901080103822823752}
   - component: {fileID: 2066159794053861629}
+  - component: {fileID: 3048715609953599497}
+  - component: {fileID: 2256513354581286791}
   m_Layer: 8
   m_Name: Stand_connect
   m_TagString: Untagged
@@ -1531,6 +1533,33 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &3048715609953599497
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5628824373338692507}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.3917334, y: 2.224278, z: 1.63656}
+  m_Center: {x: -0.00000023841858, y: 0.71456623, z: -0.00000023841858}
+--- !u!114 &2256513354581286791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5628824373338692507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3649e819e4c27cc42b6a37214fb092ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxVerticalKnockback: 0
+  damageMultiplier: 1
 --- !u!1 &5816285110607261410
 GameObject:
   m_ObjectHideFlags: 0
@@ -2057,6 +2086,8 @@ GameObject:
   - component: {fileID: 9101002838221046428}
   - component: {fileID: 6263699882981045850}
   - component: {fileID: 9074188890631181691}
+  - component: {fileID: 1231527650605818044}
+  - component: {fileID: 816254751697244053}
   m_Layer: 8
   m_Name: Stand_floor
   m_TagString: Untagged
@@ -2129,6 +2160,33 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &1231527650605818044
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8914424648151383010}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.4673605, y: 0.83153105, z: 4.4673624}
+  m_Center: {x: -0.00000035762787, y: -0.28740042, z: -0.00000035762787}
+--- !u!114 &816254751697244053
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8914424648151383010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3649e819e4c27cc42b6a37214fb092ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxVerticalKnockback: 0
+  damageMultiplier: 1
 --- !u!1 &9025826110635227500
 GameObject:
   m_ObjectHideFlags: 0
