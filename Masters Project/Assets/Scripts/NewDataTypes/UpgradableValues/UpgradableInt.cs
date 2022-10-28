@@ -19,4 +19,8 @@ public class UpgradableInt : UpgradableValue<int>
       }
       return false;
     }
+
+    public void Increment(int incrementValue) {
+      ChangeVal(current + incrementValue);
+    }
 }

@@ -462,7 +462,7 @@ public class PlayerController : MonoBehaviour
 
             source.PlayOneShot(jumpSound, 0.5f);
         }
-        
+
     }
 
     /// <summary>
@@ -540,12 +540,16 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Getters
-    
+
     /// <summary>
     /// get # of jumps
     /// </summary>
     public UpgradableInt GetJumps() {
       return jumps;
+    }
+
+    public void RefreshJumps() {
+      currentJumps = jumps.Current;
     }
 
     #endregion

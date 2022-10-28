@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HPPerSectionUp : IUpgrade {
+public class HPSectionUp : IUpgrade {
   private PlayerHealth hp;
+  private UpgradableInt healthPerSection;
   public override void LoadUpgrade(PlayerController player) {
     hp = FindObjectOfType<PlayerHealth>();
-    hp.GetNumSections().ChangeVal(hp.GetNumSections().Current + 1);
+    hp.HealthPerSectionUp(5);
+    foreach(PlayerHealthSection section in hp.GetSections()) {
+      section.MaxHealthUp(5);
     }
+  }
 }

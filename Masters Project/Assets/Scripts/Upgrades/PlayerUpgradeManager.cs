@@ -33,7 +33,6 @@ public class PlayerUpgradeManager : MonoBehaviour {
   /// </summary>
   private void Start() {
     player = FindObjectOfType<PlayerController>();
-    gun = FindObjectOfType<PlayerGunController>();
     SceneManager.sceneLoaded += OnLevelLoad;
   }
 
@@ -49,18 +48,22 @@ public class PlayerUpgradeManager : MonoBehaviour {
   /// adds upgrade to list of players upgrades and initializes
   /// </summary>
   public void AddUpgrade(UpgradeObject up) {
-    if(!upgrades.Contains(up)) {
-      upgrades.Add(up);
-      InitializeUpgrade(up);
-    }
-    foreach(UpgradeObject upgrade in upgrades) {
-      if(up.ID == upgrade.ID) {
-        upgrade.lvl.ChangeVal(upgrade.lvl.Current + 1);
-        if(upgrade.lvl.AtMax()) {
-          AllUpgradeManager.instance.RemoveUpgrade(up);
-        }
-      }
-    }
+    upgrades.Add(up);
+    InitializeUpgrade(up);
+    
+    // if(!upgrades.Contains(up)) {
+    //   upgrades.Add(up);
+    //   InitializeUpgrade(up);
+    // }
+    //
+    // foreach(UpgradeObject upgrade in upgrades) {
+    //   if(up.ID == upgrade.ID) {
+    //     upgrade.lvl.ChangeVal(upgrade.lvl.Current + 1);
+    //     if(upgrade.lvl.AtMax()) {
+    //       AllUpgradeManager.instance.RemoveUpgrade(up);
+    //     }
+    //   }
+    // }
   }
 
   /// <summary>

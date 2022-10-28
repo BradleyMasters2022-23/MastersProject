@@ -4,27 +4,22 @@ using UnityEngine;
 
 public class RewardsManager : MonoBehaviour {
     public static RewardsManager instance;
-    private List<UpgradeObject> choices = new List<UpgradeObject>();
-    private List<UpgradeContainer> containers = new List<UpgradeContainer>();
+    private UpgradeObject[] choices;
+    private UpgradeContainer[] containers;
     [SerializeField] private UpgradableInt numChoices;
     public GameObject container;
     public Transform rewardSpawnPoint;
 
     private void Awake() {
-      // if(instance == null) {
-      //     RewardsManager.instance = this;
-      //     DontDestroyOnLoad(this);
-      // } else {
-      //     Destroy(this);
-      // }
-
       numChoices.Initialize();
+      choices = new UpgradeObject[numChoices.Current];
+      containers = new UpgradeContainer[numChoices.Current];
     }
 
     private void Start() {
       for(int i = 0; i < numChoices.Current; i++) {
         UpgradeObject tempUpgrade = AllUpgradeManager.instance.GetRandomOption();
-        choices.Add(tempUpgrade);
+        choices[i] = tempUpgrade;
       }
     }
 
@@ -35,7 +30,7 @@ public class RewardsManager : MonoBehaviour {
         temp += Vector3.right * (i * 5);
         GameObject obj = Instantiate(container, temp, rewardSpawnPoint.rotation);
         obj.GetComponent<UpgradeContainer>().SetUp(choices[i]);
-        containers.Add(obj.GetComponent<UpgradeContainer>());
+        containers[i] = obj.GetComponent<UpgradeContainer>();
       }
 
       foreach (UpgradeContainer container in containers) {

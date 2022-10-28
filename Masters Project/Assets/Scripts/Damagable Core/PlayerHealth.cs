@@ -42,7 +42,7 @@ public class PlayerHealth : Damagable
     /// Index for the current player's health
     /// </summary>
     private int healthSectionIndex;
-    
+
     /// <summary>
     /// Get current health
     /// </summary>
@@ -203,11 +203,11 @@ public class PlayerHealth : Damagable
         currHealth = Mathf.CeilToInt(hpCount);
     }
 
-    public UpgradableInt GetHealthPerSection() {
-      return healthPerSection;
+    public PlayerHealthSection[] GetSections() {
+      return healthSections;
     }
 
-    public UpgradableInt GetNumSections() {
-      return numOfSections;
+    public void HealthPerSectionUp(int increment) {
+      healthPerSection.Increment(increment);
     }
 }
