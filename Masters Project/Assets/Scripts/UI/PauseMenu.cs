@@ -10,59 +10,48 @@ public class PauseMenu : MonoBehaviour
     /// Controls
     /// </summary>
     private GameControls controls;
-    private InputAction pause;
     private InputAction reset;
-
-    /// <summary>
-    /// Whether the game is paused
-    /// </summary>
-    private bool paused;
 
     [Tooltip("Frame of the pause menu")]
     [SerializeField] private GameObject pauseScreen;
 
+    [Tooltip("On state change channel to listen for when to pause")]
+    [SerializeField] private ChannelGMStates onStateChangeChannel;
+
     private void Awake()
     {
         controls = new GameControls();
-        pause = controls.PlayerGameplay.Pause;
-        pause.performed += TogglePause;
-        pause.Enable();
+        
 
         reset = controls.PlayerGameplay.Reset;
         reset.performed += Reload;
         reset.Enable();
+
+        
     }
 
     /// <summary>
-    /// Toggle the pause 
+    /// Toggle the pause screen menu
     /// </summary>
-    /// <param name="c"></param>
-    private void TogglePause(InputAction.CallbackContext c)
+    /// <param name="_newState">New state being set to</param>
+    private void TogglePause(GameManager.States _newState)
     {
-        paused = !paused;
-
-        if(paused)
+        if (_newState == GameManager.States.PAUSED)
         {
-            PauseGame();
+            pauseScreen.SetActive(true);
         }
-        else
+        else if(pauseScreen.activeInHierarchy)
         {
-            UnpauseGame();
+            pauseScreen.SetActive(false);
         }
     }
 
-    public void PauseGame()
+    /// <summary>
+    /// Function for resuming game. Called via UI buttons
+    /// </summary>
+    public void ResumeGame()
     {
-        paused = true;
-        Time.timeScale = 0;
-        pauseScreen.SetActive(true);
-    }
-
-    public void UnpauseGame()
-    {
-        paused = false;
-        Time.timeScale = 1;
-        pauseScreen.SetActive(false);
+        GameManager.instance.TogglePause();
     }
 
     /// <summary>
@@ -73,9 +62,15 @@ public class PauseMenu : MonoBehaviour
         Application.Quit();
     }
 
+    private void OnEnable()
+    {
+        onStateChangeChannel.OnEventRaised += TogglePause;
+    }
+
     private void OnDisable()
     {
-        pause.Disable();
+        onStateChangeChannel.OnEventRaised -= TogglePause;
+
         reset.Disable();
     }
 
