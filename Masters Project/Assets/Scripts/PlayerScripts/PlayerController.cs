@@ -1,8 +1,8 @@
-/* 
+/*
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 21th, 2022
- * Last Edited - October 21th, 2022 by Ben Schuster
+ * Last Edited - October 25, 2022 by Soma Hannon - add getters section and 1 getter for upgrade tests
  * Description - Manage the movement for the player
  * ================================================================================================
  */
@@ -103,7 +103,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField][Range(0, 1)] private float startingSpeedPercentage;
     [Tooltip("Time it takes to fully stop")]
     [SerializeField][Range(0, 1)] private float decelerationTime;
-    
+
     /// <summary>
     /// Direction the player is inputting
     /// </summary>
@@ -179,9 +179,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-
-
-
         // Initialize controls
         controller = new GameControls();
         move = controller.PlayerGameplay.Move;
@@ -218,7 +215,7 @@ public class PlayerController : MonoBehaviour
         // Get initial references
         rb = GetComponent<Rigidbody>();
         //animator = GetComponentInChildren<Animator>();
-        
+
         // If the gravity modifier has not already been applied, apply it now
         if (Physics.gravity.y >= -10)
             Physics.gravity *= gravityMultiplier;
@@ -318,7 +315,7 @@ public class PlayerController : MonoBehaviour
                 {
                     // When entering sprint state, increase target max move speed
                     targetMaxSpeed = maxMoveSpeed.Current * sprintModifier.Current;
-                    
+
                     break;
                 }
             case PlayerState.MIDAIR:
@@ -383,7 +380,7 @@ public class PlayerController : MonoBehaviour
         {
             Accelerate();
 
-            // Reset lerp for deceleration 
+            // Reset lerp for deceleration
             decelerateLerp = 0;
         }
 
@@ -404,11 +401,11 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            // If midair, add the modified input to the existing velocity, instead of overriding it 
+            // If midair, add the modified input to the existing velocity, instead of overriding it
             newVelocity = Mathf.Pow((currSpeed * airModifier.Current), 2) * Time.deltaTime * direction;
             newVelocity += rb.velocity;
         }
-        
+
         // Use the existing vertical velocity, as that is handled by gravity
         newVelocity.y = rb.velocity.y;
 
@@ -453,12 +450,12 @@ public class PlayerController : MonoBehaviour
             newVelocity.y = 0;
             rb.velocity = newVelocity;
 
-            // Apply vertical velocity 
+            // Apply vertical velocity
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
             source.PlayOneShot(jumpSound, 0.5f);
         }
-        
+
     }
 
     /// <summary>
@@ -506,7 +503,7 @@ public class PlayerController : MonoBehaviour
             accelerateLerp += Time.deltaTime;
             accelerateLerp = Mathf.Clamp(accelerateLerp, 0, accelerationTime);
         }
-        
+
         // If current has not reached target, continue lerping
         if (currSpeed != targetMaxSpeed)
         {
@@ -525,12 +522,27 @@ public class PlayerController : MonoBehaviour
             decelerateLerp += Time.deltaTime;
             decelerateLerp = Mathf.Clamp(decelerateLerp, 0, decelerationTime);
         }
-        
+
         // If current has not reached 0, continue lerping
         if (currSpeed > 0)
         {
             currSpeed = Mathf.Lerp(targetMaxSpeed, 0, decelerateLerp / decelerationTime);
         }
+    }
+
+    #endregion
+
+    #region Getters
+
+    /// <summary>
+    /// get # of jumps
+    /// </summary>
+    public UpgradableInt GetJumps() {
+      return jumps;
+    }
+
+    public void RefreshJumps() {
+      currentJumps = jumps.Current;
     }
 
     #endregion
