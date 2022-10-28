@@ -35,6 +35,12 @@ public class Projectile : RangeAttack
     [Tooltip("What layers should this projectile ignore")]
     [SerializeField] private LayerMask layersToIgnore;
 
+    [Tooltip("Sound when enemy shoots")]
+    [SerializeField] private AudioClip[] enemyShoot;
+    [Tooltip("Sound when enemy takes a hit")]
+    [SerializeField] private AudioClip[] enemyHit;
+    private AudioSource source;
+
     /// <summary>
     /// Distance covered to calculate when to despawn
     /// </summary>
@@ -75,6 +81,11 @@ public class Projectile : RangeAttack
             
         }
 
+        if (enemyHit.Length > 0)
+        {
+            source.PlayOneShot(enemyHit[Random.Range(0, enemyHit.Length)], 0.3f);
+        }
+
         // End this projectile attack
         End();
     }
@@ -87,10 +98,17 @@ public class Projectile : RangeAttack
         rb = GetComponent<Rigidbody>();
         targetVelocity = transform.forward * speed;
         active = true;
+
+        if (enemyShoot.Length > 0)
+        {
+            source.PlayOneShot(enemyShoot[Random.Range(0, enemyShoot.Length)], 0.3f);
+        }
     }
 
     protected override void Awake()
     {
         lastPos = transform.position;
+
+        source = gameObject.AddComponent<AudioSource>();
     }
 }
