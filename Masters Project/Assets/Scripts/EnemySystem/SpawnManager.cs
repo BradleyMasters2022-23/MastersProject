@@ -273,6 +273,10 @@ public class SpawnManager : MonoBehaviour
 
         if (chosenEncounter != null)
            FindObjectOfType<RewardsManager>().SpawnUpgrades();
+           // if(Random.Range(0,100) <= 25) {
+           //
+           // }
+           FindObjectOfType<NoteSpawner>().SpawnFragment();
     }
 
     /// <summary>

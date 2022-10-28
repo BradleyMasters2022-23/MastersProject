@@ -15,19 +15,12 @@ public class NoteObject : ScriptableObject {
   public string displayName;
   public int numFragments;
   public Fragment[] fragments;
-  public List<Fragment> lostFragments;
-  public bool[] fragmentsFound;
-  public bool completed;
+  private List<Fragment> lostFragments;
+  private bool[] fragmentsFound;
 
   private void Awake() {
     fragments = new Fragment[numFragments];
     fragmentsFound = new bool[numFragments];
-
-    foreach(Fragment fragment in fragments) {
-      if(!fragment.found) {
-        lostFragments.Add(fragment);
-      }
-    }
   }
 
   private void Start() {
@@ -40,6 +33,9 @@ public class NoteObject : ScriptableObject {
         fragmentsFound[i] = true;
       } else {
         fragmentsFound[i] = false;
+        if(!lostFragments.Contains(fragments[i])) {
+          lostFragments.Add(fragments[i]);
+        }
       }
     }
   }
@@ -58,5 +54,19 @@ public class NoteObject : ScriptableObject {
 
   public Fragment GetRandomLostFragment() {
     return lostFragments[Random.Range(0, lostFragments.Count)];
+  }
+
+  public bool AllFragmentsFound() {
+    foreach(Fragment fragment in fragments) {
+      if(!fragment.found) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  public List<Fragment> GetLostFragments() {
+    return lostFragments;
   }
 }

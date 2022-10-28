@@ -11,11 +11,8 @@ using UnityEngine;
 
 public class AllNotesManager : MonoBehaviour {
   public List<NoteObject> notes = new List<NoteObject>();
-  public List<NoteObject> lostNotes = new List<NoteObject>();
+  private List<NoteObject> lostNotes = new List<NoteObject>();
   public static AllNotesManager instance;
-  public FragmentContainer fragmentContainer;
-  public GameObject container;
-  public Transform fragmentSpawnPoint;
 
   private void Start() {
     if(instance == null) {
@@ -26,22 +23,21 @@ public class AllNotesManager : MonoBehaviour {
     }
 
     foreach(NoteObject note in notes) {
-      if(!note.completed) {
+      if(!note.AllFragmentsFound()) {
         lostNotes.Add(note);
       }
     }
   }
 
-  public Fragment GetRandomLostFragment() {
-    return notes[Random.Range(0, notes.Count)].GetRandomLostFragment();
+  public NoteObject GetRandomLostNote() {
+    return lostNotes[Random.Range(0, notes.Count)];
   }
 
-  public void SpawnFragment() {
-    GameObject obj = Instantiate(container, fragmentSpawnPoint.transform.position, fragmentSpawnPoint.rotation);
-    obj.GetComponent<FragmentContainer>().SetUp(GetRandomLostFragment());
-    fragmentContainer = obj.GetComponent<FragmentContainer>();
-
-    container.GetComponent<Collider>().enabled = true;
+  public void FindNote(NoteObject note) {
+    if(lostNotes.Contains(note)) {
+      lostNotes.Remove(note);
+    }
+    return;
   }
 
 

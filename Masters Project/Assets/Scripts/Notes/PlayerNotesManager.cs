@@ -23,19 +23,35 @@ public class PlayerNotesManager : MonoBehaviour {
     }
 
     private void UpdateNotes() {
-      // populates notesFound with bools telling whether or not a particular note has been completed
+      // loop through all notes
+      foreach(NoteObject note in AllNotesManager.instance.notes) {
+        // loop through all fragments in note
+        for(int i = 0; i < note.fragments.Length; i++) {
+          // if note is found
+          if(note.fragments[i].found) {
+            // make sure fragment is removed from lostFragments
+            if(note.GetLostFragments().Contains(note.fragments[i])) {
+              note.GetLostFragments().Remove(note.fragments[i]);
+            }
+            // update fragmentsFound
+            note.GetFragmentsFound()[i] = true;
+          }
+        }
 
-      for(int i = 0; i < notesCompleted.Length; i++) {
-        if(AllNotesManager.instance.notes[i].completed) {
-          notesCompleted[i] = true;
+        // if all fragments found update playerNotes and notesComplete to reflect that
+        if(note.AllFragmentsFound()) {
+          playerNotes[note.ID] = note;
+          notesCompleted[note.ID] = true;
+          AllNotesManager.instance.FindNote(note);
         } else {
-          notesCompleted[i] = false;
+          notesCompleted[note.ID] = false;
         }
       }
     }
 
     public void FindFragment(Fragment fragment) {
       fragment.found = true;
+      Debug.Log(fragment.content);
       UpdateNotes();
     }
 
