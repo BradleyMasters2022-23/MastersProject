@@ -1,4 +1,4 @@
-/* 
+/*
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 21th, 2022
@@ -42,7 +42,7 @@ public class PlayerHealth : Damagable
     /// Index for the current player's health
     /// </summary>
     private int healthSectionIndex;
-    
+
     /// <summary>
     /// Get current health
     /// </summary>
@@ -201,5 +201,13 @@ public class PlayerHealth : Damagable
             hpCount += healthSections[i].CurrHealth;
         }
         currHealth = Mathf.CeilToInt(hpCount);
+    }
+
+    public PlayerHealthSection[] GetSections() {
+      return healthSections;
+    }
+
+    public void HealthPerSectionUp(int increment) {
+      healthPerSection.Increment(increment);
     }
 }

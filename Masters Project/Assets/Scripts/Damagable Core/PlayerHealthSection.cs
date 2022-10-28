@@ -1,4 +1,4 @@
-/* 
+/*
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 21th, 2022
@@ -15,7 +15,7 @@ public class PlayerHealthSection : MonoBehaviour
     {
         IDLE,
         EMPTIED,
-        REGENERATING, 
+        REGENERATING,
         FORCEHEAL
     }
 
@@ -97,7 +97,7 @@ public class PlayerHealthSection : MonoBehaviour
     #endregion
 
     /// <summary>
-    /// Deal damage to this segment. 
+    /// Deal damage to this segment.
     /// </summary>
     /// <param name="_dmg">damage being dealt</param>
     /// <returns>Whether or not this healthbar is emptied</returns>
@@ -132,7 +132,7 @@ public class PlayerHealthSection : MonoBehaviour
     #region states
 
     /// <summary>
-    /// Do any state-exclusive update functionality 
+    /// Do any state-exclusive update functionality
     /// </summary>
     private void StateUpdateFunction()
     {
@@ -248,5 +248,9 @@ public class PlayerHealthSection : MonoBehaviour
     public bool IsMaxed()
     {
         return currHealth == maxHealth;
+    }
+
+    public void MaxHealthUp(int increment) {
+        maxHealth += increment;
     }
 }
