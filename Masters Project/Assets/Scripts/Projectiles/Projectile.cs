@@ -64,7 +64,8 @@ public class Projectile : RangeAttack
 
         // Check if it passed target
         RaycastHit target;
-        if(Physics.CapsuleCast(transform.position, futurePos, GetComponent<SphereCollider>().radius/2, transform.forward, out target, (Vector3.Distance(lastPos, transform.position)), ~layersToIgnore))
+        //Physics.CapsuleCast(transform.position, futurePos, GetComponent<SphereCollider>().radius/3, transform.forward, out target, (Vector3.Distance(transform.position, lastPos)), ~layersToIgnore)
+        if (Physics.SphereCast(transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, (Vector3.Distance(transform.position, lastPos)), ~layersToIgnore))
         {
             hitPoint = target.point;
             TriggerTarget(target.collider);

@@ -128,7 +128,7 @@ public class EnemyTurret : EnemyBase
         // Try to get player
         RaycastHit hit;
 
-        if (Physics.Raycast(turretPoint.transform.position, direction, out hit, attackRange, ~lm))
+        if (Physics.Raycast(shootPoints[0].position, direction, out hit, attackRange, ~lm))
         {
             lastHit = hit.transform.gameObject;
             if (hit.transform.CompareTag("Player"))
