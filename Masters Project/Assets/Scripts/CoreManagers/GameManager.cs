@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -41,6 +42,15 @@ public class GameManager : MonoBehaviour
         get { return currentState; }
     }
 
+    [Header("=====Core Game Elements=====")]
+
+    [Tooltip("Name of the hub scene")]
+    [SerializeField] private string mainHubScene;
+
+    [Tooltip("Name of the main menu scene")]
+    [SerializeField] private string mainMenuScene;
+
+
     /// <summary>
     /// Track the last state
     /// </summary>
@@ -48,6 +58,8 @@ public class GameManager : MonoBehaviour
 
     private GameControls controls;
     private InputAction escape;
+
+    [Header("=====Game Flow Channels=====")]
 
     [Tooltip("Channel that handles requests to change the state")]
     [SerializeField] private ChannelGMStates requestStateChangeChannel;
@@ -82,7 +94,6 @@ public class GameManager : MonoBehaviour
         escape.performed += TogglePause;
         escape.Enable();
 
-        Cursor.lockState = CursorLockMode.Locked;
 
         // Subscribe change state function to channel
         requestStateChangeChannel.OnEventRaised += ChangeState;
@@ -95,7 +106,7 @@ public class GameManager : MonoBehaviour
     /// Try to change the state to the new state, trigger any on-state actions
     /// </summary>
     /// <param name="_newState">New state to move to</param>
-    private void ChangeState(States _newState)
+    public void ChangeState(States _newState)
     {
         // If an illegal state change, notify and exit. 
         if(!ValidateStateChange(_newState))
@@ -109,6 +120,8 @@ public class GameManager : MonoBehaviour
         {
             case States.MAINMENU:
                 {
+                    SceneManager.LoadScene(mainMenuScene);
+
                     break;
                 }
             case States.PAUSED:
@@ -118,15 +131,20 @@ public class GameManager : MonoBehaviour
                 }
             case States.HUB:
                 {
-                    // Reset player health in hub
-                    lastPlayerHealth = 0;
+                    if(currentState != States.PAUSED)
+                    {
+                        SceneManager.LoadScene(mainHubScene);
 
+                        // Reset player health in hub
+                        lastPlayerHealth = 0;
+                    }
                     UnPause();
                     break;
                 }
             case States.GAMEPLAY:
                 {
                     UnPause();
+
                     break;
                 }
             case States.GAMEMENU:
@@ -184,7 +202,8 @@ public class GameManager : MonoBehaviour
                 {
                     // Hub can go into paused and a game menu
                     return (_newState == States.PAUSED
-                        || _newState == States.GAMEMENU);
+                        || _newState == States.GAMEMENU
+                        || _newState == States.GAMEPLAY);
                 }
             case States.GAMEPLAY:
                 {
@@ -204,7 +223,8 @@ public class GameManager : MonoBehaviour
             case States.GAMEOVER:
                 {
                     // Game over can go into game menu
-                    return (_newState == States.GAMEMENU);
+                    return (_newState == States.MAINMENU
+                        || _newState == States.HUB);
                 }
             case States.LOADING:
                 {
@@ -254,6 +274,8 @@ public class GameManager : MonoBehaviour
     private void Pause()
     {
         Cursor.lockState = CursorLockMode.None;
+
+        Cursor.lockState = CursorLockMode.Confined;
         Time.timeScale = 0;
     }
     /// <summary>
@@ -261,13 +283,61 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void UnPause()
     {
+        Cursor.lockState = CursorLockMode.None;
+
         Cursor.lockState = CursorLockMode.Locked;
         Time.timeScale = 1;
     }
 
     private void OnApplicationFocus(bool focus)
     {
-        //Cursor.lockState = CursorLockMode.Locked;
+        switch (currentState)
+        {
+            case States.MAINMENU:
+                {
+                    Cursor.lockState = CursorLockMode.Confined;
+
+                    break;
+                }
+            case States.PAUSED:
+                {
+                    Cursor.lockState = CursorLockMode.Confined;
+
+                    break;
+                }
+            case States.HUB:
+                {
+                    Cursor.lockState = CursorLockMode.Locked;
+
+                    break;
+                }
+            case States.GAMEPLAY:
+                {
+                    Cursor.lockState = CursorLockMode.Locked;
+
+                    break;
+                }
+            case States.GAMEMENU:
+                {
+                    Cursor.lockState = CursorLockMode.Confined;
+
+                    break;
+                }
+            case States.GAMEOVER:
+                {
+                    Cursor.lockState = CursorLockMode.Confined;
+
+                    onGameOverChannel.RaiseEvent();
+                    break;
+                }
+            case States.LOADING:
+                {
+                    Cursor.lockState = CursorLockMode.Confined;
+
+
+                    break;
+                }
+        }
     }
 
     #endregion

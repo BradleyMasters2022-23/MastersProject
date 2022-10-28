@@ -171,10 +171,14 @@ public class PlayerHealth : Damagable
     /// </summary>
     protected override void Die()
     {
+        if (killed)
+            return;
+
+
         killed = true;
         Debug.Log("[PlayerHealth] Player has died! Game over!");
 
-        // TODO - Tie in with other systems for handling game over!
+        GameManager.instance.ChangeState(GameManager.States.GAMEOVER);
     }
 
     /// <summary>

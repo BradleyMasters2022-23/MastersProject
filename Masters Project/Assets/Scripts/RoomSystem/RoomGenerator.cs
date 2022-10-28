@@ -18,10 +18,11 @@ public class RoomGenerator : MonoBehaviour
 
     [Tooltip("Amount of rooms to be played per floor")]
     [SerializeField] private int floorLength;
-    [Tooltip("Name of hub scene to return to on player death")]
-    [SerializeField] private string returnRoom;
     [Tooltip("Name of room to load after reaching the length limit")]
     [SerializeField] private string finalRoom;
+
+    [Tooltip("Channel for observing when states change")]
+    [SerializeField] private ChannelGMStates onStateChangeChannel;
 
     /// <summary>
     /// Public instance of room generator
@@ -39,7 +40,7 @@ public class RoomGenerator : MonoBehaviour
     /// <summary>
     /// Current floor count tracker
     /// </summary>
-    [SerializeField] private int count;
+    private int count;
     
     /// <summary>
     /// Prepare singleton, initialize
@@ -72,6 +73,10 @@ public class RoomGenerator : MonoBehaviour
             ReturnToHub();
             return;
         }
+
+        // Set state to gameplay if not already
+        if(GameManager.instance.CurrentState != GameManager.States.GAMEPLAY)
+            GameManager.instance.ChangeState(GameManager.States.GAMEPLAY);
 
         // If reaching max floor length, load the last room
         if (count >= floorLength)
@@ -120,12 +125,31 @@ public class RoomGenerator : MonoBehaviour
     {
         RoomGenerator.instance = null;
 
+        GameManager.instance.ChangeState(GameManager.States.HUB);
+
         // TODO - RESET PLAYER UPGRADES
         //PlayerUpgradeManager.instance.DestroyPUM();
         //RewardStorage.instance.DestroyRS();
 
-
-        SceneManager.LoadScene(returnRoom);
         Destroy(gameObject);
+    }
+
+    private void OnEnable()
+    {
+        onStateChangeChannel.OnEventRaised += DestroyOnMainMenu;
+    }
+    private void OnDisable()
+    {
+        onStateChangeChannel.OnEventRaised -= DestroyOnMainMenu;
+    }
+
+    private void DestroyOnMainMenu(GameManager.States _newState)
+    {
+        // If quitting, destroy self
+        if(_newState == GameManager.States.MAINMENU)
+        {
+            RoomGenerator.instance = null;
+            Destroy(gameObject);
+        }
     }
 }
