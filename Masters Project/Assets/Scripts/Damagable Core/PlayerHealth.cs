@@ -1,4 +1,4 @@
-/* 
+/*
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 21th, 2022
@@ -42,7 +42,7 @@ public class PlayerHealth : Damagable
     /// Index for the current player's health
     /// </summary>
     private int healthSectionIndex;
-    
+
     /// <summary>
     /// Get current health
     /// </summary>
@@ -110,12 +110,7 @@ public class PlayerHealth : Damagable
         }
 
         // Update total health
-        float hpCount = 0;
-        for(int i = 0; i <= healthSectionIndex; i++)
-        {
-            hpCount += healthSections[i].CurrHealth;
-        }
-        currHealth = Mathf.CeilToInt(hpCount);
+        UpdateHealth();
 
         source.PlayOneShot(playerDamage, 0.5f);
     }
@@ -185,6 +180,7 @@ public class PlayerHealth : Damagable
         {
             healthSectionIndex--;
         }
+        UpdateHealth();
     }
 
     /// <summary>
@@ -194,5 +190,24 @@ public class PlayerHealth : Damagable
     public int MaxHealth()
     {
         return healthPerSection.Current * numOfSections.Current;
+    }
+
+    private void UpdateHealth()
+    {
+        // Update total health
+        float hpCount = 0;
+        for (int i = 0; i <= healthSectionIndex; i++)
+        {
+            hpCount += healthSections[i].CurrHealth;
+        }
+        currHealth = Mathf.CeilToInt(hpCount);
+    }
+
+    public PlayerHealthSection[] GetSections() {
+      return healthSections;
+    }
+
+    public void HealthPerSectionUp(int increment) {
+      healthPerSection.Increment(increment);
     }
 }
