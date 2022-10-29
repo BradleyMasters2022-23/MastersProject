@@ -62,4 +62,9 @@ public class AllUpgradeManager : MonoBehaviour {
     return upgradeOptions[Random.Range(0, upgradeOptions.Count)];
   }
 
+    public void DestroyAUM()
+    {
+        instance = null;
+        Destroy(gameObject);
+    }
 }

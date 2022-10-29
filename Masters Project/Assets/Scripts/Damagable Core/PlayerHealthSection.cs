@@ -45,7 +45,7 @@ public class PlayerHealthSection : MonoBehaviour
     /// <summary>
     /// current health of this segment
     /// </summary>
-    [SerializeField] private float currHealth;
+    private float currHealth;
     /// <summary>
     /// current health of this segment
     /// </summary>
@@ -82,16 +82,19 @@ public class PlayerHealthSection : MonoBehaviour
     /// <param name="_passRegenTime">Time it takes to passively regenerate health</param>
     /// <param name="_passRegenDelay">Time needed out of combat before regenerating</param>
     /// <param name="_actRegenTime">Time it takes to actively regenerate health</param>
-    public void InitializeSection(PlayerHealth _controller, int _max, float _passRegenTime, float _passRegenDelay, float _actRegenTime)
+    public void InitializeSection(PlayerHealth _controller, int _curr, int _max, float _passRegenTime, float _passRegenDelay, float _actRegenTime)
     {
         healthController = _controller;
+        currHealth = _curr;
         maxHealth = _max;
         passiveRegenTime = _passRegenTime;
         passiveRegenDelay = new ScaledTimer(_passRegenDelay, false);
         activeRegenTime = _actRegenTime;
 
-        currHealth = maxHealth;
         cappedRegenBuffer = 0;
+
+        if (currHealth <= 0)
+            ChangeState(HealthSectionState.EMPTIED);
     }
 
     #endregion

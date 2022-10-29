@@ -28,7 +28,10 @@ public class TimeManager : MonoBehaviour
     /// <summary>
     /// Current state of the Time Gauge
     /// </summary>
-    [SerializeField] private TimeGaugeState currentState;
+    private TimeGaugeState currentState;
+
+    [Header("---Game Flow---")]
+    [SerializeField] private ChannelGMStates onStateChangeChannel;
 
     #region Inputs
 
@@ -168,11 +171,18 @@ public class TimeManager : MonoBehaviour
 
         source = gameObject.AddComponent<AudioSource>();
     }
-    
+
+    private void OnEnable()
+    {
+        onStateChangeChannel.OnEventRaised += ToggleInputs;
+    }
+
     private void OnDisable()
     {
-        // Disable input to prevent crashing
-        slowInput.Disable();
+        onStateChangeChannel.OnEventRaised -= ToggleInputs;
+
+        if (slowInput.enabled)
+            slowInput.Disable();
     }
 
     private void FixedUpdate()
@@ -400,5 +410,22 @@ public class TimeManager : MonoBehaviour
     public float MaxGauge()
     {
         return slowDuration.Current * FixedUpdateCalls;
+    }
+
+    /// <summary>
+    /// Toggle inputs if game pauses
+    /// </summary>
+    /// <param name="_newState">new state</param>
+    private void ToggleInputs(GameManager.States _newState)
+    {
+        if (_newState == GameManager.States.GAMEPLAY
+            || _newState == GameManager.States.HUB)
+        {
+            slowInput.Enable();
+        }
+        else
+        {
+            slowInput.Disable();
+        }
     }
 }
