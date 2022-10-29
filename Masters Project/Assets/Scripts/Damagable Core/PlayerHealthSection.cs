@@ -41,11 +41,11 @@ public class PlayerHealthSection : MonoBehaviour
     /// <summary>
     /// Max health of this segment
     /// </summary>
-    [SerializeField] private float maxHealth;
+    private float maxHealth;
     /// <summary>
     /// current health of this segment
     /// </summary>
-    [SerializeField] private float currHealth;
+    private float currHealth;
     /// <summary>
     /// current health of this segment
     /// </summary>

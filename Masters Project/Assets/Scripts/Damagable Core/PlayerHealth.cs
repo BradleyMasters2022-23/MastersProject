@@ -36,7 +36,7 @@ public class PlayerHealth : Damagable
     /// <summary>
     /// All health sections for the player
     /// </summary>
-    private PlayerHealthSection[] healthSections;
+    [SerializeField] private PlayerHealthSection[] healthSections;
 
     /// <summary>
     /// Index for the current player's health
