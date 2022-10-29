@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerNotesManager : MonoBehaviour {
     public bool[] notesCompleted;
-    public NoteObject[] playerNotes;
+    public List<NoteObject> playerNotes = new List<NoteObject>();
     public static PlayerNotesManager instance;
 
     private void Awake() {
@@ -14,11 +14,11 @@ public class PlayerNotesManager : MonoBehaviour {
       } else {
           Destroy(this.gameObject);
       }
-      notesCompleted = new bool[AllNotesManager.instance.notes.Count];
-      playerNotes = new NoteObject[AllNotesManager.instance.notes.Count];
     }
 
     private void Start() {
+      notesCompleted = new bool[AllNotesManager.instance.notes.Count];
+
       UpdateNotes();
     }
 
@@ -27,8 +27,12 @@ public class PlayerNotesManager : MonoBehaviour {
       foreach(NoteObject note in AllNotesManager.instance.notes) {
         // loop through all fragments in note
         for(int i = 0; i < note.fragments.Length; i++) {
-          // if note is found
+          // if fragment is found
           if(note.fragments[i].found) {
+            // if note is not in player's list of notes, add it
+            if(!playerNotes.Contains(note)) {
+              playerNotes.Add(note);
+            }
             // make sure fragment is removed from lostFragments
             if(note.GetLostFragments().Contains(note.fragments[i])) {
               note.GetLostFragments().Remove(note.fragments[i]);
@@ -38,9 +42,10 @@ public class PlayerNotesManager : MonoBehaviour {
           }
         }
 
+        note.UpdateNote();
+
         // if all fragments found update playerNotes and notesComplete to reflect that
         if(note.AllFragmentsFound()) {
-          playerNotes[note.ID] = note;
           notesCompleted[note.ID] = true;
           AllNotesManager.instance.FindNote(note);
         } else {

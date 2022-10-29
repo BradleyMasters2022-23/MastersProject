@@ -15,7 +15,7 @@ public class NoteObject : ScriptableObject {
   public string displayName;
   public int numFragments;
   public Fragment[] fragments;
-  private List<Fragment> lostFragments;
+  private List<Fragment> lostFragments = new List<Fragment>();
   private bool[] fragmentsFound;
 
   private void Awake() {
@@ -27,7 +27,7 @@ public class NoteObject : ScriptableObject {
     UpdateNote();
   }
 
-  private void UpdateNote() {
+  public void UpdateNote() {
     for(int i = 0; i < fragmentsFound.Length; i++) {
       if(fragments[i].found) {
         fragmentsFound[i] = true;

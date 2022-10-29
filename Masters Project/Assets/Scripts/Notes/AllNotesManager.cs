@@ -27,6 +27,7 @@ public class AllNotesManager : MonoBehaviour {
         lostNotes.Add(note);
       }
     }
+    Debug.Log(notes.Count);
   }
 
   public NoteObject GetRandomLostNote() {
