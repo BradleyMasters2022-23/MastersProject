@@ -8,6 +8,8 @@
  */
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static Cinemachine.DocumentationSortingAttribute;
+using UnityEngine.Rendering;
 
 /// <summary>
 /// Manages player-controlled time abilities
@@ -26,7 +28,10 @@ public class TimeManager : MonoBehaviour
     /// <summary>
     /// Current state of the Time Gauge
     /// </summary>
-    [SerializeField] private TimeGaugeState currentState;
+    private TimeGaugeState currentState;
+
+    [Header("---Game Flow---")]
+    [SerializeField] private ChannelGMStates onStateChangeChannel;
 
     #region Inputs
 
@@ -49,6 +54,11 @@ public class TimeManager : MonoBehaviour
     [SerializeField, Range(0, 1)] private float slowestTime;
     [Tooltip("Time it takes to switch between the two time states")]
     [SerializeField, Range(0.01f, 1)] private float slowTransitionTime;
+    [Tooltip("Sound if player stops time")]
+    [SerializeField] private AudioClip stopTime;
+    [Tooltip("Sound if player starts time")]
+    [SerializeField] private AudioClip startTime;
+    private AudioSource source;
 
     /// <summary>
     /// Normal time value
@@ -158,12 +168,21 @@ public class TimeManager : MonoBehaviour
 
         // Multiply slow duration seconds by update calls per second
         currSlowGauge = slowDuration.Current * FixedUpdateCalls;
+
+        source = gameObject.AddComponent<AudioSource>();
     }
-    
+
+    private void OnEnable()
+    {
+        onStateChangeChannel.OnEventRaised += ToggleInputs;
+    }
+
     private void OnDisable()
     {
-        // Disable input to prevent crashing
-        slowInput.Disable();
+        onStateChangeChannel.OnEventRaised -= ToggleInputs;
+
+        if (slowInput.enabled)
+            slowInput.Disable();
     }
 
     private void FixedUpdate()
@@ -188,16 +207,19 @@ public class TimeManager : MonoBehaviour
                 case TimeGaugeState.IDLE:
                     {
                         ChangeState(TimeGaugeState.SLOWING);
+                        source.PlayOneShot(stopTime, 0.5f);
                         break;
                     }
                 case TimeGaugeState.RECHARGING:
                     {
                         ChangeState(TimeGaugeState.SLOWING);
+                        source.PlayOneShot(stopTime, 0.5f);
                         break;
                     }
                 case TimeGaugeState.FROZEN:
                     {
                         ChangeState(TimeGaugeState.SLOWING);
+                        source.PlayOneShot(stopTime, 0.5f);
                         break;
                     }
             }
@@ -295,12 +317,16 @@ public class TimeManager : MonoBehaviour
                     // If entering frozen state, reset timer
                     replenishDelayTimer.ResetTimer();
 
+                    source.PlayOneShot(startTime, 0.5f);
+
                     break;
                 }
             case TimeGaugeState.EMPTIED:
                 {
                     // If entering emptied state, reset timer
                     emptiedDelayTimer.ResetTimer();
+
+                    source.PlayOneShot(startTime, 0.5f);
 
                     break;
                 }
@@ -378,6 +404,28 @@ public class TimeManager : MonoBehaviour
         else
         {
             currSlowGauge += replenishAmount;
+        }
+    }
+
+    public float MaxGauge()
+    {
+        return slowDuration.Current * FixedUpdateCalls;
+    }
+
+    /// <summary>
+    /// Toggle inputs if game pauses
+    /// </summary>
+    /// <param name="_newState">new state</param>
+    private void ToggleInputs(GameManager.States _newState)
+    {
+        if (_newState == GameManager.States.GAMEPLAY
+            || _newState == GameManager.States.HUB)
+        {
+            slowInput.Enable();
+        }
+        else
+        {
+            slowInput.Disable();
         }
     }
 }

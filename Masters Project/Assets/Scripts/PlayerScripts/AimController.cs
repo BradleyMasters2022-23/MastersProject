@@ -15,16 +15,26 @@ public class AimController : MonoBehaviour
 {
     [Header("---Camera---")]
     [Tooltip("Look sensitivity for the camera.")]
-    [SerializeField] private float lookSensitivity;
+    [SerializeField] private float mouseSensitivity;
+
+    [Tooltip("Look sensitivity for the controller.")]
+    [SerializeField] private float controllerSensitivity;
+
+    [SerializeField] private bool mouseYInverted;
+    [SerializeField] private bool mouseXInverted;
+
+    [SerializeField] private bool controllerYInverted;
+    [SerializeField] private bool controllerXInverted;
+
     [Tooltip("The minimum and maximum rotation for the camera's vertical rotation.")]
     [SerializeField] private Vector2 angleClamp;
     [Tooltip("Primary point the camera looks at and pivots from. Should be around the player's shoulders.")]
     [SerializeField] private Transform cameraLook;
 
-    /// <summary>
-    /// Internal tracker for the current vertical rotation
-    /// </summary>
-    private float verticalLookRotation;
+
+    [Header("---Game flow---")]
+    [Tooltip("Channel that watches the game manager states")]
+    [SerializeField] private ChannelGMStates onStateChangedChannel;
 
     /// <summary>
     /// Core controller map
@@ -34,8 +44,7 @@ public class AimController : MonoBehaviour
     /// Action input for aiming the camera [mouse delta / joystick delta]
     /// </summary>
     private InputAction aim;
-
-    private Vector2 lookDelta;
+    private InputAction controllerAim;
 
     private void Awake()
     {
@@ -44,18 +53,16 @@ public class AimController : MonoBehaviour
         aim = controller.PlayerGameplay.Aim;
         aim.Enable();
 
+        controllerAim = controller.PlayerGameplay.ControllerAim;
+        controllerAim.Enable();
+
         // TODO - Link to settings, load in player preferences
-        verticalLookRotation = cameraLook.localRotation.x;
+
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         // Get new delta based on update
-        lookDelta = aim.ReadValue<Vector2>();
-    }
-
-    private void FixedUpdate()
-    {
         ManageCamera();
     }
 
@@ -64,28 +71,89 @@ public class AimController : MonoBehaviour
     /// </summary>
     private void ManageCamera()
     {
-        // look left and right
-        transform.Rotate(new Vector3(0, lookDelta.x, 0) * Time.deltaTime * lookSensitivity);
+        // Figure out which control input to use, adjust sensitivity values
+        Vector2 lookDelta;
+        float sensitivity;
+        float horizontalInversion = 1;
+        float verticalInversion = 1;
 
-        // Look up and down, clamping within range 
-        verticalLookRotation -= lookDelta.y * Time.deltaTime * lookSensitivity;
-        verticalLookRotation = Mathf.Clamp(verticalLookRotation, angleClamp.x, angleClamp.y);
-        cameraLook.localRotation = Quaternion.Euler(verticalLookRotation, 0f, 0f);
+        if (aim.ReadValue<Vector2>() != Vector2.zero)
+        {
+            lookDelta = aim.ReadValue<Vector2>();
+            sensitivity = mouseSensitivity;
+
+            if (mouseXInverted)
+                horizontalInversion *= -1;
+            if (mouseYInverted)
+                verticalInversion *= -1;
+
+        }
+        else if (controllerAim.ReadValue<Vector2>() != Vector2.zero)
+        {
+            lookDelta = controllerAim.ReadValue<Vector2>();
+            sensitivity = controllerSensitivity;
+
+            if (controllerXInverted)
+                horizontalInversion *= -1;
+            if (controllerYInverted)
+                verticalInversion *= -1;
+        }
+        else
+        {
+            return;
+        }
+
+
+        // Manage horizontal rotation
+        transform.rotation *= Quaternion.AngleAxis(lookDelta.x * sensitivity * horizontalInversion * Time.deltaTime, Vector3.up);
+
+        // Manage vertical rotaiton
+        Quaternion temp = cameraLook.transform.localRotation *
+            Quaternion.AngleAxis(-lookDelta.y * sensitivity * verticalInversion * Time.deltaTime, Vector3.right);
+
+        // Make sure to clamp vertical angle first
+        float newYAngle = temp.eulerAngles.x;
+        if (newYAngle > 180)
+        {
+            newYAngle -= 360;
+        }
+        float clampedAngle = Mathf.Clamp(newYAngle, angleClamp.x, angleClamp.y);
+        cameraLook.transform.localRotation = Quaternion.Euler(clampedAngle, 0, 0);
     }
 
     /// <summary>
-    /// Disable any inputs to prevent crashes
+    /// Subscribe channels 
+    /// </summary>
+    private void OnEnable()
+    {
+        onStateChangedChannel.OnEventRaised += ToggleInputs;
+    }
+
+    /// <summary>
+    /// Disable any inputs and subcscriptions to prevent crashes
     /// </summary>
     private void OnDisable()
     {
-        aim.Disable();
+        onStateChangedChannel.OnEventRaised -= ToggleInputs;
+
+        if (aim.enabled)
+            aim.Disable();
     }
 
-    private void OnApplicationFocus(bool focus)
+    /// <summary>
+    /// Toggle inputs if game pauses
+    /// </summary>
+    /// <param name="_newState">new state</param>
+    private void ToggleInputs(GameManager.States _newState)
     {
-        if (focus)
-            Cursor.lockState = CursorLockMode.Locked;
+        if(_newState == GameManager.States.GAMEPLAY
+            || _newState == GameManager.States.HUB)
+        {
+            aim.Enable();
+        }
         else
-            Cursor.lockState = CursorLockMode.None;
+        {
+            aim.Disable();
+        }
     }
 }

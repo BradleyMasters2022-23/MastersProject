@@ -21,6 +21,14 @@ public abstract class RangeAttack : Attack
     [SerializeField] protected float speed;
     [Tooltip("Range of this ranged attack")]
     [SerializeField] protected float range;
+    
+    /// <summary>
+    /// Base speed this attack moveds at
+    /// </summary>
+    public float Speed
+    {
+        get { return speed; }
+    }
 
     /// <summary>
     /// Initialize any necessary variables needing to be passed in. 

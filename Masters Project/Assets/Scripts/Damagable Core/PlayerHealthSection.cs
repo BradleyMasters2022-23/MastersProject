@@ -1,4 +1,4 @@
-/* 
+/*
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 21th, 2022
@@ -15,7 +15,7 @@ public class PlayerHealthSection : MonoBehaviour
     {
         IDLE,
         EMPTIED,
-        REGENERATING, 
+        REGENERATING,
         FORCEHEAL
     }
 
@@ -82,22 +82,25 @@ public class PlayerHealthSection : MonoBehaviour
     /// <param name="_passRegenTime">Time it takes to passively regenerate health</param>
     /// <param name="_passRegenDelay">Time needed out of combat before regenerating</param>
     /// <param name="_actRegenTime">Time it takes to actively regenerate health</param>
-    public void InitializeSection(PlayerHealth _controller, int _max, float _passRegenTime, float _passRegenDelay, float _actRegenTime)
+    public void InitializeSection(PlayerHealth _controller, int _curr, int _max, float _passRegenTime, float _passRegenDelay, float _actRegenTime)
     {
         healthController = _controller;
+        currHealth = _curr;
         maxHealth = _max;
         passiveRegenTime = _passRegenTime;
         passiveRegenDelay = new ScaledTimer(_passRegenDelay, false);
         activeRegenTime = _actRegenTime;
 
-        currHealth = maxHealth;
         cappedRegenBuffer = 0;
+
+        if (currHealth <= 0)
+            ChangeState(HealthSectionState.EMPTIED);
     }
 
     #endregion
 
     /// <summary>
-    /// Deal damage to this segment. 
+    /// Deal damage to this segment.
     /// </summary>
     /// <param name="_dmg">damage being dealt</param>
     /// <returns>Whether or not this healthbar is emptied</returns>
@@ -132,7 +135,7 @@ public class PlayerHealthSection : MonoBehaviour
     #region states
 
     /// <summary>
-    /// Do any state-exclusive update functionality 
+    /// Do any state-exclusive update functionality
     /// </summary>
     private void StateUpdateFunction()
     {
@@ -248,5 +251,9 @@ public class PlayerHealthSection : MonoBehaviour
     public bool IsMaxed()
     {
         return currHealth == maxHealth;
+    }
+
+    public void MaxHealthUp(int increment) {
+        maxHealth += increment;
     }
 }

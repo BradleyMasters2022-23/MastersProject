@@ -1,8 +1,8 @@
-/* 
+/*
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 21th, 2022
- * Last Edited - October 21th, 2022 by Ben Schuster
+ * Last Edited - October 25, 2022 by Soma Hannon - add getters section and 1 getter for upgrade tests
  * Description - Manage the movement for the player
  * ================================================================================================
  */
@@ -10,7 +10,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using static Cinemachine.DocumentationSortingAttribute;
+using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviour
 {
@@ -23,6 +24,11 @@ public class PlayerController : MonoBehaviour
     }
 
     #region Core References
+
+    [Header("---Game Flow---")]
+    [SerializeField] private ChannelGMStates onStateChangeChannel;
+
+    public static GameObject instance;
 
     /// <summary>
     /// Current state of the player
@@ -46,6 +52,16 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private Animator animator;
 
+    [Tooltip("Center of the player")]
+    [SerializeField] private Transform centerMass;
+    /// <summary>
+    /// Center of the player
+    /// </summary>
+    public Transform CenterMass
+    {
+        get { return centerMass;  }
+    }
+
     #endregion
 
     #region Inputs
@@ -66,10 +82,6 @@ public class PlayerController : MonoBehaviour
     /// Input for sprinting
     /// </summary>
     private InputAction sprint;
-    /// <summary>
-    /// Input for restarting the scene
-    /// </summary>
-    private InputAction debugRestart;
 
     #endregion
 
@@ -91,7 +103,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField][Range(0, 1)] private float startingSpeedPercentage;
     [Tooltip("Time it takes to fully stop")]
     [SerializeField][Range(0, 1)] private float decelerationTime;
-    
+
     /// <summary>
     /// Direction the player is inputting
     /// </summary>
@@ -129,7 +141,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool disableFirstJumpOnFall;
     [Tooltip("Whether the player can pivot movement when jumping")]
     [SerializeField] private bool jumpPivot;
-    
+
+    [Tooltip("Sound when the player jumps")]
+    [SerializeField] private AudioClip jumpSound;
+    [Tooltip("Sound when the player lands")]
+    [SerializeField] private AudioClip landSound;
+    private AudioSource source;
+
     /// <summary>
     /// Amount of jumps remaining
     /// </summary>
@@ -175,10 +193,6 @@ public class PlayerController : MonoBehaviour
         sprint.canceled += ToggleSprint;
         sprint.Enable();
 
-        debugRestart = controller.PlayerGameplay.Reset;
-        debugRestart.performed += DebugRestartScene;
-        debugRestart.Enable();
-
         // Initialize upgradable variables
         maxMoveSpeed.Initialize();
         sprintModifier.Initialize();
@@ -189,6 +203,8 @@ public class PlayerController : MonoBehaviour
         jumpTimer = new ScaledTimer(jumpCooldown, false);
         currentJumps = jumps.Current;
         targetMaxSpeed = maxMoveSpeed.Current;
+
+        source = gameObject.AddComponent<AudioSource>();
     }
 
     /// <summary>
@@ -199,7 +215,7 @@ public class PlayerController : MonoBehaviour
         // Get initial references
         rb = GetComponent<Rigidbody>();
         //animator = GetComponentInChildren<Animator>();
-        
+
         // If the gravity modifier has not already been applied, apply it now
         if (Physics.gravity.y >= -10)
             Physics.gravity *= gravityMultiplier;
@@ -219,6 +235,9 @@ public class PlayerController : MonoBehaviour
         // Limit any velocity to prevent player going too fast
         LimitVelocity();
     }
+
+
+
 
     #region State Functionality
 
@@ -288,6 +307,7 @@ public class PlayerController : MonoBehaviour
 
                     // When entering grounded state, reset target max speed
                     targetMaxSpeed = maxMoveSpeed.Current;
+                    source.PlayOneShot(landSound, 0.5f);
 
                     break;
                 }
@@ -295,7 +315,7 @@ public class PlayerController : MonoBehaviour
                 {
                     // When entering sprint state, increase target max move speed
                     targetMaxSpeed = maxMoveSpeed.Current * sprintModifier.Current;
-                    
+
                     break;
                 }
             case PlayerState.MIDAIR:
@@ -360,7 +380,7 @@ public class PlayerController : MonoBehaviour
         {
             Accelerate();
 
-            // Reset lerp for deceleration 
+            // Reset lerp for deceleration
             decelerateLerp = 0;
         }
 
@@ -381,11 +401,11 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            // If midair, add the modified input to the existing velocity, instead of overriding it 
+            // If midair, add the modified input to the existing velocity, instead of overriding it
             newVelocity = Mathf.Pow((currSpeed * airModifier.Current), 2) * Time.deltaTime * direction;
             newVelocity += rb.velocity;
         }
-        
+
         // Use the existing vertical velocity, as that is handled by gravity
         newVelocity.y = rb.velocity.y;
 
@@ -430,9 +450,12 @@ public class PlayerController : MonoBehaviour
             newVelocity.y = 0;
             rb.velocity = newVelocity;
 
-            // Apply vertical velocity 
+            // Apply vertical velocity
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
+            source.PlayOneShot(jumpSound, 0.5f);
         }
+
     }
 
     /// <summary>
@@ -480,7 +503,7 @@ public class PlayerController : MonoBehaviour
             accelerateLerp += Time.deltaTime;
             accelerateLerp = Mathf.Clamp(accelerateLerp, 0, accelerationTime);
         }
-        
+
         // If current has not reached target, continue lerping
         if (currSpeed != targetMaxSpeed)
         {
@@ -499,7 +522,7 @@ public class PlayerController : MonoBehaviour
             decelerateLerp += Time.deltaTime;
             decelerateLerp = Mathf.Clamp(decelerateLerp, 0, decelerationTime);
         }
-        
+
         // If current has not reached 0, continue lerping
         if (currSpeed > 0)
         {
@@ -509,26 +532,62 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
+    #region Getters
+
+    /// <summary>
+    /// get # of jumps
+    /// </summary>
+    public UpgradableInt GetJumps() {
+      return jumps;
+    }
+
+    public void RefreshJumps() {
+      currentJumps = jumps.Current;
+    }
+
+    #endregion
+
     #region Misc
+
+    private void OnEnable()
+    {
+        onStateChangeChannel.OnEventRaised += ToggleInputs;
+    }
 
     /// <summary>
     /// Disable inputs to prevent crashing
     /// </summary>
     private void OnDisable()
     {
-        move.Disable();
-        jump.Disable();
-        debugRestart.Disable();
-        sprint.Disable();
+        onStateChangeChannel.OnEventRaised -= ToggleInputs;
+        
+        if(move.enabled)
+            move.Disable();
+        if(jump.enabled)
+            jump.Disable();
+        if(jump.enabled)
+            sprint.Disable();
     }
 
     /// <summary>
-    /// Reload the current scene, reset timescale. TEMP
+    /// Toggle inputs if game pauses
     /// </summary>
-    /// <param name="ctx"></param>
-    private void DebugRestartScene(InputAction.CallbackContext ctx)
+    /// <param name="_newState">new state</param>
+    private void ToggleInputs(GameManager.States _newState)
     {
-        Time.timeScale = 1;
+        if (_newState == GameManager.States.GAMEPLAY
+            || _newState == GameManager.States.HUB)
+        {
+            move.Enable();
+            jump.Enable();
+            sprint.Enable();
+        }
+        else
+        {
+            move.Disable();
+            jump.Disable();
+            sprint.Disable();
+        }
     }
 
     #endregion

@@ -35,7 +35,7 @@ public class EncounterSO : ScriptableObject
 public class Wave
 {
     [Tooltip("The composition of enemies to use in this wave")]
-    public EnemyGroup[] waveComposition;
+    public EnemyGroup[] enemyGroups;
 }
 
 [System.Serializable]

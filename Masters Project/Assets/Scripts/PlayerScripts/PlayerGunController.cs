@@ -13,6 +13,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerGunController : MonoBehaviour
 {
+    [Header("---Game Flow---")]
+    [SerializeField] private ChannelGMStates onStateChangeChannel;
+
     [Header("=====Gameplay=====")]
 
     [Tooltip("Damage of the bullets this gun fires")]
@@ -26,6 +29,10 @@ public class PlayerGunController : MonoBehaviour
     [Tooltip("Minimum range for aiming to take effect. " +
         "Prevents weird aiming when too close to a wall")]
     [SerializeField] private float minAimRange;
+
+    [Tooltip("Sound that happens when gun go pew pew")]
+    [SerializeField] private AudioClip[] gunshotSound;
+    private AudioSource source;
 
     [Header("=====Setup=====")]
 
@@ -76,6 +83,8 @@ public class PlayerGunController : MonoBehaviour
 
         // Initialize timers
         fireTimer = new ScaledTimer(fireDelay.Current, false);
+
+        source = gameObject.AddComponent<AudioSource>();
     }
 
     /// <summary>
@@ -106,6 +115,9 @@ public class PlayerGunController : MonoBehaviour
         GameObject newShot = Instantiate(shotPrefab, shootPoint.position, transform.rotation);
         newShot.transform.LookAt(shootCam.TargetPos);
         newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current);
+
+        
+        source.PlayOneShot(gunshotSound[Random.Range(0, gunshotSound.Length)],0.3f);
     }
 
     /// <summary>
@@ -132,14 +144,35 @@ public class PlayerGunController : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        if (shoot != null)
-            shoot.Enable();
+        onStateChangeChannel.OnEventRaised += ToggleInputs;
+
+        shoot.Enable();
     }
     /// <summary>
     /// Disable input to prevent crashing
     /// </summary>
     private void OnDisable()
     {
-        shoot.Disable();
+        onStateChangeChannel.OnEventRaised -= ToggleInputs;
+
+        if(shoot.enabled)
+            shoot.Disable();
+    }
+
+    /// <summary>
+    /// Toggle inputs if game pauses
+    /// </summary>
+    /// <param name="_newState">new state</param>
+    private void ToggleInputs(GameManager.States _newState)
+    {
+        if (_newState == GameManager.States.GAMEPLAY
+            || _newState == GameManager.States.HUB)
+        {
+            shoot.Enable();
+        }
+        else
+        {
+            shoot.Disable();
+        }
     }
 }

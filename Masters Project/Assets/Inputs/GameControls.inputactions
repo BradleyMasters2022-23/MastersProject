@@ -45,7 +45,7 @@
                     "name": "Aim",
                     "type": "PassThrough",
                     "id": "d264e853-c956-498c-8206-1e034cd22428",
-                    "expectedControlType": "Delta",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -85,6 +85,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ControllerAim",
+                    "type": "PassThrough",
+                    "id": "211e21a2-66d3-4584-88db-d8f76e5e5827",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -93,6 +102,17 @@
                     "id": "14cffd41-ac2c-4758-9071-3b8034e361b4",
                     "path": "<Mouse>/rightButton",
                     "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SlowTime",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a02d7d3c-3d5b-456b-9555-413a745bcd85",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "SlowTime",
@@ -156,9 +176,31 @@
                 },
                 {
                     "name": "",
+                    "id": "abb30e25-e533-48a6-b421-1ad3fee97d79",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "c8267198-6c7e-4aeb-9a10-38b503fae22e",
                     "path": "<Mouse>/leftButton",
                     "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2f9a141b-e1bf-4950-ace4-fbed812fab96",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Shoot",
@@ -189,8 +231,30 @@
                 },
                 {
                     "name": "",
+                    "id": "b28d9ac3-3c80-4f8a-8355-8db0942d75e7",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "5b197fac-1f8a-42e4-af93-bd673abdf80f",
                     "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "16441322-ba76-4479-a33d-543fa2bcb9db",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -203,6 +267,17 @@
                     "id": "e750d19b-88ad-4ed4-81cf-8a65032af88a",
                     "path": "<Keyboard>/leftShift",
                     "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d0892d9e-033f-40fc-aa9a-49a13c7c9f34",
+                    "path": "<Gamepad>/leftStickPress",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Sprint",
@@ -228,6 +303,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ffd8484c-89d4-466a-a067-bf8396cb5608",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ControllerAim",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

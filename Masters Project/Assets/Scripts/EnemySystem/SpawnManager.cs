@@ -1,4 +1,4 @@
-/* 
+/*
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 24th, 2022
@@ -13,7 +13,7 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [Tooltip("All possible encounters this spawner could use")]
-    [SerializeField] private EncounterSO[] waveOptions;
+    [SerializeField] private EncounterSO[] encounterOptions;
 
     [Tooltip("How many seconds to wait before starting the encounter?")]
     [SerializeField] private float startDelay;
@@ -34,7 +34,7 @@ public class SpawnManager : MonoBehaviour
 
     [Tooltip("Maximum amount of enemies allowed to be spawned at once")]
     [SerializeField, Range(1, 50)] private int maxEnemies = 10;
-    
+
     /// <summary>
     /// Current number of enemies spawned
     /// </summary>
@@ -53,11 +53,11 @@ public class SpawnManager : MonoBehaviour
     private bool spawning;
 
     /// <summary>
-    /// Timer for spawning 
+    /// Timer for spawning
     /// </summary>
     private ScaledTimer spawnDelayTimer;
     /// <summary>
-    /// Timer for spawning 
+    /// Timer for spawning
     /// </summary>
     private ScaledTimer startDelayTimer;
     /// <summary>
@@ -99,7 +99,7 @@ public class SpawnManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Get external references. 
+    /// Get external references.
     /// </summary>
     private void Start()
     {
@@ -122,14 +122,14 @@ public class SpawnManager : MonoBehaviour
     private void ChooseEncounter()
     {
         // If no encounters
-        if (waveOptions.Length <= 0)
+        if (encounterOptions.Length <= 0)
         {
             CompleteEncounter();
             return;
         }
         else
         {
-            chosenEncounter = waveOptions[Random.Range(0, waveOptions.Length)];
+            chosenEncounter = encounterOptions[Random.Range(0, encounterOptions.Length)];
         }
 
         // Start the first spawn routine
@@ -142,21 +142,31 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     private void PrepareWaveQueue()
     {
-        // Prepare buffer list for each enemy to be spawned
-        List<GameObject> buffer = new List<GameObject>();
-        foreach (EnemyGroup enemyGroup in chosenEncounter.waves[waveIndex].waveComposition)
+        // load in numbers needed
+        List<int> enemyCounts = new List<int>();
+        int total = 0;
+        foreach (EnemyGroup enemyGroup in chosenEncounter.waves[waveIndex].enemyGroups)
         {
-            for (int i = 0; i < enemyGroup.amount; i++)
-            {
-                buffer.Add(enemyGroup.enemy);
-            }
+            enemyCounts.Add(enemyGroup.amount);
+            total += enemyGroup.amount;
         }
-        // Move each enemy to the queue in a random order
-        while (buffer.Count > 0)
+
+        // Load the specified number of each at random
+        for(int i = 0; i < total; i++)
         {
-            int i = Random.Range(0, buffer.Count);
-            spawnQueue.Enqueue(buffer[i]);
-            buffer.RemoveAt(i);
+            // Choose a random type, not allowing ones whos quantity has already been filled
+            int typeIndex;
+            do
+            {
+                typeIndex = Random.Range(0, enemyCounts.Count);
+            } while (enemyCounts[typeIndex] <= 0);
+
+            // Decrement that type's count
+            enemyCounts[typeIndex]--;
+
+            // Add to spawn queue
+            GameObject enemyToSpawn = chosenEncounter.waves[waveIndex].enemyGroups[typeIndex].enemy;
+            spawnQueue.Enqueue(enemyToSpawn);
         }
     }
 
@@ -199,12 +209,13 @@ public class SpawnManager : MonoBehaviour
 
             // Delay spawning between enemies between range
             spawnDelayTimer.ResetTimer(Random.Range(spawnDelay.x, spawnDelay.y));
-            while (spawnDelayTimer.TimerDone())
+            while (!spawnDelayTimer.TimerDone())
             {
                 yield return null;
             }
-        }
 
+            yield return null;
+        }
         // End spawning, begin backup check routine
         spawning = false;
         backupCheckRoutine = StartCoroutine(CheckCount());
@@ -234,6 +245,7 @@ public class SpawnManager : MonoBehaviour
         Debug.Log("Wave Finished");
         spawnRoutine = null;
         waveIndex++;
+        startDelayTimer.ResetTimer();
 
         if (waveIndex >= chosenEncounter.waves.Length)
         {
@@ -242,7 +254,7 @@ public class SpawnManager : MonoBehaviour
         }
         else
         {
-            StartCoroutine(SpawnNextWave());
+            spawnRoutine = StartCoroutine(SpawnNextWave());
         }
     }
 
@@ -252,14 +264,15 @@ public class SpawnManager : MonoBehaviour
     private void CompleteEncounter()
     {
         finished = true;
+        Debug.Log("Encounter Finished");
 
         if (sound != null)
             s.PlayOneShot(sound);
 
         FindObjectOfType<DoorManager>().UnlockAllDoors();
 
-        //if (chosenEncounter != null)
-        //    FindObjectOfType<RewardManager>().DisplayUpgrades();
+        if (chosenEncounter != null)
+           FindObjectOfType<RewardsManager>().SpawnUpgrades();
     }
 
     /// <summary>
@@ -317,7 +330,6 @@ public class SpawnManager : MonoBehaviour
 
     //    return chosenEncounter.specialRewards;
     //}
-
 
     private IEnumerator CheckCount()
     {

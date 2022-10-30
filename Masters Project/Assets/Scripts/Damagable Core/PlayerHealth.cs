@@ -1,4 +1,4 @@
-/* 
+/*
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 21th, 2022
@@ -7,6 +7,8 @@
  * ================================================================================================
  */
 using UnityEngine;
+using static Cinemachine.DocumentationSortingAttribute;
+using UnityEngine.Rendering;
 
 public class PlayerHealth : Damagable
 {
@@ -27,15 +29,31 @@ public class PlayerHealth : Damagable
     [Tooltip("Time it takes to actively regenerate a segment [Such as healthkit]")]
     [SerializeField] private UpgradableFloat activeRegenTime;
 
+    [Tooltip("Sound when player takes damage")]
+    [SerializeField] private AudioClip playerDamage;
+    private AudioSource source;
+
     /// <summary>
     /// All health sections for the player
     /// </summary>
-    private PlayerHealthSection[] healthSections;
+    [SerializeField] private PlayerHealthSection[] healthSections;
 
     /// <summary>
     /// Index for the current player's health
     /// </summary>
     private int healthSectionIndex;
+
+    /// <summary>
+    /// Get current health
+    /// </summary>
+    private int currHealth;
+    /// <summary>
+    /// Get current health
+    /// </summary>
+    public int CurrHealth
+    {
+        get { return currHealth;  }
+    }
 
     /// <summary>
     /// Initialize values and healthbars
@@ -48,16 +66,70 @@ public class PlayerHealth : Damagable
         passiveRegenDelay.Initialize();
         activeRegenTime.Initialize();
 
-        // Create all segments necessary, initialize them
         healthSections = new PlayerHealthSection[numOfSections.Current];
-        for (int i = 0; i < numOfSections.Current; i++)
-        {
-            healthSections[i] = gameObject.AddComponent<PlayerHealthSection>();
-            healthSections[i].InitializeSection(this, healthPerSection.Current,
-                passiveRegenTime.Current, passiveRegenDelay.Current, activeRegenTime.Current);
-        }
-        healthSectionIndex = healthSections.Length-1;
 
+        source = gameObject.AddComponent<AudioSource>();
+    }
+
+    /// <summary>
+    /// Load in health from game manager
+    /// </summary>
+    private void Start()
+    {
+        
+        // If last health not saved, load fresh health
+        if (GameManager.instance.lastPlayerHealth <= 0 || GameManager.instance.CurrentState == GameManager.States.HUB)
+        {
+            // Create all segments necessary, initialize them
+            for (int i = 0; i < numOfSections.Current; i++)
+            {
+                healthSections[i] = gameObject.AddComponent<PlayerHealthSection>();
+                healthSections[i].InitializeSection(this, healthPerSection.Current, healthPerSection.Current,
+                    passiveRegenTime.Current, passiveRegenDelay.Current, activeRegenTime.Current);
+
+                currHealth += healthPerSection.Current;
+            }
+            healthSectionIndex = healthSections.Length - 1;
+        }
+        // If last health was saved, load that instead
+        else
+        {
+            currHealth = GameManager.instance.lastPlayerHealth;
+            int amountLoaded = 0;
+
+            // Create all segments necessary
+            for (int i = 0; i < numOfSections.Current; i++)
+            {
+                healthSections[i] = gameObject.AddComponent<PlayerHealthSection>();
+
+                // If loading in will exceed amount, then load in the differnece
+                if (amountLoaded + healthPerSection.Current >= currHealth)
+                {
+                    //Debug.Log("Loading partial section");
+                    healthSections[i].InitializeSection(this, currHealth - amountLoaded, healthPerSection.Current,
+                    passiveRegenTime.Current, passiveRegenDelay.Current, activeRegenTime.Current);
+
+                    amountLoaded = currHealth;
+                    healthSectionIndex = i;
+                }
+                // If already maxed, then load in at 0
+                else if (amountLoaded == currHealth)
+                {
+                    //Debug.Log("Loading empty section");
+                    healthSections[i].InitializeSection(this, 0, healthPerSection.Current, 
+                    passiveRegenTime.Current, passiveRegenDelay.Current, activeRegenTime.Current);
+                }
+                // Otherwise, load in to full
+                else
+                {
+                    //Debug.Log("Loading full section");
+                    healthSections[i].InitializeSection(this, healthPerSection.Current, healthPerSection.Current,
+                    passiveRegenTime.Current, passiveRegenDelay.Current, activeRegenTime.Current);
+
+                    amountLoaded += healthPerSection.Current;
+                }
+            }
+        }
     }
 
     /// <summary>
@@ -87,6 +159,11 @@ public class PlayerHealth : Damagable
                 healthSectionIndex--;
             }
         }
+
+        // Update total health
+        UpdateHealth();
+
+        source.PlayOneShot(playerDamage, 0.5f);
     }
 
     /// <summary>
@@ -94,10 +171,14 @@ public class PlayerHealth : Damagable
     /// </summary>
     protected override void Die()
     {
+        if (killed)
+            return;
+
+
         killed = true;
         Debug.Log("[PlayerHealth] Player has died! Game over!");
 
-        // TODO - Tie in with other systems for handling game over!
+        GameManager.instance.ChangeState(GameManager.States.GAMEOVER);
     }
 
     /// <summary>
@@ -154,5 +235,40 @@ public class PlayerHealth : Damagable
         {
             healthSectionIndex--;
         }
+        UpdateHealth();
+    }
+
+    /// <summary>
+    /// Get players max health
+    /// </summary>
+    /// <returns>max health this can have</returns>
+    public int MaxHealth()
+    {
+        return healthPerSection.Current * numOfSections.Current;
+    }
+
+    private void UpdateHealth()
+    {
+        // Update total health
+        float hpCount = 0;
+        for (int i = 0; i <= healthSectionIndex; i++)
+        {
+            hpCount += healthSections[i].CurrHealth;
+        }
+        
+        currHealth = Mathf.CeilToInt(hpCount);
+    }
+
+    public PlayerHealthSection[] GetSections() {
+      return healthSections;
+    }
+
+    public void HealthPerSectionUp(int increment) {
+      healthPerSection.Increment(increment);
+    }
+
+    private void OnDisable()
+    {
+        GameManager.instance.lastPlayerHealth = currHealth;
     }
 }

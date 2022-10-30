@@ -27,6 +27,8 @@ public abstract class Attack : MonoBehaviour
 
     protected bool hitTarget;
 
+    
+
     protected abstract void Awake();
 
     protected virtual void DealDamage(GameObject _target)
@@ -48,13 +50,22 @@ public abstract class Attack : MonoBehaviour
     }
 
     /// <summary>
+    /// Trigger the damage effects on a target
+    /// </summary>
+    /// <param name="other"></param>
+    protected void TriggerTarget(Collider other)
+    {
+        Hit();
+        DealDamage(other.gameObject);
+    }
+
+    /// <summary>
     /// Deal damage to the targets it hits
     /// </summary>
     /// <param name="other">Object it hit</param>
     private void OnTriggerEnter(Collider other)
     {
-        Hit();
-        DealDamage(other.gameObject);
+        TriggerTarget(other);
     }
 
     /// <summary>

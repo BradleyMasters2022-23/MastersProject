@@ -18,10 +18,11 @@ public class RoomGenerator : MonoBehaviour
 
     [Tooltip("Amount of rooms to be played per floor")]
     [SerializeField] private int floorLength;
-    [Tooltip("Name of hub scene to return to on player death")]
-    [SerializeField] private string returnRoom;
     [Tooltip("Name of room to load after reaching the length limit")]
     [SerializeField] private string finalRoom;
+
+    [Tooltip("Channel for observing when states change")]
+    [SerializeField] private ChannelGMStates onStateChangeChannel;
 
     /// <summary>
     /// Public instance of room generator
@@ -50,7 +51,7 @@ public class RoomGenerator : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(instance);
-            instance.count = 1;
+            instance.count = 0;
         }
         else
         {
@@ -72,6 +73,10 @@ public class RoomGenerator : MonoBehaviour
             ReturnToHub();
             return;
         }
+
+        // Set state to gameplay if not already
+        if(GameManager.instance.CurrentState != GameManager.States.GAMEPLAY)
+            GameManager.instance.ChangeState(GameManager.States.GAMEPLAY);
 
         // If reaching max floor length, load the last room
         if (count >= floorLength)
@@ -104,9 +109,13 @@ public class RoomGenerator : MonoBehaviour
     /// </summary>
     public void LoadRoom()
     {
-        instance.count++;
-        SceneManager.UnloadSceneAsync(lastRoom);
-        SceneManager.LoadSceneAsync(currRoom);
+        // If gameplay, load room
+        if(GameManager.instance.CurrentState == GameManager.States.GAMEPLAY)
+        {
+            instance.count++;
+        }
+        
+        SceneManager.LoadScene(currRoom);
     }
 
     /// <summary>
@@ -116,12 +125,33 @@ public class RoomGenerator : MonoBehaviour
     {
         RoomGenerator.instance = null;
 
-        // TODO - RESET PLAYER UPGRADES
-        //PlayerUpgradeManager.instance.DestroyPUM();
-        //RewardStorage.instance.DestroyRS();
+        GameManager.instance.ChangeState(GameManager.States.HUB);
 
-        SceneManager.UnloadSceneAsync(currRoom);
-        SceneManager.LoadSceneAsync(returnRoom);
+        // TODO - RESET PLAYER UPGRADES
+        PlayerUpgradeManager.instance.DestroyPUM();
+        AllUpgradeManager.instance.DestroyAUM();
+
+
         Destroy(gameObject);
+    }
+
+    private void OnEnable()
+    {
+        onStateChangeChannel.OnEventRaised += DestroyOnMainMenu;
+    }
+    private void OnDisable()
+    {
+        onStateChangeChannel.OnEventRaised -= DestroyOnMainMenu;
+    }
+
+    private void DestroyOnMainMenu(GameManager.States _newState)
+    {
+        // If quitting, destroy self
+        if(_newState == GameManager.States.MAINMENU)
+        {
+
+            RoomGenerator.instance = null;
+            Destroy(gameObject);
+        }
     }
 }
