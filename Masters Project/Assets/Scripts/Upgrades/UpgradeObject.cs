@@ -1,7 +1,7 @@
 /* ================================================================================================
- * Author - Soma Hannon
- * Date Created - October 20th, 2022
- * Last Edited - October 21st, 2022 by Soma Hannon
+ * Author - Soma Hannon (base code - Ben Schuster)
+ * Date Created - October 20, 2022
+ * Last Edited - October 31, 2022 by Soma Hannon
  * Description - Base upgrade object.
  * ================================================================================================
  */
@@ -12,10 +12,21 @@ using Masters.CoreUpgradeVariables;
 
 [CreateAssetMenu(menuName = "Gameplay/Upgrade Data")]
 public class UpgradeObject : ScriptableObject {
-  public string displayName;
-  public string displayDesc;
-  public Color upgradeColor;
-  public int ID;
-  public UpgradableInt lvl;
-  public GameObject upgradePrefab;
+    [Tooltip("Upgrade display name.")]
+    public string displayName;
+
+    [Tooltip("Upgrade display description.")]
+    public string displayDesc;
+
+    [Tooltip("Upgrade container color.")]
+    public Color upgradeColor;
+
+    [Tooltip("Upgrade ID #.")]
+    public int ID;
+
+    [Tooltip("Upgrade level start, min, max.")]
+    public UpgradableInt lvl;
+
+    [Tooltip("Should always be the same. It's in /Prefabs/Upgrades.")]
+    public GameObject upgradePrefab;
 }

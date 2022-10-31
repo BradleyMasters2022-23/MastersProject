@@ -1,5 +1,5 @@
 /* ================================================================================================
- * Author - Soma Hannon
+ * Author - Soma Hannon (base code - Ben Schuster)
  * Date Created - October 25, 2022
  * Last Edited - October 25, 2022 by Soma Hannon
  * Description - Physical object that triggers the upgrade select screen.

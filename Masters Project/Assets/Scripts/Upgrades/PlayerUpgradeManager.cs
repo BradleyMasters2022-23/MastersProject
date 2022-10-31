@@ -1,7 +1,7 @@
 /* ================================================================================================
- * Author - Soma Hannon
+ * Author - Soma Hannon (base code - Ben Schuster)
  * Date Created - October 18, 2022
- * Last Edited - October 25, 2022 by Soma Hannon
+ * Last Edited - October 31, 2022 by Soma Hannon
  * Description - Handles player upgrades.
  * ================================================================================================
  */
@@ -10,102 +10,106 @@
  using UnityEngine;
  using UnityEngine.SceneManagement;
 
-public class PlayerUpgradeManager : MonoBehaviour {
-  // TODO: connect to PlayerController when implemented
-  // TODO: write this class lol
+public class PlayerUpgradeManager : MonoBehaviour
+{
+    public PlayerController player;
+    public List<UpgradeObject> upgrades = new List<UpgradeObject>();
+    public static PlayerUpgradeManager instance;
 
-  public PlayerController player;
-  public List<UpgradeObject> upgrades = new List<UpgradeObject>();
-  public static PlayerUpgradeManager instance;
-
-  private void Awake() {
-    // ensures only one instance ever exists
-    if(instance == null) {
-        PlayerUpgradeManager.instance = this;
-        DontDestroyOnLoad(this);
-    } else {
-        Destroy(this);
+    private void Awake() {
+        // ensures only one instance ever exists
+        if(instance == null) {
+            PlayerUpgradeManager.instance = this;
+            DontDestroyOnLoad(this);
+        } else {
+            Destroy(this);
+        }
     }
-  }
 
-  /// <summary>
-  /// called exactly once, initializes PlayerUpgradeManager
-  /// </summary>
-  private void Start() {
-    player = FindObjectOfType<PlayerController>();
-    SceneManager.sceneLoaded += OnLevelLoad;
-  }
+    /// <summary>
+    /// called exactly once, initializes PlayerUpgradeManager
+    /// </summary>
+    private void Start() {
+        player = FindObjectOfType<PlayerController>();
+        SceneManager.sceneLoaded += OnLevelLoad;
+    }
 
-  /// <summary>
-  /// initializes upgrade and attaches it to player
-  /// </summary>
-  private void InitializeUpgrade(UpgradeObject up) {
-    IUpgrade temp = Instantiate(up.upgradePrefab, player.gameObject.transform).GetComponent<IUpgrade>();
-    temp.LoadUpgrade(player);
-  }
+    /// <summary>
+    /// initializes upgrade and attaches it to player
+    /// </summary>
+    private void InitializeUpgrade(UpgradeObject up) {
+        IUpgrade temp = Instantiate(up.upgradePrefab, player.gameObject.transform).GetComponent<IUpgrade>();
+        temp.LoadUpgrade(player);
+    }
 
-  /// <summary>
-  /// adds upgrade to list of players upgrades and initializes
-  /// </summary>
-  public void AddUpgrade(UpgradeObject up) {
-    upgrades.Add(up);
-    InitializeUpgrade(up);
-    
-    // if(!upgrades.Contains(up)) {
-    //   upgrades.Add(up);
-    //   InitializeUpgrade(up);
-    // }
-    //
-    // foreach(UpgradeObject upgrade in upgrades) {
-    //   if(up.ID == upgrade.ID) {
-    //     upgrade.lvl.ChangeVal(upgrade.lvl.Current + 1);
-    //     if(upgrade.lvl.AtMax()) {
-    //       AllUpgradeManager.instance.RemoveUpgrade(up);
-    //     }
-    //   }
-    // }
-  }
+    /// <summary>
+    /// adds upgrade to list of players upgrades and initializes
+    /// </summary>
+    public void AddUpgrade(UpgradeObject up) {
+        upgrades.Add(up);
+        InitializeUpgrade(up);
 
-  /// <summary>
-  /// returns list of player's upgrades
-  /// </summary>
-  public List<UpgradeObject> GetUpgrades() {
-    return new List<UpgradeObject>(upgrades);
-  }
+        // if(!upgrades.Contains(up)) {
+        //   upgrades.Add(up);
+        //   InitializeUpgrade(up);
+        // }
+        //
+        // foreach(UpgradeObject upgrade in upgrades) {
+        //   if(up.ID == upgrade.ID) {
+        //     upgrade.lvl.ChangeVal(upgrade.lvl.Current + 1);
+        //     if(upgrade.lvl.AtMax()) {
+        //       AllUpgradeManager.instance.RemoveUpgrade(up);
+        //     }
+        //   }
+        // }
+    }
 
-  public void OnLevelLoad(Scene scene, LoadSceneMode mode) {
-      if (scene.name == "Hub") {
-          DestroyPUM();
-          return;
-      }
+    /// <summary>
+    /// returns list of player's upgrades
+    /// </summary>
+    public List<UpgradeObject> GetUpgrades() {
+      return new List<UpgradeObject>(upgrades);
+    }
 
-      int c = 0;
-      do {
-          c++;
-          if (c >= 10000)
-              break;
+    /// <summary>
+    /// re-initializes player upgrades in new scenes except Hub
+    /// </summary>
+    public void OnLevelLoad(Scene scene, LoadSceneMode mode) {
+        if (scene.name == "Hub") {
+            DestroyPUM();
+            return;
+        }
 
-          player = FindObjectOfType<PlayerController>();
-      } while (player == null);
+        int c = 0;
+        do {
+            c++;
+            if (c >= 10000)
+                break;
 
-      if (player == null)
-      {
-          Debug.LogError("cannot load player upgrades; no player instance found!");
-          return;
-      }
+            player = FindObjectOfType<PlayerController>();
+        } while (player == null);
 
-      foreach(UpgradeObject up in upgrades) {
-          InitializeUpgrade(up);
-      }
-  }
+        if (player == null)
+        {
+            Debug.LogError("cannot load player upgrades; no player instance found!");
+            return;
+        }
 
-  public void DestroyPUM() {
-      PlayerUpgradeManager.instance = null;
-      Destroy(gameObject);
-  }
+        foreach(UpgradeObject up in upgrades) {
+            InitializeUpgrade(up);
+        }
+    }
 
-  private void OnDisable() {
-      SceneManager.sceneLoaded -= OnLevelLoad;
-  }
+    /// <summary>
+    /// destroys instance
+    /// </summary>
+    public void DestroyPUM() {
+        PlayerUpgradeManager.instance = null;
+        Destroy(gameObject);
+    }
+
+    private void OnDisable() {
+        SceneManager.sceneLoaded -= OnLevelLoad;
+    }
 
 }
