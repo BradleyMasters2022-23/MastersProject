@@ -43,6 +43,11 @@ public class HealthbarVisual : MonoBehaviour
     {
         healthbar.value = health.CurrHealth;
 
+        if(healthbar.maxValue != health.MaxHealth())
+        {
+            healthbar.maxValue = health.MaxHealth();
+        }
+
         ParseNum((int)healthbar.value);
     }
 

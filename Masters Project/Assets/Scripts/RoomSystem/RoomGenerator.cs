@@ -149,6 +149,7 @@ public class RoomGenerator : MonoBehaviour
         // If quitting, destroy self
         if(_newState == GameManager.States.MAINMENU)
         {
+
             RoomGenerator.instance = null;
             Destroy(gameObject);
         }

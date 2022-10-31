@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7731361447425764330}
   - component: {fileID: 2488734027158688743}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Healthbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 6945638541695484232}
   - component: {fileID: 7541433446127910826}
   - component: {fileID: 3476804316101312595}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: UI elements
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -358,7 +358,7 @@ GameObject:
   - component: {fileID: 2032144690160975646}
   - component: {fileID: 7501666401383525026}
   - component: {fileID: 3802878429273724161}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -432,7 +432,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9102884040651079960}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -471,7 +471,7 @@ GameObject:
   - component: {fileID: 3677741775855496592}
   - component: {fileID: 37147310652405960}
   - component: {fileID: 4831294977434683251}
-  m_Layer: 5
+  m_Layer: 8
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -665,6 +665,38 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f5399ca7a2308024ea2ec0d9da41dd7e, type: 3}
+--- !u!1 &508163856627102984 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 529667785655034627, guid: f5399ca7a2308024ea2ec0d9da41dd7e, type: 3}
+  m_PrefabInstance: {fileID: 23818027377939979}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &7983487102628327215
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508163856627102984}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.1327984, y: 1.1327981, z: 0.62752724}
+  m_Center: {x: -0.000000037837808, y: -0.00000007829802, z: 0.4157871}
+--- !u!114 &5141807698792418690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508163856627102984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3649e819e4c27cc42b6a37214fb092ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxVerticalKnockback: 0
+  damageMultiplier: 2
 --- !u!4 &2273023011546668996 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2296827273520335311, guid: f5399ca7a2308024ea2ec0d9da41dd7e, type: 3}
