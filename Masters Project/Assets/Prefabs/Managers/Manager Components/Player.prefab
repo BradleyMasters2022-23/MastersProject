@@ -2026,6 +2026,7 @@ GameObject:
   - component: {fileID: 8810997313966297022}
   - component: {fileID: 8810997313966297015}
   - component: {fileID: 8810997313966297008}
+  - component: {fileID: 8665962098944256790}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -2144,7 +2145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39279cbe91784b2428cff701b50e5c22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lookSensitivity: 10
+  onSettingsChangedChannel: {fileID: 11400000, guid: 0c8d55cade4ec7748a24f8fe270230cc, type: 2}
   angleClamp: {x: -80, y: 80}
   cameraLook: {fileID: 8810997312557230426}
   onStateChangedChannel: {fileID: 11400000, guid: 2770aed5fbc083e4d8279c944f0242e2, type: 2}
@@ -2264,6 +2265,25 @@ MonoBehaviour:
     lowerLimit: 0
     upperLimit: 0
   playerDamage: {fileID: 8300000, guid: 6b2aa16ccf8e2e94e84fe082ebf2cbf6, type: 3}
+  healthSections: []
+--- !u!114 &8665962098944256790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8810997313966297016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 453dfd55a443d874798c03d9fc9dc6d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultMouseSensitivity: 10
+  defaultMouseInvertX: 0
+  defaultMouseInvertY: 0
+  defaultControllerSensitivity: 10
+  defaultControllerInvertX: 0
+  defaultControllerInvertY: 0
 --- !u!1 &8810997314044839443
 GameObject:
   m_ObjectHideFlags: 0
