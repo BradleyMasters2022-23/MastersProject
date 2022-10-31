@@ -11,7 +11,7 @@
                     "id": "8f07292b-5ac2-44ca-9df7-341212313021",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": false
                 },
                 {
@@ -45,6 +45,15 @@
                     "name": "Aim",
                     "type": "PassThrough",
                     "id": "d264e853-c956-498c-8206-1e034cd22428",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ControllerAim",
+                    "type": "PassThrough",
+                    "id": "211e21a2-66d3-4584-88db-d8f76e5e5827",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -87,9 +96,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ControllerAim",
+                    "name": "Controller",
                     "type": "PassThrough",
-                    "id": "211e21a2-66d3-4584-88db-d8f76e5e5827",
+                    "id": "73027538-d332-4fa1-8cef-196e48d7e665",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Mouse",
+                    "type": "PassThrough",
+                    "id": "9fbde5c5-a9aa-475a-9c90-0f68bb6f9fbb",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -314,6 +332,50 @@
                     "processors": "",
                     "groups": "",
                     "action": "ControllerAim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ae34960b-ab02-45b1-8774-5bf3b9122702",
+                    "path": "<Gamepad>/dpad",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Controller",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5f2dfe67-5984-404d-b69d-eb1e7ddbf42d",
+                    "path": "<Gamepad>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Controller",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8ff67f1f-87d4-4cd3-9a90-712c10099e4a",
+                    "path": "<Gamepad>/rightStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Controller",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "798fada0-9727-4c6d-9674-30cd74a3b955",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mouse",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

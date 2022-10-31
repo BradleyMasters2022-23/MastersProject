@@ -33,7 +33,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""id"": ""8f07292b-5ac2-44ca-9df7-341212313021"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Press"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -67,6 +67,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""name"": ""Aim"",
                     ""type"": ""PassThrough"",
                     ""id"": ""d264e853-c956-498c-8206-1e034cd22428"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ControllerAim"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""211e21a2-66d3-4584-88db-d8f76e5e5827"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -109,9 +118,18 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""ControllerAim"",
+                    ""name"": ""Controller"",
                     ""type"": ""PassThrough"",
-                    ""id"": ""211e21a2-66d3-4584-88db-d8f76e5e5827"",
+                    ""id"": ""73027538-d332-4fa1-8cef-196e48d7e665"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Mouse"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""9fbde5c5-a9aa-475a-9c90-0f68bb6f9fbb"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -338,6 +356,50 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""ControllerAim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ae34960b-ab02-45b1-8774-5bf3b9122702"",
+                    ""path"": ""<Gamepad>/dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Controller"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5f2dfe67-5984-404d-b69d-eb1e7ddbf42d"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Controller"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8ff67f1f-87d4-4cd3-9a90-712c10099e4a"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Controller"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""798fada0-9727-4c6d-9674-30cd74a3b955"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Mouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -351,11 +413,13 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_PlayerGameplay_Jump = m_PlayerGameplay.FindAction("Jump", throwIfNotFound: true);
         m_PlayerGameplay_Sprint = m_PlayerGameplay.FindAction("Sprint", throwIfNotFound: true);
         m_PlayerGameplay_Aim = m_PlayerGameplay.FindAction("Aim", throwIfNotFound: true);
+        m_PlayerGameplay_ControllerAim = m_PlayerGameplay.FindAction("ControllerAim", throwIfNotFound: true);
         m_PlayerGameplay_Shoot = m_PlayerGameplay.FindAction("Shoot", throwIfNotFound: true);
         m_PlayerGameplay_SlowTime = m_PlayerGameplay.FindAction("SlowTime", throwIfNotFound: true);
         m_PlayerGameplay_Heal = m_PlayerGameplay.FindAction("Heal", throwIfNotFound: true);
         m_PlayerGameplay_Reset = m_PlayerGameplay.FindAction("Reset", throwIfNotFound: true);
-        m_PlayerGameplay_ControllerAim = m_PlayerGameplay.FindAction("ControllerAim", throwIfNotFound: true);
+        m_PlayerGameplay_Controller = m_PlayerGameplay.FindAction("Controller", throwIfNotFound: true);
+        m_PlayerGameplay_Mouse = m_PlayerGameplay.FindAction("Mouse", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -420,11 +484,13 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_Jump;
     private readonly InputAction m_PlayerGameplay_Sprint;
     private readonly InputAction m_PlayerGameplay_Aim;
+    private readonly InputAction m_PlayerGameplay_ControllerAim;
     private readonly InputAction m_PlayerGameplay_Shoot;
     private readonly InputAction m_PlayerGameplay_SlowTime;
     private readonly InputAction m_PlayerGameplay_Heal;
     private readonly InputAction m_PlayerGameplay_Reset;
-    private readonly InputAction m_PlayerGameplay_ControllerAim;
+    private readonly InputAction m_PlayerGameplay_Controller;
+    private readonly InputAction m_PlayerGameplay_Mouse;
     public struct PlayerGameplayActions
     {
         private @GameControls m_Wrapper;
@@ -434,11 +500,13 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_PlayerGameplay_Jump;
         public InputAction @Sprint => m_Wrapper.m_PlayerGameplay_Sprint;
         public InputAction @Aim => m_Wrapper.m_PlayerGameplay_Aim;
+        public InputAction @ControllerAim => m_Wrapper.m_PlayerGameplay_ControllerAim;
         public InputAction @Shoot => m_Wrapper.m_PlayerGameplay_Shoot;
         public InputAction @SlowTime => m_Wrapper.m_PlayerGameplay_SlowTime;
         public InputAction @Heal => m_Wrapper.m_PlayerGameplay_Heal;
         public InputAction @Reset => m_Wrapper.m_PlayerGameplay_Reset;
-        public InputAction @ControllerAim => m_Wrapper.m_PlayerGameplay_ControllerAim;
+        public InputAction @Controller => m_Wrapper.m_PlayerGameplay_Controller;
+        public InputAction @Mouse => m_Wrapper.m_PlayerGameplay_Mouse;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -463,6 +531,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Aim.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnAim;
                 @Aim.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnAim;
                 @Aim.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnAim;
+                @ControllerAim.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnControllerAim;
+                @ControllerAim.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnControllerAim;
+                @ControllerAim.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnControllerAim;
                 @Shoot.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnShoot;
                 @Shoot.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnShoot;
                 @Shoot.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnShoot;
@@ -475,9 +546,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Reset.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnReset;
                 @Reset.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnReset;
                 @Reset.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnReset;
-                @ControllerAim.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnControllerAim;
-                @ControllerAim.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnControllerAim;
-                @ControllerAim.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnControllerAim;
+                @Controller.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnController;
+                @Controller.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnController;
+                @Controller.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnController;
+                @Mouse.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnMouse;
+                @Mouse.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnMouse;
+                @Mouse.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnMouse;
             }
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -497,6 +571,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Aim.started += instance.OnAim;
                 @Aim.performed += instance.OnAim;
                 @Aim.canceled += instance.OnAim;
+                @ControllerAim.started += instance.OnControllerAim;
+                @ControllerAim.performed += instance.OnControllerAim;
+                @ControllerAim.canceled += instance.OnControllerAim;
                 @Shoot.started += instance.OnShoot;
                 @Shoot.performed += instance.OnShoot;
                 @Shoot.canceled += instance.OnShoot;
@@ -509,9 +586,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Reset.started += instance.OnReset;
                 @Reset.performed += instance.OnReset;
                 @Reset.canceled += instance.OnReset;
-                @ControllerAim.started += instance.OnControllerAim;
-                @ControllerAim.performed += instance.OnControllerAim;
-                @ControllerAim.canceled += instance.OnControllerAim;
+                @Controller.started += instance.OnController;
+                @Controller.performed += instance.OnController;
+                @Controller.canceled += instance.OnController;
+                @Mouse.started += instance.OnMouse;
+                @Mouse.performed += instance.OnMouse;
+                @Mouse.canceled += instance.OnMouse;
             }
         }
     }
@@ -523,10 +603,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
+        void OnControllerAim(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnSlowTime(InputAction.CallbackContext context);
         void OnHeal(InputAction.CallbackContext context);
         void OnReset(InputAction.CallbackContext context);
-        void OnControllerAim(InputAction.CallbackContext context);
+        void OnController(InputAction.CallbackContext context);
+        void OnMouse(InputAction.CallbackContext context);
     }
 }
