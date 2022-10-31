@@ -22,6 +22,6 @@ public class Fragment : ScriptableObject
     [Tooltip("Content of this fragment.")]
     public string content;
 
-    [Tooltip("Whether or not this note has been found.")]
+    [Tooltip("Whether or not this fragment has been found.")]
     public bool found;
 }

@@ -11,10 +11,19 @@ using UnityEngine;
 
 public class PlayerNotesManager : MonoBehaviour
 {
-    [Tooltip("Notes the player has completed.")]
-    public List<NoteObject> playerNotes = new List<NoteObject>();
+  /// <summary>
+  /// notes player has completed 
+  /// </summary>
+    private List<NoteObject> playerNotes = new List<NoteObject>();
+
+    /// <summary>
+    /// call this class easily
+    /// </summary>
     public static PlayerNotesManager instance;
 
+    /// <summary>
+    /// initializes instance
+    /// </summary>
     private void Awake()
     {
         if(instance == null)
@@ -28,11 +37,17 @@ public class PlayerNotesManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// initial update
+    /// </summary>
     private void Start()
     {
         UpdateNotes();
     }
 
+    /// <summary>
+    /// updates each note's fragments, each note, and the list of all notes
+    /// </summary>
     private void UpdateNotes()
     {
         // loop through all notes
@@ -62,6 +77,9 @@ public class PlayerNotesManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// call when player finds a fragment; sets fragment to found and updates
+    /// </summary>
     public void FindFragment(Fragment fragment)
     {
         fragment.found = true;
