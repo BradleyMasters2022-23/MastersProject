@@ -1,3 +1,10 @@
+/* ================================================================================================
+ * Author - Soma Hannon
+ * Date Created - October 21, 2022
+ * Last Edited - October 31, 2022 by Soma Hannon
+ * Description - Spawns fragment container.
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

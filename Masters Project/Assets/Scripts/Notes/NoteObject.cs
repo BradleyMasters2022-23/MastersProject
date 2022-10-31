@@ -11,62 +11,79 @@ using UnityEngine;
 
 [CreateAssetMenu(menuName = "Gameplay/Note Data")]
 public class NoteObject : ScriptableObject {
-  public int ID;
-  public string displayName;
-  public int numFragments;
-  public Fragment[] fragments;
-  private List<Fragment> lostFragments = new List<Fragment>();
-  private bool[] fragmentsFound;
+    public int ID;
+    public string displayName;
+    public int numFragments;
+    public List<Fragment> fragments = new List<Fragment>();
+    private List<Fragment> lostFragments = new List<Fragment>();
+    public bool completed;
 
-  private void Awake() {
-    fragments = new Fragment[numFragments];
-    fragmentsFound = new bool[numFragments];
-  }
+    private void Start()
+    {
+        UpdateNote();
+    }
 
-  private void Start() {
-    UpdateNote();
-  }
-
-  public void UpdateNote() {
-    for(int i = 0; i < fragmentsFound.Length; i++) {
-      if(fragments[i].found) {
-        fragmentsFound[i] = true;
-      } else {
-        fragmentsFound[i] = false;
-        if(!lostFragments.Contains(fragments[i])) {
-          lostFragments.Add(fragments[i]);
+    public void UpdateNote()
+    {
+        foreach(Fragment fragment in fragments)
+        {
+            // if fragment is found
+            if(fragment.found)
+            {
+                // if lostFragments contains the fragment, remove it
+                if(lostFragments.Contains(fragment))
+                {
+                    lostFragments.Remove(fragment);
+                }
+            }
+            // if fragment is not found
+            else
+            {
+                // if lostFragments does not contain the fragment, add it
+                if(!lostFragments.Contains(fragment))
+                {
+                    lostFragments.Add(fragment);
+                }
+            }
         }
-      }
-    }
-  }
 
-  public Fragment[] GetFragments() {
-    return fragments;
-  }
-
-  public bool[] GetFragmentsFound() {
-    return fragmentsFound;
-  }
-
-  public Fragment GetFragment(int index) {
-    return fragments[index];
-  }
-
-  public Fragment GetRandomLostFragment() {
-    return lostFragments[Random.Range(0, lostFragments.Count)];
-  }
-
-  public bool AllFragmentsFound() {
-    foreach(Fragment fragment in fragments) {
-      if(!fragment.found) {
-        return false;
-      }
+        // if all fragments are found, mark note as completed
+        if(AllFragmentsFound())
+        {
+          completed = true;
+        }
     }
 
-    return true;
-  }
+    public List<Fragment> GetFragments()
+    {
+      return fragments;
+    }
 
-  public List<Fragment> GetLostFragments() {
-    return lostFragments;
-  }
+    public Fragment GetFragment(int index)
+    {
+      return fragments[index];
+    }
+
+    public Fragment GetRandomLostFragment()
+    {
+      return lostFragments[Random.Range(0, lostFragments.Count)];
+    }
+
+    public bool AllFragmentsFound()
+    {
+        foreach(Fragment fragment in fragments)
+        {
+            if(!fragment.found)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public List<Fragment> GetLostFragments()
+    {
+        return lostFragments;
+    }
 }
