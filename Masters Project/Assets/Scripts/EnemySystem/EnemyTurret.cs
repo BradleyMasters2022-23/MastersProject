@@ -9,7 +9,6 @@ public class EnemyTurret : EnemyBase
     public GameObject turretPoint;
     public Transform[] shootPoints;
 
-    [Range(0f, 1f)]
     public float rotationSpeed;
     public GameObject shotPrefab;
     public float shootTime;
@@ -71,11 +70,16 @@ public class EnemyTurret : EnemyBase
         Vector3 direction = (playerCenter.position - turretPoint.transform.position);
         Quaternion rot = Quaternion.LookRotation(direction);
 
-        float nextXAng = Mathf.LerpAngle(turretPoint.transform.localRotation.eulerAngles.x, rot.eulerAngles.x, rotationSpeed * currTime);
-        float nextYAng = Mathf.LerpAngle(turretPoint.transform.rotation.eulerAngles.y, rot.eulerAngles.y, rotationSpeed * currTime);
+        // Limit the next angles
+        float nextXAng = Mathf.Clamp(Mathf.DeltaAngle(turretPoint.transform.localRotation.eulerAngles.x, rot.eulerAngles.x), -rotationSpeed, rotationSpeed) * currTime;
+        float nextYAng = Mathf.Clamp(Mathf.DeltaAngle(turretPoint.transform.localRotation.eulerAngles.y, rot.eulerAngles.y), -rotationSpeed, rotationSpeed) * currTime;
 
-        turretPoint.transform.localRotation = Quaternion.Euler(nextXAng, nextYAng, 0);
-        //transform.rotation = Quaternion.Euler(0, nextYAng, 0);
+        // Apply next angles
+        //turretPoint.transform.localRotation *= Quaternion.Euler(nextXAng, nextYAng, 0);
+        //turretPoint.transform.localRotation = Quaternion.Euler(turretPoint.transform.localRotation.x, turretPoint.transform.localRotation.y, 0);
+
+        turretPoint.transform.localRotation = Quaternion.Euler(turretPoint.transform.localRotation.eulerAngles.x + nextXAng,
+            turretPoint.transform.localRotation.eulerAngles.y + nextYAng, 0);
     }
 
     /// <summary>
@@ -128,7 +132,7 @@ public class EnemyTurret : EnemyBase
         // Try to get player
         RaycastHit hit;
 
-        if (Physics.Raycast(turretPoint.transform.position, direction, out hit, attackRange, ~lm))
+        if (Physics.Raycast(shootPoints[0].position, direction, out hit, attackRange, ~lm))
         {
             lastHit = hit.transform.gameObject;
             if (hit.transform.CompareTag("Player"))

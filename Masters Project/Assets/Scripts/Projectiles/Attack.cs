@@ -27,6 +27,8 @@ public abstract class Attack : MonoBehaviour
 
     protected bool hitTarget;
 
+    
+
     protected abstract void Awake();
 
     protected virtual void DealDamage(GameObject _target)

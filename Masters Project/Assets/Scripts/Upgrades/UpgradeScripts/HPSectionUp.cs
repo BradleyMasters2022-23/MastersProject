@@ -8,8 +8,12 @@ public class HPSectionUp : IUpgrade {
   public override void LoadUpgrade(PlayerController player) {
     hp = FindObjectOfType<PlayerHealth>();
     hp.HealthPerSectionUp(5);
-    foreach(PlayerHealthSection section in hp.GetSections()) {
-      section.MaxHealthUp(5);
-    }
+        PlayerHealthSection[] sections = hp.GetSections();
+
+        for(int i = 0; i < sections.Length; i++)
+        {
+            if (sections[i] != null)
+                sections[i].MaxHealthUp(5);
+        }
   }
 }
