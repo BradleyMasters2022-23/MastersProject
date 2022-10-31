@@ -26,6 +26,8 @@ public class PlayerGunController : MonoBehaviour
     [SerializeField] private UpgradableFloat fireDelay;
     [Tooltip("Projectile thats fired from this gun")]
     [SerializeField] private GameObject shotPrefab;
+    [Tooltip("VFX for firing the gun")]
+    [SerializeField] private GameObject muzzleflashVFX;
     [Tooltip("Minimum range for aiming to take effect. " +
         "Prevents weird aiming when too close to a wall")]
     [SerializeField] private float minAimRange;
@@ -111,6 +113,11 @@ public class PlayerGunController : MonoBehaviour
     /// </summary>
     private void Shoot()
     {
+        if(muzzleflashVFX != null)
+        {
+            Instantiate(muzzleflashVFX, shootPoint.position, shootPoint.transform.rotation);
+        }
+
         // Shoot projectile, aiming towards passed in target
         GameObject newShot = Instantiate(shotPrefab, shootPoint.position, transform.rotation);
         newShot.transform.LookAt(shootCam.TargetPos);
