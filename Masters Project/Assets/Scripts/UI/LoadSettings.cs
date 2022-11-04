@@ -45,7 +45,9 @@ public class LoadSettings : MonoBehaviour
         Settings.controllerSensitivity = PlayerPrefs.GetFloat("ControllerSensitivity", defaultControllerSensitivity * CONTROLLERMULTIPLIER);
         Settings.controllerInvertX = IntToBool(PlayerPrefs.GetInt("ControllerInvertX", BoolToInt(defaultControllerInvertX)));
         Settings.controllerInvertY = IntToBool(PlayerPrefs.GetInt("ControllerInvertY", BoolToInt(defaultControllerInvertY)));
-        
+
+        Debug.Log("Settings loaded");
+
         // Self destruct once complete
         Destroy(this);
     }
