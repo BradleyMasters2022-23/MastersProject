@@ -16,12 +16,12 @@ public class EnemyPointer : MonoBehaviour
     /// <summary>
     /// reference to image component
     /// </summary>
-    private Canvas img;
+    private GameObject img;
 
     /// <summary>
     /// Target enemy to monitor
     /// </summary>
-    private GameObject targetEnemy;
+    private Transform targetEnemy;
     /// <summary>
     /// Whether this pointer has been initialized
     /// </summary>
@@ -46,40 +46,40 @@ public class EnemyPointer : MonoBehaviour
             return;
         }
 
-        // Get Y angle for pointing at enemy
-        Vector3 dir = targetEnemy.transform.position - transform.position;
-        float angY = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
-        if (angY > 180)
-            angY -= 360;
+        //Rotate arrow towards target
+        transform.LookAt(targetEnemy.position);
 
-        // Get clamped X angle for pointing at enemy
-        float angX = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        // limit vertical rotation (x-axis)
+        float angX = transform.rotation.eulerAngles.x;
         if (angX > 180)
             angX -= 360;
 
-        angX = -Mathf.Clamp(angX, -maxXAngle, maxXAngle);
-
-        // apply new rotations
-        transform.rotation = Quaternion.Euler(angX, angY, 0);
-
+        transform.rotation = Quaternion.Euler(
+            Mathf.Clamp(angX, -maxXAngle, maxXAngle),
+            transform.rotation.eulerAngles.y,
+            transform.rotation.eulerAngles.z);
 
         // Check how 'infront' the arrow is pointing, check if it should hide
         float angleYDiff = (transform.parent.rotation.eulerAngles.y % 360) - (transform.rotation.eulerAngles.y % 360);
 
-        if (Mathf.Abs(angleYDiff) <= hideYRadius && img.enabled == true)
+        if (Mathf.Abs(angleYDiff) <= hideYRadius && img.activeInHierarchy == true)
         {
-            img.enabled = false;
+            img.SetActive(false);
         }
-        else if (Mathf.Abs(angleYDiff) > hideYRadius && img.enabled == false)
+        else if (Mathf.Abs(angleYDiff) > hideYRadius && img.activeInHierarchy == false)
         {
-            img.enabled = true;
+            img.SetActive(true);
         }
     }
 
+    /// <summary>
+    /// Set the target enemy
+    /// </summary>
+    /// <param name="target"></param>
     public void SetTarget(GameObject target)
     {
-        targetEnemy = target;
-        img = GetComponentInChildren<Canvas>();
+        targetEnemy = target.GetComponent<EnemyBase>().centerMass;
+        img = transform.GetChild(0).gameObject;
 
         initialized = true;
     }
