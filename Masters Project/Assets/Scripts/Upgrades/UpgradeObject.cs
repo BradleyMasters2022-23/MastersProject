@@ -27,6 +27,6 @@ public class UpgradeObject : ScriptableObject {
     [Tooltip("Upgrade level start, min, max.")]
     public UpgradableInt lvl;
 
-    [Tooltip("Should always be the same. It's in /Prefabs/Upgrades.")]
+    [Tooltip("Holds the upgrade script itself plus other game info.")]
     public GameObject upgradePrefab;
 }
