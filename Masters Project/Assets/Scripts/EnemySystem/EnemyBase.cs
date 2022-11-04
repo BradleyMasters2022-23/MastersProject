@@ -32,25 +32,10 @@ public abstract class EnemyBase : MonoBehaviour
     /// </summary>
     protected Transform playerCenter;
 
-    //[Tooltip("Current state of the enemy")]
-    //[SerializeField] protected EnemyState currentState;
-
     /// <summary>
-    /// Current world time, based on time manager
+    /// Center of this enemy
     /// </summary>
-    //protected float currTime;
-
-    //[Tooltip("Maximum speed for this enemy")]
-    //[SerializeField]
-    //protected float maxMoveSpeed;
-
-    //[Tooltip("Speed the enemy reaches max speed")]
-    //[SerializeField]
-    //protected float accelerationSpeed;
-
-    //[Tooltip("Speed the enemy can rotate")]
-    //[SerializeField]
-    //protected float rotationSpeed;
+    public Transform centerMass;
 
     /// <summary>
     /// Prepare setup
@@ -59,5 +44,10 @@ public abstract class EnemyBase : MonoBehaviour
     {
         player = FindObjectOfType<PlayerController>().gameObject;
         playerCenter = FindObjectOfType<PlayerController>().CenterMass;
+        
+        if(centerMass is null)
+        {
+            centerMass = transform;
+        }
     }
 }
