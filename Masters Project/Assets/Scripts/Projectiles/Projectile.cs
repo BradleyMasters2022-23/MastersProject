@@ -51,6 +51,11 @@ public class Projectile : RangeAttack
     /// </summary>
     private Vector3 hitPoint;
 
+    /// <summary>
+    /// rotation where the contact was made
+    /// </summary>
+    private Vector3 hitRotatation;
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -68,11 +73,15 @@ public class Projectile : RangeAttack
         if (Physics.SphereCast(transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, (Vector3.Distance(transform.position, lastPos)), ~layersToIgnore))
         {
             hitPoint = target.point;
+
+            hitRotatation = transform.position - hitPoint;
+
             TriggerTarget(target.collider);
         }
         else
         {
             hitPoint = transform.position;
+            hitRotatation = -transform.forward;
         }
 
         // Check if projectile reached its max range
@@ -90,8 +99,8 @@ public class Projectile : RangeAttack
         // Spawn in whatever its told to, if able
         if(onHitEffect != null)
         {
-            Instantiate(onHitEffect, hitPoint, Quaternion.identity);
-            
+            GameObject t = Instantiate(onHitEffect, hitPoint, Quaternion.identity);
+            t.transform.LookAt(hitRotatation);
         }
 
         if (enemyHit.Length > 0)
