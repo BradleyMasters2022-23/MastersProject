@@ -270,31 +270,15 @@ public class GameManager : MonoBehaviour
     /// <param name="c"></param>
     private void TogglePause(InputAction.CallbackContext c)
     {
-        
-        //if(pressedPause)
-        //{
-        //    Debug.Log("Trying to pause during pressed pause!");
-        //    return;
-        //}
-        //else
-        //{
-        //    pressedPause = true;
-        //    StartCoroutine(PausePressed());
-        //}
-
-        Debug.Log("Toggle pause called! \n" + c.startTime);
-
         // check if settings menu is open. If so, dont unpause
         Settings settings = FindObjectOfType<Settings>(true);
         if (settings != null)
         {
             if (settings.SettingsOpen())
             {
-                Debug.Log("Settings open, cannot toggle pause!");
                 return;
             }
         }
-
 
 
         // try pausing
@@ -310,19 +294,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //private IEnumerator PausePressed()
-    //{
-    //    pressedPause = true;
-    //    yield return new WaitForSecondsRealtime(1f);
-    //    pressedPause = false;
-    //}
-
     /// <summary>
     /// Public call to toggle pause
     /// </summary>
     public void TogglePause()
     {
-        Debug.Log("Public toggle pause called");
         TogglePause(new InputAction.CallbackContext());
     }
 

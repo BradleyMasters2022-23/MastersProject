@@ -2,7 +2,7 @@
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 26th, 2022
- * Last Edited - October 26th, 2022 by Ben Schuster
+ * Last Edited - November 4th, 2022 by Ben Schuster
  * Description - Controller for enemy health
  * ================================================================================================
  */
@@ -38,12 +38,6 @@ public class EnemyHealth : Damagable
 
     [Tooltip("If told to drop, what is the range of orbs that can drop")]
     [SerializeField] private Vector2 dropNumerRange;
-
-    [Tooltip("Range of velocity items can drop with")]
-    [SerializeField] private Vector2 dropVelocityRange;
-
-    [Tooltip("Range of velocity items can drop with")]
-    [SerializeField] private Vector2 dropXAngleRange;
 
 
     /// <summary>
@@ -168,16 +162,8 @@ public class EnemyHealth : Damagable
         // Spawn the randomized amount at random ranges, as long as they aren't intersecting
         for(int i = 0; i < spawnAmount; i++)
         {
-            // Randomly generate velocity and rotation angles
-            float vel = Random.Range(dropVelocityRange.x, dropVelocityRange.y);
-            float angY = Random.Range(0, 360);
-            float angX = Random.Range(dropXAngleRange.x, dropXAngleRange.y);
-
-            Quaternion rot = Quaternion.Euler(angX, angY, 0);
-
             // Spawn objects, apply rotation and velocity
-            GameObject orb = Instantiate(timeOrb, transform.position, rot);
-            orb.GetComponent<Rigidbody>().velocity = orb.transform.forward * vel;
+            Instantiate(timeOrb, transform.position, Quaternion.identity);
         }
     }
 }
