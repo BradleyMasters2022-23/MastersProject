@@ -346,6 +346,7 @@ public class PlayerController : MonoBehaviour
     /// <param name="ctx">Input callback context [ignorable]</param>
     private void ToggleSprint(InputAction.CallbackContext ctx)
     {
+        
         // If player is grounded and started input, start sprinting
         if (currentState == PlayerState.GROUNDED && ctx.started)
         {
@@ -565,7 +566,7 @@ public class PlayerController : MonoBehaviour
             move.Disable();
         if(jump.enabled)
             jump.Disable();
-        if(jump.enabled)
+        if(sprint.enabled)
             sprint.Disable();
     }
 

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4200660424031383931
+--- !u!1 &3907863999387668349
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7908334833500349948}
-  - component: {fileID: 3237282376792048971}
+  - component: {fileID: 6387235414298326269}
+  - component: {fileID: -8834634656643216151}
   m_Layer: 0
-  m_Name: AllUpgradesManager
+  m_Name: NoteSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7908334833500349948
+--- !u!4 &6387235414298326269
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4200660424031383931}
+  m_GameObject: {fileID: 3907863999387668349}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,19 +32,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3237282376792048971
+--- !u!114 &-8834634656643216151
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4200660424031383931}
+  m_GameObject: {fileID: 3907863999387668349}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40b1f92c87f46c943bdc1ed583a876e3, type: 3}
+  m_Script: {fileID: 11500000, guid: f4c38871396e016418475c55b5f09ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allUpgrades:
-  - {fileID: 11400000, guid: 0837ffac84ba47b4dad3e8e1cd35df91, type: 2}
-  - {fileID: 11400000, guid: dbde72bccc9cdcf4cb2838e67f84f5ee, type: 2}
-  - {fileID: 11400000, guid: 5b0e6c3f696babc4c9f970517af13370, type: 2}
+  container: {fileID: 801039974641795922, guid: ee4f5c4e16370424f9eef59ae9d2e4af, type: 3}
+  fragmentSpawnPoint: {fileID: 0}
