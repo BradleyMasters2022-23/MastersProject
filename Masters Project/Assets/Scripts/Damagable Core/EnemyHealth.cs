@@ -2,7 +2,7 @@
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 26th, 2022
- * Last Edited - October 26th, 2022 by Ben Schuster
+ * Last Edited - November 4th, 2022 by Ben Schuster
  * Description - Controller for enemy health
  * ================================================================================================
  */
@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Sirenix.OdinInspector;
 
 public class EnemyHealth : Damagable
 {
@@ -26,6 +27,18 @@ public class EnemyHealth : Damagable
 
     [Tooltip("Time it takes after an enemy takes damage before hiding its UI. Set to 0 to leave the UI always on.")]
     [SerializeField] private float hideUIDelay;
+
+    [Header("=====Time Orbs=====")]
+
+    [Tooltip("Prefab of the time orb itself")]
+    [SerializeField, AssetsOnly] private GameObject timeOrb;
+
+    [Tooltip("Chance of dropping any time orbs at all")]
+    [SerializeField, Range(0, 100)] private float dropChance;
+
+    [Tooltip("If told to drop, what is the range of orbs that can drop")]
+    [SerializeField] private Vector2 dropNumerRange;
+
 
     /// <summary>
     /// List of active coroutines that need to be stopped on death
@@ -108,8 +121,10 @@ public class EnemyHealth : Damagable
     /// </summary>
     protected override void Die()
     {
+        DropOrbs();
+
         // Disable all coroutines currently active
-        for(int i  = activeRoutines.Count - 1; i >= 0; i--)
+        for (int i  = activeRoutines.Count - 1; i >= 0; i--)
         {
             StopCoroutine(activeRoutines[i]);
             activeRoutines.RemoveAt(i);
@@ -129,5 +144,26 @@ public class EnemyHealth : Damagable
 
         // Destroy object
         Destroy(this.gameObject);
+    }
+
+    /// <summary>
+    /// Determine if drops should drop, and spawn them
+    /// </summary>
+    protected void DropOrbs()
+    {
+        // Roll the dice. If the value is higher than the value, exit
+        if(Random.Range(1, 101) > dropChance || timeOrb is null)
+        {
+            return;
+        }
+
+        int spawnAmount = Random.Range((int) dropNumerRange.x, (int) dropNumerRange.y);
+
+        // Spawn the randomized amount at random ranges, as long as they aren't intersecting
+        for(int i = 0; i < spawnAmount; i++)
+        {
+            // Spawn objects, apply rotation and velocity
+            Instantiate(timeOrb, transform.position, Quaternion.identity);
+        }
     }
 }
