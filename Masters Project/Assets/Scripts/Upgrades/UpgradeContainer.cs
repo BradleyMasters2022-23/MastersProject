@@ -13,6 +13,7 @@ using TMPro;
 public class UpgradeContainer : MonoBehaviour {
   [SerializeField] private UpgradeObject upgrade;
   private List<GameObject> linkedUpgrades = new List<GameObject>();
+  public TextMeshProUGUI nameText;
   private Color color;
 
   /// <summary>
@@ -35,6 +36,7 @@ public class UpgradeContainer : MonoBehaviour {
       upgrade = obj;
       color = upgrade.upgradeColor;
       GetComponent<Renderer>().material.color = color;
+      nameText.text = upgrade.displayName;
   }
 
   public void AddLink(GameObject obj)

@@ -22,7 +22,7 @@ public class RewardsManager : MonoBehaviour
         if(AllUpgradeManager.instance.GetAll().Count < numChoices.Current) {
             numChoices.ChangeVal(AllUpgradeManager.instance.GetAll().Count);
         }
-        
+
         while(choices.Count < numChoices.Current) {
             UpgradeObject tempUpgrade = AllUpgradeManager.instance.GetRandomOption();
             if(!choices.Contains(tempUpgrade)) {
@@ -40,7 +40,7 @@ public class RewardsManager : MonoBehaviour
             temp += Vector3.right * (i * 5);
             GameObject obj = Instantiate(container, temp, rewardSpawnPoint.rotation);
             obj.GetComponent<UpgradeContainer>().SetUp(choices[i]);
-            containers[i] = obj.GetComponent<UpgradeContainer>();
+            containers.Add(obj.GetComponent<UpgradeContainer>());
         }
 
         if(linked && numChoices.Current > 1)
