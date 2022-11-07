@@ -6,6 +6,14 @@ using Sirenix.OdinInspector;
 
 public class MapLoader : MonoBehaviour
 {
+    public enum States
+    {
+        Preparing,
+        Room, 
+        Hallway
+    }
+
+
     [Tooltip("Hallways that can be used"), AssetsOnly]
     [SerializeField] private List<MapSegmentSO> allHallways;
     [Tooltip("Rooms that can be used"), AssetsOnly]
@@ -35,14 +43,27 @@ public class MapLoader : MonoBehaviour
 
     public Transform nextSpawnPoint;
 
-    
-
     public bool loadRoom;
 
     /// <summary>
     /// Collection of rooms being loaded in.
     /// </summary>
     private Queue<GameObject> loadedRooms;
+
+
+    #region Object Pooler
+
+    private List<GameObject> pooledRooms;
+    private List<GameObject> pooledHallways;
+
+    public static MapLoader instance;
+
+
+
+    #endregion
+
+
+
 
     private void Awake()
     {
@@ -175,11 +196,10 @@ public class MapLoader : MonoBehaviour
         GameObject section = Instantiate(nextSection, new Vector3(500, 500, 500), Quaternion.identity);
         loadedRooms.Enqueue(section);
 
-        ComponentLoader sectionManager = section.GetComponent<ComponentLoader>();
+        SegmentLoader sectionManager = section.GetComponent<SegmentLoader>();
 
 
-        sectionManager.PrepareStartPoint();
-        sectionManager.PrepareComponent(nextSpawnPoint);
+        sectionManager.PrepareStartPoint(nextSpawnPoint);
 
         nextSpawnPoint = sectionManager.NextExit();
     }
@@ -198,8 +218,8 @@ public class MapLoader : MonoBehaviour
         {
             LoadNextComponent();
 
-            if (currentFloorLength >= 2)
-                UnloadSegment();
+            //if (currentFloorLength >= 2)
+            //    UnloadSegment();
 
             yield return new WaitForSecondsRealtime(1f);
 
