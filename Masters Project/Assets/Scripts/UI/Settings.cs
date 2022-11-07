@@ -67,7 +67,7 @@ public class Settings : MonoBehaviour
     /// <summary>
     /// multiplier to controller sensitivity [otherwise is too slow]
     /// </summary>
-    private const float CONTROLLERMULTIPLIER = 50;
+    public const float CONTROLLERMULTIPLIER = 50;
     /// <summary>
     /// Axis inversion for controller
     /// </summary>

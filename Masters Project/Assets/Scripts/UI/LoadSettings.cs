@@ -26,12 +26,6 @@ public class LoadSettings : MonoBehaviour
     [Tooltip("Default value for y inversion")]
     [SerializeField] private bool defaultControllerInvertY;
 
-
-    /// <summary>
-    /// multiplier to controller sensitivity [otherwise is too slow]
-    /// </summary>
-    private const float CONTROLLERMULTIPLIER = 50;
-
     /// <summary>
     /// Load in the saved player settings
     /// </summary>
@@ -42,7 +36,7 @@ public class LoadSettings : MonoBehaviour
         Settings.mouseInvertX = IntToBool(PlayerPrefs.GetInt("MouseInvertX", BoolToInt(defaultMouseInvertX)));
         Settings.mouseInvertY = IntToBool(PlayerPrefs.GetInt("MouseInvertY", BoolToInt(defaultMouseInvertY)));
 
-        Settings.controllerSensitivity = PlayerPrefs.GetFloat("ControllerSensitivity", defaultControllerSensitivity * CONTROLLERMULTIPLIER);
+        Settings.controllerSensitivity = PlayerPrefs.GetFloat("ControllerSensitivity", defaultControllerSensitivity * Settings.CONTROLLERMULTIPLIER);
         Settings.controllerInvertX = IntToBool(PlayerPrefs.GetInt("ControllerInvertX", BoolToInt(defaultControllerInvertX)));
         Settings.controllerInvertY = IntToBool(PlayerPrefs.GetInt("ControllerInvertY", BoolToInt(defaultControllerInvertY)));
         
