@@ -73,7 +73,6 @@ public abstract class PickupOrb : MonoBehaviour
         // Switch to kinematic after the initial burst after spawning
         if(!rb.isKinematic)
         {
-            Debug.DrawRay(transform.position, Vector3.down * floatHeight);
             // Check if it needs to start floating
             if (rb.velocity.y < 0 && Physics.Raycast(transform.position, Vector3.down, out hitInfo, floatHeight, groundMask))
             {

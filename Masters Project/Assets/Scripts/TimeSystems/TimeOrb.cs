@@ -35,7 +35,6 @@ public class TimeOrb : PickupOrb
         playerTime = FindObjectOfType<TimeManager>();
         col = GetComponent<SphereCollider>();
         refillAmount *= 50;
-        Debug.Log("Will refill " + refillAmount + " of the gauge");
     }
 
     /// <summary>
