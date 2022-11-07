@@ -2,17 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class RechargeDamageUp : IUpgrade
 {
-    // Start is called before the first frame update
-    void Start()
+    private TimeManager time;
+    private PlayerGunController gun;
+    private int originalDamage;
+    public int damageMultiplier;
+    private bool damageUp;
+    public override void LoadUpgrade(PlayerController player)
     {
-        
+        damageUp = false;
+        time = FindObjectOfType<TimeManager>();
+        gun = FindObjectOfType<PlayerGunController>();
+        originalDamage = gun.GetDamageMultiplier();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+      if(time.GetState() == TimeManager.TimeGaugeState.EMPTIED) {
+          damageUp = true;
+      }
+
+      if(damageUp) {
+          gun.SetDamageMultiplier(originalDamage*damageMultiplier);
+          Debug.Log("Damage up!");
+          if(time.GetState() != TimeManager.TimeGaugeState.EMPTIED) {
+              damageUp = false;
+              gun.SetDamageMultiplier(originalDamage);
+              Debug.Log("Damage back to normal");
+          }
+      }
     }
 }
