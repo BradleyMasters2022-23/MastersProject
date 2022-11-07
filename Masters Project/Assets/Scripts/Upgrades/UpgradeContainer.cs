@@ -12,6 +12,7 @@ using TMPro;
 
 public class UpgradeContainer : MonoBehaviour {
   [SerializeField] private UpgradeObject upgrade;
+  private List<GameObject> linkedUpgrades = new List<GameObject>();
   private Color color;
 
   /// <summary>
@@ -36,6 +37,11 @@ public class UpgradeContainer : MonoBehaviour {
       GetComponent<Renderer>().material.color = color;
   }
 
+  public void AddLink(GameObject obj)
+  {
+      linkedUpgrades.Add(obj);
+  }
+
   /// <summary>
   /// called when player walks into the object. eventually change to a button?
   /// </summary>
@@ -43,7 +49,15 @@ public class UpgradeContainer : MonoBehaviour {
       if(other.CompareTag("Player")) {
           // TODO: trigger upgrade select screen.
           // buttons on USS call PlayerUpgradeManager.AddUpgrade() for the linked upgrade
+
+          for (int i = linkedUpgrades.Count - 1; i >= 0; i--)
+          {
+              Destroy(linkedUpgrades[i]);
+          }
+          linkedUpgrades.Clear();
+
           PlayerUpgradeManager.instance.AddUpgrade(upgrade);
+
           Destroy(this.gameObject);
       }
   }
