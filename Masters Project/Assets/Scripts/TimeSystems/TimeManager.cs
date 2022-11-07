@@ -2,7 +2,7 @@
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 17th, 2022
- * Last Edited - October 17th, 2022 by Ben Schuster
+ * Last Edited - November 4th, 2022 by Ben Schuster
  * Description - Manages the global time value with player controls
  * ================================================================================================
  */
@@ -28,7 +28,12 @@ public class TimeManager : MonoBehaviour
     /// <summary>
     /// Current state of the Time Gauge
     /// </summary>
-    private TimeGaugeState currentState;
+    [SerializeField] private TimeGaugeState currentState;
+
+    public TimeGaugeState CurrState
+    {
+        get { return currentState; }
+    }
 
     [Header("---Game Flow---")]
     [SerializeField] private ChannelGMStates onStateChangeChannel;
@@ -112,7 +117,7 @@ public class TimeManager : MonoBehaviour
     /// <summary>
     /// Current amount of slow gauge
     /// </summary>
-    private float currSlowGauge;
+    [SerializeField] private float currSlowGauge;
     /// <summary>
     /// Current amount of slow gauge
     /// </summary>
@@ -405,6 +410,34 @@ public class TimeManager : MonoBehaviour
         {
             currSlowGauge += replenishAmount;
         }
+    }
+
+    /// <summary>
+    /// Add more energy to the time gauge
+    /// </summary>
+    /// <param name="amount">amount to add</param>
+    /// <returns>Whether anything was added</returns>
+    public bool AddGauge(float amount)
+    {
+        // If Idle, or filled, then dont use
+        if(currentState == TimeGaugeState.IDLE)
+            return false;
+
+        float maxGauge = slowDuration.Current * FixedUpdateCalls;
+
+        // Replenish the gauge, determine if state should change
+        if (currSlowGauge + amount >= maxGauge)
+        {
+            currSlowGauge = maxGauge;
+            //ChangeState(TimeGaugeState.IDLE);
+        }
+        else
+        {
+            currSlowGauge += amount;
+        }
+
+        // Since some was used, return true
+        return true;
     }
 
     public float MaxGauge()
