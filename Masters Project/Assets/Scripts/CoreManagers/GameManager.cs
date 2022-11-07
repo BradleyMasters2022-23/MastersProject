@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Initialize internal systems
     /// </summary>
-    private async void Start()
+    private void Start()
     {
         // Create singleton, initialize instane
         if(instance == null)
@@ -270,20 +270,6 @@ public class GameManager : MonoBehaviour
     /// <param name="c"></param>
     private void TogglePause(InputAction.CallbackContext c)
     {
-        
-        //if(pressedPause)
-        //{
-        //    Debug.Log("Trying to pause during pressed pause!");
-        //    return;
-        //}
-        //else
-        //{
-        //    pressedPause = true;
-        //    StartCoroutine(PausePressed());
-        //}
-
-        Debug.Log("Toggle pause called! \n" + c.startTime);
-
         // check if settings menu is open. If so, dont unpause
         Settings settings = FindObjectOfType<Settings>(true);
         if (settings != null)
@@ -294,8 +280,6 @@ public class GameManager : MonoBehaviour
                 return;
             }
         }
-
-
 
         // try pausing
         if (ValidateStateChange(States.PAUSED))
@@ -310,19 +294,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //private IEnumerator PausePressed()
-    //{
-    //    pressedPause = true;
-    //    yield return new WaitForSecondsRealtime(1f);
-    //    pressedPause = false;
-    //}
-
     /// <summary>
     /// Public call to toggle pause
     /// </summary>
     public void TogglePause()
     {
-        Debug.Log("Public toggle pause called");
         TogglePause(new InputAction.CallbackContext());
     }
 
@@ -347,8 +323,63 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
+    #endregion
+
+    #region Controller & Mouse Swapping
+
     private void OnApplicationFocus(bool focus)
     {
+        UpdateMouseMode();
+    }
+
+    private void Update()
+    {
+        EventSystem t = FindObjectOfType<EventSystem>();
+        if (t != null)
+            lastSelectedObject = t.currentSelectedGameObject;
+    }
+
+    private void HideCursor(InputAction.CallbackContext c)
+    {
+        if (controllerType == ControllerType.MOUSE
+            && checkController.ReadValue<Vector2>() != Vector2.zero)
+        {
+            //Debug.Log("Controller detected, hiding cursor");
+
+            controllerType = ControllerType.CONTROLLER;
+
+            Cursor.lockState = CursorLockMode.None;
+            //Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
+            // Set active button to either the default or last selected button
+            EventSystem t = FindObjectOfType<EventSystem>();
+            if (t != null && lastSelectedObject != null && lastSelectedObject.activeInHierarchy)
+                t.SetSelectedGameObject(lastSelectedObject);
+            else if (t != null && t.firstSelectedGameObject != null)
+                t.SetSelectedGameObject(t.firstSelectedGameObject);
+        }
+    }
+
+    private void ShowCursor(InputAction.CallbackContext c)
+    {
+        if (controllerType == ControllerType.CONTROLLER
+            && checkCursor.ReadValue<Vector2>() != Vector2.zero)
+        {
+            //Debug.Log("Mouse detected, showing cursor");
+
+            controllerType = ControllerType.MOUSE;
+
+            // Reenable cursor, set appropriate lock state
+            Cursor.visible = true;
+            UpdateMouseMode();
+        }
+    }
+
+    private void UpdateMouseMode()
+    {
+        Cursor.lockState = CursorLockMode.None;
+
         switch (currentState)
         {
             case States.MAINMENU:
@@ -398,99 +429,5 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        EventSystem t = FindObjectOfType<EventSystem>();
-        if(t != null)
-            lastSelectedObject = t.currentSelectedGameObject;
-    }
-
-    private void HideCursor(InputAction.CallbackContext c)
-    {
-        if(controllerType == ControllerType.MOUSE
-            && checkController.ReadValue<Vector2>() != Vector2.zero)
-        {
-            Debug.Log("Controller detected, hiding cursor");
-
-            controllerType = ControllerType.CONTROLLER;
-            
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-
-            EventSystem t = FindObjectOfType<EventSystem>();
-            if (t != null && lastSelectedObject != null && lastSelectedObject.activeInHierarchy)
-                t.SetSelectedGameObject(lastSelectedObject);
-            else if (t != null && t.firstSelectedGameObject != null)
-                t.SetSelectedGameObject(t.firstSelectedGameObject);
-
-
-        }
-    }
-
-    private void ShowCursor(InputAction.CallbackContext c)
-    {
-        if(controllerType == ControllerType.CONTROLLER
-            && checkCursor.ReadValue<Vector2>() != Vector2.zero)
-        {
-            Debug.Log("Mouse detected, showing cursor");
-
-            controllerType = ControllerType.MOUSE;
-
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-
-            switch (currentState)
-            {
-                case States.MAINMENU:
-                    {
-                        Cursor.lockState = CursorLockMode.Confined;
-
-                        break;
-                    }
-                case States.PAUSED:
-                    {
-                        Cursor.lockState = CursorLockMode.Confined;
-
-                        break;
-                    }
-                case States.HUB:
-                    {
-                        Cursor.lockState = CursorLockMode.Locked;
-
-                        break;
-                    }
-                case States.GAMEPLAY:
-                    {
-                        Cursor.lockState = CursorLockMode.Locked;
-
-                        break;
-                    }
-                case States.GAMEMENU:
-                    {
-                        Cursor.lockState = CursorLockMode.Confined;
-
-                        break;
-                    }
-                case States.GAMEOVER:
-                    {
-                        Cursor.lockState = CursorLockMode.Confined;
-
-                        onGameOverChannel.RaiseEvent();
-                        break;
-                    }
-                case States.LOADING:
-                    {
-                        Cursor.lockState = CursorLockMode.Confined;
-
-
-                        break;
-                    }
-            }
-
-        }
-    }
-
     #endregion
-
 }
