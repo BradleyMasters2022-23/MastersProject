@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60ed9c15b3a388345a715e8dc872fa5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentState: 0
   onStateChangeChannel: {fileID: 11400000, guid: 2770aed5fbc083e4d8279c944f0242e2, type: 2}
   slowestTime: 0
   slowTransitionTime: 0.3
@@ -54,9 +55,9 @@ MonoBehaviour:
     lowerLimit: 0
     upperLimit: 0
   replenishTime:
-    startingValue: 5
+    startingValue: 30
     lowerLimit: 0
-    upperLimit: 10
+    upperLimit: 0
   replenishDelay:
     startingValue: 1
     lowerLimit: 0
@@ -65,3 +66,4 @@ MonoBehaviour:
     startingValue: 5
     lowerLimit: 0
     upperLimit: 10
+  currSlowGauge: 0

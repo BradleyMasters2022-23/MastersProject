@@ -40,6 +40,13 @@ public class DoorManager : MonoBehaviour
     {
         // Get all doors, organize accordingly
         Door[] temp = FindObjectsOfType<Door>();
+
+        if(temp.Length <= 0)
+        {
+            Debug.Log("No doors found!");
+            return;
+        }
+
         foreach (Door f in temp)
         {
             if (f.Type == Door.PlayerDoorType.Entrance && entrance is null)
