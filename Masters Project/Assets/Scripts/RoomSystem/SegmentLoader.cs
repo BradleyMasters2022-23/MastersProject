@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class SegmentLoader : MonoBehaviour
 {
@@ -20,15 +21,23 @@ public class SegmentLoader : MonoBehaviour
     private Transform startPoint;
 
     /// <summary>
+    /// Reference to the navmesh of this segment
+    /// </summary>
+    private NavMeshSurface navMesh;
+
+
+    /// <summary>
     /// Initialize internal variables
     /// </summary>
     private void Awake()
     {
-        syncPoints = new List<Transform>();
-
         mapSection = gameObject;
 
-        // Get all syncpoints attached to this segment
+        syncPoints = new List<Transform>();
+
+        navMesh = GetComponentInChildren<NavMeshSurface>();
+
+        // Get all syncpoints attached to this segment. Used like this to ensure other segments arent grabbed.
         GameObject[] potentialPoints = GameObject.FindGameObjectsWithTag("SyncPoint");
         foreach(GameObject points in potentialPoints)
         {
@@ -66,8 +75,6 @@ public class SegmentLoader : MonoBehaviour
     /// </summary>
     public void PrepareStartPoint(Transform syncPoint)
     {
-        //Debug.Log("preparing start point");
-
         StartCoroutine(LoadSegment(syncPoint));
     }
 
