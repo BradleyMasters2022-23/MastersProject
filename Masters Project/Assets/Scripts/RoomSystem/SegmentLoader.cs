@@ -6,14 +6,19 @@ using UnityEngine.AI;
 public class SegmentLoader : MonoBehaviour
 {
     /// <summary>
-    /// All possibly syncpoints in this room
+    /// All available syncpoints for this object
     /// </summary>
     private List<Transform> syncPoints;
 
     /// <summary>
-    /// The overall prefab itself
+    /// All syncpoints found for this object
     /// </summary>
-    private GameObject mapSection;
+    private List<Transform> allSyncPoints;
+
+    /// <summary>
+    /// Reference to the segment's SO data
+    /// </summary>
+    public MapSegmentSO segmentInfo;
 
     /// <summary>
     /// The transform used to enter this map segment
@@ -21,82 +26,108 @@ public class SegmentLoader : MonoBehaviour
     private Transform startPoint;
 
     /// <summary>
-    /// Reference to the navmesh of this segment
+    /// Buffer transform that uses syncpoint data to rotate the map
     /// </summary>
-    private NavMeshSurface navMesh;
+    public Transform syncBuffer;
 
+    /// <summary>
+    /// The root of this prefab
+    /// </summary>
+    private Transform root;
 
     /// <summary>
     /// Initialize internal variables
     /// </summary>
     private void Awake()
     {
-        mapSection = gameObject;
+        root = transform;
 
-        syncPoints = new List<Transform>();
+        allSyncPoints = new List<Transform>();
 
-        navMesh = GetComponentInChildren<NavMeshSurface>();
 
-        // Get all syncpoints attached to this segment. Used like this to ensure other segments arent grabbed.
+        // Get all syncpoints in scene
         GameObject[] potentialPoints = GameObject.FindGameObjectsWithTag("SyncPoint");
-        foreach(GameObject points in potentialPoints)
+        // Make sure these are syncpoints in this prefab, not from the others
+        foreach (GameObject points in potentialPoints)
         {
-            if(IsChild(points))
+            if (points.transform.root == root)
             {
-                syncPoints.Add(points.transform);
+                allSyncPoints.Add(points.transform);
             }
         }
 
-        // select start point, remove from pool
-        startPoint = syncPoints[Random.Range(0, syncPoints.Count)];
-        syncPoints.Remove(startPoint);
+        // Load syncpoints into usable syncpoints
+        syncPoints = new List<Transform>(allSyncPoints);
+
+        // On load, deactivate self
+        ResetToPool();
     }
 
     /// <summary>
-    /// Check if the given gameobject is a child of this object
+    /// Set this segment's SO reference
     /// </summary>
-    /// <param name="target">Game object to check</param>
-    /// <returns>Whether the target is a child of this object</returns>
-    private bool IsChild(GameObject target)
+    /// <param name="so">ScriptableObject containing this segments info</param>
+    public void SetSO(MapSegmentSO so)
     {
-        Transform pointer = target.transform.parent;
-
-        // Try checking
-        while(pointer != null && pointer != transform)
-        {
-            pointer = pointer.parent;
-        }
-
-        return pointer == transform;
+        segmentInfo = so;
     }
 
     /// <summary>
     /// Choose a start point, adjust map accordingly
     /// </summary>
-    public void PrepareStartPoint(Transform syncPoint)
+    public void RetrieveFromPool(Transform syncPoint)
     {
+        gameObject.SetActive(true);
+
         StartCoroutine(LoadSegment(syncPoint));
     }
 
+    public void ResetToPool()
+    {
+        // Rotate each other sync point to point in default position direction, link to map
+        if(syncPoints != null)
+        {
+            foreach (Transform t in syncPoints)
+            {
+                //t.SetParent(root, true);
+
+                t.transform.Rotate(Vector3.up, 180);
+            }
+        }
+        syncPoints = new List<Transform>(allSyncPoints);
+        
+        // Set root back to root, reset sync buffer
+        root.parent = null;
+        syncBuffer.SetParent(root, true);
+
+        // Disable, move out of the way
+        root.gameObject.SetActive(false);
+        //root.position = transform.forward * 100f;
+
+        // clear startpoint buffer
+        startPoint = null;
+    }
+
+
     private IEnumerator LoadSegment(Transform syncPoint)
     {
-        // Wait for syncpoints to be initialized
-        while(startPoint is null)
-        {
-            yield return null;
-        }
+        // select start point, remove from pool
+        startPoint = syncPoints[Random.Range(0, syncPoints.Count)];
+        syncPoints.Remove(startPoint);
 
         // Rotate each other sync point to point in exit direction, link to map
         foreach (Transform t in syncPoints)
         {
-            t.SetParent(mapSection.transform, true);
+            //t.SetParent(root, true);
 
             t.transform.Rotate(Vector3.up, 180);
         }
 
+        syncBuffer.SetPositionAndRotation(startPoint.position, startPoint.rotation);
+
         // set parent to help sync
-        startPoint.parent = null;
-        mapSection.transform.SetParent(startPoint, true);
+        syncBuffer.parent = null;
+        root.transform.SetParent(syncBuffer, true);
 
         // Sync
         PrepareComponent(syncPoint);
@@ -111,8 +142,8 @@ public class SegmentLoader : MonoBehaviour
     /// <param name="syncPoint">Point to sync with</param>
     private void PrepareComponent(Transform syncPoint)
     {
-        startPoint.position = syncPoint.position;
-        startPoint.rotation = syncPoint.rotation;
+        syncBuffer.position = syncPoint.position;
+        syncBuffer.rotation = syncPoint.rotation;
     }
 
     /// <summary>

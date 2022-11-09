@@ -392,8 +392,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 920503796}
-  m_LocalRotation: {x: -0.213625, y: 0.4745604, z: -0.11991689, w: -0.84544474}
-  m_LocalPosition: {x: 39.364162, y: 24.60484, z: -3.8769546}
+  m_LocalRotation: {x: -0.2520924, y: 0.5449973, z: -0.17615473, w: -0.77999806}
+  m_LocalPosition: {x: 124.054306, y: 88.319176, z: 28.566847}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -474,6 +474,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1507639252}
   - component: {fileID: 1507639251}
+  - component: {fileID: 1507639253}
   m_Layer: 0
   m_Name: RoomGeneration
   m_TagString: Untagged
@@ -500,12 +501,16 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 232d47c28e651724e81c921754677e93, type: 2}
   - {fileID: 11400000, guid: 2cba427922d50164ca5528ae5ee36ac1, type: 2}
   currentFloorLength: 0
-  maxFloorLength: 5
-  startingSpot: {fileID: 837018682}
+  maxFloorLength: 0
+  startingSpot: {fileID: 1337471748}
   finalRoom: {fileID: 0}
   finalSpot: {fileID: 0}
   nextSpawnPoint: {fileID: 1337471749}
-  loadRoom: 1
+  loadRoom: 0
+  standbyRooms: []
+  standbyHallways: []
+  usedRooms: []
+  usedHallways: []
 --- !u!4 &1507639252
 Transform:
   m_ObjectHideFlags: 0
@@ -521,6 +526,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1507639253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1507639250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_BuildHeightMesh: 0
+  m_NavMeshData: {fileID: 0}
 --- !u!1 &1608709193
 GameObject:
   m_ObjectHideFlags: 0
