@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -25,10 +26,20 @@ public class GameManager : MonoBehaviour
         LOADING
     }
 
+    public enum ControllerType
+    {
+        MOUSE,
+        CONTROLLER
+    }
+
     /// <summary>
     /// Public instance of game manager
     /// </summary>
     public static GameManager instance;
+
+    public static ControllerType controllerType;
+
+    private GameObject lastSelectedObject;
 
     /// <summary>
     /// Current state of the manager
@@ -58,6 +69,9 @@ public class GameManager : MonoBehaviour
 
     private GameControls controls;
     private InputAction escape;
+    private InputAction checkController;
+    private InputAction checkCursor;
+
 
     [Header("=====Game Flow Channels=====")]
 
@@ -87,13 +101,21 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
 
         controls = new GameControls();
         escape = controls.PlayerGameplay.Pause;
-        escape.performed += TogglePause;
+        escape.canceled += TogglePause;
         escape.Enable();
 
+        checkController = controls.PlayerGameplay.Controller;
+        checkController.performed += HideCursor;
+        checkController.Enable();
+
+        checkCursor = controls.PlayerGameplay.Mouse;
+        checkCursor.performed += ShowCursor;
+        checkCursor.Enable();
 
         // Subscribe change state function to channel
         requestStateChangeChannel.OnEventRaised += ChangeState;
@@ -248,8 +270,19 @@ public class GameManager : MonoBehaviour
     /// <param name="c"></param>
     private void TogglePause(InputAction.CallbackContext c)
     {
+        // check if settings menu is open. If so, dont unpause
+        Settings settings = FindObjectOfType<Settings>(true);
+        if (settings != null)
+        {
+            if (settings.SettingsOpen())
+            {
+                Debug.Log("Settings open, cannot toggle pause!");
+                return;
+            }
+        }
+
         // try pausing
-        if(ValidateStateChange(States.PAUSED))
+        if (ValidateStateChange(States.PAUSED))
         {
             ChangeState(States.PAUSED);
         }
@@ -290,8 +323,63 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
+    #endregion
+
+    #region Controller & Mouse Swapping
+
     private void OnApplicationFocus(bool focus)
     {
+        UpdateMouseMode();
+    }
+
+    private void Update()
+    {
+        EventSystem t = FindObjectOfType<EventSystem>();
+        if (t != null)
+            lastSelectedObject = t.currentSelectedGameObject;
+    }
+
+    private void HideCursor(InputAction.CallbackContext c)
+    {
+        if (controllerType == ControllerType.MOUSE
+            && checkController.ReadValue<Vector2>() != Vector2.zero)
+        {
+            //Debug.Log("Controller detected, hiding cursor");
+
+            controllerType = ControllerType.CONTROLLER;
+
+            Cursor.lockState = CursorLockMode.None;
+            //Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
+            // Set active button to either the default or last selected button
+            EventSystem t = FindObjectOfType<EventSystem>();
+            if (t != null && lastSelectedObject != null && lastSelectedObject.activeInHierarchy)
+                t.SetSelectedGameObject(lastSelectedObject);
+            else if (t != null && t.firstSelectedGameObject != null)
+                t.SetSelectedGameObject(t.firstSelectedGameObject);
+        }
+    }
+
+    private void ShowCursor(InputAction.CallbackContext c)
+    {
+        if (controllerType == ControllerType.CONTROLLER
+            && checkCursor.ReadValue<Vector2>() != Vector2.zero)
+        {
+            //Debug.Log("Mouse detected, showing cursor");
+
+            controllerType = ControllerType.MOUSE;
+
+            // Reenable cursor, set appropriate lock state
+            Cursor.visible = true;
+            UpdateMouseMode();
+        }
+    }
+
+    private void UpdateMouseMode()
+    {
+        Cursor.lockState = CursorLockMode.None;
+
         switch (currentState)
         {
             case States.MAINMENU:
@@ -342,5 +430,4 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
-
 }

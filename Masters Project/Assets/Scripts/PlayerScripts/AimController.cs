@@ -14,18 +14,18 @@ using UnityEngine.InputSystem;
 public class AimController : MonoBehaviour
 {
     [Header("---Camera---")]
-    [Tooltip("Look sensitivity for the camera.")]
-    [SerializeField] private float mouseSensitivity;
 
-    [Tooltip("Look sensitivity for the controller.")]
-    [SerializeField] private float controllerSensitivity;
+    [Tooltip("Channel to check for settings change")]
+    [SerializeField] private ChannelVoid onSettingsChangedChannel;
 
-    [SerializeField] private bool mouseYInverted;
-    [SerializeField] private bool mouseXInverted;
-
-    [SerializeField] private bool controllerYInverted;
-    [SerializeField] private bool controllerXInverted;
-
+    private float mouseSensitivity;
+    private bool mouseXInverted;
+    private bool mouseYInverted;
+    
+    private float controllerSensitivity;
+    private bool controllerXInverted;
+    private bool controllerYInverted;
+    
     [Tooltip("The minimum and maximum rotation for the camera's vertical rotation.")]
     [SerializeField] private Vector2 angleClamp;
     [Tooltip("Primary point the camera looks at and pivots from. Should be around the player's shoulders.")]
@@ -56,8 +56,19 @@ public class AimController : MonoBehaviour
         controllerAim = controller.PlayerGameplay.ControllerAim;
         controllerAim.Enable();
 
-        // TODO - Link to settings, load in player preferences
+        // Load in settings
+        UpdateSettings();
+    }
 
+    private void UpdateSettings()
+    {
+        mouseSensitivity = Settings.mouseSensitivity;
+        mouseXInverted = Settings.mouseInvertX;
+        mouseYInverted = Settings.mouseInvertY;
+
+        controllerSensitivity = Settings.controllerSensitivity;
+        controllerXInverted = Settings.controllerInvertX;
+        controllerYInverted = Settings.controllerInvertY;
     }
 
     private void LateUpdate()
@@ -127,6 +138,8 @@ public class AimController : MonoBehaviour
     private void OnEnable()
     {
         onStateChangedChannel.OnEventRaised += ToggleInputs;
+
+        onSettingsChangedChannel.OnEventRaised += UpdateSettings;
     }
 
     /// <summary>
@@ -135,6 +148,8 @@ public class AimController : MonoBehaviour
     private void OnDisable()
     {
         onStateChangedChannel.OnEventRaised -= ToggleInputs;
+
+        onSettingsChangedChannel.OnEventRaised -= UpdateSettings;
 
         if (aim.enabled)
             aim.Disable();

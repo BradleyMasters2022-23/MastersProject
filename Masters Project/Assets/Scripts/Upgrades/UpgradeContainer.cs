@@ -1,5 +1,5 @@
 /* ================================================================================================
- * Author - Soma Hannon
+ * Author - Soma Hannon (base code - Ben Schuster)
  * Date Created - October 25, 2022
  * Last Edited - October 25, 2022 by Soma Hannon
  * Description - Physical object that triggers the upgrade select screen.
@@ -12,6 +12,8 @@ using TMPro;
 
 public class UpgradeContainer : MonoBehaviour {
   [SerializeField] private UpgradeObject upgrade;
+  private List<GameObject> linkedUpgrades = new List<GameObject>();
+  public TextMeshProUGUI nameText;
   private Color color;
 
   /// <summary>
@@ -34,6 +36,12 @@ public class UpgradeContainer : MonoBehaviour {
       upgrade = obj;
       color = upgrade.upgradeColor;
       GetComponent<Renderer>().material.color = color;
+      nameText.text = upgrade.displayName;
+  }
+
+  public void AddLink(GameObject obj)
+  {
+      linkedUpgrades.Add(obj);
   }
 
   /// <summary>
@@ -43,7 +51,15 @@ public class UpgradeContainer : MonoBehaviour {
       if(other.CompareTag("Player")) {
           // TODO: trigger upgrade select screen.
           // buttons on USS call PlayerUpgradeManager.AddUpgrade() for the linked upgrade
+
+          for (int i = linkedUpgrades.Count - 1; i >= 0; i--)
+          {
+              Destroy(linkedUpgrades[i]);
+          }
+          linkedUpgrades.Clear();
+
           PlayerUpgradeManager.instance.AddUpgrade(upgrade);
+
           Destroy(this.gameObject);
       }
   }
