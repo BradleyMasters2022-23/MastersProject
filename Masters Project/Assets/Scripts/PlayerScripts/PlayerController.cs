@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Current state of the player
     /// </summary>
-    private PlayerState currentState;
+    [SerializeField] private PlayerState currentState;
     /// <summary>
     /// Current state of the player
     /// </summary>
@@ -157,7 +157,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private ScaledTimer jumpTimer;
 
-    [Header("---Gravity---")]
+    [Header("---Gravity and Ground---")]
 
     [Tooltip("Strength of the gravity")]
     [SerializeField] private float gravityMultiplier;
@@ -165,10 +165,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [Tooltip("Transform at the bottom of this character object")]
     [SerializeField] private Transform groundCheck;
+
     /// <summary>
     /// Radius of the ground check
     /// </summary>
-    private const float GroundCheckRadius = 0.1f;
+    private float groundCheckRadius = 0.3f;
 
     #endregion
 
@@ -204,7 +205,7 @@ public class PlayerController : MonoBehaviour
         currentJumps = jumps.Current;
         targetMaxSpeed = maxMoveSpeed.Current;
 
-        source = gameObject.AddComponent<AudioSource>();
+        source = gameObject.AddComponent<AudioSource>();        
     }
 
     /// <summary>
@@ -214,6 +215,7 @@ public class PlayerController : MonoBehaviour
     {
         // Get initial references
         rb = GetComponent<Rigidbody>();
+
         //animator = GetComponentInChildren<Animator>();
 
         // If the gravity modifier has not already been applied, apply it now
@@ -237,8 +239,6 @@ public class PlayerController : MonoBehaviour
     }
 
 
-
-
     #region State Functionality
 
     /// <summary>
@@ -251,9 +251,11 @@ public class PlayerController : MonoBehaviour
             case PlayerState.GROUNDED:
                 {
                     HorizontalMovement();
+                    AdjustForSlope();
+
 
                     // If not on ground, set state to midair. Disable sprint
-                    if (!Physics.CheckSphere(groundCheck.position, GroundCheckRadius, groundMask))
+                    if (!Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask))
                     {
                         ChangeState(PlayerState.MIDAIR);
                     }
@@ -265,7 +267,7 @@ public class PlayerController : MonoBehaviour
                     HorizontalMovement();
 
                     // If not on ground, set state to midair. Disable sprint
-                    if (!Physics.CheckSphere(groundCheck.position, GroundCheckRadius, groundMask))
+                    if (!Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask))
                     {
                         ChangeState(PlayerState.MIDAIR);
                     }
@@ -277,8 +279,13 @@ public class PlayerController : MonoBehaviour
                 {
                     HorizontalMovement();
 
-                    // If player lands, set state to grounded. Enable sprint
-                    if(Physics.CheckSphere(groundCheck.position, GroundCheckRadius, groundMask))
+                    // backup check just to make sure nothing breaks with slope
+                    if (!rb.useGravity)
+                        rb.useGravity = true;
+
+                    // If player lands and is moving downward, move back to grounded state
+                    if (Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask) 
+                        && rb.velocity.y < 0)
                     {
                         ChangeState(PlayerState.GROUNDED);
                     }
@@ -320,10 +327,12 @@ public class PlayerController : MonoBehaviour
                 }
             case PlayerState.MIDAIR:
                 {
+                    rb.useGravity = true;
+
                     // If the player went from grounded to midair, check if a jump should be removed
-                    if(currentState == PlayerState.GROUNDED)
+                    if (currentState == PlayerState.GROUNDED)
                     {
-                        if(disableFirstJumpOnFall && currentJumps == jumps.Current)
+                        if (disableFirstJumpOnFall && currentJumps == jumps.Current)
                         {
                             currentJumps--;
                         }
@@ -410,9 +419,8 @@ public class PlayerController : MonoBehaviour
         // Use the existing vertical velocity, as that is handled by gravity
         newVelocity.y = rb.velocity.y;
 
-        // Assign new velocity
+        // apply new velocity
         rb.velocity = newVelocity;
-
 
         // === ANIMATION STUFF ===
         float _xaxis = rb.velocity.x;
@@ -421,6 +429,42 @@ public class PlayerController : MonoBehaviour
         //animator.SetFloat("X Move", _xaxis);
         //animator.SetFloat("Y Move", _zaxis);
     }
+
+    private void AdjustForSlope()
+    {
+        if (rb.velocity == Vector3.zero)
+            return;
+
+        // Modify velocity to be slope/friendly
+        RaycastHit test;
+        if (Physics.Raycast(groundCheck.position, -groundCheck.up, out test, groundCheckRadius))
+        {
+            // if on a slope, change to material with increased friction
+            if (test.normal != Vector3.up && rb.useGravity)
+            {
+                // Disable gravity on slope to prevent slope sliding. TODO - find a better way lol [friction doesnt work]
+                rb.useGravity = false;
+
+            }
+            // Else, return to normal
+            else if (test.normal == Vector3.up && !rb.useGravity)
+            {
+                // enable gravity otherwise
+                rb.useGravity = true;
+            }
+
+            Vector3 temp = Vector3.ProjectOnPlane(rb.velocity, test.normal);
+
+            // apply force based on ground's normal
+            
+            if(temp != Vector3.zero && temp != Vector3.up)
+            {
+                rb.velocity = Vector3.ProjectOnPlane(rb.velocity, test.normal);
+            }
+                
+        }
+    }
+
 
     /// <summary>
     /// Launch the player upwards, if possible
