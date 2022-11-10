@@ -171,6 +171,15 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private float groundCheckRadius = 0.3f;
 
+    /// <summary>
+    /// Check how long its been since jumping
+    /// </summary>
+    private ScaledTimer midAirTimer;
+    /// <summary>
+    /// The last used surface normal
+    /// </summary>
+    private Vector3 lastSurfaceNormal;
+
     #endregion
 
     #region Initialization
@@ -202,8 +211,16 @@ public class PlayerController : MonoBehaviour
 
         // Initialize internal variables
         jumpTimer = new ScaledTimer(jumpCooldown, false);
+        midAirTimer = new ScaledTimer(0.5f, false);
         currentJumps = jumps.Current;
         targetMaxSpeed = maxMoveSpeed.Current;
+
+        // Initialize normal
+        RaycastHit normal;
+        if (Physics.Raycast(groundCheck.position, -groundCheck.up, out normal, Mathf.Infinity))
+        {
+            lastSurfaceNormal = normal.normal;
+        }
 
         source = gameObject.AddComponent<AudioSource>();        
     }
@@ -224,6 +241,12 @@ public class PlayerController : MonoBehaviour
     }
 
     #endregion
+
+    private void Update()
+    {
+        if(currentState == PlayerState.GROUNDED)
+            AdjustForSlope();
+    }
 
     private void FixedUpdate()
     {
@@ -432,36 +455,40 @@ public class PlayerController : MonoBehaviour
 
     private void AdjustForSlope()
     {
-        if (rb.velocity == Vector3.zero)
+        if (rb.velocity == Vector3.zero || !midAirTimer.TimerDone())
             return;
 
-        // Modify velocity to be slope/friendly
-        RaycastHit test;
-        if (Physics.Raycast(groundCheck.position, -groundCheck.up, out test, groundCheckRadius))
-        {
-            // if on a slope, change to material with increased friction
-            if (test.normal != Vector3.up && rb.useGravity)
-            {
-                // Disable gravity on slope to prevent slope sliding. TODO - find a better way lol [friction doesnt work]
-                rb.useGravity = false;
+        //Debug.DrawLine(groundCheck.position, groundCheck.position + lastSurfaceNormal * -groundCheckRadius, Color.red, 10f);
 
+        // Modify velocity to be slope/friendly
+        RaycastHit slopeCheck;
+        if (Physics.Raycast(groundCheck.position, -lastSurfaceNormal, out slopeCheck, groundCheckRadius))
+        {
+
+            // project velocity onto plane player is standing on
+            Vector3 temp = Vector3.ProjectOnPlane(rb.velocity, slopeCheck.normal);
+
+            // if on a slope, disable gravity to prevent sliding
+            if (slopeCheck.normal != Vector3.up && rb.useGravity)
+            {
+                rb.useGravity = false;
             }
             // Else, return to normal
-            else if (test.normal == Vector3.up && !rb.useGravity)
+            else if (slopeCheck.normal == Vector3.up && !rb.useGravity)
             {
-                // enable gravity otherwise
                 rb.useGravity = true;
             }
 
-            Vector3 temp = Vector3.ProjectOnPlane(rb.velocity, test.normal);
+            // If on flat ground and on same plane, keep the Y velocity
+            if (slopeCheck.normal == Vector3.up && lastSurfaceNormal == slopeCheck.normal)
+                temp.y = rb.velocity.y;
+
+            // Update last surface normal
+            lastSurfaceNormal = slopeCheck.normal;
+
 
             // apply force based on ground's normal
-            
-            if(temp != Vector3.zero && temp != Vector3.up)
-            {
-                rb.velocity = Vector3.ProjectOnPlane(rb.velocity, test.normal);
-            }
-                
+            rb.velocity = temp;
         }
     }
 
@@ -474,6 +501,8 @@ public class PlayerController : MonoBehaviour
     {
         if(currentJumps > 0 && jumpTimer.TimerDone())
         {
+            midAirTimer.ResetTimer();
+
             // Adjust jumps, and reset any jumping cooldown
             jumpTimer.ResetTimer();
             currentJumps--;
