@@ -169,7 +169,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Radius of the ground check
     /// </summary>
-    private float groundCheckRadius = 0.15f;
+    private float groundCheckRadius = 0.25f;
 
     /// <summary>
     /// Check how long its been since jumping
@@ -278,6 +278,7 @@ public class PlayerController : MonoBehaviour
             case PlayerState.SPRINTING:
                 {
                     HorizontalMovement();
+                    AdjustForSlope();
 
                     // If not on ground, set state to midair. Disable sprint
                     if (!Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask))
@@ -340,7 +341,11 @@ public class PlayerController : MonoBehaviour
                 }
             case PlayerState.MIDAIR:
                 {
+                    // Failsafe - set gravity on
                     rb.useGravity = true;
+
+                    // Set the last slope to ground
+                    lastSurfaceNormal = Vector3.up;
 
                     // If the player went from grounded to midair, check if a jump should be removed
                     if (currentState == PlayerState.GROUNDED)
@@ -465,9 +470,14 @@ public class PlayerController : MonoBehaviour
         if (rb.velocity == Vector3.zero || !midAirTimer.TimerDone())
             return;
 
+        // Predict where the player will be, check ray from there to help with lip issues
+        Vector3 horVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        Vector3 castPos = transform.position + (horVel.normalized * 0.3f) + Vector3.up * transform.localScale.y/2;
+        //Debug.DrawRay(castPos, -lastSurfaceNormal, Color.blue, 10f);
+
         // Modify velocity to be slope/friendly
         RaycastHit slopeCheck;
-        if (Physics.Raycast(groundCheck.position, -lastSurfaceNormal, out slopeCheck, .2f))
+        if (Physics.Raycast(castPos, -lastSurfaceNormal, out slopeCheck, 1f))
         {
 
             // project velocity onto plane player is standing on
@@ -487,6 +497,13 @@ public class PlayerController : MonoBehaviour
             // If on flat ground and on same plane, keep the Y velocity
             if (slopeCheck.normal == Vector3.up && lastSurfaceNormal == slopeCheck.normal)
                 temp.y = rb.velocity.y;
+
+            // Check the difference between the normals. If significant, reduce the y velocity
+            float normalDifference = Vector3.Angle(lastSurfaceNormal, slopeCheck.normal);
+            if (normalDifference >= 10)
+            {
+                temp += Vector3.down * 2 * Time.deltaTime;
+            }
 
             // Update last surface normal
             lastSurfaceNormal = slopeCheck.normal;
