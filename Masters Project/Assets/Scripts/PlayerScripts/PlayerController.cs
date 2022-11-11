@@ -244,7 +244,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if(currentState == PlayerState.GROUNDED)
+        if (currentState == PlayerState.GROUNDED)
             AdjustForSlope();
     }
 
@@ -256,9 +256,6 @@ public class PlayerController : MonoBehaviour
 
         // Perform state-based update functionality
         UpdateStateFunction();
-
-        // Limit any velocity to prevent player going too fast
-        LimitVelocity();
     }
 
 
@@ -274,8 +271,6 @@ public class PlayerController : MonoBehaviour
             case PlayerState.GROUNDED:
                 {
                     HorizontalMovement();
-                    AdjustForSlope();
-
 
                     // If not on ground, set state to midair. Disable sprint
                     if (!Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask))
@@ -417,26 +412,43 @@ public class PlayerController : MonoBehaviour
             decelerateLerp = 0;
         }
 
+
         // Prepare new velocity
         Vector3 newVelocity;
-        if (currentState != PlayerState.MIDAIR)
+
+        // Get initial normalized direction to move in, apply time bc why not
+        if (direction != Vector3.zero)
         {
-            // If any input, set new velocity to the direction of the player input
-            if (direction != Vector3.zero)
-            {
-                newVelocity = Mathf.Pow(currSpeed, 2) * Time.deltaTime * direction;
-            }
-            // If no input, set new velocity to the direction the rb is already moving towards
-            else
-            {
-                newVelocity = Mathf.Pow(currSpeed, 2) * Time.deltaTime * rb.velocity.normalized;
-            }
+            newVelocity = Time.deltaTime * direction;
         }
+        // If no input, set new velocity to the direction the rb is already moving towards
         else
         {
+            newVelocity = Time.deltaTime * rb.velocity.normalized;
+        }
+
+
+        // If on ground, just set to current speed
+        if (currentState == PlayerState.GROUNDED)
+        {
+            newVelocity *= Mathf.Pow(currSpeed, 2);
+        }
+        // If in air, add speed to existing speed. Limit it.
+        else
+        {
+            // Get reference to what the max speed should be
+            Vector3 maxSpeed = newVelocity * Mathf.Pow((targetMaxSpeed), 2);
+
             // If midair, add the modified input to the existing velocity, instead of overriding it
-            newVelocity = Mathf.Pow((currSpeed * airModifier.Current), 2) * Time.deltaTime * direction;
+            newVelocity *= Mathf.Pow((currSpeed * airModifier.Current), 2);
             newVelocity += rb.velocity;
+
+            // Limit magnitude on the X/Z plane only
+            newVelocity.y = 0;
+            if (newVelocity.magnitude > maxSpeed.magnitude)
+            {
+                newVelocity = maxSpeed;
+            }
         }
 
         // Use the existing vertical velocity, as that is handled by gravity
@@ -530,40 +542,6 @@ public class PlayerController : MonoBehaviour
             source.PlayOneShot(jumpSound, 0.5f);
         }
 
-    }
-
-    /// <summary>
-    /// Limit the player's velocity to the current max speed
-    /// </summary>
-    private void LimitVelocity()
-    {
-        // Get the current x and z velocity. y does not need to be limited.
-        Vector2 horizontalVelocity = new Vector2(rb.velocity.x, rb.velocity.z);
-
-        // Get the current max velocity
-        float currentMax;
-        if (currentState == PlayerState.MIDAIR)
-        {
-            // Not sure why, but this needs to be divided by 2. Otherwise, player's movespeed is doubled mid air.
-            currentMax = targetMaxSpeed / 2;
-        }
-        else if (currentState == PlayerState.SPRINTING)
-        {
-            currentMax = targetMaxSpeed * sprintModifier.Current;
-        }
-        else
-        {
-            currentMax = targetMaxSpeed;
-        }
-
-        // If magnitude is greater than max, set to max speed instead
-        if (horizontalVelocity.magnitude > currentMax)
-        {
-            // Reset velocity to current max, apply to rigidbody
-            horizontalVelocity = horizontalVelocity.normalized * currentMax;
-            rb.velocity = new Vector3(horizontalVelocity.x, rb.velocity.y, horizontalVelocity.y);
-
-        }
     }
 
     /// <summary>

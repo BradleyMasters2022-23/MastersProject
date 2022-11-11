@@ -7154,7 +7154,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 163632151}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 14.499949, y: -1.7500072, z: -34.000175}
+  m_LocalPosition: {x: 14.499949, y: -3.62, z: -34.000175}
   m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -23093,6 +23093,8 @@ GameObject:
   - component: {fileID: 568037970}
   - component: {fileID: 568037969}
   - component: {fileID: 568037968}
+  - component: {fileID: 568037972}
+  - component: {fileID: 568037971}
   m_Layer: 3
   m_Name: Cube (65)
   m_TagString: Untagged
@@ -23382,6 +23384,36 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!54 &568037971
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 568037965}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!64 &568037972
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 568037965}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 1276064087}
 --- !u!43 &573624634
 Mesh:
   m_ObjectHideFlags: 0
@@ -52895,7 +52927,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-340132
+  m_Name: pb_Mesh31300
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -53703,7 +53735,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh65230
+  m_Name: pb_Mesh30234
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -54474,7 +54506,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh308994
+  m_Name: pb_Mesh30156
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -61917,7 +61949,7 @@ GameObject:
   - component: {fileID: 1462717673}
   - component: {fileID: 1462717672}
   - component: {fileID: 1462717671}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: CurvedStair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -79679,6 +79711,10 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 117732005367473926, guid: fc9bc51ab3d98a54ba18dd8c960f6f9a, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 117732005367473930, guid: fc9bc51ab3d98a54ba18dd8c960f6f9a, type: 3}
       propertyPath: jumpForce
       value: 140
@@ -79713,7 +79749,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 117732005367473930, guid: fc9bc51ab3d98a54ba18dd8c960f6f9a, type: 3}
       propertyPath: maxMoveSpeed.startingValue
-      value: 17
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 117732005367473930, guid: fc9bc51ab3d98a54ba18dd8c960f6f9a, type: 3}
       propertyPath: sprintModifier.startingValue
