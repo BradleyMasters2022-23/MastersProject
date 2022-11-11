@@ -169,7 +169,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Radius of the ground check
     /// </summary>
-    private float groundCheckRadius = 0.3f;
+    private float groundCheckRadius = 0.15f;
 
     /// <summary>
     /// Check how long its been since jumping
@@ -242,12 +242,6 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
-    private void Update()
-    {
-        if (currentState == PlayerState.GROUNDED)
-            AdjustForSlope();
-    }
-
     private void FixedUpdate()
     {
         // Get current direction based on player input
@@ -271,6 +265,7 @@ public class PlayerController : MonoBehaviour
             case PlayerState.GROUNDED:
                 {
                     HorizontalMovement();
+                    AdjustForSlope();
 
                     // If not on ground, set state to midair. Disable sprint
                     if (!Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask))
@@ -470,11 +465,9 @@ public class PlayerController : MonoBehaviour
         if (rb.velocity == Vector3.zero || !midAirTimer.TimerDone())
             return;
 
-        //Debug.DrawLine(groundCheck.position, groundCheck.position + lastSurfaceNormal * -groundCheckRadius, Color.red, 10f);
-
         // Modify velocity to be slope/friendly
         RaycastHit slopeCheck;
-        if (Physics.Raycast(groundCheck.position, -lastSurfaceNormal, out slopeCheck, groundCheckRadius))
+        if (Physics.Raycast(groundCheck.position, -lastSurfaceNormal, out slopeCheck, .2f))
         {
 
             // project velocity onto plane player is standing on
