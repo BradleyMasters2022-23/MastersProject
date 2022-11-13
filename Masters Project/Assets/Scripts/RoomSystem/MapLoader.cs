@@ -1,9 +1,19 @@
+/* 
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - November 1st, 2022
+ * Last Edited - November 13th, 2022 by Ben Schuster
+ * Description - Core map loader manager. Manages initializing map pool and choosing what segments 
+ * to load and in what order.
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Sirenix.OdinInspector;
 using UnityEngine.AI;
+
 public class MapLoader : MonoBehaviour
 {
     public enum States
@@ -13,14 +23,20 @@ public class MapLoader : MonoBehaviour
         Hallway
     }
 
+    public States currState;
+
+    #region Initialization Variables 
 
     [Tooltip("Hallways that can be used"), AssetsOnly]
     [SerializeField] private List<MapSegmentSO> allHallways;
     [Tooltip("Rooms that can be used"), AssetsOnly]
     [SerializeField] private List<MapSegmentSO> allRooms;
 
-    public int currentFloorLength;
-    public int maxFloorLength;
+    [Tooltip("How many rooms to complete before loading ")]
+    [SerializeField] private int maxFloorLength;
+    private int currentFloorLength;
+
+
 
     [Tooltip("Starting room for the player"), SceneObjectsOnly, Required]
     [SerializeField] private GameObject startingSpot;
@@ -30,6 +46,8 @@ public class MapLoader : MonoBehaviour
 
     [Tooltip("Final hallway room"), AssetsOnly]
     [SerializeField] private GameObject finalSpot;
+
+    #endregion
 
     public Transform nextSpawnPoint;
 
@@ -83,9 +101,7 @@ public class MapLoader : MonoBehaviour
 
     #endregion
 
-
-
-
+    
     private void Awake()
     {
         if(instance == null)
@@ -110,7 +126,7 @@ public class MapLoader : MonoBehaviour
         for(int i = 0; i < allRooms.Count; i++)
         {
             GameObject room = Instantiate(allRooms[i].segmentPrefab);
-            room.GetComponent<SegmentLoader>().SetSO(allRooms[i]);
+            room.GetComponent<SegmentInterface>().SetSO(allRooms[i]);
             standbyRooms.Add(room);
         }
 
@@ -120,7 +136,7 @@ public class MapLoader : MonoBehaviour
             for(int j = 0; j < 3; j++)
             {
                 GameObject hallway = Instantiate(allHallways[i].segmentPrefab);
-                hallway.GetComponent<SegmentLoader>().SetSO(allHallways[i]);
+                hallway.GetComponent<SegmentInterface>().SetSO(allHallways[i]);
                 standbyHallways.Add(hallway);
             }
         }
@@ -147,7 +163,7 @@ public class MapLoader : MonoBehaviour
     private GameObject SelectRoom()
     {
         GameObject selectedObject;
-        SegmentLoader selectedLoader;
+        SegmentInterface selectedLoader;
 
         do
         {
@@ -160,7 +176,7 @@ public class MapLoader : MonoBehaviour
 
             // select a new room
             selectedObject = standbyRooms[Random.Range(0, standbyRooms.Count)];
-            selectedLoader = selectedObject.GetComponent<SegmentLoader>();
+            selectedLoader = selectedObject.GetComponent<SegmentInterface>();
 
             // Verify it is a hallway, otherwise remove from list and try again
             if (selectedLoader.segmentInfo.segmentType != MapSegmentSO.MapSegmentType.Room)
@@ -199,7 +215,7 @@ public class MapLoader : MonoBehaviour
     {
         // Select a random hallway, ensure its valid
         GameObject selectedObject;
-        SegmentLoader selectedLoader;
+        SegmentInterface selectedLoader;
 
         do
         {
@@ -212,7 +228,7 @@ public class MapLoader : MonoBehaviour
 
             // select a new room
             selectedObject = standbyHallways[Random.Range(0, standbyHallways.Count)];
-            selectedLoader = selectedObject.GetComponent<SegmentLoader>();
+            selectedLoader = selectedObject.GetComponent<SegmentInterface>();
 
             // Verify it is a hallway, otherwise remove from list and try again
             if (selectedLoader.segmentInfo.segmentType != MapSegmentSO.MapSegmentType.Hallway)
@@ -258,7 +274,7 @@ public class MapLoader : MonoBehaviour
         //GameObject section = Instantiate(nextSection, new Vector3(500, 500, 500), Quaternion.identity);
         loadedRooms.Enqueue(nextSection);
 
-        SegmentLoader sectionManager = nextSection.GetComponent<SegmentLoader>();
+        SegmentInterface sectionManager = nextSection.GetComponent<SegmentInterface>();
 
 
 
@@ -266,7 +282,7 @@ public class MapLoader : MonoBehaviour
 
         navMesh.BuildNavMesh();
 
-        nextSpawnPoint = sectionManager.NextExit();
+        nextSpawnPoint = sectionManager.GetNextExit();
     }
 
     /// <summary>
@@ -274,9 +290,9 @@ public class MapLoader : MonoBehaviour
     /// </summary>
     private void UnloadSegment()
     {
-        SegmentLoader t;
+        SegmentInterface t;
 
-        if(loadedRooms.Peek().TryGetComponent<SegmentLoader>(out t))
+        if(loadedRooms.Peek().TryGetComponent<SegmentInterface>(out t))
         {
             loadedRooms.Dequeue();
             t.ResetToPool();
@@ -284,12 +300,12 @@ public class MapLoader : MonoBehaviour
 
             if(t.segmentInfo.segmentType == MapSegmentSO.MapSegmentType.Hallway)
             {
-                usedHallways.Add(t.gameObject);
+                usedHallways.Add(t.root);
 
             }
             else if(t.segmentInfo.segmentType == MapSegmentSO.MapSegmentType.Room)
             {
-                usedRooms.Add(t.gameObject);
+                usedRooms.Add(t.root);
 
             }
         }
@@ -299,7 +315,7 @@ public class MapLoader : MonoBehaviour
         }
 
 
-        //loadedRooms.Dequeue().GetComponent<SegmentLoader>().ResetToPool();
+        //loadedRooms.Dequeue().GetComponent<SegmentInterface>().ResetToPool();
     }
 
     private IEnumerator ContinueLoad()
@@ -316,5 +332,9 @@ public class MapLoader : MonoBehaviour
             yield return null;
         }
     }
-    
+
+    private void OnDestroy()
+    {
+        instance = null;
+    }
 }
