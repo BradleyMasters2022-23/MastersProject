@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Current state of the player
     /// </summary>
-    private PlayerState currentState;
+    [SerializeField] private PlayerState currentState;
     /// <summary>
     /// Current state of the player
     /// </summary>
@@ -157,7 +157,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private ScaledTimer jumpTimer;
 
-    [Header("---Gravity---")]
+    [Header("---Gravity and Ground---")]
 
     [Tooltip("Strength of the gravity")]
     [SerializeField] private float gravityMultiplier;
@@ -165,10 +165,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [Tooltip("Transform at the bottom of this character object")]
     [SerializeField] private Transform groundCheck;
+
     /// <summary>
     /// Radius of the ground check
     /// </summary>
-    private const float GroundCheckRadius = 0.1f;
+    private float groundCheckRadius = 0.25f;
+
+    /// <summary>
+    /// Check how long its been since jumping
+    /// </summary>
+    private ScaledTimer midAirTimer;
+    /// <summary>
+    /// The last used surface normal
+    /// </summary>
+    private Vector3 lastSurfaceNormal;
 
     #endregion
 
@@ -201,10 +211,18 @@ public class PlayerController : MonoBehaviour
 
         // Initialize internal variables
         jumpTimer = new ScaledTimer(jumpCooldown, false);
+        midAirTimer = new ScaledTimer(0.5f, false);
         currentJumps = jumps.Current;
         targetMaxSpeed = maxMoveSpeed.Current;
 
-        source = gameObject.AddComponent<AudioSource>();
+        // Initialize normal
+        RaycastHit normal;
+        if (Physics.Raycast(groundCheck.position, -groundCheck.up, out normal, Mathf.Infinity))
+        {
+            lastSurfaceNormal = normal.normal;
+        }
+
+        source = gameObject.AddComponent<AudioSource>();        
     }
 
     /// <summary>
@@ -214,6 +232,7 @@ public class PlayerController : MonoBehaviour
     {
         // Get initial references
         rb = GetComponent<Rigidbody>();
+
         //animator = GetComponentInChildren<Animator>();
 
         // If the gravity modifier has not already been applied, apply it now
@@ -231,12 +250,7 @@ public class PlayerController : MonoBehaviour
 
         // Perform state-based update functionality
         UpdateStateFunction();
-
-        // Limit any velocity to prevent player going too fast
-        LimitVelocity();
     }
-
-
 
 
     #region State Functionality
@@ -251,9 +265,10 @@ public class PlayerController : MonoBehaviour
             case PlayerState.GROUNDED:
                 {
                     HorizontalMovement();
+                    AdjustForSlope();
 
                     // If not on ground, set state to midair. Disable sprint
-                    if (!Physics.CheckSphere(groundCheck.position, GroundCheckRadius, groundMask))
+                    if (!Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask))
                     {
                         ChangeState(PlayerState.MIDAIR);
                     }
@@ -263,9 +278,10 @@ public class PlayerController : MonoBehaviour
             case PlayerState.SPRINTING:
                 {
                     HorizontalMovement();
+                    AdjustForSlope();
 
                     // If not on ground, set state to midair. Disable sprint
-                    if (!Physics.CheckSphere(groundCheck.position, GroundCheckRadius, groundMask))
+                    if (!Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask))
                     {
                         ChangeState(PlayerState.MIDAIR);
                     }
@@ -277,8 +293,13 @@ public class PlayerController : MonoBehaviour
                 {
                     HorizontalMovement();
 
-                    // If player lands, set state to grounded. Enable sprint
-                    if(Physics.CheckSphere(groundCheck.position, GroundCheckRadius, groundMask))
+                    // backup check just to make sure nothing breaks with slope
+                    if (!rb.useGravity)
+                        rb.useGravity = true;
+
+                    // If player lands and is moving downward, move back to grounded state
+                    if (Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask) 
+                        && rb.velocity.y < 0)
                     {
                         ChangeState(PlayerState.GROUNDED);
                     }
@@ -320,10 +341,16 @@ public class PlayerController : MonoBehaviour
                 }
             case PlayerState.MIDAIR:
                 {
+                    // Failsafe - set gravity on
+                    rb.useGravity = true;
+
+                    // Set the last slope to ground
+                    lastSurfaceNormal = Vector3.up;
+
                     // If the player went from grounded to midair, check if a jump should be removed
-                    if(currentState == PlayerState.GROUNDED)
+                    if (currentState == PlayerState.GROUNDED)
                     {
-                        if(disableFirstJumpOnFall && currentJumps == jumps.Current)
+                        if (disableFirstJumpOnFall && currentJumps == jumps.Current)
                         {
                             currentJumps--;
                         }
@@ -346,6 +373,7 @@ public class PlayerController : MonoBehaviour
     /// <param name="ctx">Input callback context [ignorable]</param>
     private void ToggleSprint(InputAction.CallbackContext ctx)
     {
+        
         // If player is grounded and started input, start sprinting
         if (currentState == PlayerState.GROUNDED && ctx.started)
         {
@@ -384,34 +412,50 @@ public class PlayerController : MonoBehaviour
             decelerateLerp = 0;
         }
 
+
         // Prepare new velocity
         Vector3 newVelocity;
-        if (currentState != PlayerState.MIDAIR)
+
+        // Get initial normalized direction to move in, apply time bc why not
+        if (direction != Vector3.zero)
         {
-            // If any input, set new velocity to the direction of the player input
-            if (direction != Vector3.zero)
-            {
-                newVelocity = Mathf.Pow(currSpeed, 2) * Time.deltaTime * direction;
-            }
-            // If no input, set new velocity to the direction the rb is already moving towards
-            else
-            {
-                newVelocity = Mathf.Pow(currSpeed, 2) * Time.deltaTime * rb.velocity.normalized;
-            }
+            newVelocity = Time.deltaTime * direction;
         }
+        // If no input, set new velocity to the direction the rb is already moving towards
         else
         {
+            newVelocity = Time.deltaTime * rb.velocity.normalized;
+        }
+
+
+        // If on ground, just set to current speed
+        if (currentState == PlayerState.GROUNDED)
+        {
+            newVelocity *= Mathf.Pow(currSpeed, 2);
+        }
+        // If in air, add speed to existing speed. Limit it.
+        else
+        {
+            // Get reference to what the max speed should be
+            Vector3 maxSpeed = newVelocity * Mathf.Pow((targetMaxSpeed), 2);
+
             // If midair, add the modified input to the existing velocity, instead of overriding it
-            newVelocity = Mathf.Pow((currSpeed * airModifier.Current), 2) * Time.deltaTime * direction;
+            newVelocity *= Mathf.Pow((currSpeed * airModifier.Current), 2);
             newVelocity += rb.velocity;
+
+            // Limit magnitude on the X/Z plane only
+            newVelocity.y = 0;
+            if (newVelocity.magnitude > maxSpeed.magnitude)
+            {
+                newVelocity = maxSpeed;
+            }
         }
 
         // Use the existing vertical velocity, as that is handled by gravity
         newVelocity.y = rb.velocity.y;
 
-        // Assign new velocity
+        // apply new velocity
         rb.velocity = newVelocity;
-
 
         // === ANIMATION STUFF ===
         float _xaxis = rb.velocity.x;
@@ -421,6 +465,56 @@ public class PlayerController : MonoBehaviour
         //animator.SetFloat("Y Move", _zaxis);
     }
 
+    private void AdjustForSlope()
+    {
+        if (rb.velocity == Vector3.zero || !midAirTimer.TimerDone())
+            return;
+
+        // Predict where the player will be, check ray from there to help with lip issues
+        Vector3 horVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        Vector3 castPos = transform.position + (horVel.normalized * 0.3f) + Vector3.up * transform.localScale.y/2;
+        //Debug.DrawRay(castPos, -lastSurfaceNormal, Color.blue, 10f);
+
+        // Modify velocity to be slope/friendly
+        RaycastHit slopeCheck;
+        if (Physics.Raycast(castPos, -lastSurfaceNormal, out slopeCheck, 1f))
+        {
+
+            // project velocity onto plane player is standing on
+            Vector3 temp = Vector3.ProjectOnPlane(rb.velocity, slopeCheck.normal);
+
+            // if on a slope, disable gravity to prevent sliding
+            if (slopeCheck.normal != Vector3.up && rb.useGravity)
+            {
+                rb.useGravity = false;
+            }
+            // Else, return to normal
+            else if (slopeCheck.normal == Vector3.up && !rb.useGravity)
+            {
+                rb.useGravity = true;
+            }
+
+            // If on flat ground and on same plane, keep the Y velocity
+            if (slopeCheck.normal == Vector3.up && lastSurfaceNormal == slopeCheck.normal)
+                temp.y = rb.velocity.y;
+
+            // Check the difference between the normals. If significant, reduce the y velocity
+            float normalDifference = Vector3.Angle(lastSurfaceNormal, slopeCheck.normal);
+            if (normalDifference >= 10)
+            {
+                temp += Vector3.down * 2 * Time.deltaTime;
+            }
+
+            // Update last surface normal
+            lastSurfaceNormal = slopeCheck.normal;
+
+
+            // apply force based on ground's normal
+            rb.velocity = temp;
+        }
+    }
+
+
     /// <summary>
     /// Launch the player upwards, if possible
     /// </summary>
@@ -429,6 +523,8 @@ public class PlayerController : MonoBehaviour
     {
         if(currentJumps > 0 && jumpTimer.TimerDone())
         {
+            midAirTimer.ResetTimer();
+
             // Adjust jumps, and reset any jumping cooldown
             jumpTimer.ResetTimer();
             currentJumps--;
@@ -456,40 +552,6 @@ public class PlayerController : MonoBehaviour
             source.PlayOneShot(jumpSound, 0.5f);
         }
 
-    }
-
-    /// <summary>
-    /// Limit the player's velocity to the current max speed
-    /// </summary>
-    private void LimitVelocity()
-    {
-        // Get the current x and z velocity. y does not need to be limited.
-        Vector2 horizontalVelocity = new Vector2(rb.velocity.x, rb.velocity.z);
-
-        // Get the current max velocity
-        float currentMax;
-        if (currentState == PlayerState.MIDAIR)
-        {
-            // Not sure why, but this needs to be divided by 2. Otherwise, player's movespeed is doubled mid air.
-            currentMax = targetMaxSpeed / 2;
-        }
-        else if (currentState == PlayerState.SPRINTING)
-        {
-            currentMax = targetMaxSpeed * sprintModifier.Current;
-        }
-        else
-        {
-            currentMax = targetMaxSpeed;
-        }
-
-        // If magnitude is greater than max, set to max speed instead
-        if (horizontalVelocity.magnitude > currentMax)
-        {
-            // Reset velocity to current max, apply to rigidbody
-            horizontalVelocity = horizontalVelocity.normalized * currentMax;
-            rb.velocity = new Vector3(horizontalVelocity.x, rb.velocity.y, horizontalVelocity.y);
-
-        }
     }
 
     /// <summary>
@@ -565,7 +627,7 @@ public class PlayerController : MonoBehaviour
             move.Disable();
         if(jump.enabled)
             jump.Disable();
-        if(jump.enabled)
+        if(sprint.enabled)
             sprint.Disable();
     }
 

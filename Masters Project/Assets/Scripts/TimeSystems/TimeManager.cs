@@ -440,6 +440,11 @@ public class TimeManager : MonoBehaviour
         return true;
     }
 
+    public TimeGaugeState GetState()
+    {
+        return currentState;
+    }
+
     public float MaxGauge()
     {
         return slowDuration.Current * FixedUpdateCalls;
