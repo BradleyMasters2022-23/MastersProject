@@ -18,7 +18,7 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface
     /// <summary>
     /// Reference to the segment's SO data
     /// </summary>
-    [HideInInspector] private MapSegmentSO segmentInfo;
+    [HideInInspector] public MapSegmentSO segmentInfo;
     /// <summary>
     /// Getter for interface
     /// </summary>
@@ -55,7 +55,10 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface
     /// </summary>
     private Transform syncBuffer;
 
-    
+    /// <summary>
+    /// Door manager for this segment
+    /// </summary>
+    private DoorManager doorManager;
 
     /// <summary>
     /// Initialize internal variables
@@ -65,6 +68,8 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface
         // Initialize internal variables
         root = transform;
         allSyncPoints = new List<Transform>();
+        doorManager = GetComponent<DoorManager>();
+        doorManager.InitializeDoorManager();
 
         // Initialize sync buffer automatically
         syncBuffer = new GameObject("SyncBuffer").transform;
@@ -72,14 +77,10 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface
         syncBuffer.localPosition = Vector3.zero;
 
         // Get all syncpoints in scene
-        GameObject[] potentialPoints = GameObject.FindGameObjectsWithTag("SyncPoint");
-        foreach (GameObject points in potentialPoints)
+        Door[] potentialPoints = GetComponentsInChildren<Door>(true);
+        foreach (Door d in potentialPoints)
         {
-            // Make sure syncpoints are for this object
-            if (points.transform.root == root)
-            {
-                allSyncPoints.Add(points.transform);
-            }
+            allSyncPoints.Add(d.SyncPoint);
         }
 
         // Load syncpoints into usable syncpoints
@@ -99,8 +100,6 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface
     /// </summary>
     public void RetrieveFromPool(Transform syncPoint)
     {
-        gameObject.SetActive(true);
-
         SyncSegment(syncPoint);
 
         UniquePoolPull();
@@ -113,7 +112,7 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface
     protected void SyncSegment(Transform syncPoint)
     {
         // select start point, remove from pool
-        startPoint = syncPoints[Random.Range(0, syncPoints.Count)];
+        startPoint = doorManager.SelectEntrance();
         syncPoints.Remove(startPoint);
 
         // Rotate each other sync point to point in exit direction, link to map
@@ -133,6 +132,12 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface
         // Sync
         syncBuffer.position = syncPoint.position;
         syncBuffer.rotation = syncPoint.rotation;
+
+        // Enable
+        gameObject.SetActive(true);
+
+        // DBUG
+        doorManager.UnlockAllDoors();
     }
 
     /// <summary>
@@ -162,10 +167,13 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface
         // clear startpoint buffer
         startPoint = null;
 
+        // reset doors
+        doorManager.ResetDoors();
+
         UniquePoolReturn();
     }
 
-#endregion
+    #endregion
 
     #region Utility Functions
 
@@ -185,10 +193,7 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface
     /// <returns>The exit chosen</returns>
     public Transform GetNextExit()
     {
-        // select exit point, remove from pool
-        Transform exit = syncPoints[Random.Range(0, syncPoints.Count)];
-        
-        return exit;
+        return doorManager.SelectExit();
     }
 
     #endregion

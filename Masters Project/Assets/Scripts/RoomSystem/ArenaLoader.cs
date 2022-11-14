@@ -27,7 +27,7 @@ public class ArenaLoader : SegmentLoader
     protected override void UniquePoolPull()
     {
         // Get a random encounter from the segment info
-        chosenEncounter = segmentInfo.potentialEncounters[Random.Range(0, segmentInfo.potentialEncounters.Length)];
+        //chosenEncounter = segmentInfo.potentialEncounters[Random.Range(0, segmentInfo.potentialEncounters.Length)];
 
         // Send necessary data to spawner [spawnpoints, encounters]
 

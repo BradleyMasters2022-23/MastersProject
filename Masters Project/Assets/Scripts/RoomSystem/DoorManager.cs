@@ -2,8 +2,8 @@
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 24th, 2022
- * Last Edited - October 24th, 2022 by Ben Schuster
- * Description - Manage all doors to be locked, unlocked when called
+ * Last Edited - November 13th, 2022 by Ben Schuster
+ * Description - Manage all doors in a single room segment
  * ================================================================================================
  */
 using System.Collections;
@@ -13,90 +13,109 @@ using UnityEngine;
 public class DoorManager : MonoBehaviour
 {
     /// <summary>
-    /// All doorways found in scene
+    /// All doorways found in segment
     /// </summary>
-    private List<Door> doorways;
-    /// <summary>
-    /// All doorways marked for exit
-    /// </summary>
-    private List<Door> exits;
+    [SerializeField] private List<Door> doorways;
+    
     /// <summary>
     /// Door determined to be the entrance
+    /// </summary>
+    private List<Door> exits;
+
+    private Door chosenExit;
+
+    /// <summary>
+    /// All doorways marked for exit
     /// </summary>
     private Door entrance;
 
     /// <summary>
-    /// Whether or not this is already locked
+    /// Initialize the door manager
     /// </summary>
-    // private bool locked = false;
-
-    private void Awake()
+    public void InitializeDoorManager()
     {
         doorways = new List<Door>();
         exits = new List<Door>();
+
+        Debug.Log("Exits initialized");
+
+        // Get all doors, organize accordingly
+        Door[] temp = GetComponentsInChildren<Door>(true);
+        foreach (Door d in temp)
+        {
+            doorways.Add(d);
+            d.Initialize();
+        }
     }
 
-    private void Start()
+    /// <summary>
+    /// Reset the doors when returned to pool
+    /// </summary>
+    public void ResetDoors()
     {
-        // Get all doors, organize accordingly
-        Door[] temp = FindObjectsOfType<Door>();
-        foreach (Door f in temp)
+        if (doorways == null)
+            return;
+
+        foreach (Door d in doorways)
         {
-            if (f.Type == Door.PlayerDoorType.Entrance && entrance is null)
-            {
-                entrance = f;
-            }
-            else if (f.Type == Door.PlayerDoorType.Exit)
-            {
-                exits.Add(f);
-            }
-            else
-            {
-                doorways.Add(f);
-            }
+            d.SetType(Door.PlayerDoorType.Door);
         }
 
-        // If no set enterance found, get one from doorways
-        if (entrance == null)
-        {
-            entrance = doorways[Random.Range(0, doorways.Count)];
-            doorways.Remove(entrance);
-        }
-        entrance.SetEntrance();
+        // re-add entrance to available doorways
+        entrance = null;
+        chosenExit = null;
+        exits.Clear();
+    }
 
-        // If no exits, set doors to exits. Otherwise, disable remaining doors
-        if (exits.Count <= 0)
+    /// <summary>
+    /// Select what door will be this room's entrance
+    /// </summary>
+    /// <returns>New entrance syncpoint</returns>
+    public Transform SelectEntrance()
+    {
+        // Randomly choose one available doorway as an entrance
+        entrance = doorways[Random.Range(0, doorways.Count)];
+        entrance.SetType(Door.PlayerDoorType.Entrance);
+        
+        // remove so it wont be selected by exit
+        doorways.Remove(entrance);
+
+        // Load all other doors into entrances
+        foreach(Door d in doorways)
         {
-            // If no exits, choose doors from doorways
-            foreach (Door f in doorways)
+            if (d != entrance)
             {
-                f.SetExit();
-                exits.Add(f);
-            }
-            doorways.Clear();
-        }
-        else
-        {
-            // If set exits, lock remaining doors
-            foreach (Door f in doorways)
-            {
-                f.LockDoor();
-            }
+                exits.Add(d);
+                d.SetType(Door.PlayerDoorType.Null);
+            }    
         }
 
-        // Lock all doors set to exits
-        // locked = true;
-        foreach (Door f in exits)
-        {
-            f.LockDoor();
-        }
+        entrance.UnlockDoor();
 
-        // If no spawner, unlock doors
-        if (GameObject.FindGameObjectWithTag("Spawn") is null)
+        return entrance.SyncPoint;
+    }
+
+    /// <summary>
+    /// Select what door will be this room's exit
+    /// </summary>
+    /// <returns>new enterance sync point</returns>
+    public Transform SelectExit()
+    {
+        // Select door, make sure its not the entrance
+        Door d;
+        do
         {
-            Debug.Log("No spawn found, unlocking doors");
-            UnlockAllDoors();
-        }
+            Debug.Log(exits.Count);
+            //Debug.Break();
+            int i = Random.Range(0, exits.Count);
+            
+            d = exits[i];
+            d.SetType(Door.PlayerDoorType.Exit);
+        } while (d == entrance);
+
+        chosenExit = d;
+
+        return d.SyncPoint;
     }
 
     /// <summary>
@@ -104,9 +123,16 @@ public class DoorManager : MonoBehaviour
     /// </summary>
     public void UnlockAllDoors()
     {
-        foreach (Door f in exits)
+        StartCoroutine(UnlockExit());
+    }
+
+    private IEnumerator UnlockExit()
+    {
+        while(chosenExit == null)
         {
-            f.UnlockDoor();
+            yield return null;
         }
+
+        chosenExit.UnlockDoor();
     }
 }

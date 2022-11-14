@@ -13,6 +13,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Sirenix.OdinInspector;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 public class MapLoader : MonoBehaviour
 {
@@ -23,9 +24,12 @@ public class MapLoader : MonoBehaviour
         Hallway
     }
 
-    public States currState;
-
     #region Initialization Variables 
+
+    /// <summary>
+    /// Current state of the loader
+    /// </summary>
+    private States currState;
 
     [Tooltip("Hallways that can be used"), AssetsOnly]
     [SerializeField] private List<MapSegmentSO> allHallways;
@@ -34,9 +38,11 @@ public class MapLoader : MonoBehaviour
 
     [Tooltip("How many rooms to complete before loading ")]
     [SerializeField] private int maxFloorLength;
+    
+    /// <summary>
+    /// Current number of floors
+    /// </summary>
     private int currentFloorLength;
-
-
 
     [Tooltip("Starting room for the player"), SceneObjectsOnly, Required]
     [SerializeField] private GameObject startingSpot;
@@ -47,47 +53,10 @@ public class MapLoader : MonoBehaviour
     [Tooltip("Final hallway room"), AssetsOnly]
     [SerializeField] private GameObject finalSpot;
 
-    #endregion
-
+    [Tooltip("The next point to use as an exit")]
     public Transform nextSpawnPoint;
 
-    public bool loadRoom;
-
-    /// <summary>
-    /// Collection of rooms being loaded in.
-    /// </summary>
-    private Queue<GameObject> loadedRooms;
-
-
-    #region Object Pooler
-
-    /// <summary>
-    /// Track all pooled rooms that have not been used yet
-    /// </summary>
-    [SerializeField] private List<GameObject> standbyRooms;
-    /// <summary>
-    /// Track all pooled hallways that have not been used yet
-    /// </summary>
-    [SerializeField] private List<GameObject> standbyHallways;
-
-    /// <summary>
-    /// Track all pooled rooms that have recently been used
-    /// </summary>
-    [SerializeField] private List<GameObject> usedRooms;
-    /// <summary>
-    /// Track all pooled hallways that have recently been used
-    /// </summary>
-    [SerializeField] private List<GameObject> usedHallways;
-
-    /// <summary>
-    /// The current room being used
-    /// </summary>
-    private GameObject currentRoom;
-    /// <summary>
-    /// The current hallway being used
-    /// </summary>
-    private GameObject currentHallway;
-
+    private GameObject lastRoomLoaded;
 
     /// <summary>
     /// Reference to this loader
@@ -101,9 +70,64 @@ public class MapLoader : MonoBehaviour
 
     #endregion
 
-    
+    #region Object Pooler Variables
+
+    /// <summary>
+    /// Track all pooled rooms that have not been used yet
+    /// </summary>
+    private List<GameObject> standbyRooms;
+    /// <summary>
+    /// Track all pooled hallways that have not been used yet
+    /// </summary>
+    private List<GameObject> standbyHallways;
+
+    /// <summary>
+    /// Track all pooled rooms that have recently been used
+    /// </summary>
+    private List<GameObject> usedRooms;
+    /// <summary>
+    /// Track all pooled hallways that have recently been used
+    /// </summary>
+    private List<GameObject> usedHallways;
+
+    /// <summary>
+    /// The current room being used
+    /// </summary>
+    private GameObject currentRoom;
+    /// <summary>
+    /// The current hallway being used
+    /// </summary>
+    private GameObject currentHallway;
+
+    /// <summary>
+    /// Collection of rooms being loaded in.
+    /// </summary>
+    private Queue<GameObject> loadedRooms;
+
+
+
+
+    #endregion
+
+    #region Events
+
+    /// <summary>
+    /// Event system for when a player enters a door
+    /// </summary>
+    [HideInInspector] public UnityEvent enterDoor;
+    /// <summary>
+    /// Event system for when a player exits a door
+    /// </summary>
+    [HideInInspector] public UnityEvent exitDoor;
+
+    #endregion
+
+    /// <summary>
+    /// Initialize pools
+    /// </summary>
     private void Awake()
     {
+        // Prepare instance
         if(instance == null)
         {
             instance = this;
@@ -113,7 +137,6 @@ public class MapLoader : MonoBehaviour
             Destroy(this);
             return;
         }
-
 
         // Create pool lists 
         standbyRooms = new List<GameObject>();
@@ -141,20 +164,41 @@ public class MapLoader : MonoBehaviour
             }
         }
 
+        // Prepare Events
+        enterDoor = new UnityEvent();
+        exitDoor = new UnityEvent();
+
+        enterDoor.AddListener(LoadNextSegment);
+        exitDoor.AddListener(UnloadSegment);
+
         // Load the entrance into the loaded queue
         loadedRooms = new Queue<GameObject>();
         loadedRooms.Enqueue(startingSpot);
 
+        // Prepare navmesh system
         navMesh = GetComponent<NavMeshSurface>();
+
+        // Loading finished, start in a hallway segment
+        currState = States.Hallway;
     }
 
     private void Start()
     {
-        StartCoroutine(ContinueLoad());
+        StartCoroutine(DelayedStart());
 
+        
     }
 
-    
+    private IEnumerator DelayedStart()
+    {
+        yield return new WaitForSecondsRealtime(1f);
+
+        LoadNextSegment();
+
+        yield return null;
+    }
+
+    #region Selection Functions
 
     /// <summary>
     /// Select a room, auto manages room container
@@ -188,8 +232,9 @@ public class MapLoader : MonoBehaviour
                 standbyRooms.Remove(selectedObject);
             }
             
-            // If out of difficulty, remove from pool and send to used 
-            if(!selectedLoader.segmentInfo.WithinDifficulty(currentFloorLength))
+            // If out of difficulty or recently used, remove from pool and send to used 
+            if(!selectedLoader.segmentInfo.WithinDifficulty(currentFloorLength)
+                || (lastRoomLoaded != null && selectedObject == lastRoomLoaded))
             {
                 standbyRooms.Remove(selectedObject);
                 usedRooms.Add(selectedObject);
@@ -199,8 +244,8 @@ public class MapLoader : MonoBehaviour
         } while (selectedLoader.segmentInfo.segmentType != MapSegmentSO.MapSegmentType.Room);
 
         // Remove from current pool
-
         currentRoom = selectedObject;
+        lastRoomLoaded = selectedObject;
         standbyRooms.Remove(selectedObject);
 
         // Return new room
@@ -250,34 +295,51 @@ public class MapLoader : MonoBehaviour
         return selectedObject;
     }
 
+    #endregion
+
+    #region Pool Management
+
     /// <summary>
-    /// Load in the next section
+    /// Decide what segment to load, load it
     /// </summary>
-    public void LoadNextComponent()
+    public void LoadNextSegment()
     {
+        Debug.Log("next segment called");
+
         GameObject nextSection;
 
-        if (loadRoom)
+        switch(currState)
         {
-            nextSection = SelectRoom();
-            currentFloorLength++;
+            case States.Room:
+                {
+                    nextSection = SelectHallway();
+                    currState = States.Hallway;
+
+                    break;
+                }
+            case States.Hallway:
+                {
+                    nextSection = SelectRoom();
+                    currentFloorLength++;
+
+                    currState = States.Room;
+
+                    break;
+                }
+            default:
+                {
+                    Debug.LogError("[MapLoader] Trying to load segment before initialization finished!");
+                    return;
+                }
         }
-        else
-        {
-            nextSection = SelectHallway();
-        }
 
-        Debug.Log("Loading room " + nextSection.name);
+        Debug.Log("Loading... " + nextSection.name);
 
-        loadRoom = !loadRoom;
-
-        //GameObject section = Instantiate(nextSection, new Vector3(500, 500, 500), Quaternion.identity);
+        // Add loaded segment to queue
         loadedRooms.Enqueue(nextSection);
 
+        // Prepare spawnpoint
         SegmentInterface sectionManager = nextSection.GetComponent<SegmentInterface>();
-
-
-
         sectionManager.RetrieveFromPool(nextSpawnPoint);
 
         navMesh.BuildNavMesh();
@@ -290,6 +352,8 @@ public class MapLoader : MonoBehaviour
     /// </summary>
     private void UnloadSegment()
     {
+        Debug.Log("unload segment called");
+
         SegmentInterface t;
 
         if(loadedRooms.Peek().TryGetComponent<SegmentInterface>(out t))
@@ -306,35 +370,36 @@ public class MapLoader : MonoBehaviour
             else if(t.segmentInfo.segmentType == MapSegmentSO.MapSegmentType.Room)
             {
                 usedRooms.Add(t.root);
-
             }
         }
         else
         {
             Destroy(loadedRooms.Dequeue());
         }
-
-
-        //loadedRooms.Dequeue().GetComponent<SegmentInterface>().ResetToPool();
     }
 
-    private IEnumerator ContinueLoad()
-    {
-        while(currentFloorLength <= maxFloorLength)
-        {
-            LoadNextComponent();
+    #endregion
 
-            if (currentFloorLength >= 1)
-                UnloadSegment();
 
-            yield return new WaitForSecondsRealtime(2f);
+    //private IEnumerator ContinueLoad()
+    //{
+    //    while(currentFloorLength <= maxFloorLength)
+    //    {
+    //        LoadNextSegment();
 
-            yield return null;
-        }
-    }
+    //        if (currentFloorLength >= 1)
+    //            UnloadSegment();
+
+    //        yield return new WaitForSecondsRealtime(2f);
+
+    //        yield return null;
+    //    }
+    //}
 
     private void OnDestroy()
     {
         instance = null;
+        enterDoor = null;
+        exitDoor = null;
     }
 }
