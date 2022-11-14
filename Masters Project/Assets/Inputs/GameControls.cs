@@ -134,6 +134,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""3fa2a5c8-a241-433c-8731-738b7b09d9ce"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -400,6 +409,17 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""Mouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c92ff0bf-0138-4eb3-b767-6744b09a6f0e"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -420,6 +440,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_PlayerGameplay_Reset = m_PlayerGameplay.FindAction("Reset", throwIfNotFound: true);
         m_PlayerGameplay_Controller = m_PlayerGameplay.FindAction("Controller", throwIfNotFound: true);
         m_PlayerGameplay_Mouse = m_PlayerGameplay.FindAction("Mouse", throwIfNotFound: true);
+        m_PlayerGameplay_Interact = m_PlayerGameplay.FindAction("Interact", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -491,6 +512,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_Reset;
     private readonly InputAction m_PlayerGameplay_Controller;
     private readonly InputAction m_PlayerGameplay_Mouse;
+    private readonly InputAction m_PlayerGameplay_Interact;
     public struct PlayerGameplayActions
     {
         private @GameControls m_Wrapper;
@@ -507,6 +529,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @Reset => m_Wrapper.m_PlayerGameplay_Reset;
         public InputAction @Controller => m_Wrapper.m_PlayerGameplay_Controller;
         public InputAction @Mouse => m_Wrapper.m_PlayerGameplay_Mouse;
+        public InputAction @Interact => m_Wrapper.m_PlayerGameplay_Interact;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -552,6 +575,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Mouse.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnMouse;
                 @Mouse.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnMouse;
                 @Mouse.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnMouse;
+                @Interact.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnInteract;
+                @Interact.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnInteract;
+                @Interact.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnInteract;
             }
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -592,6 +618,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Mouse.started += instance.OnMouse;
                 @Mouse.performed += instance.OnMouse;
                 @Mouse.canceled += instance.OnMouse;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
             }
         }
     }
@@ -610,5 +639,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnReset(InputAction.CallbackContext context);
         void OnController(InputAction.CallbackContext context);
         void OnMouse(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
 }

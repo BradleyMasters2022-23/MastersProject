@@ -40,6 +40,6 @@ public class FragmentInteract : Interactable
 
     public override void OnInteract(PlayerController player)
     {
-        // open note  
+        Debug.Log("hehe note");
     }
 }
