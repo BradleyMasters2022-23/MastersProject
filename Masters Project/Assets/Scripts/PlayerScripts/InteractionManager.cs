@@ -26,6 +26,8 @@ public class InteractionManager : MonoBehaviour
 
     private void Interact(InputAction.CallbackContext context)
     {
+        // TODO: the raycast is kind of janky with small objects (fires just above where it looks like it should)
+        // possibly switch to CapsuleCast or find some other solution
         RaycastHit hit;
         interacting = Physics.Raycast(point.position, point.forward, out hit, interactDistance);
 

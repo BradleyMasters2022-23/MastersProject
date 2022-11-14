@@ -6,7 +6,7 @@ public class RewardsManager : MonoBehaviour
 {
     public static RewardsManager instance;
     private List<UpgradeObject> choices = new List<UpgradeObject>();
-    private List<UpgradeContainer> containers = new List<UpgradeContainer>();
+    private List<UpgradeInteract> containers = new List<UpgradeInteract>();
     [SerializeField] private UpgradableInt numChoices;
     public GameObject container;
     public Transform rewardSpawnPoint;
@@ -39,15 +39,15 @@ public class RewardsManager : MonoBehaviour
             Vector3 temp = rewardSpawnPoint.transform.position;
             temp += Vector3.right * (i * 5);
             GameObject obj = Instantiate(container, temp, rewardSpawnPoint.rotation);
-            obj.GetComponent<UpgradeContainer>().SetUp(choices[i]);
-            containers.Add(obj.GetComponent<UpgradeContainer>());
+            obj.GetComponent<UpgradeInteract>().SetUp(choices[i]);
+            containers.Add(obj.GetComponent<UpgradeInteract>());
         }
 
         if(linked && numChoices.Current > 1)
         {
-            foreach(UpgradeContainer up in containers)
+            foreach(UpgradeInteract up in containers)
             {
-                foreach(UpgradeContainer link in containers)
+                foreach(UpgradeInteract link in containers)
                 {
                     if(up != link)
                     {
@@ -57,7 +57,7 @@ public class RewardsManager : MonoBehaviour
             }
         }
 
-        foreach (UpgradeContainer container in containers)
+        foreach (UpgradeInteract container in containers)
         {
             container.GetComponent<Collider>().enabled = true;
         }

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class UpgradeContainer : MonoBehaviour {
+public class UpgradeInteract : MonoBehaviour {
   [SerializeField] private UpgradeObject upgrade;
   private List<GameObject> linkedUpgrades = new List<GameObject>();
   public TextMeshProUGUI nameText;
