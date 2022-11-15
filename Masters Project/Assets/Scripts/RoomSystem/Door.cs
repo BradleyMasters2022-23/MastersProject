@@ -2,7 +2,7 @@
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 24th, 2022
- * Last Edited - October 24th, 2022 by Ben Schuster
+ * Last Edited - November 13th, 2022 by Ben Schuster
  * Description - Controls an individual door that the player uses
  * ================================================================================================
  */
@@ -17,7 +17,9 @@ public class Door : MonoBehaviour
     {
         Door,
         Entrance,
-        Exit
+        Open,
+        Exit, 
+        Null
     }
 
     [Tooltip("What type of door is this")]
@@ -30,14 +32,6 @@ public class Door : MonoBehaviour
         get { return type; }
     }
 
-    [Tooltip("Point where player spawns when used as an entrance")]
-    [SerializeField] private Transform spawnPoint;
-
-    /// <summary>
-    /// Animator for this door
-    /// </summary>
-    private Animator animator;
-
     [Tooltip("Panel that will change color when locked or unlocked")]
     [SerializeField] private GameObject doorLight;
     [Tooltip("Color of the light when door is locked")]
@@ -47,34 +41,66 @@ public class Door : MonoBehaviour
     [Tooltip("The actual door object")]
     [SerializeField] private GameObject door;
 
+    [Tooltip("Syncpoint for when syncing with other doors")]
+    [SerializeField] private Transform syncPoint;
+    public Transform SyncPoint
+    {
+        get { return syncPoint; }
+    }
+
     /// <summary>
-    /// Get any internal references
+    /// collider for the room triggers
     /// </summary>
+    private Collider col;
+
+    /// <summary>
+    /// Animator for this door
+    /// </summary>
+    private Animator animator;
+
+    private bool locked;
+    public bool Locked { get { return locked; } }
+
+    [SerializeField] private bool overrideOpen;
+
     private void Awake()
     {
+        if (overrideOpen)
+        {
+            col = GetComponent<Collider>();
+            UnlockDoor();
+        }
+            
+    }
+
+    public void Initialize()
+    {
         animator = GetComponent<Animator>();
+        col = GetComponent<Collider>();
+        locked = true;
+    }
+
+    public void SetType(PlayerDoorType t)
+    {
+        type = t;
     }
 
     /// <summary>
-    /// Set this door to entrance, move player to its spawn position.
+    /// Try to open or close the door
     /// </summary>
-    public void SetEntrance()
+    /// <param name="open">Whether the door should open</param>
+    /// <returns>Whether the door can be opened</returns>
+    public void SetOpenStatus(bool open)
     {
-        // Lock door, turn to locked color
-        LockDoor();
-
-        // Spawn player to entrance position
-        GameObject p = FindObjectOfType<PlayerController>().gameObject;
-        p.transform.position = spawnPoint.transform.position;
-        p.transform.rotation = spawnPoint.transform.rotation;
-    }
-
-    /// <summary>
-    /// Set this door as an exit
-    /// </summary>
-    public void SetExit()
-    {
-        type = PlayerDoorType.Exit;
+        // Open and close door. Animate stuff here.
+        if(open)
+        {
+            door.SetActive(false);
+        }
+        else
+        {
+            door.SetActive(true);
+        }
     }
 
     /// <summary>
@@ -83,7 +109,8 @@ public class Door : MonoBehaviour
     public void LockDoor()
     {
         doorLight.GetComponent<Renderer>().material = lockedColor;
-        door.SetActive(true);
+        locked = true;
+        col.enabled = false;
     }
 
     /// <summary>
@@ -92,7 +119,8 @@ public class Door : MonoBehaviour
     public void UnlockDoor()
     {
         doorLight.GetComponent<Renderer>().material = unlockedColor;
-        door.SetActive(false);
+        locked = false;
+        col.enabled = true;
     }
 
     /// <summary>
@@ -103,7 +131,38 @@ public class Door : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            RoomGenerator.instance.SelectRoom();
+            
+            switch(type)
+            {
+                case PlayerDoorType.Open:
+                    {
+                        //Debug.Log("Player detected entering open hallway door, loading next segment!");
+                        MapLoader.instance.UpdateLoadedSegments();
+
+                        LockDoor();
+                        col.enabled = false;
+
+                        break;
+                    }
+                case PlayerDoorType.Entrance:
+                    {
+                        //Debug.Log("Player detected entering a room! Telling it to activate!");
+                        // Call system to activate room
+
+                        MapLoader.instance.StartRoomEncounter();
+
+                        // lock door behind player
+                        LockDoor();
+                        col.enabled = false;
+                        break;
+                    }
+                default:
+                    {
+                        // Debug.Log("Player Detected, invalid door set!");
+                        col.enabled = false;
+                        break;
+                    }
+            }
         }
     }
 }

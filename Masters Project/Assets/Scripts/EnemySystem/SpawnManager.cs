@@ -269,7 +269,7 @@ public class SpawnManager : MonoBehaviour
         if (sound != null)
             s.PlayOneShot(sound);
 
-        FindObjectOfType<DoorManager>().UnlockAllDoors();
+        //FindObjectOfType<DoorManager>().UnlockAllDoors();
 
         if (chosenEncounter != null)
            FindObjectOfType<RewardsManager>().SpawnUpgrades();
