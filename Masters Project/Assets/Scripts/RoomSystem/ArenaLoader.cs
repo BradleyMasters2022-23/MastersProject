@@ -18,13 +18,17 @@ public class ArenaLoader : SegmentLoader
 
 
 
-    protected override void UniquePoolInitialization()
+    protected override IEnumerator UniquePoolInitialization()
     {
         // Get reference to all spawnpoints
         allSpawnpoints = GetComponentsInChildren<SpawnPoint>(true);
+
+        //Debug.Log("Arena segment finished initialization");
+        initialized = true;
+        yield return null;
     }
 
-    protected override void UniquePoolPull()
+    protected override void UniqueActivate()
     {
         // Get a random encounter from the segment info
         //chosenEncounter = segmentInfo.potentialEncounters[Random.Range(0, segmentInfo.potentialEncounters.Length)];
@@ -33,7 +37,7 @@ public class ArenaLoader : SegmentLoader
 
     }
 
-    protected override void UniquePoolReturn()
+    protected override void UniqueDeactivate()
     {
         chosenEncounter = null;
     }

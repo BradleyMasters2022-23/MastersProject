@@ -12,17 +12,21 @@ using UnityEngine;
 
 public class HallwayLoader : SegmentLoader
 {
-    protected override void UniquePoolInitialization()
+    protected override IEnumerator UniquePoolInitialization()
+    {
+        // Put upgrade initialization stuff here
+
+        // Leave this stuff alone and as the last item
+        initialized = true;
+        yield return null;
+    }
+
+    protected override void UniqueActivate()
     {
         return;
     }
 
-    protected override void UniquePoolPull()
-    {
-        return;
-    }
-
-    protected override void UniquePoolReturn()
+    protected override void UniqueDeactivate()
     {
         return;
     }

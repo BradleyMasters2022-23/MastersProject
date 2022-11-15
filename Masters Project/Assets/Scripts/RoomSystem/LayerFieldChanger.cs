@@ -18,11 +18,11 @@ public class LayerFieldChanger : MonoBehaviour
     /// <summary>
     /// What is the original layer the target entered
     /// </summary>
-    [SerializeField] private int originalLayer;
+    private int originalLayer;
     /// <summary>
     /// What is the target layer to apply on targets who enter
     /// </summary>
-    [SerializeField] private int targetLayer;
+    private int targetLayer;
 
     /// <summary>
     /// Initialize, get the appropriate layer mask
@@ -30,6 +30,7 @@ public class LayerFieldChanger : MonoBehaviour
     private void Awake()
     {
         targetLayer = LayerMask.NameToLayer(targetLayerName);
+        originalLayer = LayerMask.NameToLayer("Player Body");
     }
 
     /// <summary>
@@ -40,7 +41,15 @@ public class LayerFieldChanger : MonoBehaviour
     {
         if(other.tag == "Player" && other.gameObject.layer != targetLayer)
         {
-            originalLayer = other.gameObject.layer;
+            //originalLayer = other.gameObject.layer;
+            other.gameObject.layer = targetLayer;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.tag == "Player" && other.gameObject.layer != targetLayer)
+        {
             other.gameObject.layer = targetLayer;
         }
     }

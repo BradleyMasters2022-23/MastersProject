@@ -20,9 +20,11 @@ public interface SegmentInterface
 
     void SetSO(MapSegmentSO newSegment);
 
-    void RetrieveFromPool(Transform syncPoint);
+    void Sync(Transform syncPoint);
 
-    void ResetToPool();
+    void ActivateSegment();
 
-    Transform GetNextExit();
+    void DeactivateSegment();
+
+    Transform GetExit();
 }

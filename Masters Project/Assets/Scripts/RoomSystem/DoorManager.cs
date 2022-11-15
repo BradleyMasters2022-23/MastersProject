@@ -10,129 +10,174 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoorManager : MonoBehaviour
+public class DoorManager : MonoBehaviour, MapInitialize
 {
     /// <summary>
     /// All doorways found in segment
     /// </summary>
-    [SerializeField] private List<Door> doorways;
-    
+    private List<Door> doorways;
+
     /// <summary>
-    /// Door determined to be the entrance
+    /// Door chosen to be this room's exit
     /// </summary>
-    private List<Door> exits;
-
-    private Door chosenExit;
-
+    private Door exit;
     /// <summary>
-    /// All doorways marked for exit
+    /// Door chosen to be this room's entrance
     /// </summary>
     private Door entrance;
 
     /// <summary>
-    /// Initialize the door manager
+    /// Whether or not the manager is initialized
     /// </summary>
-    public void InitializeDoorManager()
+    private bool initialized;
+    public bool Initialized { get { return initialized; } }
+    bool MapInitialize.initialized => initialized;
+
+    public IEnumerator InitializeComponent()
     {
+        // Set up the lists
         doorways = new List<Door>();
-        exits = new List<Door>();
 
-        Debug.Log("Exits initialized");
+        // Get temp pools for checking preset entrances/exits
+        List<Door> potentialEntrances = new List<Door>();
+        List<Door> potentialExits = new List<Door>();
 
-        // Get all doors, organize accordingly
+        // Get all doors, organize accordingly. Nulls should be excluded
         Door[] temp = GetComponentsInChildren<Door>(true);
         foreach (Door d in temp)
         {
-            doorways.Add(d);
             d.Initialize();
+
+            // Ignore nulled doors. Nulled doors are set to 'off'
+            if (d.Type == Door.PlayerDoorType.Entrance)
+                potentialEntrances.Add(d);
+            else if (d.Type == Door.PlayerDoorType.Exit)
+                potentialExits.Add(d);
+            else if (d.Type == Door.PlayerDoorType.Door)
+                doorways.Add(d);
+
         }
-    }
 
-    /// <summary>
-    /// Reset the doors when returned to pool
-    /// </summary>
-    public void ResetDoors()
-    {
-        if (doorways == null)
-            return;
-
-        foreach (Door d in doorways)
+        // Validate
+        if((doorways.Count <= 0 && potentialEntrances.Count <= 0)
+            || (doorways.Count <= 0 && potentialExits.Count <= 0))
         {
-            d.SetType(Door.PlayerDoorType.Door);
+            Debug.LogError($"[DoorManager] Error! There are no doors set to neutral, and not enough set to either entrance and/or exits!" +
+                $" Door manager cannot continue initializing!");
+
+            yield break;
         }
 
-        // re-add entrance to available doorways
-        entrance = null;
-        chosenExit = null;
-        exits.Clear();
-    }
+        // === Get an entrance === //
 
-    /// <summary>
-    /// Select what door will be this room's entrance
-    /// </summary>
-    /// <returns>New entrance syncpoint</returns>
-    public Transform SelectEntrance()
-    {
-        // Randomly choose one available doorway as an entrance
-        entrance = doorways[Random.Range(0, doorways.Count)];
+        // If any doors marked as entrance, choose from those
+        if (potentialEntrances.Count > 0)
+            entrance = GetDoor(potentialEntrances);
+        // Otherwise, choose from all doors
+        else
+            entrance = GetDoor(doorways);
+
         entrance.SetType(Door.PlayerDoorType.Entrance);
-        
-        // remove so it wont be selected by exit
-        doorways.Remove(entrance);
-
-        // Load all other doors into entrances
-        foreach(Door d in doorways)
-        {
-            if (d != entrance)
-            {
-                exits.Add(d);
-                d.SetType(Door.PlayerDoorType.Null);
-            }    
-        }
-
         entrance.UnlockDoor();
 
-        return entrance.SyncPoint;
+
+        // === Get an exit === //
+
+        // If any doors makred as exit, choose from those
+        if (potentialExits.Count > 0)
+            exit = GetDoor(potentialExits);
+        // Otherwise, choose from all doors. Dont select entrance
+        else
+            exit = GetDoor(doorways, entrance);
+
+        // Initialization complete
+        initialized = true;
+
+        //Debug.Log("Door manager initialized");
+
+        yield return null;
     }
 
     /// <summary>
-    /// Select what door will be this room's exit
+    /// Note this manager's doors as hallway, namely unlocking the entrance
+    /// </summary>
+    public void SetHallway()
+    {
+        entrance.SetType(Door.PlayerDoorType.Open);
+        entrance.UnlockDoor();
+    }
+
+    /// <summary>
+    /// Get a door from the passed in list. Exclude a specific door 
+    /// </summary>
+    /// <param name="options">List of options to choose from</param>
+    /// <param name="exclude">What is the exception</param>
+    /// <returns>Randomly selected door thats not the excluded option</returns>
+    private Door GetDoor(List<Door> options, Door exclude = null)
+    {
+        // Validate thers enough to select from
+        if(options.Count == 1 && options[0] == exclude)
+        {
+            Debug.LogError($"[DoorManager] Error! There are not enough doors set to neutral, and not enough set to either entrance and/or exits!" +
+                $" Door manager cannot continue initializing!");
+            Debug.Break();
+
+            return null;
+        }
+
+        Door d;
+
+        // Randomly select a door while its equal to the excluded option
+        do
+        { 
+            d = options[Random.Range(0, options.Count)];
+        } while (d == exclude);
+
+        return d;
+    }
+
+    /// <summary>
+    /// Get the room's entrance
+    /// </summary>
+    /// <returns>New entrance syncpoint</returns>
+    public Door GetEntrance()
+    {
+        return entrance;
+    }
+
+    /// <summary>
+    /// Get the room's exit
     /// </summary>
     /// <returns>new enterance sync point</returns>
-    public Transform SelectExit()
+    public Door GetExit()
     {
-        // Select door, make sure its not the entrance
-        Door d;
-        do
-        {
-            Debug.Log(exits.Count);
-            //Debug.Break();
-            int i = Random.Range(0, exits.Count);
-            
-            d = exits[i];
-            d.SetType(Door.PlayerDoorType.Exit);
-        } while (d == entrance);
-
-        chosenExit = d;
-
-        return d.SyncPoint;
+        return exit;
     }
 
     /// <summary>
     /// Unlock all doors set as exits
     /// </summary>
-    public void UnlockAllDoors()
+    public void UnlockExit()
     {
-        StartCoroutine(UnlockExit());
+        exit.UnlockDoor();
     }
 
-    private IEnumerator UnlockExit()
+    /// <summary>
+    /// Get all syncpoints this manager detects
+    /// </summary>
+    /// <returns></returns>
+    public List<Transform> GetSyncpoints()
     {
-        while(chosenExit == null)
+        if (doorways == null)
+            return null;
+
+        List<Transform> list = new List<Transform>();
+
+        foreach(Door d in doorways)
         {
-            yield return null;
+            list.Add(d.SyncPoint);
         }
 
-        chosenExit.UnlockDoor();
+        return list;
     }
 }
