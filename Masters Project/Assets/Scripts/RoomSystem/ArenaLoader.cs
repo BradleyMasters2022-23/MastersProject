@@ -12,8 +12,14 @@ using UnityEngine;
 
 public class ArenaLoader : SegmentLoader
 {
+    /// <summary>
+    /// Chosen wave to use this encounter
+    /// </summary>
     private EncounterSO chosenEncounter;
 
+    /// <summary>
+    /// All spawnpoints to use
+    /// </summary>
     private SpawnPoint[] allSpawnpoints;
 
 
@@ -23,6 +29,7 @@ public class ArenaLoader : SegmentLoader
         // Get reference to all spawnpoints
         allSpawnpoints = GetComponentsInChildren<SpawnPoint>(true);
 
+
         //Debug.Log("Arena segment finished initialization");
         initialized = true;
         yield return null;
@@ -31,10 +38,12 @@ public class ArenaLoader : SegmentLoader
     protected override void UniqueActivate()
     {
         // Get a random encounter from the segment info
-        //chosenEncounter = segmentInfo.potentialEncounters[Random.Range(0, segmentInfo.potentialEncounters.Length)];
+        chosenEncounter = segmentInfo.potentialEncounters[Random.Range(0, segmentInfo.potentialEncounters.Length)];
+
+        
 
         // Send necessary data to spawner [spawnpoints, encounters]
-
+        GetComponent<SpawnManager>().PrepareEncounter(chosenEncounter, allSpawnpoints);
     }
 
     protected override void UniqueDeactivate()

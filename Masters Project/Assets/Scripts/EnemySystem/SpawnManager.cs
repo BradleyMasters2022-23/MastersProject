@@ -10,7 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnManager : MonoBehaviour
+public class SpawnManager : MonoBehaviour, MapInitialize
 {
     [Tooltip("All possible encounters this spawner could use")]
     [SerializeField] private EncounterSO[] encounterOptions;
@@ -87,52 +87,82 @@ public class SpawnManager : MonoBehaviour
     private bool finished;
 
     /// <summary>
-    /// Initialize internal variables and references
+    /// Whether or not the manager is initialized
     /// </summary>
-    private void Awake()
+    [SerializeField] private bool initialized;
+    public bool Initialized { get { return initialized; } }
+    bool MapInitialize.initialized => initialized;
+
+    private DoorManager doorManager;
+
+    public IEnumerator InitializeComponent()
     {
+        doorManager = GetComponent<DoorManager>();
         s = gameObject.AddComponent<AudioSource>();
         spawnQueue = new Queue<GameObject>();
 
         spawnDelayTimer = new ScaledTimer(spawnDelay.x);
         startDelayTimer = new ScaledTimer(startDelay);
+
+        initialized = true;
+
+        yield return null;
     }
 
     /// <summary>
     /// Get external references.
     /// </summary>
-    private void Start()
-    {
-        // Get all spawnpoints
-        spawnPoints = FindObjectsOfType<SpawnPoint>();
-        if (spawnPoints.Length <= 0)
-        {
-            Debug.LogError("This room has no spawnpoints set! Disabling spawner!");
-            CompleteEncounter();
-            return;
-        }
+    //private void Start()
+    //{
+    //    // Get all spawnpoints
+    //    spawnPoints = GetComponentsInChildren<SpawnPoint>();
+    //    if (spawnPoints.Length <= 0)
+    //    {
+    //        Debug.LogError("This room has no spawnpoints set! Disabling spawner!");
+    //        CompleteEncounter();
+    //        return;
+    //    }
 
-        // Start spawner
-        ChooseEncounter();
+    //    // Start spawner
+    //    ChooseEncounter();
+    //}
+
+    ///// <summary>
+    ///// Choose a random wave if possible
+    ///// </summary>
+    //private void ChooseEncounter()
+    //{
+    //    // If no encounters
+    //    if (encounterOptions.Length <= 0)
+    //    {
+    //        CompleteEncounter();
+    //        return;
+    //    }
+    //    else
+    //    {
+    //        chosenEncounter = encounterOptions[Random.Range(0, encounterOptions.Length)];
+    //    }
+
+    //    // Start the first spawn routine
+    //    startDelayTimer.ResetTimer();
+    //    spawnRoutine = StartCoroutine(SpawnNextWave());
+    //}
+
+    public void PrepareEncounter(EncounterSO encounterData, SpawnPoint[] spawnData)
+    {
+        chosenEncounter = encounterData;
+        spawnPoints = spawnData;
     }
 
-    /// <summary>
-    /// Choose a random wave if possible
-    /// </summary>
-    private void ChooseEncounter()
+    public void BeginEncounter()
     {
-        // If no encounters
-        if (encounterOptions.Length <= 0)
+        
+        if (chosenEncounter == null || spawnPoints.Length <= 0)
         {
+            Debug.Log("No encounter or not enough spawnpoints! Unlocking room!");
             CompleteEncounter();
-            return;
-        }
-        else
-        {
-            chosenEncounter = encounterOptions[Random.Range(0, encounterOptions.Length)];
         }
 
-        // Start the first spawn routine
         startDelayTimer.ResetTimer();
         spawnRoutine = StartCoroutine(SpawnNextWave());
     }
@@ -266,13 +296,12 @@ public class SpawnManager : MonoBehaviour
         finished = true;
         Debug.Log("Encounter Finished");
 
+        // Play completion sound, if possible
         if (sound != null)
             s.PlayOneShot(sound);
 
-        //FindObjectOfType<DoorManager>().UnlockAllDoors();
-
-        if (chosenEncounter != null)
-           FindObjectOfType<RewardsManager>().SpawnUpgrades();
+        // Tell door manager to unlock their exits
+        doorManager.UnlockExit();
     }
 
     /// <summary>
@@ -314,22 +343,6 @@ public class SpawnManager : MonoBehaviour
             WaveFinished();
         }
     }
-
-
-    //public bool HasSpecialUpgrades()
-    //{
-    //    if (chosenEncounter is null)
-    //        return false;
-
-    //    return chosenEncounter.specialRewards.Count > 0;
-    //}
-    //public List<UpgradeObject> GetSpecialUpgrades()
-    //{
-    //    if (chosenEncounter is null)
-    //        return null;
-
-    //    return chosenEncounter.specialRewards;
-    //}
 
     private IEnumerator CheckCount()
     {
@@ -384,4 +397,5 @@ public class SpawnManager : MonoBehaviour
     {
         enemyCount++;
     }
+
 }

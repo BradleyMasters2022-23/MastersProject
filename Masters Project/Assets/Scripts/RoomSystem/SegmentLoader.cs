@@ -58,12 +58,12 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
     /// <summary>
     /// Door manager for this segment
     /// </summary>
-    private DoorManager doorManager;
+    protected DoorManager doorManager;
 
     /// <summary>
     /// Whether this segment has finished initializing
     /// </summary>
-    protected bool initialized;
+    [SerializeField] protected bool initialized;
     public bool Initialized { get { return initialized; } }
     bool MapInitialize.initialized => initialized;
 
@@ -71,12 +71,14 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
     {
         // Get references
         root = transform;
+        syncPoints = new List<Transform>();
         doorManager = GetComponent<DoorManager>();
 
         // Initialize sync buffer automatically
         syncBuffer = new GameObject("SyncBuffer").transform;
         syncBuffer.parent = root;
         syncBuffer.localPosition = Vector3.zero;
+
 
         // Get sync points when its initialized
         while (!doorManager.Initialized)
@@ -123,11 +125,8 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
         syncBuffer.position = syncPoint.position;
         syncBuffer.rotation = syncPoint.rotation;
 
-        // Enable
-        //gameObject.SetActive(true);
-
         // DBUG
-        doorManager.UnlockExit();
+        //doorManager.UnlockExit();
     }
 
     /// <summary>
@@ -191,8 +190,6 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
     /// Perform any unique cleanup when returning to pull
     /// </summary>
     protected abstract void UniqueDeactivate();
-
-    
 
     #endregion
 }

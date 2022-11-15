@@ -6,6 +6,7 @@
  * Description - Controls an individual door that the player uses
  * ================================================================================================
  */
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,31 +23,33 @@ public class Door : MonoBehaviour
         Null
     }
 
+    #region Serialized Variables and Getters
+
+    [Header("=== Gameplay ===")]
+
     [Tooltip("What type of door is this")]
     [SerializeField] private PlayerDoorType type;
-    /// <summary>
-    /// What type of door is this
-    /// </summary>
-    public PlayerDoorType Type
-    {
-        get { return type; }
-    }
+    [Tooltip("The actual door object"), Required]
+    [SerializeField] private GameObject door;
+    [Tooltip("Syncpoint for when syncing with other doors"), Required]
+    [SerializeField] private Transform syncPoint;
+    [Tooltip("Whether this door should always be open")]
+    [SerializeField] private bool overrideOpen;
+    public Transform SyncPoint { get { return syncPoint; } }
+    public PlayerDoorType Type { get { return type; } }
+
+    [Header("=== Visuals ===")]
 
     [Tooltip("Panel that will change color when locked or unlocked")]
     [SerializeField] private GameObject doorLight;
-    [Tooltip("Color of the light when door is locked")]
+    [Tooltip("Color of the light when door is locked"), HideIf("@this.doorLight == null")]
     [SerializeField] private Material lockedColor;
-    [Tooltip("Color of the light when door is unlocked")]
+    [Tooltip("Color of the light when door is unlocked"), HideIf("@this.doorLight == null")]
     [SerializeField] private Material unlockedColor;
-    [Tooltip("The actual door object")]
-    [SerializeField] private GameObject door;
+    [Tooltip("Color of the light when door is disabled"), HideIf("@this.doorLight == null")]
+    [SerializeField] private Material disabledColor;
 
-    [Tooltip("Syncpoint for when syncing with other doors")]
-    [SerializeField] private Transform syncPoint;
-    public Transform SyncPoint
-    {
-        get { return syncPoint; }
-    }
+    #endregion
 
     /// <summary>
     /// collider for the room triggers
@@ -58,21 +61,31 @@ public class Door : MonoBehaviour
     /// </summary>
     private Animator animator;
 
+    /// <summary>
+    /// Whether the door is currently locked 
+    /// </summary>
     private bool locked;
     public bool Locked { get { return locked; } }
 
-    [SerializeField] private bool overrideOpen;
+    #region Initialization Functions
 
+    /// <summary>
+    /// Automatically initialize, unlock if needed
+    /// </summary>
     private void Awake()
     {
+        Initialize();
+
         if (overrideOpen)
         {
-            col = GetComponent<Collider>();
             UnlockDoor();
         }
             
     }
 
+    /// <summary>
+    /// Initialize this segment
+    /// </summary>
     public void Initialize()
     {
         animator = GetComponent<Animator>();
@@ -80,13 +93,25 @@ public class Door : MonoBehaviour
         locked = true;
     }
 
+    #endregion
+
+    #region Assigning Functions
+
+    /// <summary>
+    /// Set the type of this door
+    /// </summary>
+    /// <param name="t">Tyope of door this should be</param>
     public void SetType(PlayerDoorType t)
     {
         type = t;
+
+        // Disable door if possible
+        if(t == PlayerDoorType.Null)
+            doorLight.GetComponent<Renderer>().material = disabledColor;
     }
 
     /// <summary>
-    /// Try to open or close the door
+    /// Try to open or close the physical door
     /// </summary>
     /// <param name="open">Whether the door should open</param>
     /// <returns>Whether the door can be opened</returns>
@@ -108,6 +133,9 @@ public class Door : MonoBehaviour
     /// </summary>
     public void LockDoor()
     {
+        if (type == PlayerDoorType.Null)
+            return;
+
         doorLight.GetComponent<Renderer>().material = lockedColor;
         locked = true;
         col.enabled = false;
@@ -118,10 +146,15 @@ public class Door : MonoBehaviour
     /// </summary>
     public void UnlockDoor()
     {
+        if (type == PlayerDoorType.Null)
+            return;
+
         doorLight.GetComponent<Renderer>().material = unlockedColor;
         locked = false;
         col.enabled = true;
     }
+
+    #endregion
 
     /// <summary>
     /// When player enters, tell the room generator to load next room

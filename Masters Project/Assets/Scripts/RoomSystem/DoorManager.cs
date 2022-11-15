@@ -29,7 +29,7 @@ public class DoorManager : MonoBehaviour, MapInitialize
     /// <summary>
     /// Whether or not the manager is initialized
     /// </summary>
-    private bool initialized;
+    [SerializeField] private bool initialized;
     public bool Initialized { get { return initialized; } }
     bool MapInitialize.initialized => initialized;
 
@@ -59,7 +59,7 @@ public class DoorManager : MonoBehaviour, MapInitialize
         }
 
         // Validate
-        if((doorways.Count <= 0 && potentialEntrances.Count <= 0)
+        if ((doorways.Count <= 0 && potentialEntrances.Count <= 0)
             || (doorways.Count <= 0 && potentialExits.Count <= 0))
         {
             Debug.LogError($"[DoorManager] Error! There are no doors set to neutral, and not enough set to either entrance and/or exits!" +
@@ -77,10 +77,6 @@ public class DoorManager : MonoBehaviour, MapInitialize
         else
             entrance = GetDoor(doorways);
 
-        entrance.SetType(Door.PlayerDoorType.Entrance);
-        entrance.UnlockDoor();
-
-
         // === Get an exit === //
 
         // If any doors makred as exit, choose from those
@@ -89,6 +85,10 @@ public class DoorManager : MonoBehaviour, MapInitialize
         // Otherwise, choose from all doors. Dont select entrance
         else
             exit = GetDoor(doorways, entrance);
+
+
+        entrance.SetType(Door.PlayerDoorType.Entrance);
+        entrance.UnlockDoor();
 
         // Initialization complete
         initialized = true;
@@ -120,7 +120,7 @@ public class DoorManager : MonoBehaviour, MapInitialize
         {
             Debug.LogError($"[DoorManager] Error! There are not enough doors set to neutral, and not enough set to either entrance and/or exits!" +
                 $" Door manager cannot continue initializing!");
-            Debug.Break();
+            //Debug.Break();
 
             return null;
         }

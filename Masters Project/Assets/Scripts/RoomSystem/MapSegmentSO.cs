@@ -9,7 +9,8 @@ public class MapSegmentSO : ScriptableObject
     public enum MapSegmentType
     {
         Room,
-        Hallway
+        Hallway,
+        FinalRoom
     }
 
     [Tooltip("Type of map section this is")]
