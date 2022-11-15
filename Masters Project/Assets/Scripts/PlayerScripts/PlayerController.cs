@@ -398,6 +398,7 @@ public class PlayerController : MonoBehaviour
         // If not inputing, try decelerating
         if (direction == Vector3.zero)
         {
+            //Debug.Log("Decelerating called");
             Decelerate();
 
             // Reset lerp for acceleration
@@ -429,7 +430,7 @@ public class PlayerController : MonoBehaviour
 
 
         // If on ground, just set to current speed
-        if (currentState == PlayerState.GROUNDED)
+        if (currentState != PlayerState.MIDAIR)
         {
             newVelocity *= Mathf.Pow(currSpeed, 2);
         }
