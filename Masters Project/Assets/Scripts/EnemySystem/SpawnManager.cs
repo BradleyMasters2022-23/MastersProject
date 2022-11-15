@@ -271,8 +271,6 @@ public class SpawnManager : MonoBehaviour
 
         //FindObjectOfType<DoorManager>().UnlockAllDoors();
 
-        if (chosenEncounter != null)
-           FindObjectOfType<RewardsManager>().SpawnUpgrades();
     }
 
     /// <summary>

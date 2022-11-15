@@ -30,36 +30,4 @@ public class RewardsManager : MonoBehaviour
             }
         }
     }
-
-    public void SpawnUpgrades()
-    {
-        // Spawn all upgrades cascading to the right
-        for(int i = 0; i < numChoices.Current; i++)
-        {
-            Vector3 temp = rewardSpawnPoint.transform.position;
-            temp += Vector3.right * (i * 5);
-            GameObject obj = Instantiate(container, temp, rewardSpawnPoint.rotation);
-            obj.GetComponent<UpgradeInteract>().SetUp(choices[i]);
-            containers.Add(obj.GetComponent<UpgradeInteract>());
-        }
-
-        if(linked && numChoices.Current > 1)
-        {
-            foreach(UpgradeInteract up in containers)
-            {
-                foreach(UpgradeInteract link in containers)
-                {
-                    if(up != link)
-                    {
-                        up.AddLink(link.gameObject);
-                    }
-                }
-            }
-        }
-
-        foreach (UpgradeInteract container in containers)
-        {
-            container.GetComponent<Collider>().enabled = true;
-        }
-    }
 }
