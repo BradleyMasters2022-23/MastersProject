@@ -478,7 +478,7 @@ public class PlayerController : MonoBehaviour
 
         // Modify velocity to be slope/friendly
         RaycastHit slopeCheck;
-        if (Physics.Raycast(castPos, -lastSurfaceNormal, out slopeCheck, 1f))
+        if (Physics.Raycast(castPos, -lastSurfaceNormal, out slopeCheck, 1f, groundMask))
         {
 
             // project velocity onto plane player is standing on
