@@ -10,10 +10,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnManager : MonoBehaviour, MapInitialize
+public class SpawnManager : MonoBehaviour
 {
-    [Tooltip("All possible encounters this spawner could use")]
-    [SerializeField] private EncounterSO[] encounterOptions;
+    public static SpawnManager instance;
 
     [Tooltip("How many seconds to wait before starting the encounter?")]
     [SerializeField] private float startDelay;
@@ -73,6 +72,7 @@ public class SpawnManager : MonoBehaviour, MapInitialize
     /// audio source for spawner
     /// </summary>
     private AudioSource s;
+
     [Tooltip("Sound played when the encounter ends.")]
     [SerializeField] AudioClip sound;
 
@@ -87,73 +87,50 @@ public class SpawnManager : MonoBehaviour, MapInitialize
     private bool finished;
 
     /// <summary>
-    /// Whether or not the manager is initialized
+    /// Initialize singleton, internal trackers
     /// </summary>
-    [SerializeField] private bool initialized;
-    public bool Initialized { get { return initialized; } }
-    bool MapInitialize.initialized => initialized;
-
-    private DoorManager doorManager;
-
-    public IEnumerator InitializeComponent()
+    private void Awake()
     {
-        doorManager = GetComponent<DoorManager>();
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+            return;
+        }
+
         s = gameObject.AddComponent<AudioSource>();
         spawnQueue = new Queue<GameObject>();
 
         spawnDelayTimer = new ScaledTimer(spawnDelay.x);
         startDelayTimer = new ScaledTimer(startDelay);
-
-        initialized = true;
-
-        yield return null;
     }
 
     /// <summary>
-    /// Get external references.
+    /// Pass in data needed to begin an encounter
     /// </summary>
-    //private void Start()
-    //{
-    //    // Get all spawnpoints
-    //    spawnPoints = GetComponentsInChildren<SpawnPoint>();
-    //    if (spawnPoints.Length <= 0)
-    //    {
-    //        Debug.LogError("This room has no spawnpoints set! Disabling spawner!");
-    //        CompleteEncounter();
-    //        return;
-    //    }
-
-    //    // Start spawner
-    //    ChooseEncounter();
-    //}
-
-    ///// <summary>
-    ///// Choose a random wave if possible
-    ///// </summary>
-    //private void ChooseEncounter()
-    //{
-    //    // If no encounters
-    //    if (encounterOptions.Length <= 0)
-    //    {
-    //        CompleteEncounter();
-    //        return;
-    //    }
-    //    else
-    //    {
-    //        chosenEncounter = encounterOptions[Random.Range(0, encounterOptions.Length)];
-    //    }
-
-    //    // Start the first spawn routine
-    //    startDelayTimer.ResetTimer();
-    //    spawnRoutine = StartCoroutine(SpawnNextWave());
-    //}
-
+    /// <param name="encounterData">the encounter data with enemies to spawn</param>
+    /// <param name="spawnData">the spawnpoints to be used</param>
     public void PrepareEncounter(EncounterSO encounterData, SpawnPoint[] spawnData)
     {
         chosenEncounter = encounterData;
         spawnPoints = spawnData;
     }
 
+    /// <summary>
+    /// Clear the manager of it previous data
+    /// </summary>
+    private void ClearManager()
+    {
+        chosenEncounter = null;
+        spawnPoints = null;
+    }
+
+    /// <summary>
+    /// Start the encounter, if possible
+    /// </summary>
     public void BeginEncounter()
     {
         
@@ -163,42 +140,15 @@ public class SpawnManager : MonoBehaviour, MapInitialize
             CompleteEncounter();
         }
 
+        waveIndex = 0;
+        enemyCount = 0;
+        waitingEnemies = 0;
+        finished = false;
+
         startDelayTimer.ResetTimer();
         spawnRoutine = StartCoroutine(SpawnNextWave());
     }
 
-    /// <summary>
-    /// Prepare the wave queue by populating the spawn queue
-    /// </summary>
-    private void PrepareWaveQueue()
-    {
-        // load in numbers needed
-        List<int> enemyCounts = new List<int>();
-        int total = 0;
-        foreach (EnemyGroup enemyGroup in chosenEncounter.waves[waveIndex].enemyGroups)
-        {
-            enemyCounts.Add(enemyGroup.amount);
-            total += enemyGroup.amount;
-        }
-
-        // Load the specified number of each at random
-        for(int i = 0; i < total; i++)
-        {
-            // Choose a random type, not allowing ones whos quantity has already been filled
-            int typeIndex;
-            do
-            {
-                typeIndex = Random.Range(0, enemyCounts.Count);
-            } while (enemyCounts[typeIndex] <= 0);
-
-            // Decrement that type's count
-            enemyCounts[typeIndex]--;
-
-            // Add to spawn queue
-            GameObject enemyToSpawn = chosenEncounter.waves[waveIndex].enemyGroups[typeIndex].enemy;
-            spawnQueue.Enqueue(enemyToSpawn);
-        }
-    }
 
     /// <summary>
     /// Spawn the next wave
@@ -251,6 +201,39 @@ public class SpawnManager : MonoBehaviour, MapInitialize
         backupCheckRoutine = StartCoroutine(CheckCount());
     }
 
+    /// <summary>
+    /// Prepare the wave queue by populating the spawn queue
+    /// </summary>
+    private void PrepareWaveQueue()
+    {
+        // load in numbers needed
+        List<int> enemyCounts = new List<int>();
+        int total = 0;
+        foreach (EnemyGroup enemyGroup in chosenEncounter.waves[waveIndex].enemyGroups)
+        {
+            enemyCounts.Add(enemyGroup.amount);
+            total += enemyGroup.amount;
+        }
+
+        // Load the specified number of each at random
+        for (int i = 0; i < total; i++)
+        {
+            // Choose a random type, not allowing ones whos quantity has already been filled
+            int typeIndex;
+            do
+            {
+                typeIndex = Random.Range(0, enemyCounts.Count);
+            } while (enemyCounts[typeIndex] <= 0);
+
+            // Decrement that type's count
+            enemyCounts[typeIndex]--;
+
+            // Add to spawn queue
+            GameObject enemyToSpawn = chosenEncounter.waves[waveIndex].enemyGroups[typeIndex].enemy;
+            spawnQueue.Enqueue(enemyToSpawn);
+        }
+    }
+
 
     /// <summary>
     /// Send an enemy into the spawnpoint
@@ -300,8 +283,10 @@ public class SpawnManager : MonoBehaviour, MapInitialize
         if (sound != null)
             s.PlayOneShot(sound);
 
-        // Tell door manager to unlock their exits
-        doorManager.UnlockExit();
+        // Tell room manager to end encounter
+        MapLoader.instance.EndRoomEncounter();
+        
+        ClearManager();
     }
 
     /// <summary>

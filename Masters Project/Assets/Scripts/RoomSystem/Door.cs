@@ -154,6 +154,11 @@ public class Door : MonoBehaviour
         col.enabled = true;
     }
 
+    public void SetDecor()
+    {
+        doorLight.GetComponent<Renderer>().sharedMaterial = disabledColor;
+    }
+
     #endregion
 
     /// <summary>

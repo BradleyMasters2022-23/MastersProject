@@ -43,7 +43,7 @@ public class ArenaLoader : SegmentLoader
         
 
         // Send necessary data to spawner [spawnpoints, encounters]
-        GetComponent<SpawnManager>().PrepareEncounter(chosenEncounter, allSpawnpoints);
+        SpawnManager.instance.PrepareEncounter(chosenEncounter, allSpawnpoints);
     }
 
     protected override void UniqueDeactivate()

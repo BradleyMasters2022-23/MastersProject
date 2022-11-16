@@ -86,7 +86,7 @@ public class DoorProximity : MonoBehaviour
     /// <returns></returns>
     private IEnumerator RepeatCheck()
     {
-        WaitForSeconds stagger = new WaitForSeconds(1f);
+        WaitForSeconds stagger = new WaitForSeconds(.25f);
 
         while (true)
         {

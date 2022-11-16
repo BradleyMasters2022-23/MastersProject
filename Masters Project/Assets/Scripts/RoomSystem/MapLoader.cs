@@ -197,7 +197,7 @@ public class MapLoader : MonoBehaviour
         }
         Debug.Log("[MapLoader] Initial inactive set!");
 
-        roomIndex = 0;
+        roomIndex = -1;
 
         navMesh.BuildNavMesh();
 
@@ -384,9 +384,16 @@ public class MapLoader : MonoBehaviour
 
     public void StartRoomEncounter()
     {
-        Debug.Log($"Pew Bang! Encounter started for room at index {roomIndex}!");
+        Debug.Log($"Pew Bang! Encounter started for room at index {roomIndex +1}!");
 
-        loadedMap[roomIndex].GetComponent<SpawnManager>().BeginEncounter();
+        //loadedMap[roomIndex].GetComponent<SpawnManager>().BeginEncounter();
+        SpawnManager.instance.BeginEncounter();
+    }
+
+    public void EndRoomEncounter()
+    {
+        Debug.Log($"Phew! You won it all good jorb {roomIndex+1}!");
+        loadedMap[roomIndex+1].GetComponent<DoorManager>().UnlockExit();
     }
 
     #endregion

@@ -86,6 +86,12 @@ public class DoorManager : MonoBehaviour, MapInitialize
         else
             exit = GetDoor(doorways, entrance);
 
+        // Set other doors as off
+        foreach(Door d in doorways)
+        {
+            if (d != entrance && d != exit)
+                d.SetDecor();
+        }
 
         entrance.SetType(Door.PlayerDoorType.Entrance);
         entrance.UnlockDoor();
