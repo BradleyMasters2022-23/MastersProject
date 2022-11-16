@@ -29,7 +29,7 @@ public class DoorManager : MonoBehaviour, MapInitialize
     /// <summary>
     /// Whether or not the manager is initialized
     /// </summary>
-    [SerializeField] private bool initialized;
+    private bool initialized;
     public bool Initialized { get { return initialized; } }
     bool MapInitialize.initialized => initialized;
 
@@ -166,6 +166,14 @@ public class DoorManager : MonoBehaviour, MapInitialize
     public void UnlockExit()
     {
         exit.UnlockDoor();
+    }
+
+    /// <summary>
+    /// Set the exit to a return to hub teleport door
+    /// </summary>
+    public void SetReturnToHub()
+    {
+        exit.SetType(Door.PlayerDoorType.ReturnToHub);
     }
 
     /// <summary>

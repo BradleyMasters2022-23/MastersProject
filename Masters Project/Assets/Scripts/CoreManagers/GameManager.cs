@@ -61,6 +61,8 @@ public class GameManager : MonoBehaviour
     [Tooltip("Name of the main menu scene")]
     [SerializeField] private string mainMenuScene;
 
+    [Tooltip("Name of the main menu scene")]
+    [SerializeField] private string mainGameplayScene;
 
     /// <summary>
     /// Track the last state
@@ -165,6 +167,11 @@ public class GameManager : MonoBehaviour
                 }
             case States.GAMEPLAY:
                 {
+                    if(currentState == States.HUB) 
+                    {
+                        SceneManager.LoadScene(mainGameplayScene);
+                    }
+
                     UnPause();
 
                     break;

@@ -6,6 +6,7 @@
  * Description - Manages an individual enemy pointer indicator
  * ================================================================================================
  */
+using Mono.Cecil.Cil;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -44,6 +45,19 @@ public class EnemyPointer : MonoBehaviour
         {
             Destroy(gameObject);
             return;
+        }
+
+        // Hide if enemy is not enabled
+        if (!targetEnemy.gameObject.activeInHierarchy)
+        {
+            if(img.activeInHierarchy)
+                img.SetActive(false);
+
+            return;
+        }
+        else if (targetEnemy.gameObject.activeInHierarchy && !img.activeInHierarchy)
+        {
+            img.SetActive(true);
         }
 
         //Rotate arrow towards target
