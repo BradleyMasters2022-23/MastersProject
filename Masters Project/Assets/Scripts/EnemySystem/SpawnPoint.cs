@@ -92,9 +92,14 @@ public class SpawnPoint : MonoBehaviour
         spawnDelayTimer = new ScaledTimer(spawnDelay);
         spawnOverrideTimer = new ScaledTimer(spawnOverrideDelay);
 
+
+        s.playOnAwake = false;
         // Prepare sound
         if (spawnSound != null)
             s.clip = spawnSound;
+
+        s.volume = 0.5f;
+        
     }
 
     /// <summary>
@@ -103,7 +108,7 @@ public class SpawnPoint : MonoBehaviour
     private void Start()
     {
         player = FindObjectOfType<PlayerController>().transform;
-        spawnManager = FindObjectOfType<SpawnManager>();
+        spawnManager = SpawnManager.instance;
     }
 
     /// <summary>
@@ -243,6 +248,7 @@ public class SpawnPoint : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+
         if (spawnRoutine != null)
             StopCoroutine(spawnRoutine);
     }

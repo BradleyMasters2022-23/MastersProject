@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4727643954459420797
 Transform:
   m_ObjectHideFlags: 0
@@ -31,7 +31,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8200428784903921716}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8455637583105416572
 MeshFilter:
@@ -141,7 +141,7 @@ GameObject:
   - component: {fileID: 5802414119283089959}
   - component: {fileID: 612025728364619968}
   - component: {fileID: 2806237161906772599}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: OpenCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,7 +161,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 8200428784903921716}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4912861497467466676
 MeshFilter:
@@ -238,10 +238,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac62304cd9be5c64daa210c8e1f91dfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parent: {fileID: 0}
-  locked: 0
-  inProximity: 0
-  open: 0
 --- !u!1 &4340193867806968591
 GameObject:
   m_ObjectHideFlags: 0
@@ -253,13 +249,13 @@ GameObject:
   - component: {fileID: 3704092654680170088}
   - component: {fileID: 1638798991195267540}
   - component: {fileID: 9167932230916617051}
-  m_Layer: 0
-  m_Name: PhysicsCheck
+  m_Layer: 12
+  m_Name: PhysicsCheckField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3704092654680170088
 Transform:
   m_ObjectHideFlags: 0
@@ -273,7 +269,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8200428784903921716}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1638798991195267540
 BoxCollider:
@@ -301,8 +297,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetLayerName: Player Door Noclip
-  originalLayer: 0
-  targetLayer: 0
 --- !u!1 &8200428784344433696
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,12 +366,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8200428784670616730}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.003, z: -0.115}
+  m_LocalPosition: {x: 0, y: -0.003, z: -0.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8200428784903921716}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8200428784903921713
 GameObject:
@@ -409,12 +403,12 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8433816899962816321}
   - {fileID: 8200428785144063657}
   - {fileID: 8200428784670616731}
   - {fileID: 4727643954459420797}
   - {fileID: 3704092654680170088}
   - {fileID: 5059424513979914632}
+  - {fileID: 8433816899962816321}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -431,11 +425,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
+  door: {fileID: 8883932922796840754}
+  syncPoint: {fileID: 8200428784670616731}
+  overrideOpen: 0
   doorLight: {fileID: 163752525124960604}
   lockedColor: {fileID: 2100000, guid: 72fcc6de01a38e9458a4e770e4950aec, type: 2}
   unlockedColor: {fileID: 2100000, guid: 1515c5fd73980454fa72045d4a2d3c2f, type: 2}
-  door: {fileID: 8883932922796840754}
-  syncPoint: {fileID: 8200428784670616731}
+  disabledColor: {fileID: 2100000, guid: 656b702ab4bdaae4b912ad54280b5cc5, type: 2}
 --- !u!65 &8200428784903921718
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -482,7 +478,7 @@ Transform:
   - {fileID: 8200428785287373398}
   - {fileID: 579238826271421002}
   m_Father: {fileID: 8200428784903921716}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8200428785287373393
 GameObject:
@@ -583,7 +579,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 344289256205856461, guid: 7a209a4054c851f44b0cc9059b01ed43, type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 344289256205856461, guid: 7a209a4054c851f44b0cc9059b01ed43, type: 3}
       propertyPath: m_LocalPosition.x
@@ -631,7 +627,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1120545206741136503, guid: 7a209a4054c851f44b0cc9059b01ed43, type: 3}
       propertyPath: m_Name
-      value: Prefab_T_PlayerSpawnDoor
+      value: DoorModel
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a209a4054c851f44b0cc9059b01ed43, type: 3}

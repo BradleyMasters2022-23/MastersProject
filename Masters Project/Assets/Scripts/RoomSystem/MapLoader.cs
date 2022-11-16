@@ -14,22 +14,35 @@ using UnityEngine.SceneManagement;
 using Sirenix.OdinInspector;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using Unity.VisualScripting;
 
 public class MapLoader : MonoBehaviour
 {
     public enum States
     {
         Preparing,
+        Start,
         Room, 
-        Hallway
+        Hallway,
+        Final
     }
 
-    #region Initialization Variables 
+    /// <summary>
+    /// Reference to this loader
+    /// </summary>
+    public static MapLoader instance;
 
     /// <summary>
     /// Current state of the loader
     /// </summary>
     private States currState;
+
+    /// <summary>
+    /// Navmesh for overall map
+    /// </summary>
+    private NavMeshSurface navMesh;
+
+    #region Initialization Variables 
 
     [Tooltip("Hallways that can be used"), AssetsOnly]
     [SerializeField] private List<MapSegmentSO> allHallways;
@@ -38,65 +51,37 @@ public class MapLoader : MonoBehaviour
 
     [Tooltip("How many rooms to complete before loading ")]
     [SerializeField] private int maxFloorLength;
-    
-    /// <summary>
-    /// Current number of floors
-    /// </summary>
-    private int currentFloorLength;
 
-    [Tooltip("Starting room for the player"), SceneObjectsOnly, Required]
-    [SerializeField] private GameObject startingSpot;
+    [Tooltip("Root of the starting room"), SceneObjectsOnly, Required]
+    [SerializeField] private GameObject startingRoom;
 
     [Tooltip("Final boss room"), AssetsOnly]
-    [SerializeField] private GameObject finalRoom;
-
-    [Tooltip("Final hallway room"), AssetsOnly]
-    [SerializeField] private GameObject finalSpot;
-
-    [Tooltip("The next point to use as an exit")]
-    public Transform startingSpawnPoint;
-
-    private GameObject lastRoomLoaded;
-
-    /// <summary>
-    /// Reference to this loader
-    /// </summary>
-    public static MapLoader instance;
-
-    /// <summary>
-    /// Navmesh for overall map
-    /// </summary>
-    private NavMeshSurface navMesh;
+    [SerializeField] private MapSegmentSO finalRoom;
 
     #endregion
 
     #region Big Map Variables
 
-    [Header("=== BIG MAP VARS ===")]
+    [Header("=== Big Map Variables ===")]
 
-    [SerializeField, ReadOnly] private List<MapSegmentSO> mapOrder;
-    [SerializeField, ReadOnly] private List<SegmentLoader> loadedMap;
-    public int roomCount;
+    [Tooltip("The current order of maps to be played. Randomized at runtime")]
+    [SerializeField, ReadOnly, HideInEditorMode] private List<MapSegmentSO> mapOrder;
+    /// <summary>
+    /// All segments loaded into the scene, in order
+    /// </summary>
+    private List<SegmentLoader> loadedMap;
     
-    [SerializeField] private List<MapSegmentSO> availableRooms;
-    [SerializeField] private List<MapSegmentSO> availableHalls;
+    private List<MapSegmentSO> availableRooms;
+    private List<MapSegmentSO> availableHalls;
 
-    public int roomIndex;
+    /// <summary>
+    /// Current index for looking through rooms
+    /// </summary>
+    private int roomIndex;
 
     #endregion
 
-    #region Events
-
-    /// <summary>
-    /// Event system for when a player enters a door
-    /// </summary>
-    [HideInInspector] public UnityEvent enterDoor;
-    /// <summary>
-    /// Event system for when a player exits a door
-    /// </summary>
-    [HideInInspector] public UnityEvent exitDoor;
-
-    #endregion
+    #region Initialization
 
     /// <summary>
     /// Initialize pools
@@ -114,22 +99,42 @@ public class MapLoader : MonoBehaviour
             return;
         }
         mapOrder = new List<MapSegmentSO>();
+        loadedMap = new List<SegmentLoader>();
+
+        availableRooms = new List<MapSegmentSO>();
+        availableHalls = new List<MapSegmentSO>();
+
+        navMesh = GetComponent<NavMeshSurface>();
         StartCoroutine(PrepareMapSegments());
     }
 
+    /// <summary>
+    /// Initialize the entire map
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator PrepareMapSegments()
     {
         // === Choose what rooms to use === //
-
-        while(roomCount < maxFloorLength)
+        int c = 0;
+        while(c < maxFloorLength)
         {
+            // Add new segment, check if a room was added. If so, add
             mapOrder.Add(ChooseNextSegment());
+            if (mapOrder[mapOrder.Count - 1].segmentType == MapSegmentSO.MapSegmentType.Room)
+                c++;
         }
-        Debug.Log("Segments prepared");
+
+        // Load in the final room, if there is one. Add hallway buffer
+        if(finalRoom != null)
+        {
+            mapOrder.Add(SelectHallway());
+            mapOrder.Add(finalRoom);
+        }
+
+        Debug.Log("[MapLoader] Order Prepared");
 
         // === Spawn in each room, initialize whats required ===/
 
-        loadedMap = new List<SegmentLoader>();
         foreach(MapSegmentSO segment in mapOrder)
         {
             // Create map segment, give its info to it, add to list
@@ -146,28 +151,41 @@ public class MapLoader : MonoBehaviour
                 StartCoroutine(test[i].InitializeComponent());
             }
         }
-        Debug.Log("Each component initialized");
+
+        // Make sure last item is initialized before continuing
+        MapInitialize[] lastItemRef = loadedMap[loadedMap.Count - 1].GetComponents<MapInitialize>();
+        bool doneInitializing;
+        do
+        {
+            doneInitializing = true;
+
+            foreach (MapInitialize m in lastItemRef)
+            {
+                if (!m.initialized)
+                    doneInitializing = false;
+            }
+
+            yield return null;
+
+        } while (!doneInitializing);
+
+
+        Debug.Log("[MapLoader] Each component initialized");
 
         // === Sync up each room === //
 
-        // Make sure last item is initialized before starting
-        MapInitialize lastDoorRef = loadedMap[loadedMap.Count - 1].GetComponent<MapInitialize>();
-        while (!lastDoorRef.initialized)
-        {
-            yield return null;
-        }
-        Debug.Log("Starting syncing!!!");
-
         // Pair first item to the start point
-        loadedMap[0].Sync(startingSpawnPoint);
+        loadedMap[0].Sync(startingRoom.GetComponentInChildren<Door>().SyncPoint );
         // Pair all other consecutive rooms
         for(int i = 0; i < loadedMap.Count-1; i++)
         {
             loadedMap[i + 1].Sync(loadedMap[i].GetExit());
         }
-        Debug.Log("Sync finished!");
+        Debug.Log("[MapLoader] Sync finished!");
+
 
         // === Set later rooms inactive === //
+
         // Activate first room and hallway, deactivate rest
         for(int i = 0; i < 2; i++)
         {
@@ -177,16 +195,18 @@ public class MapLoader : MonoBehaviour
         {
             loadedMap[i].DeactivateSegment();
         }
-        Debug.Log("Initial inactive set!");
+        Debug.Log("[MapLoader] Initial inactive set!");
 
         roomIndex = -1;
 
-        //yield return new WaitForSeconds(5f);
+        navMesh.BuildNavMesh();
 
-        //StartCoroutine(ContinueLoad());
+        currState = States.Start;
 
         yield return null;
     }
+
+    #endregion
 
     #region Selection Functions
 
@@ -199,7 +219,6 @@ public class MapLoader : MonoBehaviour
         if(mapOrder.Count == 0
             || mapOrder[mapOrder.Count-1].segmentType == MapSegmentSO.MapSegmentType.Hallway)
         {
-            roomCount++;
             return SelectRoom();
         }
         else
@@ -240,7 +259,7 @@ public class MapLoader : MonoBehaviour
             }
 
             // If out of difficulty or recently used, remove from pool and send to used 
-            if (!selectedObject.WithinDifficulty(currentFloorLength))
+            if (!selectedObject.WithinDifficulty(roomIndex/2))
             {;
                 availableRooms.Remove(selectedObject);
                 continue;
@@ -324,6 +343,8 @@ public class MapLoader : MonoBehaviour
 
     #endregion
 
+    #region Room Incremenation
+
     /// <summary>
     /// Deactivate passed sections and prepare the new ones
     /// </summary>
@@ -332,27 +353,57 @@ public class MapLoader : MonoBehaviour
         // Increment room index. Do by 2 because its accounting for room and hallway
         roomIndex += 2;
 
+        if (loadedMap[roomIndex].segmentInfo.segmentType == MapSegmentSO.MapSegmentType.Room)
+        {
+            currState = States.Room;
+        }
+        else if(loadedMap[roomIndex].segmentInfo.segmentType == MapSegmentSO.MapSegmentType.Hallway)
+        {
+            currState = States.Hallway;
+        }
+        else if (loadedMap[roomIndex].segmentInfo.segmentType == MapSegmentSO.MapSegmentType.FinalRoom)
+        {
+            currState = States.Final;
+        }
+
         // Deactivate the last 2 sections, if possible
         loadedMap[roomIndex - 1].DeactivateSegment();
         if (roomIndex - 2 >= 0)
             loadedMap[roomIndex - 2].DeactivateSegment();
         else
-            startingSpot.SetActive(false);
+            startingRoom.SetActive(false);
 
         // Activate the next two sections, if possible
         if (roomIndex+1 < loadedMap.Count)
             loadedMap[roomIndex + 1].ActivateSegment();
         if (roomIndex + 2 < loadedMap.Count)
             loadedMap[roomIndex + 2].ActivateSegment();
+
+        navMesh.BuildNavMesh();
     }
 
     public void StartRoomEncounter()
     {
-        Debug.Log($"Pew Bang! Encounter started for room at index {roomIndex + 1}!");
+        Debug.Log($"Pew Bang! Encounter started for room at index {roomIndex +1}!");
+
+        //loadedMap[roomIndex].GetComponent<SpawnManager>().BeginEncounter();
+        SpawnManager.instance.BeginEncounter();
     }
 
-    #region Utility
+    public void EndRoomEncounter()
+    {
+        Debug.Log($"Phew! You won it all good jorb {roomIndex+1}!");
+        loadedMap[roomIndex+1].GetComponent<DoorManager>().UnlockExit();
+    }
 
+    #endregion
+
+    #region Utility - Debug
+
+    /// <summary>
+    /// Continuely load the rooms. Debug only to help test in inspector
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator ContinueLoad()
     {
         while (roomIndex < loadedMap.Count)
@@ -370,8 +421,6 @@ public class MapLoader : MonoBehaviour
     private void OnDestroy()
     {
         instance = null;
-        enterDoor = null;
-        exitDoor = null;
     }
 
     #endregion

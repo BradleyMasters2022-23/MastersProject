@@ -12,59 +12,63 @@ using UnityEngine;
 
 public class DoorProximity : MonoBehaviour
 {
+    #region Variables
+
     /// <summary>
     /// Parent door reference
     /// </summary>
-    [SerializeField] private Door parent;
-    /// <summary>
-    /// Reference to collider
-    /// </summary>
-    private Collider col;
-
-    /// <summary>
-    /// Whether the door parent is locked
-    /// </summary>
-    //[SerializeField] private bool locked;
+    private Door parent;
     /// <summary>
     /// Whether the player is in range
     /// </summary>
-    [SerializeField] private bool inProximity;
-    
+    private bool inProximity;
     /// <summary>
     /// Whether the door is currently open
     /// </summary>
-    [SerializeField] private bool open;
+    private bool open;
     /// <summary>
     /// Refernece to check routine
     /// </summary>
     private Coroutine checkRoutine;
 
+    #endregion
+
+    #region Initialization
+
     // Start is called before the first frame update
     void Awake()
     {
         parent = GetComponentInParent<Door>();
-        col = GetComponent<Collider>();
-    }
-    /// <summary>
-    /// On disable, stop the coroutine
-    /// </summary>
-    private void OnDisable()
-    {
-        //StopCoroutine(checkRoutine);
-        checkRoutine = null;
     }
     /// <summary>
     /// On enable, start the coroutine
     /// </summary>
     private void OnEnable()
     {
-        //checkRoutine = StartCoroutine(CheckDoor());
+        checkRoutine = StartCoroutine(RepeatCheck());
+    }
+    /// <summary>
+    /// On disable, stop the coroutine
+    /// </summary>
+    private void OnDisable()
+    {
+        if(checkRoutine != null)
+        {
+            StopCoroutine(checkRoutine);
+            checkRoutine = null;
+        }
     }
 
-    private void Update()
-    {
+    #endregion
 
-        if(!parent.Locked && inProximity && !open)
+    #region Door Checking
+
+    /// <summary>
+    /// Check the door to see if it should open
+    /// </summary>
+    private void CheckDoor()
+    {
+        if (!parent.Locked && inProximity && !open)
         {
             open = true;
             parent.SetOpenStatus(true);
@@ -76,38 +80,25 @@ public class DoorProximity : MonoBehaviour
         }
     }
 
-    ///// <summary>
-    ///// Check if the door is unlocked, whether to open the door
-    ///// </summary>
-    ///// <returns></returns>
-    //private IEnumerator CheckDoor()
-    //{
-    //    WaitForSeconds stagger = new WaitForSeconds(1f);
+    /// <summary>
+    /// Check if the door is unlocked, whether to open the door
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator RepeatCheck()
+    {
+        WaitForSeconds stagger = new WaitForSeconds(.25f);
 
-    //    while(true)
-    //    {
-    //        yield return stagger;
-            
-    //        // Check if the lock state changed
-    //        if(locked != parent.Locked)
-    //        {
-    //            locked = parent.Locked;
+        while (true)
+        {
+            yield return stagger;
 
-    //            // If it was set to locked and in prox, close door
-    //            if(locked && inProximity)
-    //            {
-    //                open = false;
-    //                parent.SetOpenStatus(false);
-    //            }
-    //            // If its unlocked and in range, open it
-    //            else if(!locked && inProximity)
-    //            {
-    //                open = true;
-    //                parent.SetOpenStatus(true);
-    //            }
-    //        }
-    //    }
-    //}
+            CheckDoor();
+        }
+    }
+
+    #endregion
+
+    #region TriggerField Check
 
     /// <summary>
     /// Detect if the player is in range. Open if able
@@ -115,7 +106,7 @@ public class DoorProximity : MonoBehaviour
     /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
-        if(!inProximity && other.tag == "Player")
+        if (!inProximity && other.tag == "Player")
         {
             inProximity = true;
         }
@@ -131,4 +122,6 @@ public class DoorProximity : MonoBehaviour
             inProximity = false;
         }
     }
+
+    #endregion
 }

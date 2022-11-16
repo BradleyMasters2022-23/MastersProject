@@ -23,6 +23,9 @@ public class HallwayLoader : SegmentLoader
 
     protected override void UniqueActivate()
     {
+        // Unlock the hallway door right after activation
+        doorManager.UnlockExit();
+
         return;
     }
 
