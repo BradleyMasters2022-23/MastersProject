@@ -1,3 +1,4 @@
+using Cinemachine.Utility;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,21 +17,37 @@ public class EnemyTurret : EnemyBase
     [Tooltip("Range the enemy can attack from")]
     public float attackRange;
     private float currDist;
-    public GameObject lastHit;
     public int lookRadius;
 
     private float time = 0;
     private float currTime = 1;
 
+    private Vector3 neutralLook;
+
+    private bool waitingNeutral;
+
+    private ScaledTimer returnNeutralDelay;
+
+    private Vector3 target;
+
+    private float shotRadius;
+
+    [Tooltip("What layers affects this enemy's vision")]
+    [SerializeField] private LayerMask visionLayer;
+
     // Start is called before the first frame update
     void Start()
     {
+        //neutralLook = shootPoints[0].transform.forward*3;
         currTime = TimeManager.WorldTimeScale;
+        shotRadius = shotPrefab.GetComponent<SphereCollider>().radius + 0.5f;
+        neutralLook = turretPoint.transform.forward * 5;
+
+        returnNeutralDelay = new ScaledTimer(4f);
     }
 
     private void FixedUpdate()
     {
-
         CheckState();
 
         // Get current time state
@@ -41,11 +58,11 @@ public class EnemyTurret : EnemyBase
         {
             case EnemyState.Idle:
                 {
-
                     break;
                 }
             case EnemyState.Attacking:
                 {
+
                     // Shoot every few seconds if in range
                     if (time >= shootTime)
                     {
@@ -65,18 +82,17 @@ public class EnemyTurret : EnemyBase
                 }
         }
 
-        // Get direction of player, rotate towards them1
+        // Get direction of target, rotate towards them
 
-        Vector3 direction = (playerCenter.position - turretPoint.transform.position);
+        Vector3 direction = (target - shootPoints[0].position);
         Quaternion rot = Quaternion.LookRotation(direction);
+
+        
 
         // Limit the next angles
         float nextXAng = Mathf.Clamp(Mathf.DeltaAngle(turretPoint.transform.localRotation.eulerAngles.x, rot.eulerAngles.x), -rotationSpeed, rotationSpeed) * currTime;
         float nextYAng = Mathf.Clamp(Mathf.DeltaAngle(turretPoint.transform.localRotation.eulerAngles.y, rot.eulerAngles.y), -rotationSpeed, rotationSpeed) * currTime;
 
-        // Apply next angles
-        //turretPoint.transform.localRotation *= Quaternion.Euler(nextXAng, nextYAng, 0);
-        //turretPoint.transform.localRotation = Quaternion.Euler(turretPoint.transform.localRotation.x, turretPoint.transform.localRotation.y, 0);
 
         turretPoint.transform.localRotation = Quaternion.Euler(turretPoint.transform.localRotation.eulerAngles.x + nextXAng,
             turretPoint.transform.localRotation.eulerAngles.y + nextYAng, 0);
@@ -93,7 +109,7 @@ public class EnemyTurret : EnemyBase
             case EnemyState.Idle:
                 {
                     // Switch to attacking if line of sight and within ideal range
-                    if (LineOfSight(playerCenter.gameObject) && currDist <= attackRange)
+                    if (LineOfSight(playerCenter))
                     {
                         state = EnemyState.Attacking;
                     }
@@ -102,9 +118,13 @@ public class EnemyTurret : EnemyBase
                 }
             case EnemyState.Attacking:
                 {
-                    if (!LineOfSight(playerCenter.gameObject))
+                    if (!LineOfSight(playerCenter) && returnNeutralDelay.TimerDone())
                     {
                         state = EnemyState.Idle;
+                        waitingNeutral = false;
+                        target = neutralLook;
+                        
+                        
                         time = shootTime / 2;
                     }
 
@@ -118,26 +138,35 @@ public class EnemyTurret : EnemyBase
     /// </summary>
     /// <param name="target">target to check</param>
     /// <returns>Line of sight</returns>
-    public bool LineOfSight(GameObject target)
+    public bool LineOfSight(Transform t)
     {
-        Vector3 direction = target.transform.position - turretPoint.transform.position;
+        Vector3 direction = t.position - shootPoints[0].position;
 
         // Set mask to ignore raycasts and enemy layer
-        int lm = LayerMask.NameToLayer("Enemy");
-        lm = (1 << lm);
-        lm |= (1 << LayerMask.NameToLayer("Ignore Raycast"));
-        lm |= (1 << LayerMask.NameToLayer("Enemy Projectile"));
-        lm |= (1 << LayerMask.NameToLayer("Player Projectile"));
+        
 
         // Try to get player
         RaycastHit hit;
-
-        if (Physics.Raycast(shootPoints[0].position, direction, out hit, attackRange, ~lm))
+        
+        if (Physics.SphereCast(shootPoints[0].position, shotRadius, direction, out hit, attackRange, visionLayer))
         {
-            lastHit = hit.transform.gameObject;
             if (hit.transform.CompareTag("Player"))
+            {
+                waitingNeutral = false;
+                target = hit.point;
+                returnNeutralDelay.ResetTimer();
                 return true;
+            }
         }
+
+
+        if (!waitingNeutral)
+        {
+            returnNeutralDelay.ResetTimer();
+            waitingNeutral = true;
+        }
+            
+
         return false;
     }
 

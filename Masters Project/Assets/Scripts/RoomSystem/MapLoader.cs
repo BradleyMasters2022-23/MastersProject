@@ -384,7 +384,7 @@ public class MapLoader : MonoBehaviour
 
     public void StartRoomEncounter()
     {
-        Debug.Log($"Pew Bang! Encounter started for room at index {roomIndex +1}!");
+        //Debug.Log($"Pew Bang! Encounter started for room at index {roomIndex +1}!");
 
         //loadedMap[roomIndex].GetComponent<SpawnManager>().BeginEncounter();
         SpawnManager.instance.BeginEncounter();
@@ -392,7 +392,7 @@ public class MapLoader : MonoBehaviour
 
     public void EndRoomEncounter()
     {
-        Debug.Log($"Phew! You won it all good jorb {roomIndex+1}!");
+        //Debug.Log($"Phew! You won it all good jorb {roomIndex+1}!");
         loadedMap[roomIndex+1].GetComponent<DoorManager>().UnlockExit();
     }
 

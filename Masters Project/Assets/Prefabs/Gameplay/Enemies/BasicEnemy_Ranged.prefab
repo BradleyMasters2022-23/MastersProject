@@ -322,8 +322,8 @@ MonoBehaviour:
   deathVFX: {fileID: 8273445605695135385, guid: 3c02a13cc5fc9994f8787e38cd6a77ea, type: 3}
   hideUIDelay: 0
   timeOrb: {fileID: 3071240432754548792, guid: 2001e4aa90ac76a47866171fcaafdf7f, type: 3}
-  dropChance: 100
-  dropNumerRange: {x: 2, y: 4}
+  dropChance: 75
+  dropNumerRange: {x: 4, y: 5}
 --- !u!114 &5867305176111294565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,30 +337,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   centerMass: {fileID: 5940177062539629436}
+  state: 0
   walkSpeed: 8
   rotationSpeed: 0.1
   overshootMult: 3
-  idealRange: 20
-  attackRange: 40
-  moveThreshold: 10
-  fleeMoveModifier: 1
+  idealRange: 30
+  attackRange: 60
+  moveThreshold: 20
+  fleeMoveModifier: 0.5
   shotPrefab: {fileID: 8727397786430278917, guid: 406069cb0a402f342af7f980f4ed2f6c, type: 3}
   shootPoints:
   - {fileID: 7560648934456931615}
   numberOfShots: 1
   lookRadius: 30
-  aimDuration: 1.2
+  visionLayer:
+    serializedVersion: 2
+    m_Bits: 2121
+  aimDuration: 0.8
   shootDuration: 0.1
-  reloadDuration: 1.8
-  aimMoveModifier: 0
+  reloadDuration: 1.2
+  aimMoveModifier: 0.1
   shootMoveModifier: 0
-  reloadMoveModifier: 0.2
+  reloadMoveModifier: 0.3
   aimRotModifier: 1
   shootRotModifier: 0.5
   reloadRotModifier: 0
   lockAiming: 1
   fleeWhileAttacking: 0
-  leadStrength: {x: 1, y: 1}
+  leadStrength: {x: 0.8, y: 1.2}
 --- !u!195 &6878320425555973780
 NavMeshAgent:
   m_ObjectHideFlags: 0
