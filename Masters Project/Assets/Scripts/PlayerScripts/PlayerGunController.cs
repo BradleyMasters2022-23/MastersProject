@@ -1,4 +1,4 @@
-/* 
+/*
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 23th, 2022
@@ -123,7 +123,7 @@ public class PlayerGunController : MonoBehaviour
         newShot.transform.LookAt(shootCam.TargetPos);
         newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current);
 
-        
+
         source.PlayOneShot(gunshotSound[Random.Range(0, gunshotSound.Length)],0.3f);
     }
 
@@ -181,5 +181,13 @@ public class PlayerGunController : MonoBehaviour
         {
             shoot.Disable();
         }
+    }
+
+    public int GetDamageMultiplier() {
+        return damageMultiplier.Current;
+    }
+
+    public void SetDamageMultiplier(int newVal) {
+        damageMultiplier.ChangeVal(newVal);
     }
 }

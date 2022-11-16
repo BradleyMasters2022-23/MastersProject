@@ -2,39 +2,64 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RewardsManager : MonoBehaviour {
+public class RewardsManager : MonoBehaviour
+{
     public static RewardsManager instance;
-    private UpgradeObject[] choices;
-    private UpgradeContainer[] containers;
+    private List<UpgradeObject> choices = new List<UpgradeObject>();
+    private List<UpgradeContainer> containers = new List<UpgradeContainer>();
     [SerializeField] private UpgradableInt numChoices;
     public GameObject container;
     public Transform rewardSpawnPoint;
+    public bool linked = true;
 
-    private void Awake() {
-      numChoices.Initialize();
-      choices = new UpgradeObject[numChoices.Current];
-      containers = new UpgradeContainer[numChoices.Current];
+    private void Awake()
+    {
+        numChoices.Initialize();
     }
 
-    private void Start() {
-      for(int i = 0; i < numChoices.Current; i++) {
-        UpgradeObject tempUpgrade = AllUpgradeManager.instance.GetRandomOption();
-        choices[i] = tempUpgrade;
-      }
+    private void Start()
+    {
+        if(AllUpgradeManager.instance.GetAll().Count < numChoices.Current) {
+            numChoices.ChangeVal(AllUpgradeManager.instance.GetAll().Count);
+        }
+
+        while(choices.Count < numChoices.Current) {
+            UpgradeObject tempUpgrade = AllUpgradeManager.instance.GetRandomOption();
+            if(!choices.Contains(tempUpgrade)) {
+                choices.Add(tempUpgrade);
+            }
+        }
     }
 
-    public void SpawnUpgrades() {
-      // Spawn all upgrades cascading to the right
-      for(int i = 0; i < numChoices.Current; i++) {
-        Vector3 temp = rewardSpawnPoint.transform.position;
-        temp += Vector3.right * (i * 5);
-        GameObject obj = Instantiate(container, temp, rewardSpawnPoint.rotation);
-        obj.GetComponent<UpgradeContainer>().SetUp(choices[i]);
-        containers[i] = obj.GetComponent<UpgradeContainer>();
-      }
+    public void SpawnUpgrades()
+    {
+        // Spawn all upgrades cascading to the right
+        for(int i = 0; i < numChoices.Current; i++)
+        {
+            Vector3 temp = rewardSpawnPoint.transform.position;
+            temp += Vector3.right * (i * 5);
+            GameObject obj = Instantiate(container, temp, rewardSpawnPoint.rotation);
+            obj.GetComponent<UpgradeContainer>().SetUp(choices[i]);
+            containers.Add(obj.GetComponent<UpgradeContainer>());
+        }
 
-      foreach (UpgradeContainer container in containers) {
-          container.GetComponent<Collider>().enabled = true;
-      }
+        if(linked && numChoices.Current > 1)
+        {
+            foreach(UpgradeContainer up in containers)
+            {
+                foreach(UpgradeContainer link in containers)
+                {
+                    if(up != link)
+                    {
+                        up.AddLink(link.gameObject);
+                    }
+                }
+            }
+        }
+
+        foreach (UpgradeContainer container in containers)
+        {
+            container.GetComponent<Collider>().enabled = true;
+        }
     }
 }
