@@ -43,5 +43,6 @@ public class FragmentInteract : Interactable
         PlayerNotesManager.instance.FindFragment(fragment);
         // somehow bring up a menu here?
         Debug.Log("It's a note.");
+        Destroy(this);
     }
 }
