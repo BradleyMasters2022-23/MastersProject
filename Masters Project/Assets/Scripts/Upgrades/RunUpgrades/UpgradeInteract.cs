@@ -11,5 +11,7 @@ using UnityEngine;
 using TMPro;
 
 public class UpgradeInteract : MonoBehaviour {
-    
+    public override void OnInteract() {
+        
+    }
 }
