@@ -11,6 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class Door : MonoBehaviour
 {
@@ -20,7 +21,9 @@ public class Door : MonoBehaviour
         Entrance,
         Open,
         Exit, 
-        Null
+        Null,
+        ReturnToHub, 
+        Custom
     }
 
     #region Serialized Variables and Getters
@@ -33,6 +36,10 @@ public class Door : MonoBehaviour
     [SerializeField] private GameObject door;
     [Tooltip("Syncpoint for when syncing with other doors"), Required]
     [SerializeField] private Transform syncPoint;
+
+    [Tooltip("What happens when entering this door?"), HideIf("@this.type != PlayerDoorType.Custom")]
+    [SerializeField] private UnityEvent customTriggerEvent;
+
     [Tooltip("Whether this door should always be open")]
     [SerializeField] private bool overrideOpen;
     public Transform SyncPoint { get { return syncPoint; } }
@@ -48,6 +55,8 @@ public class Door : MonoBehaviour
     [SerializeField] private Material unlockedColor;
     [Tooltip("Color of the light when door is disabled"), HideIf("@this.doorLight == null")]
     [SerializeField] private Material disabledColor;
+
+    
 
     #endregion
 
@@ -154,6 +163,9 @@ public class Door : MonoBehaviour
         col.enabled = true;
     }
 
+    /// <summary>
+    /// Set this door as a decoration door that does not function otherwise
+    /// </summary>
     public void SetDecor()
     {
         doorLight.GetComponent<Renderer>().sharedMaterial = disabledColor;
@@ -191,7 +203,22 @@ public class Door : MonoBehaviour
 
                         // lock door behind player
                         LockDoor();
+                        SetDecor();
                         col.enabled = false;
+
+                        break;
+                    }
+                case PlayerDoorType.ReturnToHub:
+                    {
+                        // TODO - go to the 'finished upgrades' stuff instead
+
+                        GameManager.instance.ChangeState(GameManager.States.HUB);
+                        break;
+                    }
+                case PlayerDoorType.Custom:
+                    {
+                        // Trigger any custom events when this happens
+                        customTriggerEvent.Invoke();
                         break;
                     }
                 default:

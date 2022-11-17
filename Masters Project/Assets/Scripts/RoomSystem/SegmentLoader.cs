@@ -63,7 +63,7 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
     /// <summary>
     /// Whether this segment has finished initializing
     /// </summary>
-    [SerializeField] protected bool initialized;
+    protected bool initialized;
     public bool Initialized { get { return initialized; } }
     bool MapInitialize.initialized => initialized;
 

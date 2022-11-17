@@ -138,6 +138,7 @@ public class SpawnManager : MonoBehaviour
         {
             Debug.Log("No encounter or not enough spawnpoints! Unlocking room!");
             CompleteEncounter();
+            return;
         }
 
         waveIndex = 0;
