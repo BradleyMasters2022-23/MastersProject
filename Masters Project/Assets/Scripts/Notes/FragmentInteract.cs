@@ -14,28 +14,13 @@ public class FragmentInteract : Interactable
     [Tooltip("The fragment this container represents.")]
     [SerializeField] private Fragment fragment;
 
-    /// <summary>
-    /// ensures that fragment is not null and calls SetUp
-    /// </summary>
-    private void Start()
-    {
-        if (fragment is null)
-        {
-            Destroy(this);
-        }
-
-        if(fragment != null)
-        {
-            SetUp(fragment);
-        }
-    }
 
     /// <summary>
     /// called exactly once, initializes container
     /// </summary>
-    public void SetUp(Fragment obj)
+    public void Awake()
     {
-        fragment = obj;
+        fragment = AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment();
     }
 
     public override void OnInteract(PlayerController player)

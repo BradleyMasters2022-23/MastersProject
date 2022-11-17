@@ -13,9 +13,11 @@ using UnityEngine;
 public class HallwayLoader : SegmentLoader
 {
     [SerializeField] private FragmentSpawner fragSpawner;
+    [SerializeField] private Transform fragSpawnPoint;
     protected override IEnumerator UniquePoolInitialization()
     {
         // Put upgrade initialization stuff here
+        fragSpawner.SetSpawnPoint(fragSpawnPoint);
         fragSpawner.SpawnFragment();
 
         // Leave this stuff alone and as the last item

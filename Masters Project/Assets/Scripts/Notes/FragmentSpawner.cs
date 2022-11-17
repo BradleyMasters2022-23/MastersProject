@@ -6,8 +6,7 @@ public class FragmentSpawner : MonoBehaviour
 {
     [Tooltip("% chance for a note to spawn.")]
     [SerializeField] private float luck;
-    [Tooltip("Where the note should spawn.")]
-    [SerializeField] private Transform noteSpawnPoint;
+    private Transform fragSpawnPoint;
     [SerializeField] private GameObject fragInteractable;
     private float max;
     // Start is called before the first frame update
@@ -19,9 +18,9 @@ public class FragmentSpawner : MonoBehaviour
     public void SpawnFragment()
     {
         if(FragShouldSpawn()) {
-            Vector3 temp = noteSpawnPoint.transform.position;
-            GameObject obj = Instantiate(fragInteractable, temp, noteSpawnPoint.rotation);
-            obj.GetComponent<FragmentInteract>().SetUp(AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment());
+            Vector3 temp = fragSpawnPoint.transform.position;
+            GameObject obj = Instantiate(fragInteractable, temp, fragSpawnPoint.rotation);
+            //obj.GetComponent<FragmentInteract>().SetUp(AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment());
             obj.GetComponent<Collider>().enabled = true;
         }
     }
@@ -34,6 +33,9 @@ public class FragmentSpawner : MonoBehaviour
 
         return false;
 
+    }
 
+    public void SetSpawnPoint(Transform spawn) {
+        fragSpawnPoint = spawn;
     }
 }
