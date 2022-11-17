@@ -396,6 +396,25 @@ public class MapLoader : MonoBehaviour
         loadedMap[roomIndex+1].GetComponent<DoorManager>().UnlockExit();
     }
 
+    /// <summary>
+    /// Return to the hub world and reset upgrades
+    /// </summary>
+    public void ReturnToHub()
+    {
+        instance = null;
+
+        GameManager.instance.ChangeState(GameManager.States.HUB);
+
+        // TODO - RESET PLAYER UPGRADES
+        if (PlayerUpgradeManager.instance != null)
+            PlayerUpgradeManager.instance.DestroyPUM();
+        if (AllUpgradeManager.instance != null)
+            AllUpgradeManager.instance.DestroyAUM();
+
+        Destroy(gameObject);
+    }
+
+
     #endregion
 
     #region Utility - Debug

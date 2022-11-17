@@ -128,9 +128,10 @@ public class RoomGenerator : MonoBehaviour
         GameManager.instance.ChangeState(GameManager.States.HUB);
 
         // TODO - RESET PLAYER UPGRADES
-        PlayerUpgradeManager.instance.DestroyPUM();
-        AllUpgradeManager.instance.DestroyAUM();
-
+        if(PlayerUpgradeManager.instance != null)
+            PlayerUpgradeManager.instance.DestroyPUM();
+        if(AllUpgradeManager.instance != null)
+            AllUpgradeManager.instance.DestroyAUM();
 
         Destroy(gameObject);
     }
