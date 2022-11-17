@@ -133,7 +133,7 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     public void BeginEncounter()
     {
-        
+
         if (chosenEncounter == null || spawnPoints.Length <= 0)
         {
             Debug.Log("No encounter or not enough spawnpoints! Unlocking room!");
@@ -286,7 +286,7 @@ public class SpawnManager : MonoBehaviour
 
         // Tell room manager to end encounter
         MapLoader.instance.EndRoomEncounter();
-        
+
         ClearManager();
     }
 
