@@ -40,7 +40,7 @@ public class LoadSettings : MonoBehaviour
         Settings.controllerInvertX = IntToBool(PlayerPrefs.GetInt("ControllerInvertX", BoolToInt(defaultControllerInvertX)));
         Settings.controllerInvertY = IntToBool(PlayerPrefs.GetInt("ControllerInvertY", BoolToInt(defaultControllerInvertY)));
 
-        Debug.Log("Settings loaded");
+        Debug.Log("Settings loaded by " + gameObject.name);
 
         // Self destruct once complete
         Destroy(this);

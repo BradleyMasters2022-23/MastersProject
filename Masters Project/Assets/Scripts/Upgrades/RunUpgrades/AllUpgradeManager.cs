@@ -1,7 +1,7 @@
 /* ================================================================================================
  * Author - Soma Hannon (base code - Ben Schuster)
  * Date Created - October 25, 2022
- * Last Edited - October 31, 2022 by Soma Hannon
+ * Last Edited - November 17, 2022 by Ben Schuster
  * Description - Holds list of all upgrades.
  * ================================================================================================
  */
@@ -70,6 +70,61 @@ public class AllUpgradeManager : MonoBehaviour {
     public UpgradeObject GetRandomOption()
     {
         return upgradeOptions[Random.Range(0, upgradeOptions.Count)];
+    }
+
+    /// <summary>
+    /// Request a specific number of upgrades
+    /// </summary>
+    /// <param name="num"></param>
+    /// <returns></returns>
+    public UpgradeObject[] GetRandomOptions(int num)
+    {
+        UpgradeObject[] selected;
+        int goal;
+
+        // if there are less upgrades, return an error msg
+        if (num > upgradeOptions.Count)
+        {
+            Debug.LogError("Requesting too many upgrades! returning less");
+            selected = new UpgradeObject[upgradeOptions.Count];
+            goal = upgradeOptions.Count;
+        }
+        // Otherwise, meet the requirement
+        else
+        {
+            selected = new UpgradeObject[num];
+            goal = num;
+        }
+        
+        // Select up to the goal of options, validate with no dupes
+        for(int i = 0; i < goal; i++)
+        {
+            // select options, validate no dupes
+            UpgradeObject chosen;
+            bool alreadySelected;
+            do
+            {
+                alreadySelected = false;
+                chosen = GetRandomOption();
+
+                for(int j = 0; j < i; j++)
+                {
+                    if(selected[j] != null && selected[j] == chosen)
+                    {
+                        alreadySelected = true;
+                        continue;
+                    }
+                }
+
+
+            } while (alreadySelected);
+
+            selected[i] = chosen;
+        }
+
+        // Randomly select upgrades that are unique from eachother
+
+        return selected;
     }
 
       public void DestroyAUM()
