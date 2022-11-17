@@ -10,8 +10,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class UpgradeInteract : MonoBehaviour {
+public class UpgradeInteract : Interactable {
     public override void OnInteract() {
-        
+
     }
 }
