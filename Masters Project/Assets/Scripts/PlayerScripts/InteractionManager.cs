@@ -41,7 +41,7 @@ public class InteractionManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("nothin to interact with");
+                Debug.Log("Nothing to interact with!");
             }
         }
     }

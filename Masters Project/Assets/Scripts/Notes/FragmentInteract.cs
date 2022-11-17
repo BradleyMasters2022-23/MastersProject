@@ -40,7 +40,8 @@ public class FragmentInteract : Interactable
 
     public override void OnInteract(PlayerController player)
     {
+        PlayerNotesManager.instance.FindFragment(fragment);
         // somehow bring up a menu here?
-        Debug.Log("its a note");
+        Debug.Log("It's a note.");
     }
 }

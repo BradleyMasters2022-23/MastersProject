@@ -11,7 +11,7 @@ using UnityEngine;
 using TMPro;
 
 public class UpgradeInteract : Interactable {
-    public override void OnInteract() {
-
+    public override void OnInteract(PlayerController player) {
+        Debug.Log("It's an upgrade!");
     }
 }
