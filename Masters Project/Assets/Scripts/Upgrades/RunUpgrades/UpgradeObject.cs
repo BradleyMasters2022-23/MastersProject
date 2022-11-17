@@ -29,4 +29,7 @@ public class UpgradeObject : ScriptableObject {
 
     [Tooltip("Holds the upgrade script itself plus other game info.")]
     public GameObject upgradePrefab;
+
+    [Tooltip("Icon used to represent this upgrade")]
+    public Sprite displayIcon;
 }

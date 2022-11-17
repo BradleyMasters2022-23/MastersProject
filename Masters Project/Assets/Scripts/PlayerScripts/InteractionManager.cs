@@ -12,6 +12,8 @@ public class InteractionManager : MonoBehaviour
     private InputAction interact;
     private bool interacting = false;
 
+    [SerializeField] private LayerMask detectableLayer;
+
     private void Awake() {
         controller = new GameControls();
         interact = controller.PlayerGameplay.Interact;
@@ -31,7 +33,7 @@ public class InteractionManager : MonoBehaviour
         // add another point that would work better
         // possibly switch to CapsuleCast or find some other solution
         RaycastHit hit;
-        interacting = Physics.Raycast(point.position, point.forward, out hit, interactDistance);
+        interacting = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactDistance, detectableLayer);
 
         if(interacting)
         {

@@ -51,9 +51,14 @@ public class GameOverMenu : MonoBehaviour
     }
 
     
-    public void LoadToHub()
+    public void LoadToHubOldSystem()
     {
         RoomGenerator.instance.ReturnToHub();
+    }
+
+    public void LoadToHubNewSystem()
+    {
+        MapLoader.instance.ReturnToHub();
     }
 
     public void ReturnToMainMenu()

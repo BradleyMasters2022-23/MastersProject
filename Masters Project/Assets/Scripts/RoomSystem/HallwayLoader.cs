@@ -14,6 +14,9 @@ public class HallwayLoader : SegmentLoader
 {
     [SerializeField] private FragmentSpawner fragSpawner;
     [SerializeField] private Transform fragSpawnPoint;
+
+    [SerializeField] private GameObject upgradeContainer;
+
     protected override IEnumerator UniquePoolInitialization()
     {
         // Put upgrade initialization stuff here
@@ -27,8 +30,6 @@ public class HallwayLoader : SegmentLoader
 
     protected override void UniqueActivate()
     {
-        // Unlock the hallway door right after activation
-        doorManager.UnlockExit();
 
         return;
     }
@@ -36,5 +37,13 @@ public class HallwayLoader : SegmentLoader
     protected override void UniqueDeactivate()
     {
         return;
+    }
+
+    /// <summary>
+    /// When the upgrade is selected, unlock the exit
+    /// </summary>
+    public void UpgradeSelected()
+    {
+        doorManager.UnlockExit();
     }
 }
