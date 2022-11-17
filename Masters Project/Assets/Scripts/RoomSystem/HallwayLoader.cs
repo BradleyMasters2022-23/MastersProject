@@ -1,4 +1,4 @@
-/* 
+/*
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - November 3st, 2022
@@ -12,9 +12,11 @@ using UnityEngine;
 
 public class HallwayLoader : SegmentLoader
 {
+    [SerializeField] private FragmentSpawner fragSpawner;
     protected override IEnumerator UniquePoolInitialization()
     {
         // Put upgrade initialization stuff here
+        fragSpawner.SpawnFragment();
 
         // Leave this stuff alone and as the last item
         initialized = true;

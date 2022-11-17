@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3044925789322927758
+--- !u!1 &2236163082910726378
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4408411195379044641}
-  - component: {fileID: 2451540683616025832}
+  - component: {fileID: 8396087465823494519}
+  - component: {fileID: 7544580432857459814}
   m_Layer: 0
-  m_Name: RewardsManager
+  m_Name: NoteSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4408411195379044641
+--- !u!4 &8396087465823494519
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3044925789322927758}
+  m_GameObject: {fileID: 2236163082910726378}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -32,22 +32,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2451540683616025832
+--- !u!114 &7544580432857459814
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3044925789322927758}
+  m_GameObject: {fileID: 2236163082910726378}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 045c20ec16ed84d40adfbc425d517b8a, type: 3}
+  m_Script: {fileID: 11500000, guid: e9805fc1f8d125b4a8d07a630c1d8436, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numChoices:
-    startingValue: 1
-    lowerLimit: 0
-    upperLimit: 3
-  container: {fileID: 7046487143279642567, guid: 1d7d8b81cc8d1fb408c5b777c956d3b3, type: 3}
-  rewardSpawnPoint: {fileID: 0}
-  linked: 1
+  luck: 100
+  noteSpawnPoint: {fileID: 0}
+  fragInteractable: {fileID: 4955004976110838259, guid: 69c4396d834d6d24d8f11b673515f111, type: 3}
