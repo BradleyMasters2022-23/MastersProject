@@ -211,8 +211,8 @@ public class Door : MonoBehaviour
                 case PlayerDoorType.ReturnToHub:
                     {
                         // TODO - go to the 'finished upgrades' stuff instead
-
-                        GameManager.instance.ChangeState(GameManager.States.HUB);
+                        MapLoader.instance.ReturnToHub();
+                        //GameManager.instance.ChangeState(GameManager.States.HUB);
                         break;
                     }
                 case PlayerDoorType.Custom:
