@@ -40,7 +40,7 @@ public class EnemyTurret : EnemyBase
     {
         //neutralLook = shootPoints[0].transform.forward*3;
         currTime = TimeManager.WorldTimeScale;
-        shotRadius = shotPrefab.GetComponent<SphereCollider>().radius + 0.5f;
+        shotRadius = shotPrefab.GetComponent<SphereCollider>().radius + 0.15f;
         neutralLook = turretPoint.transform.forward * 5;
 
         returnNeutralDelay = new ScaledTimer(4f);
