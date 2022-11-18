@@ -29,7 +29,7 @@ public class AllNotesManager : MonoBehaviour
     /// <summary>
     /// sets up the manager
     /// </summary>
-    private void Start()
+    private void Awake()
     {
         if(instance == null)
         {
@@ -40,15 +40,17 @@ public class AllNotesManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
 
-        // adds all NoteObjects in notes to lostNotes on first load
-        foreach(NoteObject note in notes)
+    private void Start() {
+      // adds all NoteObjects in notes to lostNotes on first load
+      foreach(NoteObject note in notes)
+      {
+        if(!note.AllFragmentsFound() && !lostNotes.Contains(note))
         {
-          if(!note.AllFragmentsFound() && !lostNotes.Contains(note))
-          {
-            lostNotes.Add(note);
-          }
+          lostNotes.Add(note);
         }
+      }
     }
 
     /// <summary>

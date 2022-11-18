@@ -18,12 +18,18 @@ public class FragmentSpawner : MonoBehaviour
     public void SpawnFragment()
     {
         if(FragShouldSpawn()) {
-            Vector3 temp = fragSpawnPoint.transform.position;
-            GameObject obj = Instantiate(fragInteractable, temp, fragSpawnPoint.rotation);
-            obj.GetComponent<FragmentInteract>().SetUp(AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment());
-            Debug.Log(obj.GetComponent<FragmentInteract>().fragment.content);
+            GameObject obj = CreateFrag();
+            Debug.Log(obj.GetComponent<FragmentInteract>().GetFrag().content);
             obj.GetComponent<Collider>().enabled = true;
         }
+    }
+
+    private GameObject CreateFrag() {
+        Vector3 temp = fragSpawnPoint.transform.position;
+        GameObject obj = Instantiate(fragInteractable, temp, fragSpawnPoint.rotation);
+        obj.GetComponent<FragmentInteract>().SetUp(AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment());
+
+        return obj;
     }
 
     private bool FragShouldSpawn()

@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class FragmentInteract : Interactable
 {
-    public Fragment fragment;
+    [SerializeField] private Fragment fragment;
 
     /// <summary>
     /// initializes fragment
@@ -27,5 +27,9 @@ public class FragmentInteract : Interactable
         // somehow bring up a menu here?
         Debug.Log("It's a note.");
         Destroy(this);
+    }
+
+    public Fragment GetFrag() {
+        return fragment;
     }
 }
