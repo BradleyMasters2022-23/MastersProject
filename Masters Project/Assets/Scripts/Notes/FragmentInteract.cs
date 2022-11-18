@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class FragmentInteract : Interactable
 {
-    private Fragment fragment;
+    public Fragment fragment;
 
     /// <summary>
     /// initializes fragment

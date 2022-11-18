@@ -19,7 +19,6 @@ public class HallwayLoader : SegmentLoader
 
     protected override IEnumerator UniquePoolInitialization()
     {
-        // Put upgrade initialization stuff here
         fragSpawner.GetComponent<FragmentSpawner>().SetSpawnPoint(fragSpawnPoint);
         fragSpawner.GetComponent<FragmentSpawner>().SpawnFragment();
 
