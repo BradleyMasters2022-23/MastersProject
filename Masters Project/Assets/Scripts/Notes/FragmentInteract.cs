@@ -24,8 +24,6 @@ public class FragmentInteract : Interactable
     public override void OnInteract(PlayerController player)
     {
         PlayerNotesManager.instance.FindFragment(fragment);
-        // somehow bring up a menu here?
-        Debug.Log("It's a note.");
         Destroy(this);
     }
 
