@@ -11,16 +11,14 @@ using UnityEngine;
 
 public class FragmentInteract : Interactable
 {
-    [Tooltip("The fragment this container represents.")]
-    [SerializeField] private Fragment fragment;
-
+    private Fragment fragment;
 
     /// <summary>
-    /// called exactly once, initializes container
+    /// initializes fragment
     /// </summary>
-    public void Awake()
+    public void SetUp(Fragment frag)
     {
-        fragment = AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment();
+        fragment = frag;
     }
 
     public override void OnInteract(PlayerController player)

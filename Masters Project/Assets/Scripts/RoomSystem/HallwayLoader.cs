@@ -12,7 +12,7 @@ using UnityEngine;
 
 public class HallwayLoader : SegmentLoader
 {
-    [SerializeField] private FragmentSpawner fragSpawner;
+    [SerializeField] private GameObject fragSpawner;
     [SerializeField] private Transform fragSpawnPoint;
 
     [SerializeField] private GameObject upgradeContainer;
@@ -20,8 +20,8 @@ public class HallwayLoader : SegmentLoader
     protected override IEnumerator UniquePoolInitialization()
     {
         // Put upgrade initialization stuff here
-        fragSpawner.SetSpawnPoint(fragSpawnPoint);
-        fragSpawner.SpawnFragment();
+        fragSpawner.GetComponent<FragmentSpawner>().SetSpawnPoint(fragSpawnPoint);
+        fragSpawner.GetComponent<FragmentSpawner>().SpawnFragment();
 
         // Leave this stuff alone and as the last item
         initialized = true;

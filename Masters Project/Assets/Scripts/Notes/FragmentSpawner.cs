@@ -20,7 +20,7 @@ public class FragmentSpawner : MonoBehaviour
         if(FragShouldSpawn()) {
             Vector3 temp = fragSpawnPoint.transform.position;
             GameObject obj = Instantiate(fragInteractable, temp, fragSpawnPoint.rotation);
-            //obj.GetComponent<FragmentInteract>().SetUp(AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment());
+            obj.GetComponent<FragmentInteract>().SetUp(AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment());
             obj.GetComponent<Collider>().enabled = true;
         }
     }
