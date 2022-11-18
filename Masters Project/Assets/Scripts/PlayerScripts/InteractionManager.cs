@@ -35,6 +35,8 @@ public class InteractionManager : MonoBehaviour
         RaycastHit hit;
         interacting = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactDistance, detectableLayer);
 
+        //Debug.DrawLine(Camera.main.transform.position, Camera.main.transform.position + Camera.main.transform.forward * interactDistance, Color.red, 1f);
+
         if(interacting)
         {
             if(hit.transform.GetComponent<Interactable>() != null)
