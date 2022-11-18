@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using TMPro;
 using Sirenix.OdinInspector;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
+using Unity.VisualScripting;
 
 public class SelectUpgradeUI : MonoBehaviour
 {
@@ -14,6 +16,8 @@ public class SelectUpgradeUI : MonoBehaviour
     [SerializeField] private UpgradeSelectModule[] options;
 
     private UpgradeInteract caller;
+
+    private EventSystem eventSystem;
 
     /// <summary>
     /// Initialize inputs [TEMP]
@@ -45,9 +49,15 @@ public class SelectUpgradeUI : MonoBehaviour
     /// </summary>
     public void OpenScreen()
     {
+        if(eventSystem == null)
+        {
+            eventSystem = EventSystem.current;
+        }
+
         GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
         gameObject.SetActive(true);
         esc.Enable();
+        eventSystem.SetSelectedGameObject(options[0].GetComponentInChildren<Button>().gameObject);
     }
 
     /// <summary>
@@ -82,7 +92,8 @@ public class SelectUpgradeUI : MonoBehaviour
             PlayerUpgradeManager.instance.AddUpgrade(chosenUpgrade);
 
         // Tell container that its request has been granted and it can continue the game
-        caller.UpgradeSelected();
+        if(caller != null)
+            caller.UpgradeSelected();
 
         Debug.Log(chosenUpgrade.displayName + " was selected!");
     }
