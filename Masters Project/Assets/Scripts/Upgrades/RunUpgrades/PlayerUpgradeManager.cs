@@ -86,6 +86,8 @@ public class PlayerUpgradeManager : MonoBehaviour
         if (player == null)
         {
             Debug.LogError("cannot load player upgrades; no player instance found!");
+            instance = null;
+            Destroy(gameObject);
             return;
         }
 

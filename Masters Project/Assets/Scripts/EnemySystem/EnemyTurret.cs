@@ -91,11 +91,12 @@ public class EnemyTurret : EnemyBase
 
         // Limit the next angles
         float nextXAng = Mathf.Clamp(Mathf.DeltaAngle(turretPoint.transform.localRotation.eulerAngles.x, rot.eulerAngles.x), -rotationSpeed, rotationSpeed) * currTime;
-        float nextYAng = Mathf.Clamp(Mathf.DeltaAngle(turretPoint.transform.localRotation.eulerAngles.y, rot.eulerAngles.y), -rotationSpeed, rotationSpeed) * currTime;
+        float nextYAng = Mathf.Clamp(Mathf.DeltaAngle(gameObject.transform.rotation.eulerAngles.y, rot.eulerAngles.y), -rotationSpeed, rotationSpeed) * currTime;
 
-
-        turretPoint.transform.localRotation = Quaternion.Euler(turretPoint.transform.localRotation.eulerAngles.x + nextXAng,
-            turretPoint.transform.localRotation.eulerAngles.y + nextYAng, 0);
+        // Adjust the vertical neck of the turret
+        turretPoint.transform.localRotation = Quaternion.Euler(turretPoint.transform.localRotation.eulerAngles.x + nextXAng, 0, 0);
+        // Adjust the horizontal base of the turret
+        gameObject.transform.rotation = Quaternion.Euler(0, gameObject.transform.rotation.eulerAngles.y + nextYAng, 0);
     }
 
     /// <summary>

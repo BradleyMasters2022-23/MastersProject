@@ -48,6 +48,9 @@ public abstract class Damagable : MonoBehaviour
     {
         Rigidbody rb = GetComponent<Rigidbody>();
 
+        if (rb is null)
+            return;
+
         // Prepare the new velocity vector for knockback
         Vector3 newForce = (transform.position - _origin).normalized * _force;
         

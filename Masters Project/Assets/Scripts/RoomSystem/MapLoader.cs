@@ -403,13 +403,17 @@ public class MapLoader : MonoBehaviour
     {
         instance = null;
 
-        GameManager.instance.ChangeState(GameManager.States.HUB);
+        
 
         // TODO - RESET PLAYER UPGRADES
+        Debug.Log($"PUM active : {PlayerUpgradeManager.instance != null} | AUM active : {AllUpgradeManager.instance != null}");
+
         if (PlayerUpgradeManager.instance != null)
             PlayerUpgradeManager.instance.DestroyPUM();
         if (AllUpgradeManager.instance != null)
             AllUpgradeManager.instance.DestroyAUM();
+
+        GameManager.instance.ChangeState(GameManager.States.HUB);
 
         Destroy(gameObject);
     }

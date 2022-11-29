@@ -9,6 +9,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 public class Projectile : RangeAttack
 {
@@ -32,8 +33,11 @@ public class Projectile : RangeAttack
     [Tooltip("What spawns when this his something")]
     [SerializeField] public GameObject onHitEffect;
 
-    [Tooltip("What layers should this projectile ignore")]
-    [SerializeField] private LayerMask layersToIgnore;
+    [Tooltip("What layers should this projectile hit with a larger radius")]
+    [SerializeField] private LayerMask targetLayers;
+
+    [Tooltip("What layers should this impact directly with")]
+    [SerializeField] private LayerMask groundLayer;
 
     [Tooltip("Sound when enemy shoots")]
     [SerializeField] private AudioClip[] enemyShoot;
@@ -69,20 +73,31 @@ public class Projectile : RangeAttack
 
         // Check if it passed target
         RaycastHit target;
-        //Physics.CapsuleCast(transform.position, futurePos, GetComponent<SphereCollider>().radius/3, transform.forward, out target, (Vector3.Distance(transform.position, lastPos)), ~layersToIgnore)
-        if (Physics.SphereCast(transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, (Vector3.Distance(transform.position, lastPos)), ~layersToIgnore))
+        if (Physics.SphereCast(transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, (Vector3.Distance(transform.position, lastPos)), targetLayers))
         {
             hitPoint = target.point;
 
-            hitRotatation = transform.position - hitPoint;
+            hitRotatation = target.normal;
 
             TriggerTarget(target.collider);
         }
         else
         {
-            hitPoint = transform.position;
-            hitRotatation = -transform.forward;
+            // Check if it directly hit a wall
+            if (Physics.Raycast(transform.position, transform.forward, out target, (Vector3.Distance(transform.position, lastPos)), groundLayer))
+            {
+                hitPoint = target.point;
+                hitRotatation = target.normal;
+                TriggerTarget(target.collider);
+            }
+            else
+            {
+                hitPoint = transform.position;
+                hitRotatation = -transform.forward;
+            }
         }
+        
+
 
         // Check if projectile reached its max range
         distanceCovered += targetVelocity.magnitude * TimeManager.WorldDeltaTime;
