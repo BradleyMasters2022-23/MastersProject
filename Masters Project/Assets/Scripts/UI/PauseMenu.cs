@@ -40,10 +40,6 @@ public class PauseMenu : MonoBehaviour
         {
             pauseScreen.SetActive(true);
         }
-        else if(pauseScreen.activeInHierarchy)
-        {
-            pauseScreen.SetActive(false);
-        }
     }
 
     /// <summary>

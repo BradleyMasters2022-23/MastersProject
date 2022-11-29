@@ -32,14 +32,12 @@ public class GameManager : MonoBehaviour
         CONTROLLER
     }
 
+    #region Core Variables
+
     /// <summary>
     /// Public instance of game manager
     /// </summary>
     public static GameManager instance;
-
-    public static ControllerType controllerType;
-
-    private GameObject lastSelectedObject;
 
     /// <summary>
     /// Current state of the manager
@@ -53,7 +51,12 @@ public class GameManager : MonoBehaviour
         get { return currentState; }
     }
 
-    [Header("=====Core Game Elements=====")]
+    /// <summary>
+    /// Type of controller being used
+    /// </summary>
+    public static ControllerType controllerType;
+
+    [Header("===== Scene Management Info =====")]
 
     [Tooltip("Name of the hub scene")]
     [SerializeField] private string mainHubScene;
@@ -61,19 +64,30 @@ public class GameManager : MonoBehaviour
     [Tooltip("Name of the main menu scene")]
     [SerializeField] private string mainMenuScene;
 
-    [Tooltip("Name of the main menu scene")]
+    [Tooltip("Name of the main gameplay scene")]
     [SerializeField] private string mainGameplayScene;
+
+    #endregion
+
+    #region Input Management Variables
+
+    private GameObject lastSelectedObject;
+
+    private PlayerInput input;
 
     /// <summary>
     /// Track the last state
     /// </summary>
     private States lastState;
 
-    private GameControls controls;
+    public static GameControls controls;
     private InputAction escape;
     private InputAction checkController;
     private InputAction checkCursor;
 
+    #endregion
+
+    #region Channel Variables
 
     [Header("=====Game Flow Channels=====")]
 
@@ -84,8 +98,21 @@ public class GameManager : MonoBehaviour
     [Tooltip("Channel that handles game over actions")]
     [SerializeField] private ChannelVoid onGameOverChannel;
 
+    #endregion
+
+    #region Menu Variables
+
     /// <summary>
-    /// Last health of the player
+    /// Stack of opened UI menus
+    /// </summary>
+    private Stack<UIMenu> menuStack;
+
+    private InputAction backMenu;
+
+    #endregion
+
+    /// <summary>
+    /// Last health of the player. Outdated, but keeping for backup
     /// </summary>
     [HideInInspector] public int lastPlayerHealth;
 
@@ -106,9 +133,10 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        // Set up controls
         controls = new GameControls();
         escape = controls.PlayerGameplay.Pause;
-        escape.canceled += TogglePause;
+        escape.performed += TogglePause;
         escape.Enable();
 
         checkController = controls.PlayerGameplay.Controller;
@@ -119,10 +147,19 @@ public class GameManager : MonoBehaviour
         checkCursor.performed += ShowCursor;
         checkCursor.Enable();
 
+        backMenu = controls.UI.Back;
+        backMenu.performed += CloseTopMenu;
+        backMenu.Enable();
+
         // Subscribe change state function to channel
         requestStateChangeChannel.OnEventRaised += ChangeState;
 
+        //controls.PlayerGameplay.Disable();
+        controls.PlayerGameplay.Enable();
+        controls.UI.Disable();
+        menuStack = new Stack<UIMenu>();
     }
+
 
     #region State Management
 
@@ -139,18 +176,25 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // perform any actions inside this script
+        // perform any actions when moving to the new state
         switch (_newState)
         {
             case States.MAINMENU:
                 {
                     SceneManager.LoadScene(mainMenuScene);
 
+                    controls.UI.Enable();
+                    controls.PlayerGameplay.Disable();
+
                     break;
                 }
             case States.PAUSED:
                 {
                     Pause();
+
+                    controls.UI.Enable();
+                    controls.PlayerGameplay.Disable();
+
                     break;
                 }
             case States.HUB:
@@ -163,6 +207,11 @@ public class GameManager : MonoBehaviour
                         lastPlayerHealth = 0;
                     }
                     UnPause();
+
+                    // TODO - switch to hub bindings, incase different
+                    controls.UI.Disable();
+                    controls.PlayerGameplay.Enable();
+
                     break;
                 }
             case States.GAMEPLAY:
@@ -171,14 +220,19 @@ public class GameManager : MonoBehaviour
                     {
                         SceneManager.LoadScene(mainGameplayScene);
                     }
-
                     UnPause();
+
+                    controls.UI.Disable();
+                    controls.PlayerGameplay.Enable();
 
                     break;
                 }
             case States.GAMEMENU:
                 {
                     Pause();
+
+                    controls.UI.Enable();
+                    controls.PlayerGameplay.Disable();
 
                     break;
                 }
@@ -187,11 +241,19 @@ public class GameManager : MonoBehaviour
                     Pause();
 
                     onGameOverChannel.RaiseEvent();
+
+                    controls.UI.Enable();
+                    controls.PlayerGameplay.Disable();
+
                     break;
                 }
             case States.LOADING:
                 {
                     Pause();
+
+                    controls.UI.Enable();
+                    controls.PlayerGameplay.Disable();
+
                     break;
                 }
         }
@@ -275,19 +337,8 @@ public class GameManager : MonoBehaviour
     /// Input for toggling pause, if possible
     /// </summary>
     /// <param name="c"></param>
-    private void TogglePause(InputAction.CallbackContext c)
+    public void TogglePause(InputAction.CallbackContext c = default)
     {
-        // check if settings menu is open. If so, dont unpause
-        Settings settings = FindObjectOfType<Settings>(true);
-        if (settings != null)
-        {
-            if (settings.SettingsOpen())
-            {
-                Debug.Log("Settings open, cannot toggle pause!");
-                return;
-            }
-        }
-
         // try pausing
         if (ValidateStateChange(States.PAUSED))
         {
@@ -299,14 +350,6 @@ public class GameManager : MonoBehaviour
         {
             ChangeState(lastState);
         }
-    }
-
-    /// <summary>
-    /// Public call to toggle pause
-    /// </summary>
-    public void TogglePause()
-    {
-        TogglePause(new InputAction.CallbackContext());
     }
 
     /// <summary>
@@ -433,6 +476,52 @@ public class GameManager : MonoBehaviour
 
                     break;
                 }
+        }
+    }
+
+    #endregion
+
+    #region Menu Management
+
+    /// <summary>
+    /// Push a new menu onto the stack
+    /// </summary>
+    /// <param name="menu">newely opened menu to add to stack</param>
+    public void PushMenu(UIMenu menu)
+    {
+        // Debug.Log($"[GameManager] added menu {menu.name} to UI stack");
+        menuStack.Push(menu);
+    }
+
+    /// <summary>
+    /// Close the current top menu, if possible
+    /// </summary>
+    public void CloseTopMenu(InputAction.CallbackContext c = default)
+    {
+        // Check if there are no options available
+        if(menuStack.Count <= 0)
+        {
+            Debug.Log("[GameManager] Close menu called, but no menu to close!");
+            return;
+        }
+
+        // Close the top menu and remove from stack
+        UIMenu menu = menuStack.Pop();
+        menu.Close();
+
+        // Check if all menus are closed and if should return to appropriate scene
+        if(menuStack.Count <= 0)
+        {
+            if(currentState == States.PAUSED)
+            {
+                TogglePause();
+            }
+            else if (currentState == States.GAMEMENU)
+            {
+                // Change it back to its previous state (Gameplay or HUB)
+                ChangeState(lastState);
+            }
+
         }
     }
 

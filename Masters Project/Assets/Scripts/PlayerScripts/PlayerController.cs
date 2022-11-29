@@ -189,20 +189,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        // Initialize controls
-        controller = new GameControls();
-        move = controller.PlayerGameplay.Move;
-        move.Enable();
-
-        jump = controller.PlayerGameplay.Jump;
-        jump.Enable();
-        jump.performed += Jump;
-
-        sprint = controller.PlayerGameplay.Sprint;
-        sprint.started += ToggleSprint;
-        sprint.canceled += ToggleSprint;
-        sprint.Enable();
-
         // Initialize upgradable variables
         maxMoveSpeed.Initialize();
         sprintModifier.Initialize();
@@ -230,6 +216,22 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        // Initialize controls
+        controller = GameManager.controls;
+        move = controller.PlayerGameplay.Move;
+        move.Enable();
+
+        jump = controller.PlayerGameplay.Jump;
+        jump.Enable();
+        jump.performed += Jump;
+
+        sprint = controller.PlayerGameplay.Sprint;
+        sprint.started += ToggleSprint;
+        sprint.canceled += ToggleSprint;
+        sprint.Enable();
+
+        
+
         // Get initial references
         rb = GetComponent<Rigidbody>();
 
