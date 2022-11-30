@@ -41,7 +41,7 @@ public class EnemyTurret : EnemyBase
     {
         //neutralLook = shootPoints[0].transform.forward*3;
         currTime = TimeManager.WorldTimeScale;
-        shotRadius = shotPrefab.GetComponent<SphereCollider>().radius + 0.15f;
+        shotRadius = shotPrefab.GetComponent<SphereCollider>().radius * .5f;
         neutralLook = turretPoint.transform.forward * 5;
 
         returnNeutralDelay = new ScaledTimer(4f);
@@ -142,15 +142,22 @@ public class EnemyTurret : EnemyBase
     /// <returns>Line of sight</returns>
     public bool LineOfSight(Transform t)
     {
-        Vector3 direction = t.position - turretPoint.transform.position;
+        // First target direct, then higher, then lower, 
+        Vector3 dir = t.position - turretPoint.transform.position;
+        Vector3 dirHigh = (t.position + t.up * .35f) - turretPoint.transform.position;
+        Vector3 dirLow = (t.position + t.up * -.7f) - turretPoint.transform.position;
 
         // Set mask to ignore raycasts and enemy layer
-        // Debug.DrawRay(turretPoint.transform.position, direction, Color.red, 2f);
+        //Debug.DrawRay(turretPoint.transform.position, dir, Color.red, 2f);
+        Debug.DrawRay(turretPoint.transform.position, dirHigh, Color.blue, 2f);
+        Debug.DrawRay(turretPoint.transform.position, dirLow, Color.green, 2f);
 
         // Try to get player
         RaycastHit hit;
         
-        if (Physics.SphereCast(turretPoint.transform.position, shotRadius, direction, out hit, attackRange, visionLayer))
+        if (Physics.SphereCast(turretPoint.transform.position, shotRadius, dir, out hit, attackRange, visionLayer)
+            || Physics.SphereCast(turretPoint.transform.position, shotRadius, dirHigh, out hit, attackRange, visionLayer)
+            || Physics.SphereCast(turretPoint.transform.position, shotRadius, dirLow, out hit, attackRange, visionLayer))
         {
             if (hit.transform.CompareTag("Player"))
             {
@@ -160,7 +167,6 @@ public class EnemyTurret : EnemyBase
                 return true;
             }
         }
-
 
         if (!waitingNeutral)
         {
