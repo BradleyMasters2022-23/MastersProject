@@ -72,7 +72,7 @@ public class PlayerGunController : MonoBehaviour
     private void Awake()
     {
         // Initialize controls
-        controller = new GameControls();
+        controller = GameManager.controls;
         shoot = controller.PlayerGameplay.Shoot;
         shoot.Enable();
         shoot.started += ToggleTrigger;
@@ -147,40 +147,12 @@ public class PlayerGunController : MonoBehaviour
     }
 
     /// <summary>
-    /// Re-enable shooting input if enabled and not null
-    /// </summary>
-    private void OnEnable()
-    {
-        onStateChangeChannel.OnEventRaised += ToggleInputs;
-
-        shoot.Enable();
-    }
-    /// <summary>
     /// Disable input to prevent crashing
     /// </summary>
     private void OnDisable()
     {
-        onStateChangeChannel.OnEventRaised -= ToggleInputs;
-
-        if(shoot.enabled)
-            shoot.Disable();
-    }
-
-    /// <summary>
-    /// Toggle inputs if game pauses
-    /// </summary>
-    /// <param name="_newState">new state</param>
-    private void ToggleInputs(GameManager.States _newState)
-    {
-        if (_newState == GameManager.States.GAMEPLAY
-            || _newState == GameManager.States.HUB)
-        {
-            shoot.Enable();
-        }
-        else
-        {
-            shoot.Disable();
-        }
+        shoot.started -= ToggleTrigger;
+        shoot.canceled -= ToggleTrigger;
     }
 
     public int GetDamageMultiplier() {

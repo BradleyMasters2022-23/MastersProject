@@ -154,12 +154,11 @@ public class GameManager : MonoBehaviour
         // Subscribe change state function to channel
         requestStateChangeChannel.OnEventRaised += ChangeState;
 
-        //controls.PlayerGameplay.Disable();
-        controls.PlayerGameplay.Enable();
-        controls.UI.Disable();
+        // Set correct control scheme
+        UpdateControlMode();
+
         menuStack = new Stack<UIMenu>();
     }
-
 
     #region State Management
 
@@ -183,17 +182,11 @@ public class GameManager : MonoBehaviour
                 {
                     SceneManager.LoadScene(mainMenuScene);
 
-                    controls.UI.Enable();
-                    controls.PlayerGameplay.Disable();
-
                     break;
                 }
             case States.PAUSED:
                 {
                     Pause();
-
-                    controls.UI.Enable();
-                    controls.PlayerGameplay.Disable();
 
                     break;
                 }
@@ -209,10 +202,6 @@ public class GameManager : MonoBehaviour
 
                     UnPause();
 
-                    // TODO - switch to hub bindings, incase different
-                    controls.UI.Disable();
-                    controls.PlayerGameplay.Enable();
-
                     break;
                 }
             case States.GAMEPLAY:
@@ -223,17 +212,11 @@ public class GameManager : MonoBehaviour
                     }
                     UnPause();
 
-                    controls.UI.Disable();
-                    controls.PlayerGameplay.Enable();
-
                     break;
                 }
             case States.GAMEMENU:
                 {
                     Pause();
-
-                    controls.UI.Enable();
-                    controls.PlayerGameplay.Disable();
 
                     break;
                 }
@@ -243,8 +226,6 @@ public class GameManager : MonoBehaviour
 
                     onGameOverChannel.RaiseEvent();
 
-                    controls.UI.Enable();
-                    controls.PlayerGameplay.Disable();
 
                     break;
                 }
@@ -252,13 +233,9 @@ public class GameManager : MonoBehaviour
                 {
                     Pause();
 
-                    controls.UI.Enable();
-                    controls.PlayerGameplay.Disable();
-
                     break;
                 }
         }
-
 
         // perform any new events outside this script
         onStateChangeChannel.RaiseEvent(_newState);
@@ -266,6 +243,9 @@ public class GameManager : MonoBehaviour
         // Change state
         lastState = currentState;
         currentState = _newState;
+
+        UpdateControlMode();
+        UpdateMouseMode();
     }
 
     /// <summary>
@@ -467,13 +447,11 @@ public class GameManager : MonoBehaviour
                 {
                     Cursor.lockState = CursorLockMode.Confined;
 
-                    onGameOverChannel.RaiseEvent();
                     break;
                 }
             case States.LOADING:
                 {
                     Cursor.lockState = CursorLockMode.Confined;
-
 
                     break;
                 }
@@ -490,7 +468,6 @@ public class GameManager : MonoBehaviour
     /// <param name="menu">newely opened menu to add to stack</param>
     public void PushMenu(UIMenu menu)
     {
-        // Debug.Log($"[GameManager] added menu {menu.name} to UI stack");
         menuStack.Push(menu);
     }
 
@@ -500,7 +477,7 @@ public class GameManager : MonoBehaviour
     public void CloseTopMenu(InputAction.CallbackContext c = default)
     {
         // Check if there are no options available
-        if(menuStack.Count <= 0)
+        if (menuStack.Count <= 0)
         {
             Debug.Log("[GameManager] Close menu called, but no menu to close!");
             return;
@@ -511,7 +488,7 @@ public class GameManager : MonoBehaviour
         menu.Close();
 
         // Check if all menus are closed and if should return to appropriate scene
-        if(menuStack.Count <= 0)
+        if (menuStack.Count <= 0)
         {
             if(currentState == States.PAUSED)
             {
@@ -523,6 +500,67 @@ public class GameManager : MonoBehaviour
                 ChangeState(lastState);
             }
 
+        }
+    }
+
+    /// <summary>
+    /// Update the current control scheme based on the current state
+    /// </summary>
+    private void UpdateControlMode()
+    {
+        //controls = new GameControls();
+
+        switch (currentState)
+        {
+            case States.MAINMENU:
+                {
+                    controls.UI.Enable();
+                    controls.PlayerGameplay.Disable();
+
+                    break;
+                }
+            case States.PAUSED:
+                {
+                    controls.UI.Enable();
+                    controls.PlayerGameplay.Disable();
+
+                    break;
+                }
+            case States.HUB:
+                {
+                    controls.PlayerGameplay.Enable();
+                    controls.UI.Disable();
+
+                    break;
+                }
+            case States.GAMEPLAY:
+                {
+                    controls.PlayerGameplay.Enable();
+                    controls.UI.Disable();
+
+                    break;
+                }
+            case States.GAMEMENU:
+                {
+                    controls.UI.Enable();
+                    controls.PlayerGameplay.Disable();
+
+                    break;
+                }
+            case States.GAMEOVER:
+                {
+                    controls.UI.Enable();
+                    controls.PlayerGameplay.Disable();
+
+                    break;
+                }
+            case States.LOADING:
+                {
+                    controls.UI.Disable();
+                    controls.PlayerGameplay.Disable();
+
+                    break;
+                }
         }
     }
 

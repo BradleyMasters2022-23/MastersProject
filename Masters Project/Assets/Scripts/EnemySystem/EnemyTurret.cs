@@ -145,7 +145,7 @@ public class EnemyTurret : EnemyBase
         Vector3 direction = t.position - turretPoint.transform.position;
 
         // Set mask to ignore raycasts and enemy layer
-        Debug.DrawRay(turretPoint.transform.position, direction, Color.red, 2f);
+        // Debug.DrawRay(turretPoint.transform.position, direction, Color.red, 2f);
 
         // Try to get player
         RaycastHit hit;
