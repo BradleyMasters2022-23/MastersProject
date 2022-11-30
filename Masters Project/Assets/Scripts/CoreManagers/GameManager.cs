@@ -181,6 +181,7 @@ public class GameManager : MonoBehaviour
             case States.MAINMENU:
                 {
                     SceneManager.LoadScene(mainMenuScene);
+                    menuStack.Clear();
 
                     break;
                 }
@@ -195,6 +196,7 @@ public class GameManager : MonoBehaviour
                     if(SceneManager.GetActiveScene().name != mainHubScene)
                     {
                         SceneManager.LoadScene(mainHubScene);
+                        menuStack.Clear();
                     }
 
                     // Reset player health in hub
@@ -209,6 +211,7 @@ public class GameManager : MonoBehaviour
                     if(SceneManager.GetActiveScene().name != mainGameplayScene) 
                     {
                         SceneManager.LoadScene(mainGameplayScene);
+                        menuStack.Clear();
                     }
                     UnPause();
 

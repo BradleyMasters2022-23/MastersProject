@@ -72,11 +72,7 @@ public class PlayerGunController : MonoBehaviour
     private void Awake()
     {
         // Initialize controls
-        controller = GameManager.controls;
-        shoot = controller.PlayerGameplay.Shoot;
-        shoot.Enable();
-        shoot.started += ToggleTrigger;
-        shoot.canceled += ToggleTrigger;
+        StartCoroutine(InitializeControls());
 
         // Initialize upgradable variables
         damageMultiplier.Initialize();
@@ -86,7 +82,21 @@ public class PlayerGunController : MonoBehaviour
         // Initialize timers
         fireTimer = new ScaledTimer(fireDelay.Current, false);
 
-        source = gameObject.AddComponent<AudioSource>();
+        source = GetComponent<AudioSource>();
+    }
+
+    private IEnumerator InitializeControls()
+    {
+        while(GameManager.controls == null)
+            yield return null;
+
+        controller = GameManager.controls;
+        shoot = controller.PlayerGameplay.Shoot;
+        shoot.Enable();
+        shoot.started += ToggleTrigger;
+        shoot.canceled += ToggleTrigger;
+
+        yield return null;
     }
 
     /// <summary>
