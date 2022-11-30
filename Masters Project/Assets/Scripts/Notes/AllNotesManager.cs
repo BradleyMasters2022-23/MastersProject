@@ -73,4 +73,19 @@ public class AllNotesManager : MonoBehaviour
         }
         return;
     }
+
+    public bool NoteFindable()
+    {
+        if(lostNotes.Count == 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public NoteObject GetNote(int index)
+    {
+        return notes[index];
+    }
 }

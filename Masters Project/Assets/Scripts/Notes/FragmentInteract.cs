@@ -12,6 +12,13 @@ using UnityEngine;
 public class FragmentInteract : Interactable
 {
     [SerializeField] private Fragment fragment;
+    private NoteFoundUI ui;
+    private bool dataSent = false;
+
+    private void Awake()
+    {
+        ui = FindObjectOfType<NoteFoundUI>(true);
+    }
 
     /// <summary>
     /// initializes fragment
@@ -23,11 +30,31 @@ public class FragmentInteract : Interactable
 
     public override void OnInteract(PlayerController player)
     {
+        if (ui == null) {
+            Debug.Log("No UI found.");
+        }
+
+        if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
+        {
+            Debug.Log("Not in a state where the player can interact with this object");
+            return;
+        }
+
+        if (!dataSent)
+        {
+            ui.LoadFragment(this);
+
+            dataSent = true;
+        }
+
+        ui.OpenScreen();
         PlayerNotesManager.instance.FindFragment(fragment);
-        Destroy(this);
+
     }
 
-    public Fragment GetFrag() {
+    public Fragment GetFragment()
+    {
         return fragment;
     }
+
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class FragmentSpawner : MonoBehaviour
@@ -9,7 +10,7 @@ public class FragmentSpawner : MonoBehaviour
     private Transform fragSpawnPoint;
     [SerializeField] private GameObject fragInteractable;
     private float max;
-    // Start is called before the first frame update
+
     private void Start()
     {
         max = 100/luck-1;
@@ -18,15 +19,14 @@ public class FragmentSpawner : MonoBehaviour
     public void SpawnFragment()
     {
         if(FragShouldSpawn()) {
+            Debug.Log(FragShouldSpawn());
             GameObject obj = CreateFrag();
-            Debug.Log(obj.GetComponent<FragmentInteract>().GetFrag().content);
             obj.GetComponent<Collider>().enabled = true;
-        }
+        } 
     }
 
     private GameObject CreateFrag() {
-        Vector3 temp = fragSpawnPoint.transform.position;
-        GameObject obj = Instantiate(fragInteractable, temp, fragSpawnPoint.rotation);
+        GameObject obj = Instantiate(fragInteractable, fragSpawnPoint.transform.position, fragSpawnPoint.rotation);
         obj.GetComponent<FragmentInteract>().SetUp(AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment());
 
         return obj;
@@ -34,7 +34,7 @@ public class FragmentSpawner : MonoBehaviour
 
     private bool FragShouldSpawn()
     {
-        if(Random.Range(0, max) == 0) {
+        if(Random.Range(0, max) == 0 && AllNotesManager.instance.NoteFindable()) {
             return true;
         }
 

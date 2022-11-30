@@ -19,9 +19,13 @@ public class HallwayLoader : SegmentLoader
 
     protected override IEnumerator UniquePoolInitialization()
     {
-        fragSpawner.GetComponent<FragmentSpawner>().SetSpawnPoint(fragSpawnPoint);
-        fragSpawner.GetComponent<FragmentSpawner>().SpawnFragment();
+        if(GameObject.Find("NoteSpawnPoint") != null)
+        {
+            fragSpawnPoint = GameObject.Find("NoteSpawnPoint").transform;
+            fragSpawner.GetComponent<FragmentSpawner>().SetSpawnPoint(fragSpawnPoint);
+        } 
 
+        
         // Leave this stuff alone and as the last item
         initialized = true;
         yield return null;
@@ -29,7 +33,7 @@ public class HallwayLoader : SegmentLoader
 
     protected override void UniqueActivate()
     {
-
+        fragSpawner.GetComponent<FragmentSpawner>().SpawnFragment();
         return;
     }
 
