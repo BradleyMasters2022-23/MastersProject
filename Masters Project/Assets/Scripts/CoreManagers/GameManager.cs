@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -32,14 +33,12 @@ public class GameManager : MonoBehaviour
         CONTROLLER
     }
 
+    #region Core Variables
+
     /// <summary>
     /// Public instance of game manager
     /// </summary>
     public static GameManager instance;
-
-    public static ControllerType controllerType;
-
-    private GameObject lastSelectedObject;
 
     /// <summary>
     /// Current state of the manager
@@ -53,7 +52,12 @@ public class GameManager : MonoBehaviour
         get { return currentState; }
     }
 
-    [Header("=====Core Game Elements=====")]
+    /// <summary>
+    /// Type of controller being used
+    /// </summary>
+    public static ControllerType controllerType;
+
+    [Header("===== Scene Management Info =====")]
 
     [Tooltip("Name of the hub scene")]
     [SerializeField] private string mainHubScene;
@@ -61,19 +65,30 @@ public class GameManager : MonoBehaviour
     [Tooltip("Name of the main menu scene")]
     [SerializeField] private string mainMenuScene;
 
-    [Tooltip("Name of the main menu scene")]
+    [Tooltip("Name of the main gameplay scene")]
     [SerializeField] private string mainGameplayScene;
+
+    #endregion
+
+    #region Input Management Variables
+
+    private GameObject lastSelectedObject;
+
+    private PlayerInput input;
 
     /// <summary>
     /// Track the last state
     /// </summary>
     private States lastState;
 
-    private GameControls controls;
+    public static GameControls controls;
     private InputAction escape;
     private InputAction checkController;
     private InputAction checkCursor;
 
+    #endregion
+
+    #region Channel Variables
 
     [Header("=====Game Flow Channels=====")]
 
@@ -84,8 +99,21 @@ public class GameManager : MonoBehaviour
     [Tooltip("Channel that handles game over actions")]
     [SerializeField] private ChannelVoid onGameOverChannel;
 
+    #endregion
+
+    #region Menu Variables
+
     /// <summary>
-    /// Last health of the player
+    /// Stack of opened UI menus
+    /// </summary>
+    private Stack<UIMenu> menuStack;
+
+    private InputAction backMenu;
+
+    #endregion
+
+    /// <summary>
+    /// Last health of the player. Outdated, but keeping for backup
     /// </summary>
     [HideInInspector] public int lastPlayerHealth;
 
@@ -106,22 +134,31 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        // Set up controls
         controls = new GameControls();
         escape = controls.PlayerGameplay.Pause;
-        escape.canceled += TogglePause;
+        escape.performed += TogglePause;
         escape.Enable();
 
-        checkController = controls.PlayerGameplay.Controller;
+        checkController = controls.UI.Controller;
         checkController.performed += HideCursor;
         checkController.Enable();
 
-        checkCursor = controls.PlayerGameplay.Mouse;
+        checkCursor = controls.UI.Mouse;
         checkCursor.performed += ShowCursor;
         checkCursor.Enable();
+
+        backMenu = controls.UI.Back;
+        backMenu.performed += CloseTopMenu;
+        backMenu.Enable();
 
         // Subscribe change state function to channel
         requestStateChangeChannel.OnEventRaised += ChangeState;
 
+        // Set correct control scheme
+        UpdateControlMode();
+
+        menuStack = new Stack<UIMenu>();
     }
 
     #region State Management
@@ -139,39 +176,44 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // perform any actions inside this script
+        // perform any actions when moving to the new state
         switch (_newState)
         {
             case States.MAINMENU:
                 {
                     SceneManager.LoadScene(mainMenuScene);
+                    menuStack.Clear();
 
                     break;
                 }
             case States.PAUSED:
                 {
                     Pause();
+
                     break;
                 }
             case States.HUB:
                 {
-                    if(currentState != States.PAUSED)
+                    if(SceneManager.GetActiveScene().name != mainHubScene)
                     {
                         SceneManager.LoadScene(mainHubScene);
-
-                        // Reset player health in hub
-                        lastPlayerHealth = 0;
+                        menuStack.Clear();
                     }
+
+                    // Reset player health in hub
+                    lastPlayerHealth = 0;
+
                     UnPause();
+
                     break;
                 }
             case States.GAMEPLAY:
                 {
-                    if(currentState == States.HUB) 
+                    if(SceneManager.GetActiveScene().name != mainGameplayScene) 
                     {
                         SceneManager.LoadScene(mainGameplayScene);
+                        menuStack.Clear();
                     }
-
                     UnPause();
 
                     break;
@@ -187,15 +229,17 @@ public class GameManager : MonoBehaviour
                     Pause();
 
                     onGameOverChannel.RaiseEvent();
+
+
                     break;
                 }
             case States.LOADING:
                 {
                     Pause();
+
                     break;
                 }
         }
-
 
         // perform any new events outside this script
         onStateChangeChannel.RaiseEvent(_newState);
@@ -203,6 +247,9 @@ public class GameManager : MonoBehaviour
         // Change state
         lastState = currentState;
         currentState = _newState;
+
+        UpdateControlMode();
+        UpdateMouseMode();
     }
 
     /// <summary>
@@ -275,19 +322,8 @@ public class GameManager : MonoBehaviour
     /// Input for toggling pause, if possible
     /// </summary>
     /// <param name="c"></param>
-    private void TogglePause(InputAction.CallbackContext c)
+    public void TogglePause(InputAction.CallbackContext c = default)
     {
-        // check if settings menu is open. If so, dont unpause
-        Settings settings = FindObjectOfType<Settings>(true);
-        if (settings != null)
-        {
-            if (settings.SettingsOpen())
-            {
-                Debug.Log("Settings open, cannot toggle pause!");
-                return;
-            }
-        }
-
         // try pausing
         if (ValidateStateChange(States.PAUSED))
         {
@@ -299,14 +335,6 @@ public class GameManager : MonoBehaviour
         {
             ChangeState(lastState);
         }
-    }
-
-    /// <summary>
-    /// Public call to toggle pause
-    /// </summary>
-    public void TogglePause()
-    {
-        TogglePause(new InputAction.CallbackContext());
     }
 
     /// <summary>
@@ -339,49 +367,47 @@ public class GameManager : MonoBehaviour
         UpdateMouseMode();
     }
 
-    private void Update()
-    {
-        EventSystem t = FindObjectOfType<EventSystem>();
-        if (t != null)
-            lastSelectedObject = t.currentSelectedGameObject;
-    }
-
-    private void HideCursor(InputAction.CallbackContext c)
+    private void HideCursor(InputAction.CallbackContext c = default)
     {
         if (controllerType == ControllerType.MOUSE
             && checkController.ReadValue<Vector2>() != Vector2.zero)
         {
-            //Debug.Log("Controller detected, hiding cursor");
+            Debug.Log("Controller detected, hiding cursor");
 
             controllerType = ControllerType.CONTROLLER;
 
+            // Hide the mouse cursor
             Cursor.lockState = CursorLockMode.None;
-            //Cursor.lockState = CursorLockMode.Locked;
+            Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
-            // Set active button to either the default or last selected button
-            EventSystem t = FindObjectOfType<EventSystem>();
-            if (t != null && lastSelectedObject != null && lastSelectedObject.activeInHierarchy)
-                t.SetSelectedGameObject(lastSelectedObject);
-            else if (t != null && t.firstSelectedGameObject != null)
-                t.SetSelectedGameObject(t.firstSelectedGameObject);
+            ClearPointer();
+
+            // Set the controller select to the screen
+            menuStack.Peek().TopStackFunction();
         }
     }
 
-    private void ShowCursor(InputAction.CallbackContext c)
+    private void ShowCursor(InputAction.CallbackContext c = default)
     {
         if (controllerType == ControllerType.CONTROLLER
             && checkCursor.ReadValue<Vector2>() != Vector2.zero)
         {
-            //Debug.Log("Mouse detected, showing cursor");
+            Debug.Log("Mouse detected, showing cursor");
 
             controllerType = ControllerType.MOUSE;
 
             // Reenable cursor, set appropriate lock state
             Cursor.visible = true;
             UpdateMouseMode();
+
+            // Save the last thing the controller was on 
+            menuStack.Peek().StackSave();
+            // hide the controller's selected option
+            EventSystem.current.SetSelectedGameObject(null);
         }
     }
+
 
     private void UpdateMouseMode()
     {
@@ -423,16 +449,184 @@ public class GameManager : MonoBehaviour
                 {
                     Cursor.lockState = CursorLockMode.Confined;
 
-                    onGameOverChannel.RaiseEvent();
                     break;
                 }
             case States.LOADING:
                 {
                     Cursor.lockState = CursorLockMode.Confined;
 
+                    break;
+                }
+        }
+    }
+
+    #endregion
+
+    #region Menu Management
+
+    /// <summary>
+    /// Push a new menu onto the stack
+    /// </summary>
+    /// <param name="menu">newely opened menu to add to stack</param>
+    public void PushMenu(UIMenu menu)
+    {
+        //EventSystem.current.SetSelectedGameObject(null);
+
+        if(menuStack.Count > 0)
+        {
+            menuStack.Peek().StackSave();
+        }
+
+        // initialize it when on top of stack
+        menuStack.Push(menu);
+        menuStack.Peek().TopStackFunction();
+    }
+
+    /// <summary>
+    /// Close the current top menu, if possible
+    /// </summary>
+    public void CloseTopMenu(InputAction.CallbackContext c = default)
+    {
+        Debug.Log("Close was called! " + c.action);
+
+        // Check if there are no options available
+        if (menuStack.Count <= 0)
+        {
+            Debug.Log("[GameManager] Close menu called, but no menu to close!");
+            return;
+        }
+        else if(!menuStack.Peek().Closable)
+        {
+            Debug.Log("[GameManager] Tried to close the menu, but its marked as permenant!");
+            return;
+        }
+
+        EventSystem.current.SetSelectedGameObject(null);
+
+        // Save the stack select before continuing
+        if (menuStack.Count > 0)
+        {
+            menuStack.Peek().StackSave();
+        }
+
+        // Close the top menu and remove from stack
+        UIMenu menu = menuStack.Pop();
+        menu.Close();
+
+        // Tell the stack below it to load its select
+        if (menuStack.Count > 0)
+        {
+            menuStack.Peek().TopStackFunction();
+        }
+
+        // Check if all menus are closed and if should return to appropriate state
+        if (menuStack.Count <= 0)
+        {
+            if(currentState == States.PAUSED)
+            {
+                TogglePause();
+            }
+            else if (currentState == States.GAMEMENU)
+            {
+                // Change it back to its previous state (Gameplay or HUB)
+                ChangeState(lastState);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Update the current control scheme based on the current state
+    /// </summary>
+    private void UpdateControlMode()
+    {
+        switch (currentState)
+        {
+            case States.MAINMENU:
+                {
+                    controls.UI.Enable();
+                    controls.PlayerGameplay.Disable();
 
                     break;
                 }
+            case States.PAUSED:
+                {
+                    controls.UI.Enable();
+                    controls.PlayerGameplay.Disable();
+
+                    break;
+                }
+            case States.HUB:
+                {
+                    controls.PlayerGameplay.Enable();
+                    controls.UI.Disable();
+
+                    break;
+                }
+            case States.GAMEPLAY:
+                {
+                    controls.PlayerGameplay.Enable();
+                    controls.UI.Disable();
+
+                    break;
+                }
+            case States.GAMEMENU:
+                {
+                    controls.UI.Enable();
+                    controls.PlayerGameplay.Disable();
+
+                    break;
+                }
+            case States.GAMEOVER:
+                {
+                    controls.UI.Enable();
+                    controls.PlayerGameplay.Disable();
+
+                    break;
+                }
+            case States.LOADING:
+                {
+                    controls.UI.Disable();
+                    controls.PlayerGameplay.Disable();
+
+                    break;
+                }
+        }
+    }
+
+
+    /// <summary>
+    /// Clear any pointer hover effects
+    /// </summary>
+    private void ClearPointer()
+    {
+        PointerEventData pointer = new PointerEventData(EventSystem.current);
+        pointer.position = Input.mousePosition;
+
+        List<RaycastResult> raycastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointer, raycastResults);
+
+        if (raycastResults.Count > 0)
+        {
+            // make sure its accurate based on the type
+            foreach (RaycastResult raycastResult in raycastResults)
+            {
+                //Debug.Log(raycastResult.gameObject.name);
+                GameObject hoveredObj = raycastResult.gameObject;
+
+                if (hoveredObj.GetComponent<Button>())
+                {
+                    hoveredObj.GetComponent<Button>().OnPointerExit(pointer);
+                }
+                else if (hoveredObj.GetComponent<Toggle>())
+                {
+                    hoveredObj.GetComponent<Toggle>().OnPointerExit(pointer);
+                }
+                else if (hoveredObj.GetComponent<Slider>())
+                {
+                    hoveredObj.GetComponent<Slider>().OnPointerExit(pointer);
+                }
+            }
+
         }
     }
 

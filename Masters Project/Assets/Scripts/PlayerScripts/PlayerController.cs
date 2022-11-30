@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using static Cinemachine.DocumentationSortingAttribute;
 using UnityEngine.Rendering;
+using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour
 {
@@ -189,20 +190,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        // Initialize controls
-        controller = new GameControls();
-        move = controller.PlayerGameplay.Move;
-        move.Enable();
-
-        jump = controller.PlayerGameplay.Jump;
-        jump.Enable();
-        jump.performed += Jump;
-
-        sprint = controller.PlayerGameplay.Sprint;
-        sprint.started += ToggleSprint;
-        sprint.canceled += ToggleSprint;
-        sprint.Enable();
-
         // Initialize upgradable variables
         maxMoveSpeed.Initialize();
         sprintModifier.Initialize();
@@ -222,7 +209,7 @@ public class PlayerController : MonoBehaviour
             lastSurfaceNormal = normal.normal;
         }
 
-        source = gameObject.AddComponent<AudioSource>();        
+        source = GetComponent<AudioSource>();        
     }
 
     /// <summary>
@@ -230,6 +217,20 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        // Initialize controls
+        controller = GameManager.controls;
+        move = controller.PlayerGameplay.Move;
+        move.Enable();
+
+        jump = controller.PlayerGameplay.Jump;
+        jump.performed += Jump;
+        jump.Enable();
+
+        sprint = controller.PlayerGameplay.Sprint;
+        sprint.started += ToggleSprint;
+        sprint.canceled += ToggleSprint;
+        sprint.Enable();
+
         // Get initial references
         rb = GetComponent<Rigidbody>();
 
@@ -328,7 +329,9 @@ public class PlayerController : MonoBehaviour
 
                     // When entering grounded state, reset target max speed
                     targetMaxSpeed = maxMoveSpeed.Current;
-                    source.PlayOneShot(landSound, 0.5f);
+
+                    if(currentState != PlayerState.SPRINTING && source != null && landSound != null)
+                        source.PlayOneShot(landSound, 0.5f);
 
                     break;
                 }
@@ -373,7 +376,6 @@ public class PlayerController : MonoBehaviour
     /// <param name="ctx">Input callback context [ignorable]</param>
     private void ToggleSprint(InputAction.CallbackContext ctx)
     {
-        
         // If player is grounded and started input, start sprinting
         if (currentState == PlayerState.GROUNDED && ctx.started)
         {
@@ -522,6 +524,8 @@ public class PlayerController : MonoBehaviour
     /// <param name="c">Input callback context [ignorable]</param>
     private void Jump(InputAction.CallbackContext c)
     {
+        
+
         if(currentJumps > 0 && jumpTimer.TimerDone())
         {
             midAirTimer.ResetTimer();
@@ -612,45 +616,17 @@ public class PlayerController : MonoBehaviour
 
     #region Misc
 
-    private void OnEnable()
-    {
-        onStateChangeChannel.OnEventRaised += ToggleInputs;
-    }
 
     /// <summary>
     /// Disable inputs to prevent crashing
     /// </summary>
     private void OnDisable()
     {
-        onStateChangeChannel.OnEventRaised -= ToggleInputs;
-        
-        if(move.enabled)
-            move.Disable();
-        if(jump.enabled)
-            jump.Disable();
-        if(sprint.enabled)
-            sprint.Disable();
-    }
+        jump.performed -= Jump;
+        sprint.started -= ToggleSprint;
+        sprint.canceled -= ToggleSprint;
 
-    /// <summary>
-    /// Toggle inputs if game pauses
-    /// </summary>
-    /// <param name="_newState">new state</param>
-    private void ToggleInputs(GameManager.States _newState)
-    {
-        if (_newState == GameManager.States.GAMEPLAY
-            || _newState == GameManager.States.HUB)
-        {
-            move.Enable();
-            jump.Enable();
-            sprint.Enable();
-        }
-        else
-        {
-            move.Disable();
-            jump.Disable();
-            sprint.Disable();
-        }
+        instance = null;
     }
 
     #endregion
