@@ -63,7 +63,7 @@ public class Door : MonoBehaviour
     /// <summary>
     /// collider for the room triggers
     /// </summary>
-    private Collider col;
+    private Collider[] col;
 
     /// <summary>
     /// Animator for this door
@@ -98,7 +98,7 @@ public class Door : MonoBehaviour
     public void Initialize()
     {
         animator = GetComponent<Animator>();
-        col = GetComponent<Collider>();
+        col = GetComponents<Collider>();
         locked = true;
     }
 
@@ -147,7 +147,9 @@ public class Door : MonoBehaviour
 
         doorLight.GetComponent<Renderer>().material = lockedColor;
         locked = true;
-        col.enabled = false;
+
+        foreach (Collider c in col)
+            c.enabled = false;
     }
 
     /// <summary>
@@ -160,7 +162,9 @@ public class Door : MonoBehaviour
 
         doorLight.GetComponent<Renderer>().material = unlockedColor;
         locked = false;
-        col.enabled = true;
+
+        foreach(Collider c in col)
+            c.enabled = true;
     }
 
     /// <summary>
@@ -181,7 +185,9 @@ public class Door : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            
+            foreach(Collider c in col)
+                c.enabled= false;
+
             switch(type)
             {
                 case PlayerDoorType.Open:
@@ -190,7 +196,6 @@ public class Door : MonoBehaviour
                         MapLoader.instance.UpdateLoadedSegments();
 
                         LockDoor();
-                        col.enabled = false;
 
                         break;
                     }
@@ -204,7 +209,6 @@ public class Door : MonoBehaviour
                         // lock door behind player
                         LockDoor();
                         SetDecor();
-                        col.enabled = false;
 
                         break;
                     }
@@ -224,7 +228,6 @@ public class Door : MonoBehaviour
                 default:
                     {
                         // Debug.Log("Player Detected, invalid door set!");
-                        col.enabled = false;
                         break;
                     }
             }

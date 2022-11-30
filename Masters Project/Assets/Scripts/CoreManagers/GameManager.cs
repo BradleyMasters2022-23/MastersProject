@@ -199,13 +199,14 @@ public class GameManager : MonoBehaviour
                 }
             case States.HUB:
                 {
-                    if(currentState != States.PAUSED)
+                    if(SceneManager.GetActiveScene().name != mainHubScene)
                     {
                         SceneManager.LoadScene(mainHubScene);
-
-                        // Reset player health in hub
-                        lastPlayerHealth = 0;
                     }
+
+                    // Reset player health in hub
+                    lastPlayerHealth = 0;
+
                     UnPause();
 
                     // TODO - switch to hub bindings, incase different
@@ -216,7 +217,7 @@ public class GameManager : MonoBehaviour
                 }
             case States.GAMEPLAY:
                 {
-                    if(currentState == States.HUB) 
+                    if(SceneManager.GetActiveScene().name != mainGameplayScene) 
                     {
                         SceneManager.LoadScene(mainGameplayScene);
                     }
