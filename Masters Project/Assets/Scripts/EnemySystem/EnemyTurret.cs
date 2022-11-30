@@ -1,6 +1,7 @@
 using Cinemachine.Utility;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
 public class EnemyTurret : EnemyBase
@@ -141,15 +142,15 @@ public class EnemyTurret : EnemyBase
     /// <returns>Line of sight</returns>
     public bool LineOfSight(Transform t)
     {
-        Vector3 direction = t.position - shootPoints[0].position;
+        Vector3 direction = t.position - turretPoint.transform.position;
 
         // Set mask to ignore raycasts and enemy layer
-        
+        Debug.DrawRay(turretPoint.transform.position, direction, Color.red, 2f);
 
         // Try to get player
         RaycastHit hit;
         
-        if (Physics.SphereCast(shootPoints[0].position, shotRadius, direction, out hit, attackRange, visionLayer))
+        if (Physics.SphereCast(turretPoint.transform.position, shotRadius, direction, out hit, attackRange, visionLayer))
         {
             if (hit.transform.CompareTag("Player"))
             {
