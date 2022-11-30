@@ -854,6 +854,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8302028242866227798, guid: b9c1d9774ec38d04caf92eabfea7fa8f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8302028242866227798, guid: b9c1d9774ec38d04caf92eabfea7fa8f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
       objectReference: {fileID: 1183918136}
@@ -875,11 +879,6 @@ RectTransform:
 --- !u!1 &770124476 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3782795748720004211, guid: b9c1d9774ec38d04caf92eabfea7fa8f, type: 3}
-  m_PrefabInstance: {fileID: 770124474}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &770124477 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1948600891359997464, guid: b9c1d9774ec38d04caf92eabfea7fa8f, type: 3}
   m_PrefabInstance: {fileID: 770124474}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &855883925
@@ -1229,6 +1228,7 @@ GameObject:
   - component: {fileID: 1036664771}
   - component: {fileID: 1036664773}
   - component: {fileID: 1036664774}
+  - component: {fileID: 1036664775}
   m_Layer: 5
   m_Name: Main Screen
   m_TagString: Untagged
@@ -1331,6 +1331,20 @@ MonoBehaviour:
   defaultControllerSensitivity: 5
   defaultControllerInvertX: 0
   defaultControllerInvertY: 0
+--- !u!114 &1036664775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1036664769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d000aab3d0e8f364c8d476eb59c02d17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controllerDefault: {fileID: 285529199}
+  closable: 0
 --- !u!1 &1070428564
 GameObject:
   m_ObjectHideFlags: 0
@@ -1557,18 +1571,6 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 1183918136}
-        m_TargetAssemblyTypeName: UnityEngine.EventSystems.EventSystem, UnityEngine.UI
-        m_MethodName: SetSelectedGameObject
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 770124477}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

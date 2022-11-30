@@ -10,24 +10,10 @@ using Unity.VisualScripting;
 
 public class SelectUpgradeUI : MonoBehaviour
 {
-    GameControls c;
-    InputAction esc;
-
     [SerializeField] private UpgradeSelectModule[] options;
 
     private UpgradeInteract caller;
 
-    private EventSystem eventSystem;
-
-    /// <summary>
-    /// Initialize inputs [TEMP]
-    /// </summary>
-    private void Awake()
-    {
-        c = new GameControls();
-        esc = c.PlayerGameplay.Pause;
-        esc.performed += CloseScreen;
-    }
 
     /// <summary>
     /// Load in necessary data for the current selection
@@ -49,33 +35,8 @@ public class SelectUpgradeUI : MonoBehaviour
     /// </summary>
     public void OpenScreen()
     {
-        if(eventSystem == null)
-        {
-            eventSystem = EventSystem.current;
-        }
-
         GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
         gameObject.SetActive(true);
-        esc.Enable();
-        eventSystem.SetSelectedGameObject(options[0].GetComponentInChildren<Button>().gameObject);
-    }
-
-    /// <summary>
-    /// Close the screen, change state. For input system
-    /// </summary>
-    /// <param name="c"></param>
-    private void CloseScreen(InputAction.CallbackContext c) 
-    {
-        CloseScreen();
-    }
-    /// <summary>
-    /// Close the screen, change state
-    /// </summary>
-    public void CloseScreen()
-    {
-        esc.Disable();
-        gameObject.SetActive(false);
-        GameManager.instance.ChangeState(GameManager.States.GAMEPLAY);
     }
 
     /// <summary>
@@ -95,7 +56,7 @@ public class SelectUpgradeUI : MonoBehaviour
         if(caller != null)
             caller.UpgradeSelected();
 
-        Debug.Log(chosenUpgrade.displayName + " was selected!");
+        // Debug.Log(chosenUpgrade.displayName + " was selected!");
     }
 
     /// <summary>
@@ -113,8 +74,6 @@ public class SelectUpgradeUI : MonoBehaviour
     {
         foreach (UpgradeSelectModule m in options)
             m.ClearUI();
-
-        CloseScreen();
 
         caller = null;
     }

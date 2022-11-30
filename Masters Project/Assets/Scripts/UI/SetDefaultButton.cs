@@ -17,11 +17,11 @@ public class SetDefaultButton : MonoBehaviour
 
     private void OnEnable()
     {
-        system = FindObjectOfType<EventSystem>();
+        //system = FindObjectOfType<EventSystem>();
 
         if(system != null)
         {
-            system.SetSelectedGameObject(this.gameObject);
+            //system.SetSelectedGameObject(this.gameObject);
         }
     }
 }

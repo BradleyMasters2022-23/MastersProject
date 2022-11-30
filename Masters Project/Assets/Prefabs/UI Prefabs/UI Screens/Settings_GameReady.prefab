@@ -95,7 +95,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3782795748720004210
 RectTransform:
   m_ObjectHideFlags: 0
@@ -103,7 +103,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3782795748720004211}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -200,6 +200,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d000aab3d0e8f364c8d476eb59c02d17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controllerDefault: {fileID: 1948600891359997464}
+  closable: 1
 --- !u!1001 &221257577084469482
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -872,12 +874,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d845e6d1e7ea9e94cb4a11aabfdd632d, type: 3}
+--- !u!1 &1948600891359997464 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4808427934631538491, guid: d845e6d1e7ea9e94cb4a11aabfdd632d, type: 3}
+  m_PrefabInstance: {fileID: 6462706788117676323}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1948600891359997465 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4808427934631538490, guid: d845e6d1e7ea9e94cb4a11aabfdd632d, type: 3}
   m_PrefabInstance: {fileID: 6462706788117676323}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1948600891359997464}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
@@ -993,7 +1000,7 @@ PrefabInstance:
       objectReference: {fileID: 1948600891359997465}
     - target: {fileID: 1799733926088497341, guid: 77da07a13571f6f4aa8d98be1d20e83b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1799733926088497341, guid: 77da07a13571f6f4aa8d98be1d20e83b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode

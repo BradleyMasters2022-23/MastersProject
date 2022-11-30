@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -139,11 +140,11 @@ public class GameManager : MonoBehaviour
         escape.performed += TogglePause;
         escape.Enable();
 
-        checkController = controls.PlayerGameplay.Controller;
+        checkController = controls.UI.Controller;
         checkController.performed += HideCursor;
         checkController.Enable();
 
-        checkCursor = controls.PlayerGameplay.Mouse;
+        checkCursor = controls.UI.Mouse;
         checkCursor.performed += ShowCursor;
         checkCursor.Enable();
 
@@ -366,49 +367,47 @@ public class GameManager : MonoBehaviour
         UpdateMouseMode();
     }
 
-    private void Update()
-    {
-        EventSystem t = FindObjectOfType<EventSystem>();
-        if (t != null)
-            lastSelectedObject = t.currentSelectedGameObject;
-    }
-
-    private void HideCursor(InputAction.CallbackContext c)
+    private void HideCursor(InputAction.CallbackContext c = default)
     {
         if (controllerType == ControllerType.MOUSE
             && checkController.ReadValue<Vector2>() != Vector2.zero)
         {
-            //Debug.Log("Controller detected, hiding cursor");
+            Debug.Log("Controller detected, hiding cursor");
 
             controllerType = ControllerType.CONTROLLER;
 
+            // Hide the mouse cursor
             Cursor.lockState = CursorLockMode.None;
-            //Cursor.lockState = CursorLockMode.Locked;
+            Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
-            // Set active button to either the default or last selected button
-            EventSystem t = FindObjectOfType<EventSystem>();
-            if (t != null && lastSelectedObject != null && lastSelectedObject.activeInHierarchy)
-                t.SetSelectedGameObject(lastSelectedObject);
-            else if (t != null && t.firstSelectedGameObject != null)
-                t.SetSelectedGameObject(t.firstSelectedGameObject);
+            ClearPointer();
+
+            // Set the controller select to the screen
+            menuStack.Peek().TopStackFunction();
         }
     }
 
-    private void ShowCursor(InputAction.CallbackContext c)
+    private void ShowCursor(InputAction.CallbackContext c = default)
     {
         if (controllerType == ControllerType.CONTROLLER
             && checkCursor.ReadValue<Vector2>() != Vector2.zero)
         {
-            //Debug.Log("Mouse detected, showing cursor");
+            Debug.Log("Mouse detected, showing cursor");
 
             controllerType = ControllerType.MOUSE;
 
             // Reenable cursor, set appropriate lock state
             Cursor.visible = true;
             UpdateMouseMode();
+
+            // Save the last thing the controller was on 
+            menuStack.Peek().StackSave();
+            // hide the controller's selected option
+            EventSystem.current.SetSelectedGameObject(null);
         }
     }
+
 
     private void UpdateMouseMode()
     {
@@ -471,7 +470,16 @@ public class GameManager : MonoBehaviour
     /// <param name="menu">newely opened menu to add to stack</param>
     public void PushMenu(UIMenu menu)
     {
+        //EventSystem.current.SetSelectedGameObject(null);
+
+        if(menuStack.Count > 0)
+        {
+            menuStack.Peek().StackSave();
+        }
+
+        // initialize it when on top of stack
         menuStack.Push(menu);
+        menuStack.Peek().TopStackFunction();
     }
 
     /// <summary>
@@ -479,18 +487,39 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void CloseTopMenu(InputAction.CallbackContext c = default)
     {
+        Debug.Log("Close was called! " + c.action);
+
         // Check if there are no options available
         if (menuStack.Count <= 0)
         {
             Debug.Log("[GameManager] Close menu called, but no menu to close!");
             return;
         }
+        else if(!menuStack.Peek().Closable)
+        {
+            Debug.Log("[GameManager] Tried to close the menu, but its marked as permenant!");
+            return;
+        }
+
+        EventSystem.current.SetSelectedGameObject(null);
+
+        // Save the stack select before continuing
+        if (menuStack.Count > 0)
+        {
+            menuStack.Peek().StackSave();
+        }
 
         // Close the top menu and remove from stack
         UIMenu menu = menuStack.Pop();
         menu.Close();
 
-        // Check if all menus are closed and if should return to appropriate scene
+        // Tell the stack below it to load its select
+        if (menuStack.Count > 0)
+        {
+            menuStack.Peek().TopStackFunction();
+        }
+
+        // Check if all menus are closed and if should return to appropriate state
         if (menuStack.Count <= 0)
         {
             if(currentState == States.PAUSED)
@@ -502,7 +531,6 @@ public class GameManager : MonoBehaviour
                 // Change it back to its previous state (Gameplay or HUB)
                 ChangeState(lastState);
             }
-
         }
     }
 
@@ -511,8 +539,6 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void UpdateControlMode()
     {
-        //controls = new GameControls();
-
         switch (currentState)
         {
             case States.MAINMENU:
@@ -564,6 +590,43 @@ public class GameManager : MonoBehaviour
 
                     break;
                 }
+        }
+    }
+
+
+    /// <summary>
+    /// Clear any pointer hover effects
+    /// </summary>
+    private void ClearPointer()
+    {
+        PointerEventData pointer = new PointerEventData(EventSystem.current);
+        pointer.position = Input.mousePosition;
+
+        List<RaycastResult> raycastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointer, raycastResults);
+
+        if (raycastResults.Count > 0)
+        {
+            // make sure its accurate based on the type
+            foreach (RaycastResult raycastResult in raycastResults)
+            {
+                //Debug.Log(raycastResult.gameObject.name);
+                GameObject hoveredObj = raycastResult.gameObject;
+
+                if (hoveredObj.GetComponent<Button>())
+                {
+                    hoveredObj.GetComponent<Button>().OnPointerExit(pointer);
+                }
+                else if (hoveredObj.GetComponent<Toggle>())
+                {
+                    hoveredObj.GetComponent<Toggle>().OnPointerExit(pointer);
+                }
+                else if (hoveredObj.GetComponent<Slider>())
+                {
+                    hoveredObj.GetComponent<Slider>().OnPointerExit(pointer);
+                }
+            }
+
         }
     }
 

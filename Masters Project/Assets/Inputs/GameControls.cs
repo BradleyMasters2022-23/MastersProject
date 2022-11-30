@@ -118,24 +118,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Controller"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""73027538-d332-4fa1-8cef-196e48d7e665"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Mouse"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""9fbde5c5-a9aa-475a-9c90-0f68bb6f9fbb"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""3fa2a5c8-a241-433c-8731-738b7b09d9ce"",
@@ -368,50 +350,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ae34960b-ab02-45b1-8774-5bf3b9122702"",
-                    ""path"": ""<Gamepad>/dpad"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Controller"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""5f2dfe67-5984-404d-b69d-eb1e7ddbf42d"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Controller"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""8ff67f1f-87d4-4cd3-9a90-712c10099e4a"",
-                    ""path"": ""<Gamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Controller"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""798fada0-9727-4c6d-9674-30cd74a3b955"",
-                    ""path"": ""<Mouse>/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Mouse"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""c92ff0bf-0138-4eb3-b767-6744b09a6f0e"",
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
@@ -439,6 +377,24 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
             ""id"": ""e12e6fa9-b96e-4f7f-8a46-e154b59ba327"",
             ""actions"": [
                 {
+                    ""name"": ""Mouse"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""c5acd629-26f9-4fd4-bc18-d27d50aa7d78"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Controller"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""c306cda9-70ad-4e0e-9c30-86f5b7163051"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Back"",
                     ""type"": ""Button"",
                     ""id"": ""ad8ff928-f829-4dec-9352-e241113e53eb"",
@@ -449,6 +405,50 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 }
             ],
             ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""b93f5733-e1a6-4a31-a24d-4657aa6a5d62"",
+                    ""path"": ""<Gamepad>/dpad"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Controller"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5fe8ac79-4173-410b-9cbe-c0d21260f4cd"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Controller"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3a55982f-b851-4710-b192-6f1d2618cc55"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Controller"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""11f1d3ed-8f91-4425-ac42-7a28f84f9a6c"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Mouse"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
                 {
                     ""name"": """",
                     ""id"": ""4d3ec7e2-ffbd-4bf4-8c95-4617e9032605"",
@@ -488,11 +488,11 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_PlayerGameplay_SlowTime = m_PlayerGameplay.FindAction("SlowTime", throwIfNotFound: true);
         m_PlayerGameplay_Heal = m_PlayerGameplay.FindAction("Heal", throwIfNotFound: true);
         m_PlayerGameplay_Reset = m_PlayerGameplay.FindAction("Reset", throwIfNotFound: true);
-        m_PlayerGameplay_Controller = m_PlayerGameplay.FindAction("Controller", throwIfNotFound: true);
-        m_PlayerGameplay_Mouse = m_PlayerGameplay.FindAction("Mouse", throwIfNotFound: true);
         m_PlayerGameplay_Interact = m_PlayerGameplay.FindAction("Interact", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
+        m_UI_Mouse = m_UI.FindAction("Mouse", throwIfNotFound: true);
+        m_UI_Controller = m_UI.FindAction("Controller", throwIfNotFound: true);
         m_UI_Back = m_UI.FindAction("Back", throwIfNotFound: true);
     }
 
@@ -563,8 +563,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_SlowTime;
     private readonly InputAction m_PlayerGameplay_Heal;
     private readonly InputAction m_PlayerGameplay_Reset;
-    private readonly InputAction m_PlayerGameplay_Controller;
-    private readonly InputAction m_PlayerGameplay_Mouse;
     private readonly InputAction m_PlayerGameplay_Interact;
     public struct PlayerGameplayActions
     {
@@ -580,8 +578,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @SlowTime => m_Wrapper.m_PlayerGameplay_SlowTime;
         public InputAction @Heal => m_Wrapper.m_PlayerGameplay_Heal;
         public InputAction @Reset => m_Wrapper.m_PlayerGameplay_Reset;
-        public InputAction @Controller => m_Wrapper.m_PlayerGameplay_Controller;
-        public InputAction @Mouse => m_Wrapper.m_PlayerGameplay_Mouse;
         public InputAction @Interact => m_Wrapper.m_PlayerGameplay_Interact;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
@@ -622,12 +618,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Reset.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnReset;
                 @Reset.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnReset;
                 @Reset.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnReset;
-                @Controller.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnController;
-                @Controller.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnController;
-                @Controller.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnController;
-                @Mouse.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnMouse;
-                @Mouse.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnMouse;
-                @Mouse.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnMouse;
                 @Interact.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnInteract;
@@ -665,12 +655,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Reset.started += instance.OnReset;
                 @Reset.performed += instance.OnReset;
                 @Reset.canceled += instance.OnReset;
-                @Controller.started += instance.OnController;
-                @Controller.performed += instance.OnController;
-                @Controller.canceled += instance.OnController;
-                @Mouse.started += instance.OnMouse;
-                @Mouse.performed += instance.OnMouse;
-                @Mouse.canceled += instance.OnMouse;
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
@@ -682,11 +666,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     // UI
     private readonly InputActionMap m_UI;
     private IUIActions m_UIActionsCallbackInterface;
+    private readonly InputAction m_UI_Mouse;
+    private readonly InputAction m_UI_Controller;
     private readonly InputAction m_UI_Back;
     public struct UIActions
     {
         private @GameControls m_Wrapper;
         public UIActions(@GameControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Mouse => m_Wrapper.m_UI_Mouse;
+        public InputAction @Controller => m_Wrapper.m_UI_Controller;
         public InputAction @Back => m_Wrapper.m_UI_Back;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
@@ -697,6 +685,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_UIActionsCallbackInterface != null)
             {
+                @Mouse.started -= m_Wrapper.m_UIActionsCallbackInterface.OnMouse;
+                @Mouse.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnMouse;
+                @Mouse.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnMouse;
+                @Controller.started -= m_Wrapper.m_UIActionsCallbackInterface.OnController;
+                @Controller.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnController;
+                @Controller.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnController;
                 @Back.started -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
                 @Back.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
                 @Back.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnBack;
@@ -704,6 +698,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
             {
+                @Mouse.started += instance.OnMouse;
+                @Mouse.performed += instance.OnMouse;
+                @Mouse.canceled += instance.OnMouse;
+                @Controller.started += instance.OnController;
+                @Controller.performed += instance.OnController;
+                @Controller.canceled += instance.OnController;
                 @Back.started += instance.OnBack;
                 @Back.performed += instance.OnBack;
                 @Back.canceled += instance.OnBack;
@@ -723,12 +723,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnSlowTime(InputAction.CallbackContext context);
         void OnHeal(InputAction.CallbackContext context);
         void OnReset(InputAction.CallbackContext context);
-        void OnController(InputAction.CallbackContext context);
-        void OnMouse(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
+        void OnMouse(InputAction.CallbackContext context);
+        void OnController(InputAction.CallbackContext context);
         void OnBack(InputAction.CallbackContext context);
     }
 }
