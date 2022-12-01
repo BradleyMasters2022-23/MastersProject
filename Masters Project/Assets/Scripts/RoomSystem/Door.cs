@@ -76,6 +76,9 @@ public class Door : MonoBehaviour
     private bool locked;
     public bool Locked { get { return locked; } }
 
+
+    private bool triggered;
+
     #region Initialization Functions
 
     /// <summary>
@@ -183,8 +186,10 @@ public class Door : MonoBehaviour
     /// <param name="other"></param>
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && col[0].enabled)
         {
+            Debug.Log("Trigger triggered!");
+
             foreach(Collider c in col)
                 c.enabled= false;
 
