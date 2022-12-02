@@ -203,6 +203,8 @@ public class TimeManager : MonoBehaviour
     /// <param name="c">callback context [ignorable]</param>
     private void ToggleSlow(InputAction.CallbackContext c)
     {
+        Debug.Log(c.action);
+
         // If started input, then can only slow
         if(c.started)
         {
@@ -212,19 +214,19 @@ public class TimeManager : MonoBehaviour
                 case TimeGaugeState.IDLE:
                     {
                         ChangeState(TimeGaugeState.SLOWING);
-                        source.PlayOneShot(stopTime, 0.5f);
+                        //source.PlayOneShot(stopTime, 0.5f);
                         break;
                     }
                 case TimeGaugeState.RECHARGING:
                     {
                         ChangeState(TimeGaugeState.SLOWING);
-                        source.PlayOneShot(stopTime, 0.5f);
+                        //source.PlayOneShot(stopTime, 0.5f);
                         break;
                     }
                 case TimeGaugeState.FROZEN:
                     {
                         ChangeState(TimeGaugeState.SLOWING);
-                        source.PlayOneShot(stopTime, 0.5f);
+                        //source.PlayOneShot(stopTime, 0.5f);
                         break;
                     }
             }
@@ -311,6 +313,9 @@ public class TimeManager : MonoBehaviour
                 }
             case TimeGaugeState.SLOWING:
                 {
+                    source.Stop();
+                    source.PlayOneShot(stopTime, 0.5f);
+
                     break;
                 }
             case TimeGaugeState.RECHARGING:
@@ -322,6 +327,7 @@ public class TimeManager : MonoBehaviour
                     // If entering frozen state, reset timer
                     replenishDelayTimer.ResetTimer();
 
+                    source.Stop();
                     source.PlayOneShot(startTime, 0.5f);
 
                     break;
@@ -331,6 +337,7 @@ public class TimeManager : MonoBehaviour
                     // If entering emptied state, reset timer
                     emptiedDelayTimer.ResetTimer();
 
+                    source.Stop();
                     source.PlayOneShot(startTime, 0.5f);
 
                     break;
