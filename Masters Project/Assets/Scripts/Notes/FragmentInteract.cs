@@ -57,4 +57,9 @@ public class FragmentInteract : Interactable
         return fragment;
     }
 
+    public void DestroyFrag()
+    {
+        Destroy(gameObject);
+    }
+
 }

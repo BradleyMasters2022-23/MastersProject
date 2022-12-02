@@ -21,7 +21,7 @@ public class NoteFoundUI : MonoBehaviour
     private void Awake()
     {
         c = new GameControls();
-        //esc = c.PlayerGameplay.Pause;
+        esc = c.PlayerGameplay.Pause;
         esc.performed += CloseScreen;
     }
 
@@ -59,10 +59,13 @@ public class NoteFoundUI : MonoBehaviour
     /// </summary>
     public void CloseScreen()
     {
+        if(caller != null)
+        {
+            caller.DestroyFrag();
+        }
         caller = null;
         esc.Disable();
         gameObject.SetActive(false);
-        GameManager.instance.ChangeState(GameManager.States.GAMEPLAY);
     }
 
 }
