@@ -11,38 +11,55 @@ using UnityEngine;
 
 public class FragmentInteract : Interactable
 {
-    [Tooltip("The fragment this container represents.")]
     [SerializeField] private Fragment fragment;
+    private NoteFoundUI ui;
+    private bool dataSent = false;
 
-    /// <summary>
-    /// ensures that fragment is not null and calls SetUp
-    /// </summary>
-    private void Start()
+    private void Awake()
     {
-        if (fragment is null)
-        {
-            Destroy(this);
-        }
-
-        if(fragment != null)
-        {
-            SetUp(fragment);
-        }
+        ui = FindObjectOfType<NoteFoundUI>(true);
     }
 
     /// <summary>
-    /// called exactly once, initializes container
+    /// initializes fragment
     /// </summary>
-    public void SetUp(Fragment obj)
+    public void SetUp(Fragment frag)
     {
-        fragment = obj;
+        fragment = frag;
     }
 
     public override void OnInteract(PlayerController player)
     {
+        if (ui == null) {
+            Debug.Log("No UI found.");
+        }
+
+        if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
+        {
+            Debug.Log("Not in a state where the player can interact with this object");
+            return;
+        }
+
+        if (!dataSent)
+        {
+            ui.LoadFragment(this);
+
+            dataSent = true;
+        }
+
+        ui.OpenScreen();
         PlayerNotesManager.instance.FindFragment(fragment);
-        // somehow bring up a menu here?
-        Debug.Log("It's a note.");
-        Destroy(this);
+
     }
+
+    public Fragment GetFragment()
+    {
+        return fragment;
+    }
+
+    public void DestroyFrag()
+    {
+        Destroy(gameObject);
+    }
+
 }

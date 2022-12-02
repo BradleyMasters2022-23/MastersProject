@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 
 public class InteractionManager : MonoBehaviour
 {
-    public Transform point;
     public float interactDistance;
     private PlayerController player;
     private GameControls controller;
@@ -28,10 +27,6 @@ public class InteractionManager : MonoBehaviour
 
     private void Interact(InputAction.CallbackContext context)
     {
-        // TODO: the raycast is kind of janky with small objects (fires just above where it looks like it should)
-        // this happens because it's technically tied to the gun's FirePoint and i can't figure out how to
-        // add another point that would work better
-        // possibly switch to CapsuleCast or find some other solution
         RaycastHit hit;
         interacting = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, interactDistance, detectableLayer);
 
@@ -43,10 +38,8 @@ public class InteractionManager : MonoBehaviour
             {
                 hit.transform.GetComponent<Interactable>().OnInteract(player);
             }
-            else
-            {
-                Debug.Log("Nothing to interact with!");
-            }
+        } else {
+            Debug.Log("Nothing to interact with.");
         }
     }
 }
