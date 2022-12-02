@@ -1570,30 +1570,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   centerMass: {fileID: 793414667720240907}
-  walkSpeed: 9.5
-  rotationSpeed: 0.15
+  state: 0
+  walkSpeed: 14
+  rotationSpeed: 0.07
   overshootMult: 3
-  idealRange: 30
-  attackRange: 60
-  moveThreshold: 10
+  idealRange: 15
+  attackRange: 50
+  moveThreshold: 2
   fleeMoveModifier: 1
   shotPrefab: {fileID: 8727397786430278917, guid: 72ddf08186379004e8a2d2b56de45efb, type: 3}
   shootPoints:
   - {fileID: 5086307354650794681}
-  numberOfShots: 1
+  numberOfShots: 3
   lookRadius: 30
+  visionLayer:
+    serializedVersion: 2
+    m_Bits: 2369
   aimDuration: 0
-  shootDuration: 0.2
-  reloadDuration: 0.2
-  aimMoveModifier: 0.8
-  shootMoveModifier: 0.8
-  reloadMoveModifier: 0.8
+  shootDuration: 0.1
+  reloadDuration: 1.8
+  aimMoveModifier: 0.4
+  shootMoveModifier: 0.4
+  reloadMoveModifier: 0
   aimRotModifier: 1
-  shootRotModifier: 0.5
+  shootRotModifier: 0
   reloadRotModifier: 0
   lockAiming: 0
   fleeWhileAttacking: 1
-  leadStrength: {x: -1.2, y: 1.2}
+  leadStrength: {x: -1.3, y: 1.3}
 --- !u!195 &6878320425555973780
 NavMeshAgent:
   m_ObjectHideFlags: 0
