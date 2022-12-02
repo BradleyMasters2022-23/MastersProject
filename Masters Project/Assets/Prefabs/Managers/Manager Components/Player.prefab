@@ -2070,6 +2070,7 @@ GameObject:
   - component: {fileID: 8810997313966297015}
   - component: {fileID: 8810997313966297008}
   - component: {fileID: 8665962098944256790}
+  - component: {fileID: -4782539468412231022}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -2186,7 +2187,7 @@ MonoBehaviour:
   gravityMultiplier: 4
   groundMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 2056
   groundCheck: {fileID: 8810997314421572952}
 --- !u!114 &8810997313966297015
 MonoBehaviour:
@@ -2226,7 +2227,7 @@ MonoBehaviour:
   defaultTarget: {fileID: 8810997314261937679}
   layersToIgnore:
     serializedVersion: 2
-    m_Bits: 196
+    m_Bits: 5316
 --- !u!114 &8810997313966297008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2279,6 +2280,23 @@ MonoBehaviour:
   defaultControllerSensitivity: 10
   defaultControllerInvertX: 0
   defaultControllerInvertY: 0
+--- !u!114 &-4782539468412231022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8810997313966297016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b571b9b3c7f75bf41b0822772a1689f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  point: {fileID: 8810997314044839442}
+  interactDistance: 10
+  detectableLayer:
+    serializedVersion: 2
+    m_Bits: 8192
 --- !u!1 &8810997314044839443
 GameObject:
   m_ObjectHideFlags: 0
@@ -2303,7 +2321,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8810997314044839443}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.136, y: -0.243, z: 0.864}
+  m_LocalPosition: {x: 0.12, y: -0.143, z: 0.74}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

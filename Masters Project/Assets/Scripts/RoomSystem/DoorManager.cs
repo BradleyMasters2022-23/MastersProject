@@ -2,118 +2,196 @@
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 24th, 2022
- * Last Edited - October 24th, 2022 by Ben Schuster
- * Description - Manage all doors to be locked, unlocked when called
+ * Last Edited - November 13th, 2022 by Ben Schuster
+ * Description - Manage all doors in a single room segment
  * ================================================================================================
  */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoorManager : MonoBehaviour
+public class DoorManager : MonoBehaviour, MapInitialize
 {
     /// <summary>
-    /// All doorways found in scene
+    /// All doorways found in segment
     /// </summary>
     private List<Door> doorways;
+
     /// <summary>
-    /// All doorways marked for exit
+    /// Door chosen to be this room's exit
     /// </summary>
-    private List<Door> exits;
+    private Door exit;
     /// <summary>
-    /// Door determined to be the entrance
+    /// Door chosen to be this room's entrance
     /// </summary>
     private Door entrance;
 
     /// <summary>
-    /// Whether or not this is already locked
+    /// Whether or not the manager is initialized
     /// </summary>
-    // private bool locked = false;
+    private bool initialized;
+    public bool Initialized { get { return initialized; } }
+    bool MapInitialize.initialized => initialized;
 
-    private void Awake()
+    public IEnumerator InitializeComponent()
     {
+        // Set up the lists
         doorways = new List<Door>();
-        exits = new List<Door>();
+
+        // Get temp pools for checking preset entrances/exits
+        List<Door> potentialEntrances = new List<Door>();
+        List<Door> potentialExits = new List<Door>();
+
+        // Get all doors, organize accordingly. Nulls should be excluded
+        Door[] temp = GetComponentsInChildren<Door>(true);
+        foreach (Door d in temp)
+        {
+            d.Initialize();
+
+            // Ignore nulled doors. Nulled doors are set to 'off'
+            if (d.Type == Door.PlayerDoorType.Entrance)
+                potentialEntrances.Add(d);
+            else if (d.Type == Door.PlayerDoorType.Exit)
+                potentialExits.Add(d);
+            else if (d.Type == Door.PlayerDoorType.Door)
+                doorways.Add(d);
+
+        }
+
+        // Validate
+        if ((doorways.Count <= 0 && potentialEntrances.Count <= 0)
+            || (doorways.Count <= 0 && potentialExits.Count <= 0))
+        {
+            Debug.LogError($"[DoorManager] Error! There are no doors set to neutral, and not enough set to either entrance and/or exits!" +
+                $" Door manager cannot continue initializing!");
+
+            yield break;
+        }
+
+        // === Get an entrance === //
+
+        // If any doors marked as entrance, choose from those
+        if (potentialEntrances.Count > 0)
+            entrance = GetDoor(potentialEntrances);
+        // Otherwise, choose from all doors
+        else
+            entrance = GetDoor(doorways);
+
+        // === Get an exit === //
+
+        // If any doors makred as exit, choose from those
+        if (potentialExits.Count > 0)
+            exit = GetDoor(potentialExits);
+        // Otherwise, choose from all doors. Dont select entrance
+        else
+            exit = GetDoor(doorways, entrance);
+
+        // Set other doors as off
+        foreach(Door d in doorways)
+        {
+            if (d != entrance && d != exit)
+                d.SetDecor();
+        }
+
+        entrance.SetType(Door.PlayerDoorType.Entrance);
+        entrance.UnlockDoor();
+
+        // Initialization complete
+        initialized = true;
+
+        //Debug.Log("Door manager initialized");
+
+        yield return null;
     }
 
-    private void Start()
+    /// <summary>
+    /// Note this manager's doors as hallway, namely unlocking the entrance
+    /// </summary>
+    public void SetHallway()
     {
-        // Get all doors, organize accordingly
-        Door[] temp = FindObjectsOfType<Door>();
+        entrance.SetType(Door.PlayerDoorType.Open);
+        entrance.UnlockDoor();
+    }
 
-        if(temp.Length <= 0)
+    /// <summary>
+    /// Get a door from the passed in list. Exclude a specific door 
+    /// </summary>
+    /// <param name="options">List of options to choose from</param>
+    /// <param name="exclude">What is the exception</param>
+    /// <returns>Randomly selected door thats not the excluded option</returns>
+    private Door GetDoor(List<Door> options, Door exclude = null)
+    {
+        // Validate thers enough to select from
+        if(options.Count == 1 && options[0] == exclude)
         {
-            Debug.Log("No doors found!");
-            return;
-        }
+            Debug.LogError($"[DoorManager] Error! There are not enough doors set to neutral, and not enough set to either entrance and/or exits!" +
+                $" Door manager cannot continue initializing!");
+            //Debug.Break();
 
-        foreach (Door f in temp)
-        {
-            if (f.Type == Door.PlayerDoorType.Entrance && entrance is null)
-            {
-                entrance = f;
-            }
-            else if (f.Type == Door.PlayerDoorType.Exit)
-            {
-                exits.Add(f);
-            }
-            else
-            {
-                doorways.Add(f);
-            }
+            return null;
         }
 
-        // If no set enterance found, get one from doorways
-        if (entrance == null)
-        {
-            entrance = doorways[Random.Range(0, doorways.Count)];
-            doorways.Remove(entrance);
-        }
-        entrance.SetEntrance();
+        Door d;
 
-        // If no exits, set doors to exits. Otherwise, disable remaining doors
-        if (exits.Count <= 0)
-        {
-            // If no exits, choose doors from doorways
-            foreach (Door f in doorways)
-            {
-                f.SetExit();
-                exits.Add(f);
-            }
-            doorways.Clear();
-        }
-        else
-        {
-            // If set exits, lock remaining doors
-            foreach (Door f in doorways)
-            {
-                f.LockDoor();
-            }
-        }
+        // Randomly select a door while its equal to the excluded option
+        do
+        { 
+            d = options[Random.Range(0, options.Count)];
+        } while (d == exclude);
 
-        // Lock all doors set to exits
-        // locked = true;
-        foreach (Door f in exits)
-        {
-            f.LockDoor();
-        }
+        return d;
+    }
 
-        // If no spawner, unlock doors
-        if (GameObject.FindGameObjectWithTag("Spawn") is null)
-        {
-            Debug.Log("No spawn found, unlocking doors");
-            UnlockAllDoors();
-        }
+    /// <summary>
+    /// Get the room's entrance
+    /// </summary>
+    /// <returns>New entrance syncpoint</returns>
+    public Door GetEntrance()
+    {
+        return entrance;
+    }
+
+    /// <summary>
+    /// Get the room's exit
+    /// </summary>
+    /// <returns>new enterance sync point</returns>
+    public Door GetExit()
+    {
+        return exit;
     }
 
     /// <summary>
     /// Unlock all doors set as exits
     /// </summary>
-    public void UnlockAllDoors()
+    public void UnlockExit()
     {
-        foreach (Door f in exits)
+        exit.UnlockDoor();
+    }
+
+    /// <summary>
+    /// Set the exit to a return to hub teleport door
+    /// </summary>
+    public void SetReturnToHub()
+    {
+        exit.SetType(Door.PlayerDoorType.ReturnToHub);
+    }
+
+    /// <summary>
+    /// Get all syncpoints this manager detects
+    /// </summary>
+    /// <returns></returns>
+    public List<Transform> GetSyncpoints()
+    {
+        if (doorways == null)
+            return null;
+
+        List<Transform> list = new List<Transform>();
+
+        foreach(Door d in doorways)
         {
-            f.UnlockDoor();
+            list.Add(d.SyncPoint);
         }
+
+        return list;
     }
 }

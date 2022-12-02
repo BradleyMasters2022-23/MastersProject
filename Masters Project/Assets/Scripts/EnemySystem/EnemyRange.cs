@@ -10,13 +10,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem.XR.Haptics;
 
 public class EnemyRange : EnemyBase
 {
     /// <summary>
     /// Current state of the enemy
     /// </summary>
-    private EnemyState state;
+    [SerializeReference] private EnemyState state;
     /// <summary>
     /// The navmesh component for the enemy
     /// </summary>
@@ -61,6 +62,11 @@ public class EnemyRange : EnemyBase
     [Tooltip("What is the radius of the cone this enemy can see in")]
     [SerializeField] private int lookRadius;
 
+    [Tooltip("What layers affects this enemy's vision")]
+    [SerializeField] private LayerMask visionLayer;
+
+    private float shotRadius;
+
     [Header("---Attack Stage Duration---")]
     [Tooltip("How long this enemy waits while aiming")]
     [SerializeField][Range(0, 10)] private float aimDuration;
@@ -104,6 +110,8 @@ public class EnemyRange : EnemyBase
         currTime = TimeManager.WorldTimeScale; ;
         agent = GetComponent<NavMeshAgent>();
 
+        shotRadius = shotPrefab.GetComponent<SphereCollider>().radius + 0.1f;
+
         agent.speed = walkSpeed;
         agent.updateRotation = false;
         state = EnemyState.Moving;
@@ -118,8 +126,8 @@ public class EnemyRange : EnemyBase
         currDist = Vector3.Distance(playerCenter.position, transform.position);
         agent.speed = walkSpeed * currTime;
 
-        // Move towards player when out of range and out of threshold
-        if (Mathf.Abs(currDist - idealRange) > moveThreshold && currDist > idealRange)
+        // Move towards player when out of range and out of threshold, or in the moving state at all
+        if (state == EnemyState.Moving || (Mathf.Abs(currDist - idealRange) > moveThreshold && currDist > idealRange))
         {
             agent.speed = walkSpeed * currTime;
             agent.SetDestination(playerCenter.position);
@@ -146,9 +154,10 @@ public class EnemyRange : EnemyBase
                 }
             case EnemyState.Attacking:
                 {
-
+                    //Debug.Log($"Attacking State of {name}" +
+                    //    $"Routine : {attackRoutine == null} | line of sight : {LineOfSight(playerCenter)} | In Vision : {InVision(playerCenter)}");
                     // Attack if vision and not already attacking
-                    if (attackRoutine == null && InVision())
+                    if (attackRoutine == null && LineOfSight(playerCenter) && InVision(playerCenter))
                     {
                         attackRoutine = StartCoroutine(Attack());
                     }
@@ -175,7 +184,7 @@ public class EnemyRange : EnemyBase
             case EnemyState.Moving:
                 {
                     // Switch to attacking if line of sight and within ideal range
-                    if (LineOfSight(playerCenter.gameObject) && currDist <= idealRange)
+                    if (LineOfSight(playerCenter) && currDist <= idealRange)
                     {
                         state = EnemyState.Attacking;
 
@@ -191,7 +200,7 @@ public class EnemyRange : EnemyBase
             case EnemyState.Attacking:
                 {
                     // Resume moving if outside of attack range and not already attacking
-                    if (!LineOfSight(playerCenter.gameObject) && attackRoutine == null)
+                    if (!LineOfSight(playerCenter) && attackRoutine == null)
                     {
                         state = EnemyState.Moving;
                     }
@@ -206,29 +215,29 @@ public class EnemyRange : EnemyBase
     /// </summary>
     /// <param name="target">target to check</param>
     /// <returns>Line of sight</returns>
-    private bool LineOfSight(GameObject target)
+    private bool LineOfSight(Transform target)
     {
-        Vector3 direction = target.transform.position - (transform.position + Vector3.up);
-
-        // Set mask to ignore raycasts and enemy layer
-        int lm = LayerMask.NameToLayer("Enemy");
-        lm = (1 << lm);
-        lm |= (1 << LayerMask.NameToLayer("Ignore Raycast"));
+        Vector3 direction = target.position - shootPoints[0].position;
 
         // Try to get player
         RaycastHit hit;
-        if (Physics.Raycast((transform.position + Vector3.up), direction, out hit, attackRange, ~lm))
+        
+        // Use a cast to make sure it accounts for the shot's radius
+        if (Physics.SphereCast(centerMass.position, shotRadius, direction, out hit, attackRange, visionLayer))
         {
+            
             if (hit.transform.CompareTag("Player"))
                 return true;
         }
+
+
         return false;
     }
 
 
-    private bool InVision()
+    private bool InVision(Transform target)
     {
-        Vector3 temp = (playerCenter.position - (transform.position + Vector3.up)).normalized;
+        Vector3 temp = (target.position - centerMass.position).normalized;
         float angle = Vector3.SignedAngle(temp, transform.forward, Vector3.up);
         return (Mathf.Abs(angle) <= lookRadius);
     }

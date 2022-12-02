@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 8727397786430278917}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.52, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a4105cb5395f54b419ae19a0fa0df742, type: 2}
+  - {fileID: 2100000, guid: 05bff99339955284d8ce4e1c45bae951, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -130,12 +130,15 @@ MonoBehaviour:
   damage: 3
   knockback: 0
   addativeKnockback: 0
-  speed: 25
+  speed: 23
   range: 100
   onHitEffect: {fileID: 8310898044211945277, guid: 011a9baa743b55648b354e6aaf58a345, type: 3}
-  layersToIgnore:
+  targetLayers:
     serializedVersion: 2
-    m_Bits: 934
+    m_Bits: 64
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 2056
   enemyShoot:
   - {fileID: 8300000, guid: 9c64281aa7548784f82e002f655fe02d, type: 3}
   - {fileID: 8300000, guid: a1cf490eb9aaafb44a7264e4dc46bd4a, type: 3}

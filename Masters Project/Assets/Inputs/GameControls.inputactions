@@ -96,19 +96,10 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Controller",
-                    "type": "PassThrough",
-                    "id": "73027538-d332-4fa1-8cef-196e48d7e665",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Mouse",
-                    "type": "PassThrough",
-                    "id": "9fbde5c5-a9aa-475a-9c90-0f68bb6f9fbb",
-                    "expectedControlType": "",
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "3fa2a5c8-a241-433c-8731-738b7b09d9ce",
+                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -337,7 +328,64 @@
                 },
                 {
                     "name": "",
-                    "id": "ae34960b-ab02-45b1-8774-5bf3b9122702",
+                    "id": "c92ff0bf-0138-4eb3-b767-6744b09a6f0e",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a4e58ae0-480c-4d88-9db5-b7c79379fe32",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "id": "e12e6fa9-b96e-4f7f-8a46-e154b59ba327",
+            "actions": [
+                {
+                    "name": "Mouse",
+                    "type": "PassThrough",
+                    "id": "c5acd629-26f9-4fd4-bc18-d27d50aa7d78",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Controller",
+                    "type": "PassThrough",
+                    "id": "c306cda9-70ad-4e0e-9c30-86f5b7163051",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Back",
+                    "type": "Button",
+                    "id": "ad8ff928-f829-4dec-9352-e241113e53eb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "b93f5733-e1a6-4a31-a24d-4657aa6a5d62",
                     "path": "<Gamepad>/dpad",
                     "interactions": "",
                     "processors": "",
@@ -348,7 +396,7 @@
                 },
                 {
                     "name": "",
-                    "id": "5f2dfe67-5984-404d-b69d-eb1e7ddbf42d",
+                    "id": "5fe8ac79-4173-410b-9cbe-c0d21260f4cd",
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
@@ -359,7 +407,7 @@
                 },
                 {
                     "name": "",
-                    "id": "8ff67f1f-87d4-4cd3-9a90-712c10099e4a",
+                    "id": "3a55982f-b851-4710-b192-6f1d2618cc55",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
@@ -370,12 +418,34 @@
                 },
                 {
                     "name": "",
-                    "id": "798fada0-9727-4c6d-9674-30cd74a3b955",
+                    "id": "11f1d3ed-8f91-4425-ac42-7a28f84f9a6c",
                     "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Mouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4d3ec7e2-ffbd-4bf4-8c95-4617e9032605",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Back",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c169a124-b65f-447b-8789-ebdd0dc0f05b",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Back",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

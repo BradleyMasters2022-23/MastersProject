@@ -135,12 +135,8 @@ public class EnemyHealth : Damagable
             Instantiate(deathVFX, transform.position + Vector3.up * (transform.localScale.y / 2), transform.rotation);
 
         // Try telling spawn manager to destroy self, if needed
-        // TODO - CONVERT TO CHANNEL
-        SpawnManager manager = FindObjectOfType<SpawnManager>();
-        if (manager != null)
-        {
-            manager.DestroyEnemy();
-        }
+        if(SpawnManager.instance != null)
+            SpawnManager.instance.DestroyEnemy();
 
         // Destroy object
         Destroy(this.gameObject);

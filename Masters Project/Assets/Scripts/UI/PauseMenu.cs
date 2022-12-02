@@ -24,7 +24,6 @@ public class PauseMenu : MonoBehaviour
         
 
         reset = controls.PlayerGameplay.Reset;
-        reset.performed += Reload;
         reset.Enable();
 
         
@@ -39,10 +38,6 @@ public class PauseMenu : MonoBehaviour
         if (_newState == GameManager.States.PAUSED)
         {
             pauseScreen.SetActive(true);
-        }
-        else if(pauseScreen.activeInHierarchy)
-        {
-            pauseScreen.SetActive(false);
         }
     }
 
@@ -65,6 +60,7 @@ public class PauseMenu : MonoBehaviour
     private void OnEnable()
     {
         onStateChangeChannel.OnEventRaised += TogglePause;
+        reset.performed += Reload;
     }
 
     private void OnDisable()
@@ -72,6 +68,7 @@ public class PauseMenu : MonoBehaviour
         onStateChangeChannel.OnEventRaised -= TogglePause;
 
         reset.Disable();
+        reset.performed -= Reload;
     }
 
     public void Reload(InputAction.CallbackContext c)
