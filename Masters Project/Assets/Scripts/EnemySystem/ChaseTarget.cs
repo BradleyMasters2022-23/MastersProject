@@ -6,19 +6,19 @@ using UnityEngine.AI;
 
 public class ChaseTarget : MonoBehaviour
 {
-    private enum State
+    private enum MoveState
     {
         Moving,
         Offlink
     }
 
-    [SerializeField] private State state;
+    [SerializeField] private MoveState state;
 
     [SerializeField] private Transform target;
 
     Vector3 lastTargetPos;
 
-    private NavMeshAgent nav;
+    private NavMeshAgent agent;
 
     [SerializeField] private AnimationCurve jumpCurve;
     [SerializeField] private float jumpDuration;
@@ -35,15 +35,15 @@ public class ChaseTarget : MonoBehaviour
     [SerializeField] private float rotationSpeed;
     private void Awake()
     {
-        nav = GetComponent<NavMeshAgent>();
-        defSpeed = nav.speed;
-        defRot = nav.angularSpeed;
+        agent = GetComponent<NavMeshAgent>();
+        defSpeed = agent.speed;
+        defRot = agent.angularSpeed;
     }
 
     private void Update()
     {
-        nav.speed = TimeManager.WorldTimeScale * defSpeed;
-        nav.angularSpeed = TimeManager.WorldTimeScale * defRot;
+        agent.speed = TimeManager.WorldTimeScale * defSpeed;
+        agent.angularSpeed = TimeManager.WorldTimeScale * defRot;
 
 
         StateUpdate();
@@ -54,12 +54,12 @@ public class ChaseTarget : MonoBehaviour
     {
         switch(state)
         {
-            case State.Moving:
+            case MoveState.Moving:
                 {
                     Chase();
                     break;
                 }
-                case State.Offlink:
+                case MoveState.Offlink:
                 {
                     break;
                 }
@@ -70,17 +70,17 @@ public class ChaseTarget : MonoBehaviour
     {
         if (target == null)
         {
-            nav.ResetPath();
+            agent.ResetPath();
             return;
         }
 
         if (target.position != lastTargetPos)
         {
             lastTargetPos = target.position;
-            nav.SetDestination(target.position);
+            agent.SetDestination(target.position);
         }
 
-        if (nav.isOnOffMeshLink && state != State.Offlink)
+        if (agent.isOnOffMeshLink && state != MoveState.Offlink)
         {
             JumpToLedge();
         }
@@ -88,9 +88,9 @@ public class ChaseTarget : MonoBehaviour
 
     private void JumpToLedge()
     {
-        state = State.Offlink;
+        state = MoveState.Offlink;
 
-        OffMeshLinkData data = nav.currentOffMeshLinkData;
+        OffMeshLinkData data = agent.currentOffMeshLinkData;
 
         // Check whether to use jump or fall curve
         if (data.endPos.y >= data.startPos.y)
@@ -113,14 +113,14 @@ public class ChaseTarget : MonoBehaviour
     private IEnumerator CurvedJump(AnimationCurve curve, float duration)
     {
         // Get starting data
-        OffMeshLinkData data = nav.currentOffMeshLinkData;
-        Vector3 startPos = nav.transform.position;
-        Vector3 endPos = data.endPos + Vector3.up * nav.baseOffset;
+        OffMeshLinkData data = agent.currentOffMeshLinkData;
+        Vector3 startPos = agent.transform.position;
+        Vector3 endPos = data.endPos + Vector3.up * agent.baseOffset;
 
         // If enabled, wait until this entity has turned to their land position before jumping
         if (turnIntoJump)
         {
-            nav.updateRotation = false;
+            agent.updateRotation = false;
             Vector3 lookDirection = (endPos - transform.position).normalized;
             yield return StartCoroutine(RotateTo(lookDirection));
         }
@@ -131,16 +131,18 @@ public class ChaseTarget : MonoBehaviour
         while (normalizedTime < 1.0f)
         {
             float yOffset = curve.Evaluate(normalizedTime);
-            nav.transform.position = Vector3.Lerp(startPos, endPos, normalizedTime) + yOffset * Vector3.up;
+            agent.transform.position = Vector3.Lerp(startPos, endPos, normalizedTime) + yOffset * Vector3.up;
             normalizedTime += TimeManager.WorldDeltaTime / duration;
 
             yield return null;
         }
 
         // Reset to normal
-        nav.updateRotation = true;
-        state = State.Moving;
-        nav.CompleteOffMeshLink();
+        agent.updateRotation = true;
+        state = MoveState.Moving;
+        agent.CompleteOffMeshLink();
+        agent.ResetPath();
+        agent.SetDestination(target.position);
     }
 
     /// <summary>
@@ -150,7 +152,7 @@ public class ChaseTarget : MonoBehaviour
     /// <returns></returns>
     private IEnumerator RotateTo(Vector3 direction)
     {
-        nav.updateRotation = false;
+        agent.updateRotation = false;
 
         // Get target rotation
         Quaternion rot = Quaternion.LookRotation(direction);
