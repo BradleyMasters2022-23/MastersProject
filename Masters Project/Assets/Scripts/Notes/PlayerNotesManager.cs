@@ -12,7 +12,7 @@ using UnityEngine;
 public class PlayerNotesManager : MonoBehaviour
 {
   /// <summary>
-  /// notes player has completed 
+  /// notes player has completed
   /// </summary>
     private List<NoteObject> playerNotes = new List<NoteObject>();
 
@@ -83,7 +83,7 @@ public class PlayerNotesManager : MonoBehaviour
     public void FindFragment(Fragment fragment)
     {
         fragment.found = true;
-        Debug.Log(fragment.content);
+        Debug.Log("Fragment number " + fragment.fragmentID + " of note number " + fragment.noteID + " was collected!");
         UpdateNotes();
     }
 

@@ -24,4 +24,9 @@ public class Fragment : ScriptableObject
 
     [Tooltip("Whether or not this fragment has been found.")]
     public bool found;
+
+    public string GetNoteName()
+    {
+       return AllNotesManager.instance.GetNote(noteID).displayName;
+    }
 }
