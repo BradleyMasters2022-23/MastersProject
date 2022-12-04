@@ -424,7 +424,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1016516560220355375}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.002, z: 0}
+  m_LocalPosition: {x: 0, y: 1.002, z: -0.27999997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1047,7 +1047,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3227525620259591146}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.28}
   m_LocalScale: {x: 0.47979015, y: 0.56761, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1534,10 +1534,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.571722
-  m_Height: 1.5064869
+  m_Radius: 0.7082007
+  m_Height: 1.6111784
   m_Direction: 1
-  m_Center: {x: 0, y: 0.97296524, z: 0}
+  m_Center: {x: 0, y: 0.97296524, z: -0.3312558}
 --- !u!114 &7139646536534798339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1556,8 +1556,8 @@ MonoBehaviour:
   deathVFX: {fileID: 8273445605695135385, guid: 3c02a13cc5fc9994f8787e38cd6a77ea, type: 3}
   hideUIDelay: 0
   timeOrb: {fileID: 3071240432754548792, guid: 2001e4aa90ac76a47866171fcaafdf7f, type: 3}
-  dropChance: 100
-  dropNumerRange: {x: 2, y: 4}
+  dropChance: 50
+  dropNumerRange: {x: 2, y: 3}
 --- !u!114 &5867305176111294565
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1579,7 +1579,7 @@ MonoBehaviour:
   overshootMult: 3
   idealRange: 15
   attackRange: 50
-  moveThreshold: 2
+  moveThreshold: 4
   fleeMoveModifier: 1
   jumpCurve:
     serializedVersion: 2
@@ -1656,7 +1656,7 @@ MonoBehaviour:
   lookRadius: 5
   visionLayer:
     serializedVersion: 2
-    m_Bits: 2369
+    m_Bits: 2377
   aimDuration: 0.2
   shootDuration: 0.1
   reloadDuration: 1.4
@@ -1665,8 +1665,8 @@ MonoBehaviour:
   reloadMoveModifier: 0.5
   aimRotModifier: 1
   shootRotModifier: 0
-  reloadRotModifier: 1
-  lockAiming: 0
+  reloadRotModifier: 0
+  lockAiming: 1
   fleeWhileAttacking: 1
   leadStrength: {x: -1.3, y: 1.3}
 --- !u!195 &6878320425555973780
@@ -1678,10 +1678,10 @@ NavMeshAgent:
   m_GameObject: {fileID: 6621528852895871808}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.69
+  m_Radius: 1.05
   m_Speed: 3.5
   m_Acceleration: 30
-  avoidancePriority: 50
+  avoidancePriority: 99
   m_AngularSpeed: 1500
   m_StoppingDistance: 3
   m_AutoTraverseOffMeshLink: 0
@@ -1689,8 +1689,8 @@ NavMeshAgent:
   m_AutoRepath: 1
   m_Height: 2.14
   m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 2
+  m_WalkableMask: 5
+  m_ObstacleAvoidanceType: 3
 --- !u!65 &3311603916637224723
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1702,8 +1702,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.42321262, y: 0.48792142, z: 0.94641304}
-  m_Center: {x: 0, y: 0.80183035, z: 0.8548908}
+  m_Size: {x: 0.42321262, y: 0.48792136, z: 0.6766702}
+  m_Center: {x: 0, y: 0.80183035, z: 0.7200194}
 --- !u!1 &6647373963108662847
 GameObject:
   m_ObjectHideFlags: 0
@@ -2196,7 +2196,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5815223299785157558, guid: 9e582c8281300844aa01f3ff273878dc, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.27999997
       objectReference: {fileID: 0}
     - target: {fileID: 5815223299785157558, guid: 9e582c8281300844aa01f3ff273878dc, type: 3}
       propertyPath: m_LocalRotation.w

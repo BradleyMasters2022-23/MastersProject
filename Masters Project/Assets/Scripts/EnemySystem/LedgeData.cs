@@ -9,6 +9,9 @@ public class LedgeData : MonoBehaviour
     public float traverseTime = 0.8f;
     public LayerMask groundLayers;
 
+    /// <summary>
+    /// When game starts, hide the visual indicators
+    /// </summary>
     private void Awake()
     {
         MeshRenderer[] indicators= GetComponentsInChildren<MeshRenderer>();
@@ -18,6 +21,9 @@ public class LedgeData : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Ground the nodes to the first point of ground below them
+    /// </summary>
     [Button]
     public void GroundNodes()
     {
@@ -38,8 +44,9 @@ public class LedgeData : MonoBehaviour
         {
             Transform t = transform.GetChild(i);
 
+            // Add tiny upwards offset
             RaycastHit h;
-            if (Physics.Raycast(t.position, Vector3.down, out h, Mathf.Infinity, groundLayers))
+            if (Physics.Raycast(t.position + Vector3.up * 0.1f, Vector3.down, out h, Mathf.Infinity, groundLayers))
             {
                 points[i] = h.point;
                 xDist += h.point.x;
@@ -65,6 +72,9 @@ public class LedgeData : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Reset the node's Y heights to flat
+    /// </summary>
     [Button]
     public void ResetNodes()
     {
@@ -76,6 +86,29 @@ public class LedgeData : MonoBehaviour
         }
     }
 
-    // this it for now
-    // later, maybe try auto calculate it?
+    /// <summary>
+    /// Draw lines under the nodes to make it easier to see where they will ground to
+    /// </summary>
+    private void OnDrawGizmosSelected()
+    {
+        //Debug.Log("draw gizmos selected called");
+
+        Gizmos.color = Color.yellow;
+
+        // Get grounded node positions
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Transform t = transform.GetChild(i);
+
+            RaycastHit h;
+            if (Physics.Raycast(t.position + Vector3.up * 0.1f, Vector3.down, out h, Mathf.Infinity, groundLayers))
+            {
+                if(h.distance >= 0.3f)
+                {
+                    Gizmos.DrawLine(t.position, h.point);
+                    Gizmos.DrawSphere(h.point, 0.1f);
+                }
+            }
+        }
+    }
 }
