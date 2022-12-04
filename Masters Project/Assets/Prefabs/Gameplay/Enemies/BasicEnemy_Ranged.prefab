@@ -259,7 +259,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5851429651645590636}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.267, z: 0}
+  m_LocalPosition: {x: 0, y: 1.829, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -372,6 +372,7 @@ MonoBehaviour:
   centerMass: {fileID: 5940177062539629436}
   state: 0
   moveState: 0
+  hasLineOfSight: 0
   moveSpeed: 8
   rotationSpeed: 2
   overshootMult: 3
@@ -445,7 +446,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  turnIntoJump: 0
+  faceJump: 0
+  rotateIntoJump: 0
   shotPrefab: {fileID: 8727397786430278917, guid: 406069cb0a402f342af7f980f4ed2f6c, type: 3}
   shootPoints:
   - {fileID: 8900093909637964389}

@@ -6,6 +6,7 @@
  * Description - Base class for all ranged enemies
  * ================================================================================================
  */
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,6 +29,8 @@ public class EnemyRange : EnemyBase
     [SerializeReference] private EnemyState state;
 
     [SerializeField] private MoveState moveState;
+
+    [SerializeField] private bool hasLineOfSight;
 
     /// <summary>
     /// The navmesh component for the enemy
@@ -65,10 +68,13 @@ public class EnemyRange : EnemyBase
     [SerializeField] private AnimationCurve fallCurve;
     //[SerializeField] private float fallDuration;
 
-    [Tooltip("Whether or not the enemy should turn to their landing position before jumping")]
-    [SerializeField] private bool turnIntoJump;
+    [Tooltip("Whether or not the enemy should face the jump direction before jumping")]
+    [SerializeField] private bool faceJump;
+    [Tooltip("Whether or not the enemy actually rotates to the landing position before jumping")]
+    [HideIf("@this.faceJump == false")]
+    [SerializeField] private bool rotateIntoJump;
 
-    private ScaledTimer jumpCooldown;
+    //private ScaledTimer jumpCooldown;
 
     /// <summary>
     /// Current distance between this enemy and player
@@ -136,7 +142,7 @@ public class EnemyRange : EnemyBase
 
         shotRadius = shotPrefab.GetComponent<SphereCollider>().radius;
 
-        jumpCooldown = new ScaledTimer(0.8f);
+        //jumpCooldown = new ScaledTimer(0.8f);
 
         agent.speed = moveSpeed;
         agent.updateRotation = false;
@@ -188,12 +194,12 @@ public class EnemyRange : EnemyBase
                 }
         }
 
-        if(moveState != MoveState.Offlink || (moveState == MoveState.Offlink && !turnIntoJump) )
+        if(moveState != MoveState.Offlink || (moveState == MoveState.Offlink && !faceJump) )
         {
             Vector3 direction;
 
             // Get direction of player, or next jump
-            if (agent.nextOffMeshLinkData.valid && (turnIntoJump || !InVision(playerCenter)))
+            if (agent.nextOffMeshLinkData.valid && (faceJump || !InVision(playerCenter)))
             {
                 direction = (agent.nextOffMeshLinkData.startPos - transform.position);
             }
@@ -263,14 +269,14 @@ public class EnemyRange : EnemyBase
         Debug.DrawRay(shootPoints[0].position, direction, Color.red, 0.5f);
 
         // Use a cast to make sure it accounts for the shot's radius
-        if (Physics.Raycast(centerMass.position, direction, out hit, attackRange, visionLayer))
+        if (Physics.SphereCast(shootPoints[0].position, shotRadius, direction, out hit, attackRange, visionLayer))
         {
-            
+            hasLineOfSight = true;
             if (hit.transform.CompareTag("Player"))
                 return true;
         }
 
-
+        hasLineOfSight = false;
         return false;
     }
 
@@ -404,7 +410,7 @@ public class EnemyRange : EnemyBase
             agent.SetDestination(player.transform.position);
         }
 
-        if (agent.isOnOffMeshLink && moveState != MoveState.Offlink && jumpCooldown.TimerDone())
+        if (agent.isOnOffMeshLink && moveState != MoveState.Offlink)
         {
             JumpToLedge();
         }
@@ -442,11 +448,21 @@ public class EnemyRange : EnemyBase
         Vector3 endPos = data.endPos + Vector3.up * agent.baseOffset;
 
         // If enabled, wait until this entity has turned to their land position before jumping
-        if (turnIntoJump)
+        if (faceJump && rotateIntoJump)
         {
             agent.updateRotation = false;
             Vector3 lookDirection = (endPos - transform.position).normalized;
             yield return StartCoroutine(RotateTo(lookDirection));
+        }
+        // Instantly look towards the jump instead
+        else if(faceJump && !rotateIntoJump)
+        {
+            agent.updateRotation = false;
+            Vector3 lookDirection = (endPos - transform.position).normalized;
+
+            Quaternion rot = Quaternion.LookRotation(lookDirection);
+            rot = Quaternion.Euler(0, rot.eulerAngles.y, 0);
+            transform.rotation = rot;
         }
 
         // Check to break before starting jump
@@ -468,7 +484,7 @@ public class EnemyRange : EnemyBase
         agent.CompleteOffMeshLink();
         //agent.ResetPath();
         //agent.SetDestination(player.transform.position);
-        jumpCooldown.ResetTimer();
+        //jumpCooldown.ResetTimer();
         moveState = MoveState.Moving;
     }
 
@@ -479,6 +495,8 @@ public class EnemyRange : EnemyBase
     /// <returns></returns>
     private IEnumerator RotateTo(Vector3 direction)
     {
+        Debug.Log("Rotate towards started");
+
         agent.updateRotation = false;
 
         // Get target rotation
@@ -509,6 +527,7 @@ public class EnemyRange : EnemyBase
             yield return new WaitForFixedUpdate();
             yield return null;
         }
+        Debug.Log("Rotate towards ended");
 
         transform.rotation = rot;
         yield return null;
