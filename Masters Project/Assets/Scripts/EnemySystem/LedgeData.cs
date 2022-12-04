@@ -25,9 +25,12 @@ public class LedgeData : MonoBehaviour
         {
             Debug.Log("No children to ground!");
             return;
-        }    
+        }
 
-        float height = 0;
+        float xDist = 0;
+        float yDist = 0;
+        float zDist = 0;
+        
         Vector3[] points = new Vector3[transform.childCount];
 
         // Get grounded node positions
@@ -39,7 +42,9 @@ public class LedgeData : MonoBehaviour
             if (Physics.Raycast(t.position, Vector3.down, out h, Mathf.Infinity, groundLayers))
             {
                 points[i] = h.point;
-                height += h.point.y;
+                xDist += h.point.x;
+                yDist += h.point.y;
+                zDist += h.point.z;
             }
             else
             {
@@ -49,8 +54,8 @@ public class LedgeData : MonoBehaviour
             }
         }
 
-        // adjust its core position between the heights
-        transform.position = new Vector3(transform.position.x, height / transform.childCount, transform.position.z);
+        // adjust its core position between the yDists
+        transform.position = new Vector3(xDist / transform.childCount, yDist / transform.childCount, zDist / transform.childCount);
 
         // Apply new positions
         for (int i = 0; i < points.Length; i++)
