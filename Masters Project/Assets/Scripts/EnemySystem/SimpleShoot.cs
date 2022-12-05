@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SimpleShoot : AttackTarget
@@ -21,9 +23,11 @@ public class SimpleShoot : AttackTarget
     [Tooltip("All barrels for this enemy to shoot")]
     [SerializeField] private Transform[] shootPoints;
     [Tooltip("The object holding the VFX for player indicator")]
-    [SerializeField] private GameObject indicatorObject;
+    [SerializeField] private GameObject indicatorVFXPrefab;
     [Tooltip("VFX that plays on each shoot point when a projectile is fired")]
-    [SerializeField] private GameObject shootVFX;
+    [SerializeField] private GameObject shootVFXPrefab;
+
+    private ParticleSystem[] indicatorEffects;
 
     protected override IEnumerator DamageAction()
     {
@@ -31,7 +35,7 @@ public class SimpleShoot : AttackTarget
 
         for(int i = 0; i < numOfShots; i++)
         {
-            Shoot(transform.position + transform.forward);
+            Shoot(shootPoints[0].position + transform.forward);
 
             shotTimer.ResetTimer();
             while(!shotTimer.TimerDone())
@@ -43,11 +47,30 @@ public class SimpleShoot : AttackTarget
 
     protected override void ShowIndicator()
     {
-        
+        // if no effects, try to get them
+        if(indicatorEffects is null)
+        {
+            indicatorEffects = indicatorVFXPrefab.GetComponentsInChildren<ParticleSystem>(true);
+        }
+
+        indicatorVFXPrefab.SetActive(true);
+
+        // Tell each one to start
+        foreach(ParticleSystem par in indicatorEffects)
+        {
+            par.Play();
+        }
     }
+
     protected override void HideIndicator()
     {
-        
+        // Tell each one to stop
+        foreach (ParticleSystem par in indicatorEffects)
+        {
+            par.Stop();
+        }
+
+        indicatorVFXPrefab.SetActive(false);
     }
 
     private void Shoot(Vector3 targetPos)
@@ -68,5 +91,4 @@ public class SimpleShoot : AttackTarget
             shot.GetComponent<RangeAttack>().Activate();
         }
     }
-}
 }

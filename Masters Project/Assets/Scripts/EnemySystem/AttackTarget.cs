@@ -85,7 +85,7 @@ public abstract class AttackTarget : MonoBehaviour
         yield return StartCoroutine(DamageAction());
 
         currentAttackState = AttackState.Finishing;
-        yield return StartCoroutine(FinishAttack());
+        yield return  StartCoroutine(FinishAttack());
 
         attacking = false;
         attackTracker.ResetTimer();
@@ -107,7 +107,7 @@ public abstract class AttackTarget : MonoBehaviour
 
         // Wait
         indicatorTracker.ResetTimer();
-        while(indicatorTracker.TimerDone())
+        while(!indicatorTracker.TimerDone())
         {
             // Do things while waiting (spin indicator VFX?)
             yield return null;
@@ -157,7 +157,7 @@ public abstract class AttackTarget : MonoBehaviour
 
         // Wait
         finishTracker.ResetTimer();
-        while (finishTracker.TimerDone())
+        while (!finishTracker.TimerDone())
         {
             // Do things while waiting (spin indicator VFX?)
             yield return null;
