@@ -1,33 +1,72 @@
+using Sirenix.OdinInspector.Editor;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Security;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class SimpleShoot : AttackTarget
 {
-    [SerializeField] private GameObject projectile;
 
+    [Header("=== Ranged Attack Data ===")]
+
+    [Tooltip("The projectile prefab to use")]
+    [SerializeField] private GameObject projectile;
+    [Tooltip("All barrels for this enemy to shoot")]
+    [SerializeField] private Transform[] shootPoints;
     [Tooltip("Number of shots to do. Each shot is per-barrel" +
         "EX - 3 shots with 3 barrels will fire 3 shots 3 times, for 9 total.")]
+    [Space(5)]
     [SerializeField] private int numOfShots;
-
     [Tooltip("What is the time in between each shot")]
     [SerializeField] private float delayBetweenShots;
+
+    [Space(10)]
+    [Tooltip("What is the minimim and maximum strength for leading shots")]
+    [SerializeField] private Vector2 leadStrength;
+
+    [Space(10)]
+    [Tooltip("What is the range of accuracy for the first shot")]
+    [SerializeField] private Vector2 firstShotAccuracy;
+    [Tooltip("What is the range of accuracy on this")]
+    [SerializeField] private Vector2 normalAccuracyRange;
+    
+
+    [Header("=== Visuals and Sounds ===")]
+
+    [Tooltip("The object holding the VFX for player indicator")]
+    [SerializeField] private GameObject indicatorVFXPrefab;
+    [Tooltip("VFX that plays on each shoot point when a projectile is fired")]
+    [SerializeField] private GameObject shootVFXPrefab;
+
+    /// <summary>
+    /// Get the indicator gameobject references
+    /// </summary>
+    private GameObject[] indicators;
 
     /// <summary>
     /// Internal trakcer for the time between each shot
     /// </summary>
     private ScaledTimer shotTimer;
 
-    [Tooltip("All barrels for this enemy to shoot")]
-    [SerializeField] private Transform[] shootPoints;
-    [Tooltip("The object holding the VFX for player indicator")]
-    [SerializeField] private GameObject indicatorVFXPrefab;
-    [Tooltip("VFX that plays on each shoot point when a projectile is fired")]
-    [SerializeField] private GameObject shootVFXPrefab;
+    
 
-    private ParticleSystem[] indicatorEffects;
+    /// <summary>
+    /// Initialize each thing
+    /// </summary>
+    protected override void Awake()
+    {
+        base.Awake();
+
+        indicators = new GameObject[shootPoints.Length];
+        for(int i = 0; i < shootPoints.Length; i++) 
+        {
+            indicators[i] = Instantiate(indicatorVFXPrefab, shootPoints[i]);
+            indicators[i].transform.localPosition= Vector3.zero;
+            indicators[i].SetActive(false);
+        }
+    }
 
     protected override IEnumerator DamageAction()
     {
@@ -35,7 +74,18 @@ public class SimpleShoot : AttackTarget
 
         for(int i = 0; i < numOfShots; i++)
         {
-            Shoot(shootPoints[0].position + transform.forward);
+            // Apply first shot accuracy instead
+            if(i == 0)
+            {
+                Shoot(shootPoints[0].position + transform.forward, 
+                    firstShotAccuracy.x, firstShotAccuracy.y);
+            }
+            else
+            {
+                Shoot(shootPoints[0].position + transform.forward,
+                    normalAccuracyRange.x, normalAccuracyRange.y);
+            }
+
 
             shotTimer.ResetTimer();
             while(!shotTimer.TimerDone())
@@ -47,33 +97,36 @@ public class SimpleShoot : AttackTarget
 
     protected override void ShowIndicator()
     {
-        // if no effects, try to get them
-        if(indicatorEffects is null)
-        {
-            indicatorEffects = indicatorVFXPrefab.GetComponentsInChildren<ParticleSystem>(true);
-        }
-
-        indicatorVFXPrefab.SetActive(true);
-
         // Tell each one to start
-        foreach(ParticleSystem par in indicatorEffects)
+        foreach(GameObject indicator in indicators)
         {
-            par.Play();
+            indicator.SetActive(true);
+
+            foreach (ParticleSystem par in indicator.GetComponentsInChildren<ParticleSystem>(true))
+            {
+                par.Play();
+            }
+
         }
+        
     }
 
     protected override void HideIndicator()
     {
         // Tell each one to stop
-        foreach (ParticleSystem par in indicatorEffects)
+        foreach (GameObject indicator in indicators)
         {
-            par.Stop();
-        }
+            foreach (ParticleSystem par in indicator.GetComponentsInChildren<ParticleSystem>(true))
+            {
+                par.Stop();
+            }
 
-        indicatorVFXPrefab.SetActive(false);
+            indicator.SetActive(false);
+
+        }
     }
 
-    private void Shoot(Vector3 targetPos)
+    private void Shoot(Vector3 targetPos, float minSpread, float maxSpread)
     {
         // Spawn projectile for each barrel
         List<GameObject> spawnedProjectiles = new List<GameObject>();
@@ -81,14 +134,45 @@ public class SimpleShoot : AttackTarget
         {
             GameObject o = Instantiate(projectile, barrel.position, projectile.transform.rotation);
             spawnedProjectiles.Add(o);
+
+            GameObject vfx = Instantiate(shootVFXPrefab, barrel);
+            vfx.transform.localPosition = Vector3.zero;
         }
         RangeAttack temp = spawnedProjectiles[0].GetComponent<RangeAttack>();
 
+        // Determine lead strength
+        float travelTime = (targetPos - transform.position).magnitude / temp.Speed;
+        float strength = Random.Range(leadStrength.x, leadStrength.y);
+        //Vector3 leadPos = playerCenter.position + (player.GetComponent<Rigidbody>().velocity * travelTime * strength);
+
+
+        // determined initial rotation
+        Vector3 aimRotation = Quaternion.LookRotation(targetPos - shootPoints[0].position).eulerAngles;
+        aimRotation = ApplySpread(aimRotation, minSpread, maxSpread);
+        
         // Aim shot at target position, activate
         foreach (GameObject shot in spawnedProjectiles)
         {
-            shot.transform.LookAt(targetPos);
+            shot.transform.rotation = Quaternion.Euler(aimRotation);
             shot.GetComponent<RangeAttack>().Activate();
         }
+    }
+
+    private Vector3 ApplySpread(Vector3 rot, float minSpread, float maxSpread)
+    {
+        float xMod = Random.Range(minSpread, maxSpread);
+        float yMod = Random.Range(minSpread, maxSpread);
+
+        // Apply random signs to spread rotaiton
+        if (Random.Range(0, 2) == 0)
+            xMod *= -1;
+        if (Random.Range(0, 2) == 0)
+            yMod *= -1;
+
+        // calculate and apply rotation between given range
+        rot.x += xMod;
+        rot.y += yMod;
+
+        return rot;
     }
 }

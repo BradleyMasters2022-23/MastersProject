@@ -14,6 +14,8 @@ public enum AttackState
 
 public abstract class AttackTarget : MonoBehaviour
 {
+    [Header("=== Core Attack Data ===")]
+
     public AttackState currentAttackState;
 
     [Tooltip("Whether or not the animator is responsible for this attack system")]
@@ -48,8 +50,9 @@ public abstract class AttackTarget : MonoBehaviour
 
     #endregion
 
-    private void Awake()
+    protected virtual void Awake()
     {
+        Debug.Log("attack target awake called");
         attackTracker = new ScaledTimer(attackCoolown);
 
         indicatorTracker = new ScaledTimer(indicatorDuration);
