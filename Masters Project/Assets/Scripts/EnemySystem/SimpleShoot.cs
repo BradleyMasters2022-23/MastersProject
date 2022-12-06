@@ -46,7 +46,7 @@ public class SimpleShoot : AttackTarget
     /// <summary>
     /// Get the indicator gameobject references
     /// </summary>
-    [SerializeField] private GameObject[] indicators;
+    private GameObject[] indicators;
 
     /// <summary>
     /// Internal trakcer for the time between each shot
@@ -69,6 +69,8 @@ public class SimpleShoot : AttackTarget
             indicators[i].transform.localPosition= Vector3.zero;
             indicators[i].SetActive(false);
         }
+
+        attackReady = true;
     }
 
     protected override IEnumerator DamageAction()
@@ -89,6 +91,9 @@ public class SimpleShoot : AttackTarget
                     normalAccuracyRange.x, normalAccuracyRange.y);
             }
 
+            // dont go into cooldown after last shot
+            if (i == numOfShots - 1)
+                break;
 
             shotTimer.ResetTimer();
             while(!shotTimer.TimerDone())
@@ -155,7 +160,9 @@ public class SimpleShoot : AttackTarget
             float travelTime = (targetPos - transform.position).magnitude / temp.Speed;
             float strength = Random.Range(leadStrength.x, leadStrength.y);
             Vector3 targetVel = target.GetComponent<Rigidbody>().velocity;
-            targetVel.y = Mathf.Clamp(targetVel.y, -10, 10);
+
+            targetVel.y = 0;
+
             Vector3 leadPos = target.GetComponent<PlayerController>().CenterMass.position
                 + (targetVel * travelTime * strength);
 

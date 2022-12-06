@@ -16,23 +16,18 @@ public abstract class AttackTarget : MonoBehaviour
 {
     [Header("=== Core Attack Data ===")]
 
-    public AttackState currentAttackState;
+    [HideInInspector] public AttackState currentAttackState;
 
-    [Tooltip("Whether or not the animator is responsible for this attack system")]
-    [SerializeField] protected bool animationControlled;
+    //[Tooltip("Whether or not the animator is responsible for this attack system")]
+    //[SerializeField] protected bool animationControlled;
 
     /// <summary>
     /// animator for this enemy
     /// </summary>
     protected Animator animator;
 
-    /// <summary>
-    /// whether or not the enemy is currently attacking
-    /// </summary>
-    private bool attacking;
-
     [Tooltip("Whether or not the attack is ready")]
-    public bool attackReady;
+    [HideInInspector] public bool attackReady;
 
     [Tooltip("Length of time between attack actions")]
     [SerializeField] protected float attackCoolown;
@@ -46,7 +41,7 @@ public abstract class AttackTarget : MonoBehaviour
     [Tooltip("Rotation speed of the enemy")]
     [SerializeField][Range(0f, 5f)] private float rotationSpeed;
 
-    [SerializeField] protected Transform target;
+    protected Transform target;
 
     #region Timer Variables
 
@@ -63,12 +58,6 @@ public abstract class AttackTarget : MonoBehaviour
 
         indicatorTracker = new ScaledTimer(indicatorDuration);
         finishTracker = new ScaledTimer(finishDuration);
-
-    }
-
-    private void Start()
-    {
-        Attack(target);
     }
 
     private void Update()
@@ -130,7 +119,6 @@ public abstract class AttackTarget : MonoBehaviour
     /// <returns></returns>
     protected IEnumerator AttackAction()
     {
-        attacking = true;
         attackReady = false;
 
         currentAttackState = AttackState.Indicator;
@@ -142,7 +130,6 @@ public abstract class AttackTarget : MonoBehaviour
         currentAttackState = AttackState.Finishing;
         yield return  StartCoroutine(FinishAttack());
 
-        attacking = false;
         attackTracker.ResetTimer();
         currentAttackState = AttackState.Cooldown;
 

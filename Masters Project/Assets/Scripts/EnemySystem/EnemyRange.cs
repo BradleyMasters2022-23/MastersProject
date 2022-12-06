@@ -290,7 +290,6 @@ public class EnemyRange : EnemyBase
         return false;
     }
 
-
     private bool InVision(Transform target)
     {
         Vector3 targetPos = new Vector3(target.position.x, centerMass.position.y, target.position.z);
@@ -299,6 +298,9 @@ public class EnemyRange : EnemyBase
         return (Mathf.Abs(angle) <= lookRadius);
     }
 
+    #region Attack Stuff
+
+    /*
     private void Shoot(Vector3 targetPos)
     {
         // Spawn projectile for each barrel
@@ -386,6 +388,8 @@ public class EnemyRange : EnemyBase
             StopCoroutine(attackRoutine);
     }
 
+    */
+    #endregion
 
     #region Movement
 

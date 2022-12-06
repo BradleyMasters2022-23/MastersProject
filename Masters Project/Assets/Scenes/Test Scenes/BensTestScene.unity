@@ -982,7 +982,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &498102267
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1078,18 +1078,19 @@ MonoBehaviour:
   animationControlled: 0
   attackReady: 1
   attackCoolown: 5
-  indicatorDuration: 5
+  indicatorDuration: 0.6
   finishDuration: 1
-  rotationSpeed: 3
+  rotationSpeed: 1
   target: {fileID: 117732005555116658}
   projectile: {fileID: 8727397786430278917, guid: 72ddf08186379004e8a2d2b56de45efb, type: 3}
   shootPoints:
   - {fileID: 1266380525}
-  numOfShots: 3
-  delayBetweenShots: 0.1
+  numOfShots: 8
+  delayBetweenShots: 0.2
   leadStrength: {x: 0, y: 0}
   firstShotAccuracy: {x: 2.5, y: 4}
   normalAccuracyRange: {x: 0, y: 3}
+  visionRange: 30
   indicatorVFXPrefab: {fileID: 1951622810807663121, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
   shootVFXPrefab: {fileID: 9110516864071591092, guid: 54db9bb81c534aa4e87c63fbd1d7021a, type: 3}
   indicators: []

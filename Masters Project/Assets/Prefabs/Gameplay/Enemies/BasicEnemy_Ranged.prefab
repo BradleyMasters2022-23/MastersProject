@@ -281,6 +281,7 @@ GameObject:
   - component: {fileID: 5867305176111294565}
   - component: {fileID: 6878320425555973780}
   - component: {fileID: 5058190760948673424}
+  - component: {fileID: 9154536958261373458}
   m_Layer: 8
   m_Name: BasicEnemy_Ranged
   m_TagString: Untagged
@@ -502,6 +503,35 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.54211867, y: 0.54753757, z: 0.8458116}
   m_Center: {x: 0, y: 1.5057508, z: 0.9516901}
+--- !u!114 &9154536958261373458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6621528852895871808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3391758e28375d4bb7b252a3d99ef59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentAttackState: 0
+  attackReady: 1
+  attackCoolown: 1.5
+  indicatorDuration: 0.6
+  finishDuration: 1
+  rotationSpeed: 3
+  projectile: {fileID: 8727397786430278917, guid: 406069cb0a402f342af7f980f4ed2f6c, type: 3}
+  shootPoints:
+  - {fileID: 8900093909637964389}
+  numOfShots: 1
+  delayBetweenShots: 0.2
+  leadStrength: {x: 0.8, y: 1.2}
+  firstShotAccuracy: {x: 0, y: 0.2}
+  normalAccuracyRange: {x: 0, y: 0.2}
+  visionRange: 15
+  indicatorVFXPrefab: {fileID: 1951622810807663121, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
+  shootVFXPrefab: {fileID: 9110516864071591092, guid: 54db9bb81c534aa4e87c63fbd1d7021a, type: 3}
 --- !u!1 &6647373963108662847
 GameObject:
   m_ObjectHideFlags: 0
