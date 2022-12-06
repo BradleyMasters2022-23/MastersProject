@@ -134,14 +134,17 @@ public class EnemyRange : EnemyBase
     /// </summary>
     private Coroutine attackRoutine;
 
+
+    private SimpleShoot attackSystem;
+
     // Start is called before the first frame update
     void Start()
     {
         currTime = TimeManager.WorldTimeScale;
         agent = GetComponent<NavMeshAgent>();
+        attackSystem = GetComponent<SimpleShoot>();
 
         shotRadius = shotPrefab.GetComponent<SphereCollider>().radius;
-
         //jumpCooldown = new ScaledTimer(0.8f);
 
         agent.speed = moveSpeed;
@@ -173,7 +176,8 @@ public class EnemyRange : EnemyBase
                     // Attack if vision and not already attacking
                     if (attackRoutine == null && LineOfSight(playerCenter) && InVision(playerCenter))
                     {
-                        attackRoutine = StartCoroutine(Attack());
+                        //attackRoutine = StartCoroutine(Attack());
+                        attackSystem.Attack(player.transform);
                     }
 
                     // Move towards player when out of range and out of threshold, or in the moving state at all
@@ -192,6 +196,12 @@ public class EnemyRange : EnemyBase
 
                     break;
                 }
+        }
+
+        if(attackSystem.currentAttackState != AttackState.Ready &&
+            attackSystem.currentAttackState != AttackState.Cooldown)
+        {
+            return;
         }
 
         if(moveState != MoveState.Offlink || (moveState == MoveState.Offlink && !faceJump) )

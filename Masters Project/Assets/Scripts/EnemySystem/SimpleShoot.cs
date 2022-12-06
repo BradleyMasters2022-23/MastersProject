@@ -31,7 +31,10 @@ public class SimpleShoot : AttackTarget
     [SerializeField] private Vector2 firstShotAccuracy;
     [Tooltip("What is the range of accuracy on this")]
     [SerializeField] private Vector2 normalAccuracyRange;
-    
+
+    [Space(10)]
+    [Tooltip("How close in range does the target need to be to still aim at player")]
+    [SerializeField] private float visionRange;
 
     [Header("=== Visuals and Sounds ===")]
 
@@ -43,7 +46,7 @@ public class SimpleShoot : AttackTarget
     /// <summary>
     /// Get the indicator gameobject references
     /// </summary>
-    private GameObject[] indicators;
+    [SerializeField] private GameObject[] indicators;
 
     /// <summary>
     /// Internal trakcer for the time between each shot
@@ -77,12 +80,12 @@ public class SimpleShoot : AttackTarget
             // Apply first shot accuracy instead
             if(i == 0)
             {
-                Shoot(shootPoints[0].position + transform.forward, 
+                Shoot(target, 
                     firstShotAccuracy.x, firstShotAccuracy.y);
             }
             else
             {
-                Shoot(shootPoints[0].position + transform.forward,
+                Shoot(target,
                     normalAccuracyRange.x, normalAccuracyRange.y);
             }
 
@@ -126,8 +129,11 @@ public class SimpleShoot : AttackTarget
         }
     }
 
-    private void Shoot(Vector3 targetPos, float minSpread, float maxSpread)
+    private void Shoot(Transform target, float minSpread, float maxSpread)
     {
+
+        Vector3 targetPos = target.position;
+
         // Spawn projectile for each barrel
         List<GameObject> spawnedProjectiles = new List<GameObject>();
         foreach (Transform barrel in shootPoints)
@@ -140,14 +146,28 @@ public class SimpleShoot : AttackTarget
         }
         RangeAttack temp = spawnedProjectiles[0].GetComponent<RangeAttack>();
 
-        // Determine lead strength
-        float travelTime = (targetPos - transform.position).magnitude / temp.Speed;
-        float strength = Random.Range(leadStrength.x, leadStrength.y);
-        //Vector3 leadPos = playerCenter.position + (player.GetComponent<Rigidbody>().velocity * travelTime * strength);
+        Vector3 aimRotation;
 
+        // If target in vision, aim at target first
+        if (InVision(target))
+        {
+            // Determine lead strength
+            float travelTime = (targetPos - transform.position).magnitude / temp.Speed;
+            float strength = Random.Range(leadStrength.x, leadStrength.y);
+            Vector3 targetVel = target.GetComponent<Rigidbody>().velocity;
+            targetVel.y = Mathf.Clamp(targetVel.y, -10, 10);
+            Vector3 leadPos = target.GetComponent<PlayerController>().CenterMass.position
+                + (targetVel * travelTime * strength);
 
-        // determined initial rotation
-        Vector3 aimRotation = Quaternion.LookRotation(targetPos - shootPoints[0].position).eulerAngles;
+            // determined initial rotation
+            aimRotation = Quaternion.LookRotation(leadPos - shootPoints[0].position).eulerAngles;
+        }
+        else
+        {
+            // If target not in vision, then just aim forwards
+            aimRotation = Quaternion.LookRotation(transform.forward).eulerAngles;
+        }
+
         aimRotation = ApplySpread(aimRotation, minSpread, maxSpread);
         
         // Aim shot at target position, activate
@@ -174,5 +194,13 @@ public class SimpleShoot : AttackTarget
         rot.y += yMod;
 
         return rot;
+    }
+
+    private bool InVision(Transform target)
+    {
+        Vector3 targetPos = new Vector3(target.position.x, transform.position.y, target.position.z);
+        Vector3 temp = (targetPos - transform.position).normalized;
+        float angle = Vector3.SignedAngle(temp, transform.forward, Vector3.up);
+        return (Mathf.Abs(angle) <= visionRange);
     }
 }

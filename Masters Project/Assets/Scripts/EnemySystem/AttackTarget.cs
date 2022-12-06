@@ -42,6 +42,12 @@ public abstract class AttackTarget : MonoBehaviour
     [Tooltip("How long the enemy stays in the finished attack state")]
     [SerializeField] protected float finishDuration;
 
+
+    [Tooltip("Rotation speed of the enemy")]
+    [SerializeField][Range(0f, 5f)] private float rotationSpeed;
+
+    [SerializeField] protected Transform target;
+
     #region Timer Variables
 
     protected ScaledTimer attackTracker;
@@ -57,18 +63,63 @@ public abstract class AttackTarget : MonoBehaviour
 
         indicatorTracker = new ScaledTimer(indicatorDuration);
         finishTracker = new ScaledTimer(finishDuration);
+
+    }
+
+    private void Start()
+    {
+        Attack(target);
     }
 
     private void Update()
     {
-        if(attackTracker.TimerDone() && !attacking)
-        {
-            currentAttackState= AttackState.Ready;
-        }
+        StateUpdateFunctionality();
+    }
 
-        // if not alrady attacking and the timer is done, it can attack
-        if(attackTracker.TimerDone() && !attacking)
+    private void StateUpdateFunctionality()
+    {
+        switch(currentAttackState)
         {
+            case AttackState.Ready:
+                {
+                    break;
+                }
+            case AttackState.Indicator:
+                {
+                    RotateToTarget();
+                    break;
+                }
+            case AttackState.Damaging:
+                {
+                    RotateToTarget();
+                    break;
+                }
+            case AttackState.Finishing:
+                {
+                    break;
+                }
+            case AttackState.Cooldown:
+                {
+                    if (attackTracker.TimerDone())
+                    {
+                        currentAttackState = AttackState.Ready;
+                        attackReady = true;
+                    }
+
+                    break;
+                }
+        }
+    }
+
+    /// <summary>
+    /// Begin the attack routine
+    /// </summary>
+    /// <param name="target"></param>
+    public void Attack(Transform t)
+    {
+        if(currentAttackState == AttackState.Ready)
+        {
+            target = t;
             StartCoroutine(AttackAction());
         }
     }
@@ -80,6 +131,7 @@ public abstract class AttackTarget : MonoBehaviour
     protected IEnumerator AttackAction()
     {
         attacking = true;
+        attackReady = false;
 
         currentAttackState = AttackState.Indicator;
         yield return StartCoroutine(AttackIndicator());
@@ -189,4 +241,15 @@ public abstract class AttackTarget : MonoBehaviour
     }
 
     #endregion
+
+    protected void RotateToTarget()
+    {
+        Vector3 direction;
+        direction = (target.position - transform.position);
+
+        // rotate towards them, clamped
+        Quaternion rot = Quaternion.LookRotation(direction);
+        float nextYAng = Mathf.Clamp(Mathf.DeltaAngle(gameObject.transform.rotation.eulerAngles.y, rot.eulerAngles.y), -rotationSpeed, rotationSpeed) * TimeManager.WorldTimeScale;
+        transform.rotation = Quaternion.Euler(0, gameObject.transform.rotation.eulerAngles.y + nextYAng, 0);
+    }
 }
