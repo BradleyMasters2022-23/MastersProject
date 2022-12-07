@@ -27,15 +27,10 @@ public class CloseDamageUp : IUpgrade {
         if ((int)projectile.GetDistanceCovered() <= maxPercentIncrease && projectile.GetShotByPlayer())
         {
 
-            Debug.Log("Max percent increase: " + maxPercentIncrease);
             float damageIncrease = maxPercentIncrease - (projectile.GetDistanceCovered());
-            Debug.Log("Current percent increase: " + damageIncrease);
             damageIncrease /= 100;
-            Debug.Log("Current increase in decimal: " + damageIncrease);
             damageIncrease *= (float)baseDamage;
-            Debug.Log("Damage increase: " + damageIncrease);
             damageIncrease += (float)baseDamage;
-            Debug.Log("Total damage: " + damageIncrease);
             projectile.ChangeDamageTo((int)damageIncrease);
             damageIncrease = 0;
         }

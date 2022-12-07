@@ -457,6 +457,24 @@ public class TimeManager : MonoBehaviour
         return slowDuration.Current * FixedUpdateCalls;
     }
 
+    public void SetRegenTime(float regenMultiplier)
+    {
+        float temp = replenishTime.Current * regenMultiplier;
+        replenishTime.ChangeVal(Mathf.Ceil(temp));
+    }
+
+    public void SetGaugeMax(float gaugeMultiplier)
+    {
+        float temp = slowDuration.Current * gaugeMultiplier;
+        slowDuration.ChangeVal(Mathf.Ceil(temp));
+    }
+
+    public void SetRegenDelay(float delayMultiplier)
+    {
+        float temp = replenishDelay.Current * delayMultiplier;
+        replenishDelay.ChangeVal(Mathf.Ceil(temp));
+    }
+
     /// <summary>
     /// Toggle inputs if game pauses
     /// </summary>

@@ -253,7 +253,8 @@ public class PlayerHealthSection : MonoBehaviour
         return currHealth == maxHealth;
     }
 
-    public void MaxHealthUp(int increment) {
-        maxHealth += increment;
+    public void SetMaxHealth(int _maxHealth) {
+        maxHealth = _maxHealth;
+        currHealth = _maxHealth;
     }
 }
