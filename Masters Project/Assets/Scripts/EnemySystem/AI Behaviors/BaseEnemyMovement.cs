@@ -1,4 +1,11 @@
-using Cinemachine.Utility;
+/* 
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - December 6, 2022
+ * Last Edited - December 6, 2022 by Ben Schuster
+ * Description - Base enemy movement behavior script that contains common functions needed
+ * ================================================================================================
+ */
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
@@ -293,13 +300,13 @@ public abstract class BaseEnemyMovement : MonoBehaviour
 
     protected bool CheckForCollision(Vector3 dir)
     {
-        Debug.DrawRay(transform.position, dir, Color.red, 1f);
+        // Debug.DrawRay(transform.position, dir, Color.red, 1f);
 
         RaycastHit hit;
 
         if(Physics.Raycast(transform.position+Vector3.up, dir, out hit, dir.magnitude, collisionLayers))
         {
-            Debug.Log($"Hit detected at {hit.collider.name}!");
+            // Debug.Log($"Hit detected at {hit.collider.name}!");
             return true;
         }
         else

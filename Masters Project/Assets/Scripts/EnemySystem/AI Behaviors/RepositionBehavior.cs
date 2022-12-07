@@ -1,3 +1,11 @@
+/* 
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - December 6, 2022
+ * Last Edited - December 6, 2022 by Ben Schuster
+ * Description - Concrete behavior for choosing and moving into a random direction to strafe
+ * ================================================================================================
+ */
 using Masters.AI;
 using System.Collections;
 using System.Collections.Generic;

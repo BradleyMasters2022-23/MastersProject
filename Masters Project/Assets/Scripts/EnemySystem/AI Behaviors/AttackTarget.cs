@@ -1,3 +1,11 @@
+/* 
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - December 5, 2022
+ * Last Edited - December 5, 2022 by Ben Schuster
+ * Description - Base enemy attack behavior that contains the main routine for attacking
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
@@ -16,7 +24,7 @@ public abstract class AttackTarget : MonoBehaviour
 {
     [Header("=== Core Attack Data ===")]
 
-    [HideInInspector] public AttackState currentAttackState;
+    public AttackState currentAttackState;
 
     //[Tooltip("Whether or not the animator is responsible for this attack system")]
     //[SerializeField] protected bool animationControlled;
@@ -32,16 +40,23 @@ public abstract class AttackTarget : MonoBehaviour
     [Tooltip("Length of time between attack actions")]
     [SerializeField] protected float attackCoolown;
 
+    [Space(5)]
     [Tooltip("How long indicator lasts before attacking")]
     [SerializeField] protected float indicatorDuration;
+    [Tooltip("Whether the enemy can rotate during the indicator stage")]
+    [SerializeField] protected bool rotateDuringIndication;
+
+    [Space(5)]
     [Tooltip("How long the enemy stays in the finished attack state")]
     [SerializeField] protected float finishDuration;
+    [Tooltip("Whether the enemy can rotate during the finish stage")]
+    [SerializeField] protected bool rotateDuringFinish;
 
-
+    [Space(5)]
     [Tooltip("Rotation speed of the enemy")]
-    [SerializeField][Range(0f, 5f)] private float rotationSpeed;
+    [SerializeField][Range(0f, 5f)] protected float rotationSpeed;
 
-    protected Transform target;
+    [SerializeField] protected Transform target;
 
     #region Timer Variables
 
@@ -60,7 +75,7 @@ public abstract class AttackTarget : MonoBehaviour
         finishTracker = new ScaledTimer(finishDuration);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         StateUpdateFunctionality();
     }
@@ -75,16 +90,19 @@ public abstract class AttackTarget : MonoBehaviour
                 }
             case AttackState.Indicator:
                 {
-                    RotateToTarget();
+                    IndicatorUpdateFunctionality();
                     break;
                 }
             case AttackState.Damaging:
                 {
-                    RotateToTarget();
+                    DamageUpdateFunctionality();
                     break;
                 }
             case AttackState.Finishing:
                 {
+                    if (rotateDuringFinish)
+                        RotateToTarget();
+
                     break;
                 }
             case AttackState.Cooldown:
@@ -177,6 +195,16 @@ public abstract class AttackTarget : MonoBehaviour
         // by default, do nothing 
         return;
     }
+    /// <summary>
+    /// perform in update during indicator phase. Always look at target by default
+    /// </summary>
+    protected virtual void IndicatorUpdateFunctionality()
+    {
+        // by default, track normally. Can edit later
+        if (rotateDuringIndication)
+            RotateToTarget();
+        return;
+    }
 
     #endregion
 
@@ -185,6 +213,13 @@ public abstract class AttackTarget : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     protected abstract IEnumerator DamageAction();
+    /// <summary>
+    /// Perform in update during damage phase. Do nothing by default
+    /// </summary>
+    protected virtual void DamageUpdateFunctionality()
+    {
+        return;
+    }
 
     #region Attack Finished Stuff
 
@@ -229,14 +264,33 @@ public abstract class AttackTarget : MonoBehaviour
 
     #endregion
 
-    protected void RotateToTarget()
+    /// <summary>
+    /// Rotate to the target you're attacking. can be overriden for special rotation needs such as turrets
+    /// </summary>
+    protected virtual void RotateToTarget()
+    {
+        RotateToTarget(target.position);
+    }
+
+    /// <summary>
+    /// Prepare to look at the target, but add a modifier
+    /// </summary>
+    /// <param name="modifier">Overrider modifier</param>
+    protected virtual void RotateToTarget(Vector3 targetPos)
     {
         Vector3 direction;
-        direction = (target.position - transform.position);
+        direction = ((targetPos) - transform.position);
 
         // rotate towards them, clamped
         Quaternion rot = Quaternion.LookRotation(direction);
-        float nextYAng = Mathf.Clamp(Mathf.DeltaAngle(gameObject.transform.rotation.eulerAngles.y, rot.eulerAngles.y), -rotationSpeed, rotationSpeed) * TimeManager.WorldTimeScale;
-        transform.rotation = Quaternion.Euler(0, gameObject.transform.rotation.eulerAngles.y + nextYAng, 0);
+        float nextYAng = Mathf.Clamp(Mathf.DeltaAngle(gameObject.transform.rotation.eulerAngles.y, rot.eulerAngles.y),
+            -rotationSpeed, rotationSpeed) * TimeManager.WorldTimeScale;
+        float nextXAng = Mathf.Clamp(Mathf.DeltaAngle(gameObject.transform.rotation.eulerAngles.x, rot.eulerAngles.x),
+            -rotationSpeed, rotationSpeed) * TimeManager.WorldTimeScale;
+
+        transform.rotation = Quaternion.Euler(
+            gameObject.transform.rotation.eulerAngles.x + nextXAng,
+            gameObject.transform.rotation.eulerAngles.y + nextYAng,
+            0);
     }
 }

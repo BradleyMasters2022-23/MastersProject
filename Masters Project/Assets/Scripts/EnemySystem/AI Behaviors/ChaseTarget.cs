@@ -1,3 +1,11 @@
+/* 
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - December 2, 2022
+ * Last Edited - December 2, 2022 by Ben Schuster
+ * Description - Concrete behavior that will try to chase a given target
+ * ================================================================================================
+ */
 using Sirenix.OdinInspector.Editor;
 using System.Collections;
 using System.Collections.Generic;
