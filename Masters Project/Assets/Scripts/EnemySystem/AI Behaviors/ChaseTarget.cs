@@ -1,72 +1,27 @@
+using Sirenix.OdinInspector.Editor;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.ProBuilder;
+using Masters.AI;
 
-public class ChaseTarget : MonoBehaviour
+public class ChaseTarget : BaseEnemyMovement
 {
-    private enum MoveState
+    [SerializeField] private bool alwaysFaceTarget;
+    [SerializeField] private LayerMask mask;
+
+    public override void StartBehavior(Transform t)
     {
-        Moving,
-        Offlink
+        target = t;
     }
 
-    [SerializeField] private MoveState state;
-
-    [SerializeField] private Transform target;
-
-    Vector3 lastTargetPos;
-
-    private NavMeshAgent agent;
-
-    [SerializeField] private AnimationCurve jumpCurve;
-    [SerializeField] private float jumpDuration;
-
-    [SerializeField] private AnimationCurve fallCurve;
-    [SerializeField] private float fallDuration;
-
-    private float defSpeed;
-    private float defRot;
-
-    [Tooltip("Whether or not the enemy should turn to their landing position before jumping")]
-    [SerializeField] private bool turnIntoJump;
-
-    [SerializeField] private float rotationSpeed;
-    private void Awake()
-    {
-        agent = GetComponent<NavMeshAgent>();
-        defSpeed = agent.speed;
-        defRot = agent.angularSpeed;
-    }
-
-    private void Update()
-    {
-        agent.speed = TimeManager.WorldTimeScale * defSpeed;
-        agent.angularSpeed = TimeManager.WorldTimeScale * defRot;
-
-
-        StateUpdate();
-    }
-
-
-    private void StateUpdate()
-    {
-        switch(state)
-        {
-            case MoveState.Moving:
-                {
-                    Chase();
-                    break;
-                }
-                case MoveState.Offlink:
-                {
-                    break;
-                }
-        }
-    }
-
-    private void Chase()
+    /// <summary>
+    /// Behavior for chasing the player.
+    /// This is called every frame
+    /// </summary>
+    protected override void BehaviorFunction()
     {
         if (target == null)
         {
@@ -74,17 +29,99 @@ public class ChaseTarget : MonoBehaviour
             return;
         }
 
-        if (target.position != lastTargetPos)
+        // go to the target position
+        GoToTarget(target);
+
+        // Check if the agent is on an offlink
+        CheckOfflinkConnection();
+
+
+        // rotate to the current target
+        if(alwaysFaceTarget)
         {
-            lastTargetPos = target.position;
-            agent.SetDestination(target.position);
+            RotateToInUpdate(target);
+        }
+        // Look in direction if no line of sight on player
+        else
+        {
+            // check if line of sight, otherwise look forwards 
+            if(transform.HasLineOfSight(target, mask))
+            {
+                transform.RotateToInUpdate(target, rotationSpeed);
+            }
+            else
+            {
+                transform.RotateToInUpdate(agent.velocity.normalized, rotationSpeed);
+            }
         }
 
-        if (agent.isOnOffMeshLink && state != MoveState.Offlink)
-        {
-            JumpToLedge();
-        }
     }
+
+    #region Old Stuff [MOVED TO BASEENEMYMOVEMENT]
+
+    //private enum MoveState
+    //{
+    //    Moving,
+    //    Offlink
+    //}
+
+    //[SerializeField] private MoveState state;
+
+    //[SerializeField] private Transform target;
+
+    //Vector3 lastTargetPos;
+
+    //private NavMeshAgent agent;
+
+    //[SerializeField] private AnimationCurve jumpCurve;
+    //[SerializeField] private float jumpDuration;
+
+    //[SerializeField] private AnimationCurve fallCurve;
+    //[SerializeField] private float fallDuration;
+
+    //private float defSpeed;
+    //private float defRot;
+
+    //[Tooltip("Whether or not the enemy should turn to their landing position before jumping")]
+    //[SerializeField] private bool turnIntoJump;
+
+    //[SerializeField] private float rotationSpeed;
+    //private void Awake()
+    //{
+    //    agent = GetComponent<NavMeshAgent>();
+    //    defSpeed = agent.speed;
+    //    defRot = agent.angularSpeed;
+    //}
+
+    //private void Update()
+    //{
+    //    agent.speed = TimeManager.WorldTimeScale * defSpeed;
+    //    agent.angularSpeed = TimeManager.WorldTimeScale * defRot;
+
+
+    //    StateUpdate();
+    //}
+
+
+    //private void StateUpdate()
+    //{
+    //    switch(state)
+    //    {
+    //        case MoveState.Moving:
+    //            {
+    //                Chase();
+    //                break;
+    //            }
+    //            case MoveState.Offlink:
+    //            {
+    //                break;
+    //            }
+    //    }
+    //}
+
+
+
+    /*
 
     private void JumpToLedge()
     {
@@ -182,4 +219,8 @@ public class ChaseTarget : MonoBehaviour
         transform.rotation = rot;
         yield return null;
     }
+
+    */
+
+    #endregion
 }

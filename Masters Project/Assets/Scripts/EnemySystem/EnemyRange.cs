@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem.XR.Haptics;
-
+using Masters.AI;
 
 
 public class EnemyRange : EnemyBase

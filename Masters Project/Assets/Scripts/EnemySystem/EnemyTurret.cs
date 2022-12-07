@@ -36,6 +36,8 @@ public class EnemyTurret : EnemyBase
     [Tooltip("What layers affects this enemy's vision")]
     [SerializeField] private LayerMask visionLayer;
 
+    private AttackTarget attackSystem;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,6 +47,7 @@ public class EnemyTurret : EnemyBase
         neutralLook = turretPoint.transform.forward * 5;
 
         returnNeutralDelay = new ScaledTimer(4f);
+        attackSystem.GetComponent<AttackTarget>();
     }
 
     private void FixedUpdate()
@@ -64,20 +67,25 @@ public class EnemyTurret : EnemyBase
             case EnemyState.Attacking:
                 {
 
-                    // Shoot every few seconds if in range
-                    if (time >= shootTime)
+                    if(attackSystem.currentAttackState == AttackState.Ready)
                     {
-                        foreach (Transform t in shootPoints)
-                        {
-                            Shoot(t);
-                        }
+                        attackSystem.Attack(player.transform);
+                    }
 
-                        time = 0;
-                    }
-                    else if (time < shootTime)
-                    {
-                        time += Time.deltaTime * currTime;
-                    }
+                    // Shoot every few seconds if in range
+                    //if (time >= shootTime)
+                    //{
+                    //    foreach (Transform t in shootPoints)
+                    //    {
+                    //        Shoot(t);
+                    //    }
+
+                    //    time = 0;
+                    //}
+                    //else if (time < shootTime)
+                    //{
+                    //    time += Time.deltaTime * currTime;
+                    //}
 
                     break;
                 }
@@ -85,7 +93,10 @@ public class EnemyTurret : EnemyBase
 
         // Get direction of target, rotate towards them
 
-        Vector3 direction = (target - shootPoints[0].position);
+
+
+
+        Vector3 direction = (target - shootPoints[0].position).normalized;
         Quaternion rot = Quaternion.LookRotation(direction);
 
         
