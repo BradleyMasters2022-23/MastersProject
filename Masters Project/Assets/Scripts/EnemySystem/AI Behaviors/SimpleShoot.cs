@@ -22,7 +22,7 @@ public class SimpleShoot : AttackTarget
     [Header("=== Ranged Attack Data ===")]
 
     [Tooltip("The projectile prefab to use")]
-    [SerializeField] private GameObject projectile;
+    public GameObject projectile;
     [Tooltip("All barrels for this enemy to shoot")]
     [SerializeField] private Transform[] shootPoints;
     [Tooltip("Number of shots to do. Each shot is per-barrel" +

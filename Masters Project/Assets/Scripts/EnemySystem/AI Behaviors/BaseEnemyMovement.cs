@@ -20,17 +20,18 @@ using UnityEngine.AI;
 
 public abstract class BaseEnemyMovement : MonoBehaviour
 {
-    protected enum MoveState
+    public enum MoveState
     {
+        Standby,
         Moving,
         Offlink
     }
 
     // [SerializeField] private MovementStates[] characterMovementStates;
 
-    [SerializeField] protected MoveState state;
+    [SerializeField] public MoveState state;
 
-    [SerializeField] protected Transform target;
+    protected Transform target;
 
     /// <summary>
     /// weee im in the base script unity
@@ -87,6 +88,14 @@ public abstract class BaseEnemyMovement : MonoBehaviour
 
     protected virtual void Update()
     {
+        // dont do anything while on standby
+        if (state == MoveState.Standby)
+        {
+            {
+                return;
+            }
+        }
+
         agent.speed = TimeManager.WorldTimeScale * manager.currentMoveStates.moveSpeed;
         agent.angularSpeed = TimeManager.WorldTimeScale * manager.currentMoveStates.rotationSpeed;
         rotationSpeed = manager.currentMoveStates.rotationSpeed;
@@ -153,7 +162,7 @@ public abstract class BaseEnemyMovement : MonoBehaviour
     /// </summary>
     protected virtual void CheckOfflinkConnection()
     {
-        if (agent.isOnOffMeshLink && state != MoveState.Offlink)
+        if (agent.isOnOffMeshLink && state == MoveState.Moving)
         {
             JumpToLedge();
         }
@@ -276,7 +285,7 @@ public abstract class BaseEnemyMovement : MonoBehaviour
     protected void RotateToInUpdate(Vector3 direction)
     {
         // temp, adjust this to be better later
-        if (state == MoveState.Offlink || direction == Vector3.zero)
+        if (state != MoveState.Moving || direction == Vector3.zero)
             return;
 
         agent.updateRotation = false;

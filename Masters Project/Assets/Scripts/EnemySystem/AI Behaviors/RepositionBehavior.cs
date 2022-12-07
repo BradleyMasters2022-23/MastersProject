@@ -29,11 +29,14 @@ public class RepositionBehavior : BaseEnemyMovement
 
     [SerializeField] private bool lookAtTarget;
 
-    [SerializeField] private float maxDist;
+    //[SerializeField] private float maxDist;
 
     private float stopDist;
 
     private bool reachedDest;
+
+    [SerializeField] private Vector2 repositionCooldown;
+    private ScaledTimer cooldownTracker;
 
     /*
     public override void StartBehavior(Transform t)
@@ -45,6 +48,13 @@ public class RepositionBehavior : BaseEnemyMovement
     }
     */
 
+    protected override void Awake()
+    {
+        base.Awake();
+        cooldownTracker = new ScaledTimer(Random.Range(repositionCooldown.x, repositionCooldown.y));
+        cooldownTracker.ResetTimer();
+    }
+
     public void BeginStrafe()
     {
         dest = DeterminLocation();
@@ -52,6 +62,11 @@ public class RepositionBehavior : BaseEnemyMovement
         agent.stoppingDistance = 0;
 
         reachedDest = false;
+    }
+
+    public bool CanStrafe()
+    {
+        return cooldownTracker.TimerDone();
     }
 
     private Vector3 DeterminLocation()
@@ -118,6 +133,9 @@ public class RepositionBehavior : BaseEnemyMovement
         {
             agent.ResetPath();
             agent.stoppingDistance = stopDist;
+            
+            // randomly set new cooldown
+            cooldownTracker.ResetTimer(Random.Range(repositionCooldown.x, repositionCooldown.y));
             reachedDest = true;
         }
 

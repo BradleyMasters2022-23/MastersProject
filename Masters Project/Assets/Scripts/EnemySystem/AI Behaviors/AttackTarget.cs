@@ -75,11 +75,13 @@ public abstract class AttackTarget : MonoBehaviour
 
     protected virtual void Awake()
     {
-        Debug.Log("attack target awake called");
         attackTracker = new ScaledTimer(attackCoolown);
-
         indicatorTracker = new ScaledTimer(indicatorDuration);
         finishTracker = new ScaledTimer(finishDuration);
+
+        // start attack on cooldown
+        attackTracker.ResetTimer();
+        currentAttackState = AttackState.Cooldown;
     }
 
     private void FixedUpdate()

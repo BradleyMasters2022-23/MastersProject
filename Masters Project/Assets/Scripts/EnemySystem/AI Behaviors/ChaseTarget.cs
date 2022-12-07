@@ -77,6 +77,12 @@ public class ChaseTarget : BaseEnemyMovement
         }
     }
 
+    public void StopChase()
+    {
+        agent.ResetPath();
+        reachedTarget = true;
+    }
+
     public bool ReachedTargetDistance()
     {
         // dont let behavior end on offlink
