@@ -6,7 +6,7 @@ public class HPToSpeedTime : IUpgrade {
     [SerializeField] private int healthPerSection;
     [SerializeField] private float timeRegenMultiplier;
     [SerializeField] private float regenDelayMultiplier;
-    [SerializeField] private float timeGaugeMultiplier;
+    //[SerializeField] private float timeGaugeMultiplier;
     [SerializeField] private float moveSpeedMultiplier;
     
     private PlayerHealth hp;
@@ -21,11 +21,25 @@ public class HPToSpeedTime : IUpgrade {
             section.SetMaxHealth(healthPerSection);
         }
 
+        hp.ResetSectionIndex();
         player.SetMoveSpeed(moveSpeedMultiplier);
         time.SetRegenTime(timeRegenMultiplier);
-        time.SetGaugeMax(timeGaugeMultiplier);
+        //time.SetGaugeMax(timeGaugeMultiplier);
         time.SetRegenDelay(regenDelayMultiplier);
+        //time.ChipRefillGauge();
         
 
+    }
+
+    private void Update()
+    {
+        foreach(PlayerHealthSection section in hp.GetSections())
+        {
+            if(section.GetState() == PlayerHealthSection.HealthSectionState.EMPTIED)
+            {
+                section.ChipChangeState(PlayerHealthSection.HealthSectionState.IDLE);
+                hp.ResetSectionIndex();
+            }
+        }
     }
 }

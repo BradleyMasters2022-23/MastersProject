@@ -272,6 +272,11 @@ public class PlayerHealth : Damagable
         return numOfSections.Current;
     }
 
+    public void ResetSectionIndex()
+    {
+        healthSectionIndex = healthSections.Length - 1;
+    }
+
     private void OnDisable()
     {
         GameManager.instance.lastPlayerHealth = currHealth;

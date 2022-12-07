@@ -418,6 +418,10 @@ public class TimeManager : MonoBehaviour
             currSlowGauge += replenishAmount;
         }
     }
+    public void ChipRefillGauge()
+    {
+        RefillGauge();
+    }
 
     /// <summary>
     /// Add more energy to the time gauge
@@ -473,6 +477,7 @@ public class TimeManager : MonoBehaviour
     {
         float temp = replenishDelay.Current * delayMultiplier;
         replenishDelay.ChangeVal(Mathf.Ceil(temp));
+        replenishDelayTimer.ResetTimer(replenishDelay.Current);
     }
 
     /// <summary>

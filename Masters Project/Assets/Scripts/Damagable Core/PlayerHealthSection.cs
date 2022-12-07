@@ -213,6 +213,16 @@ public class PlayerHealthSection : MonoBehaviour
         currentState = _newState;
     }
 
+    public void ChipChangeState(HealthSectionState _newState)
+    {
+        ChangeState(_newState);
+    }
+
+    public HealthSectionState GetState()
+    {
+        return currentState;
+    }
+
     #endregion
 
     /// <summary>
