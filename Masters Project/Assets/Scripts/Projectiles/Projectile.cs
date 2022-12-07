@@ -155,7 +155,11 @@ public class Projectile : RangeAttack
     public void ChangeDamageTo(int newDamage)
     {
         damage = newDamage;
-        Debug.Log("Damage is: " + damage);
+    }
+
+    public bool GetShotByPlayer()
+    {
+        return shotByPlayer;
     }
 
     protected override void Awake()
