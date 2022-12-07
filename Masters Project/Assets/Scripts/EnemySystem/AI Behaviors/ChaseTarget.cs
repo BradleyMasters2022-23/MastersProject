@@ -20,10 +20,21 @@ public class ChaseTarget : BaseEnemyMovement
     [SerializeField] private bool alwaysFaceTarget;
     [SerializeField] private LayerMask mask;
 
-    public override void StartBehavior(Transform t)
+    private bool reachedTarget;
+    private float targetDistance;
+
+    //public override void StartBehavior(Transform t)
+    //{
+    //    target = t;
+    //}
+
+    public void SetChase(Transform t, float dist)
     {
         target = t;
+        targetDistance = dist;
+        reachedTarget = false;
     }
+
 
     /// <summary>
     /// Behavior for chasing the player.
@@ -31,7 +42,7 @@ public class ChaseTarget : BaseEnemyMovement
     /// </summary>
     protected override void BehaviorFunction()
     {
-        if (target == null)
+        if (target == null || reachedTarget)
         {
             agent.ResetPath();
             return;
@@ -43,9 +54,11 @@ public class ChaseTarget : BaseEnemyMovement
         // Check if the agent is on an offlink
         CheckOfflinkConnection();
 
+        // check if completed
+        ReachedTargetDistance();
 
         // rotate to the current target
-        if(alwaysFaceTarget)
+        if (alwaysFaceTarget)
         {
             RotateToInUpdate(target);
         }
@@ -62,7 +75,25 @@ public class ChaseTarget : BaseEnemyMovement
                 transform.RotateToInUpdate(agent.velocity.normalized, rotationSpeed);
             }
         }
+    }
 
+    public bool ReachedTargetDistance()
+    {
+        // dont let behavior end on offlink
+        if (state == MoveState.Offlink)
+            return false;
+
+        float dist = Vector3.Distance(transform.position, target.position);
+
+        if((dist <= targetDistance) || reachedTarget)
+        {
+            reachedTarget = true;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     #region Old Stuff [MOVED TO BASEENEMYMOVEMENT]

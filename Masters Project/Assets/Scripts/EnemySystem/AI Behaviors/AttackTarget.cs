@@ -6,6 +6,7 @@
  * Description - Base enemy attack behavior that contains the main routine for attacking
  * ================================================================================================
  */
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
@@ -56,7 +57,13 @@ public abstract class AttackTarget : MonoBehaviour
     [Tooltip("Rotation speed of the enemy")]
     [SerializeField][Range(0f, 5f)] protected float rotationSpeed;
 
+    [Header("=== Testing and Debug ===")]
+
+    [Tooltip("Whether the enemy will automatically loop its attacks. Use this to test new attacks without the manager.")]
+    [SerializeField] protected bool autoLoopAttack;
+    [Tooltip("The target of the attack."), HideIf("@this.autoLoopAttack == false")]
     [SerializeField] protected Transform target;
+    
 
     #region Timer Variables
 
@@ -78,6 +85,12 @@ public abstract class AttackTarget : MonoBehaviour
     private void FixedUpdate()
     {
         StateUpdateFunctionality();
+
+        // this is for testing
+        if(autoLoopAttack && currentAttackState == AttackState.Ready)
+        {
+            Attack(target);
+        }
     }
 
     private void StateUpdateFunctionality()

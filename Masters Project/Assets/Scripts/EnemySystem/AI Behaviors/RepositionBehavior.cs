@@ -33,19 +33,9 @@ public class RepositionBehavior : BaseEnemyMovement
 
     private float stopDist;
 
-    private void Start()
-    {
-        agent.updateRotation = false;
-        InvokeRepeating("Test", 3f, 2.5f);
+    private bool reachedDest;
 
-        
-    }
-
-    private void Test()
-    {
-        StartBehavior(target);
-    }
-
+    /*
     public override void StartBehavior(Transform t)
     {
         dest = DeterminLocation();
@@ -53,10 +43,20 @@ public class RepositionBehavior : BaseEnemyMovement
         stopDist = agent.stoppingDistance;
         agent.stoppingDistance = 0;
     }
+    */
+
+    public void BeginStrafe()
+    {
+        dest = DeterminLocation();
+        stopDist = agent.stoppingDistance;
+        agent.stoppingDistance = 0;
+
+        reachedDest = false;
+    }
 
     private Vector3 DeterminLocation()
     {
-        NavMeshHit hit = default;
+        NavMeshHit hit;
         Vector3 temp;
 
         // Try to get a new position thats still on navmesh
@@ -114,10 +114,11 @@ public class RepositionBehavior : BaseEnemyMovement
             return;
         }
 
-        if (agent.remainingDistance <= 1)
+        if (agent.remainingDistance <= 0.1f)
         {
             agent.ResetPath();
             agent.stoppingDistance = stopDist;
+            reachedDest = true;
         }
 
         // go to the target position
@@ -149,4 +150,8 @@ public class RepositionBehavior : BaseEnemyMovement
         }
     }
 
+    public bool StrafeFinished()
+    {
+        return reachedDest;
+    }
 }

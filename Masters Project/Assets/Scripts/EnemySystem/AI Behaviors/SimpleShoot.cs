@@ -90,12 +90,6 @@ public class SimpleShoot : AttackTarget
 
     private float averageLead;
 
-    private void Update()
-    {
-        if (currentAttackState == AttackState.Ready)
-            Attack(target);
-    }
-
     /// <summary>
     /// Initialize each thing
     /// </summary>

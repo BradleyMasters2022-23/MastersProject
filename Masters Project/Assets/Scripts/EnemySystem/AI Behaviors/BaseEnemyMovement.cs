@@ -16,14 +16,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-[System.Serializable]
-public struct MovementStates
-{
-    public string name;
-    public float moveSpeed;
-    public float rotationSpeed;
-    public bool useOfflinks;
-}
+
 
 public abstract class BaseEnemyMovement : MonoBehaviour
 {
@@ -33,7 +26,7 @@ public abstract class BaseEnemyMovement : MonoBehaviour
         Offlink
     }
 
-    [SerializeField] private MovementStates[] characterMovementStates;
+    // [SerializeField] private MovementStates[] characterMovementStates;
 
     [SerializeField] protected MoveState state;
 
@@ -47,13 +40,13 @@ public abstract class BaseEnemyMovement : MonoBehaviour
     protected NavMeshAgent agent;
 
     [SerializeField] protected AnimationCurve jumpCurve;
-    [SerializeField] protected float jumpDuration;
+    // [SerializeField] protected float jumpDuration;
 
     [SerializeField] protected AnimationCurve fallCurve;
-    [SerializeField] protected float fallDuration;
+    // [SerializeField] protected float fallDuration;
 
-    protected float defSpeed;
-    protected float defRot;
+    //protected float defSpeed;
+    //protected float defRot;
 
     [Tooltip("Whether or not the enemy should face the jump direction before jumping")]
     [SerializeField] private bool faceJump;
@@ -61,33 +54,42 @@ public abstract class BaseEnemyMovement : MonoBehaviour
     [HideIf("@this.faceJump == false")]
     [SerializeField] private bool rotateIntoJump;
 
-    [SerializeField] protected float rotationSpeed;
+    protected float rotationSpeed;
 
     [SerializeField] protected LayerMask collisionLayers;
+
+    protected EnemyManager manager;
 
     protected virtual void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        manager = GetComponent<EnemyManager>();
 
-        if(characterMovementStates.Length > 0)
+        if(manager != null)
         {
-            Debug.Log($"Loading move profile of {characterMovementStates[0].name}");
-            agent.speed = characterMovementStates[0].moveSpeed;
-            rotationSpeed = characterMovementStates[0].rotationSpeed;
-            agent.angularSpeed = rotationSpeed;
+            //defSpeed = manager.currentMoveStates.moveSpeed;
+            //rotationSpeed = manager.currentMoveStates.rotationSpeed;
         }
+
+        //if(characterMovementStates.Length > 0)
+        //{
+        //    Debug.Log($"Loading move profile of {characterMovementStates[0].name}");
+        //    agent.speed = characterMovementStates[0].moveSpeed;
+        //    rotationSpeed = characterMovementStates[0].rotationSpeed;
+        //    agent.angularSpeed = rotationSpeed;
+        //}
         
 
-        defSpeed = agent.speed;
-        defRot = agent.angularSpeed;
+        // defSpeed = agent.speed;
+        // defRot = agent.angularSpeed;
         agent.updateRotation = false;
     }
 
     protected virtual void Update()
     {
-        agent.speed = TimeManager.WorldTimeScale * defSpeed;
-        agent.angularSpeed = TimeManager.WorldTimeScale * defRot;
-
+        agent.speed = TimeManager.WorldTimeScale * manager.currentMoveStates.moveSpeed;
+        agent.angularSpeed = TimeManager.WorldTimeScale * manager.currentMoveStates.rotationSpeed;
+        rotationSpeed = manager.currentMoveStates.rotationSpeed;
 
         StateUpdate();
     }
@@ -109,7 +111,7 @@ public abstract class BaseEnemyMovement : MonoBehaviour
         }
     }
 
-    public abstract void StartBehavior(Transform t);
+    //public abstract void StartBehavior(Transform t);
 
     /// <summary>
     /// Perform the unique movement function of this behavior
