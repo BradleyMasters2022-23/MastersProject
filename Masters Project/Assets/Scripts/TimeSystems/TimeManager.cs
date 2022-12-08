@@ -203,8 +203,6 @@ public class TimeManager : MonoBehaviour
     /// <param name="c">callback context [ignorable]</param>
     private void ToggleSlow(InputAction.CallbackContext c)
     {
-        Debug.Log(c.action);
-
         // If started input, then can only slow
         if(c.started)
         {
