@@ -45,6 +45,14 @@ public class GameOverMenu : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Request the ability to quit the game
+    /// </summary>
+    public void RequestQuitGame()
+    {
+        FindObjectOfType<ConfirmationBox>(true).RequestConfirmation(QuitGame);
+    }
+
     public void QuitGame()
     {
         Application.Quit();
@@ -54,6 +62,14 @@ public class GameOverMenu : MonoBehaviour
     public void LoadToHubOldSystem()
     {
         RoomGenerator.instance.ReturnToHub();
+    }
+
+    /// <summary>
+    /// Request the ability to return to hub
+    /// </summary>
+    public void RequestHUBReturn()
+    {
+        FindObjectOfType<ConfirmationBox>(true).RequestConfirmation(LoadToHubNewSystem);
     }
 
     public void LoadToHubNewSystem()
