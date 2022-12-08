@@ -38,7 +38,8 @@ public class LookAtTarget : BaseEnemyMovement
     {
         // give quick invulnerability to stun when starting
         target = t;
-        stunnedCooldown.ResetTimer();
+        if(stunnedCooldown != null)
+            stunnedCooldown.ResetTimer();
     }
 
     protected override void BehaviorFunction()

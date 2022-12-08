@@ -86,7 +86,7 @@ public class SimpleShoot : AttackTarget
     /// <summary>
     /// whether the enemy is currently stunned in indicator state
     /// </summary>
-    private bool indicatorStunned = false;
+    [SerializeField] private bool indicatorStunned = false;
 
     private float averageLead;
 

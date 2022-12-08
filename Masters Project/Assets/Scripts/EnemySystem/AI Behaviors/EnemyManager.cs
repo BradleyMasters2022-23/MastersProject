@@ -102,7 +102,7 @@ public class EnemyManager : MonoBehaviour
 
     [SerializeField] private AttackTarget mainAttack;
 
-    [SerializeField] private LayerMask visionLayer;
+    public LayerMask visionLayer;
 
     [SerializeField] protected float postAttackCD;
 
@@ -213,23 +213,25 @@ public class EnemyManager : MonoBehaviour
                 lineOfSightTracker.ResetTimer();
             }
 
-            bool chaseTrigger = chaseBehavior != null &&
-                (noLineOfSightDelay > 0 && lineOfSightTracker.TimerDone())
-                || (!stopChaseOnLineOfSight && distToPlayer >= startChastDist);
-
-
-            if (stateChangeCDTracker.TimerDone())
+            
+            if (!stateChangeCDTracker.TimerDone())
             {
                 // If nothing to do, just stare
                 if (lookBehavior.state == BaseEnemyMovement.MoveState.Standby)
                 {
-                    Debug.Log("Calling rotate behavior!");
+                    //Debug.Log("Calling rotate behavior due to cooldown!");
                     lookBehavior.state = BaseEnemyMovement.MoveState.Moving;
                     lookBehavior.SetTarget(player.transform);
                 }
+                yield return tick;
                 continue;
             }
-                
+
+
+            bool chaseTrigger = chaseBehavior != null &&
+                (noLineOfSightDelay > 0 && lineOfSightTracker.TimerDone())
+                || (!stopChaseOnLineOfSight && distToPlayer >= startChastDist)
+                || (!stopChaseOnLineOfSight && distToPlayer >= startChastDist && lineOfSightTracker.TimerDone());
 
             // if player is too far, start chasing
             if (chaseTrigger)
@@ -239,14 +241,22 @@ public class EnemyManager : MonoBehaviour
 
             }
             else if ((chaseBehavior != null && chaseBehavior.state == BaseEnemyMovement.MoveState.Standby) 
-                && (strafeBehavior.CanStrafe() || mainAttack.currentAttackState == AttackState.Ready))
+                && ((strafeBehavior != null && strafeBehavior.CanStrafe()) || (mainAttack != null && mainAttack.currentAttackState == AttackState.Ready)))
             {
 
-                if(strafeBehavior.CanStrafe() && mainAttack.currentAttackState != AttackState.Ready)
+                if(strafeBehavior == null)
+                {
+                    yield return StartCoroutine(HandleAttack());
+                }
+                else if(strafeBehavior.CanStrafe() && mainAttack.currentAttackState != AttackState.Ready)
                 {
                     yield return StartCoroutine(HandleStrafe());
                 }
                 else if(!strafeBehavior.CanStrafe() && mainAttack.currentAttackState == AttackState.Ready)
+                {
+                    yield return StartCoroutine(HandleAttack());
+                }
+                else if (mainAttack.currentAttackState == AttackState.Ready && transform.HasLineOfSight(player.transform, visionLayer))
                 {
                     yield return StartCoroutine(HandleAttack());
                 }
@@ -265,7 +275,7 @@ public class EnemyManager : MonoBehaviour
                 // If nothing else, look at target
                 if (lookBehavior.state == BaseEnemyMovement.MoveState.Standby)
                 {
-                    Debug.Log("Calling rotate behavior!");
+                    //Debug.Log("Calling rotate behavior due to nothing else!");
                     lookBehavior.state = BaseEnemyMovement.MoveState.Moving;
                     lookBehavior.SetTarget(player.transform);
                 }
@@ -283,15 +293,17 @@ public class EnemyManager : MonoBehaviour
     {
         WaitForFixedUpdate tick = new WaitForFixedUpdate();
 
-        Debug.Log("Calling chase behavior!");
+        //Debug.Log("Calling chase behavior!");
         lookBehavior.state = BaseEnemyMovement.MoveState.Standby;
         chaseBehavior.state = BaseEnemyMovement.MoveState.Moving;
 
         chaseBehavior.SetChase(player.transform, stopChaseDist);
+        
+        int c = 0;
 
         while (true)
         {
-            bool lineOfSight = transform.HasLineOfSight(player.transform, visionLayer);
+            bool lineOfSight = transform.HasLineOfSight(player.transform, visionLayer, 1f);
             bool stopTrigger = (chaseBehavior.ReachedTargetDistance()) || (stopChaseOnLineOfSight && lineOfSight);
 
             // If setting is enabled and has line of sight, stop chase
@@ -301,11 +313,18 @@ public class EnemyManager : MonoBehaviour
                 break;
             }
 
+            c++;
+            if (c >= 1000)
+            {
+                Debug.LogError($"Chase detected to get stuck!!!");
+                break;
+            }
+
             yield return null;
             yield return tick;
 
         }
-        Debug.Log("Chase behavior done!");
+        //Debug.Log("Chase behavior done!");
         stateChangeCDTracker.ResetTimer(postChaseCD);
         chaseBehavior.state = BaseEnemyMovement.MoveState.Standby;
     }
@@ -314,47 +333,76 @@ public class EnemyManager : MonoBehaviour
     {
         WaitForFixedUpdate tick = new WaitForFixedUpdate();
 
-        Debug.Log("Calling attack behavior!");
+        // Debug.Log("Calling attack behavior!");
 
         lookBehavior.state = BaseEnemyMovement.MoveState.Standby;
 
         // mainAttack.enabled = true;
         mainAttack.Attack(player.transform);
 
+        int c = 0;
+
         while (mainAttack.currentAttackState != AttackState.Cooldown)
         {
-            yield return null;
-            yield return tick;
-        }
-
-        stateChangeCDTracker.ResetTimer(postAttackCD);
-        Debug.Log("Attack finished");
-    }
-
-    private IEnumerator HandleStrafe()
-    {
-        WaitForFixedUpdate tick = new WaitForFixedUpdate();
-
-        Debug.Log("Start strafe behavior");
-
-        strafeBehavior.BeginStrafe();
-
-        // stop once strafe is finished and if strafing attack is finished. 
-        while(!strafeBehavior.StrafeFinished() && (strafingAttack is null || 
-            strafingAttack.currentAttackState == AttackState.Cooldown))
-        {
-            if(strafingAttack != null 
-                && strafingAttack.currentAttackState == AttackState.Ready)
+            c++;
+            if (c >= 1000)
             {
-                strafingAttack.Attack(player.transform);
+                Debug.LogError($"Attack detected to get stuck!!!");
+                break;
             }
 
             yield return null;
             yield return tick;
         }
 
+        stateChangeCDTracker.ResetTimer(postAttackCD);
+        // Debug.Log("Attack finished");
+    }
+
+    private IEnumerator HandleStrafe()
+    {
+        WaitForFixedUpdate tick = new WaitForFixedUpdate();
+
+        //Debug.Log("Start strafe behavior");
+
+        strafeBehavior.BeginStrafe(player.transform);
+
+        int c = 0;
+
+        lookBehavior.state = BaseEnemyMovement.MoveState.Standby;
+        strafeBehavior.state = BaseEnemyMovement.MoveState.Moving;
+
+        // && (strafingAttack != null && !(strafingAttack.currentAttackState == AttackState.Cooldown || strafingAttack.currentAttackState == AttackState.Ready))
+
+        bool attackReq = strafingAttack != null && (strafingAttack.currentAttackState == AttackState.Cooldown || strafingAttack.currentAttackState == AttackState.Ready);
+        
+
+        // stop once strafe is finished and if strafing attack is finished. 
+
+        while (!strafeBehavior.IsStrafeDone() || attackReq)
+        {
+            if (strafingAttack != null
+                && strafingAttack.currentAttackState == AttackState.Ready)
+            {
+                strafingAttack.Attack(player.transform);
+            }
+
+            c++;
+            if (c >= 1000)
+            {
+                Debug.LogError($"Strafing detected to get stuck!!!");
+                break;
+            }
+
+            attackReq = strafingAttack != null && !(strafingAttack.currentAttackState == AttackState.Cooldown || strafingAttack.currentAttackState == AttackState.Ready);
+
+            yield return null;
+            yield return tick;
+        }
+
+        strafeBehavior.state = BaseEnemyMovement.MoveState.Standby;
         stateChangeCDTracker.ResetTimer(postStrafeCD);
-        Debug.Log("Finished strafe behavior");
+        //Debug.Log("Finished strafe behavior");
     }
 
     private IEnumerator ActivateDelay()
@@ -364,4 +412,10 @@ public class EnemyManager : MonoBehaviour
             yield return null;
     }
 
+
+    public void SetMoveProfile(int i)
+    {
+        //Debug.Log("Setting profile to " + characterMovementStates[i].name);
+        currentMoveStates = characterMovementStates[i];
+    }
 }

@@ -21,22 +21,18 @@ public class RepositionBehavior : BaseEnemyMovement
     [SerializeField] private Vector2 sideToSideDistance;
     [SerializeField] private Vector2 forwardAndBackDistance;
 
-    private Vector3 dest;
+    [SerializeField] private int moveProfile;
 
+    private Vector3 dest;
 
     [SerializeField] private float maxRange;
     [SerializeField] private float minRange;
 
-    [SerializeField] private bool lookAtTarget;
-
-    //[SerializeField] private float maxDist;
-
-    private float stopDist;
-
-    private bool reachedDest;
-
+    [SerializeField] private bool relinquishRotation;
     [SerializeField] private Vector2 repositionCooldown;
-    private ScaledTimer cooldownTracker;
+    private ScaledTimer strafeCooldownTracker;
+
+    private bool complete;
 
     /*
     public override void StartBehavior(Transform t)
@@ -51,22 +47,25 @@ public class RepositionBehavior : BaseEnemyMovement
     protected override void Awake()
     {
         base.Awake();
-        cooldownTracker = new ScaledTimer(Random.Range(repositionCooldown.x, repositionCooldown.y));
-        cooldownTracker.ResetTimer();
+        strafeCooldownTracker = new ScaledTimer(Random.Range(repositionCooldown.x, repositionCooldown.y), true);
+        strafeCooldownTracker.ResetTimer();
+        
     }
 
-    public void BeginStrafe()
+    public void BeginStrafe(Transform t)
     {
-        dest = DeterminLocation();
-        stopDist = agent.stoppingDistance;
+        complete = false;
+        target = t;
         agent.stoppingDistance = 0;
-
-        reachedDest = false;
+        
+        strafeCooldownTracker.ResetTimer();
+        manager.SetMoveProfile(moveProfile);
+        dest = DeterminLocation();
     }
 
     public bool CanStrafe()
     {
-        return cooldownTracker.TimerDone();
+        return strafeCooldownTracker.TimerDone();
     }
 
     private Vector3 DeterminLocation()
@@ -118,6 +117,8 @@ public class RepositionBehavior : BaseEnemyMovement
 
         } while (!NavMesh.SamplePosition(temp, out hit, 1f, agent.areaMask));
 
+        Debug.DrawLine(hit.position, hit.position + Vector3.up, Color.red, 10f);
+
         return hit.position;
     }
 
@@ -129,30 +130,14 @@ public class RepositionBehavior : BaseEnemyMovement
             return;
         }
 
-        if (agent.remainingDistance <= 0.1f)
-        {
-            agent.ResetPath();
-            agent.stoppingDistance = stopDist;
-            
-            // randomly set new cooldown
-            cooldownTracker.ResetTimer(Random.Range(repositionCooldown.x, repositionCooldown.y));
-            reachedDest = true;
-        }
-
         // go to the target position
         GoToTarget(dest);
 
         // Check if the agent is on an offlink
         CheckOfflinkConnection();
 
-
         // rotate to the current target
-        if (lookAtTarget)
-        {
-            RotateToInUpdate(target);
-        }
-        // Look in end location
-        else
+        if(!relinquishRotation)
         {
             // if at the end of the path, look at target
             if(agent.remainingDistance <= .1f)
@@ -166,10 +151,27 @@ public class RepositionBehavior : BaseEnemyMovement
                 transform.RotateToInUpdate(dir, rotationSpeed);
             }
         }
+
+        if (agent.remainingDistance <= 0.05f)
+        {
+            FinishStrafe();
+        }
     }
 
-    public bool StrafeFinished()
+    public bool IsStrafeDone()
     {
-        return reachedDest;
+        return complete;
+    }
+
+    private void FinishStrafe()
+    {
+        float dur = Random.Range(repositionCooldown.x, repositionCooldown.y);
+        strafeCooldownTracker.ResetTimer(dur);
+        complete = true;
+
+
+        manager.SetMoveProfile(0);
+        state = MoveState.Standby;
+        agent.ResetPath();
     }
 }

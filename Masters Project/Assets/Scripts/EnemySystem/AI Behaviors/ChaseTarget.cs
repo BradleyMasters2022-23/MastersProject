@@ -91,7 +91,7 @@ public class ChaseTarget : BaseEnemyMovement
 
         float dist = Vector3.Distance(transform.position, target.position);
 
-        if((dist <= targetDistance) || reachedTarget)
+        if((dist <= targetDistance && transform.HasLineOfSight(target, manager.visionLayer)) || reachedTarget)
         {
             reachedTarget = true;
             return true;

@@ -2247,6 +2247,7 @@ GameObject:
   - component: {fileID: 4603290966354397059}
   - component: {fileID: 9056216701145678119}
   - component: {fileID: 8746456781000397376}
+  - component: {fileID: 1794628268212698115}
   m_Layer: 8
   m_Name: Turret_GameReady
   m_TagString: Untagged
@@ -2302,7 +2303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxVerticalKnockback: 0
-  maxHealth: 200
+  maxHealth: 180
   immortal: 0
   deathVFX: {fileID: 8273445605695135385, guid: 3c02a13cc5fc9994f8787e38cd6a77ea, type: 3}
   hideUIDelay: 0
@@ -2334,6 +2335,47 @@ MonoBehaviour:
   visionLayer:
     serializedVersion: 2
     m_Bits: 2121
+  attackSystem: {fileID: 1794628268212698115}
+--- !u!114 &1794628268212698115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7307720276574085364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3391758e28375d4bb7b252a3d99ef59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentAttackState: 0
+  attackReady: 0
+  attackCoolown: 4
+  indicatorDuration: 0.6
+  rotateDuringIndication: 1
+  finishDuration: 2
+  rotateDuringFinish: 1
+  rotationSpeed: 1.2
+  autoLoopAttack: 0
+  target: {fileID: 0}
+  projectile: {fileID: 8727397786430278917, guid: 72ddf08186379004e8a2d2b56de45efb, type: 3}
+  shootPoints:
+  - {fileID: 1315929774350081781}
+  numOfShots: 30
+  delayBetweenShots: 0.08
+  leadStrength: {x: 0.5, y: 1.5}
+  leadConeRadius: 5
+  firstShotAccuracy: {x: 3.5, y: 3.5}
+  normalAccuracyRange: {x: 0, y: 3.5}
+  rotateDuringAttack: 1
+  attackTrackConeRange: 45
+  indicatorTrackConeRange: 45
+  indicatorStunnedDuration: 0.6
+  indicatorVFXPrefab: {fileID: 1951622810807663121, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
+  indicatorScale: 5
+  shootVFXPrefab: {fileID: 9110516864071591092, guid: 54db9bb81c534aa4e87c63fbd1d7021a, type: 3}
+  shootVFXScale: 3
+  indicatorStunned: 0
 --- !u!1 &7449778821542265567
 GameObject:
   m_ObjectHideFlags: 0

@@ -96,9 +96,7 @@ public abstract class BaseEnemyMovement : MonoBehaviour
             }
         }
 
-        agent.speed = TimeManager.WorldTimeScale * manager.currentMoveStates.moveSpeed;
-        agent.angularSpeed = TimeManager.WorldTimeScale * manager.currentMoveStates.rotationSpeed;
-        rotationSpeed = manager.currentMoveStates.rotationSpeed;
+        
 
         StateUpdate();
     }
@@ -106,6 +104,10 @@ public abstract class BaseEnemyMovement : MonoBehaviour
 
     protected virtual void StateUpdate()
     {
+        agent.speed = TimeManager.WorldTimeScale * manager.currentMoveStates.moveSpeed;
+        agent.angularSpeed = TimeManager.WorldTimeScale * manager.currentMoveStates.rotationSpeed;
+        rotationSpeed = manager.currentMoveStates.rotationSpeed;
+
         switch (state)
         {
             case MoveState.Moving:

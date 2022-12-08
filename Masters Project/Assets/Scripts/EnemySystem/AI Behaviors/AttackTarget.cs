@@ -63,7 +63,8 @@ public abstract class AttackTarget : MonoBehaviour
     [SerializeField] protected bool autoLoopAttack;
     [Tooltip("The target of the attack."), HideIf("@this.autoLoopAttack == false")]
     [SerializeField] protected Transform target;
-    
+
+    protected EnemyManager manager;
 
     #region Timer Variables
 
@@ -75,9 +76,11 @@ public abstract class AttackTarget : MonoBehaviour
 
     protected virtual void Awake()
     {
+        manager = GetComponent<EnemyManager>();
         attackTracker = new ScaledTimer(attackCoolown);
         indicatorTracker = new ScaledTimer(indicatorDuration);
         finishTracker = new ScaledTimer(finishDuration);
+        
 
         // start attack on cooldown
         attackTracker.ResetTimer();
@@ -87,6 +90,9 @@ public abstract class AttackTarget : MonoBehaviour
     private void FixedUpdate()
     {
         StateUpdateFunctionality();
+
+        if(manager != null) 
+            rotationSpeed = TimeManager.WorldTimeScale * manager.currentMoveStates.rotationSpeed;
 
         // this is for testing
         if(autoLoopAttack && currentAttackState == AttackState.Ready)
@@ -218,7 +224,6 @@ public abstract class AttackTarget : MonoBehaviour
         // by default, track normally. Can edit later
         if (rotateDuringIndication)
             RotateToTarget();
-        return;
     }
 
     #endregion
@@ -233,7 +238,6 @@ public abstract class AttackTarget : MonoBehaviour
     /// </summary>
     protected virtual void DamageUpdateFunctionality()
     {
-        return;
     }
 
     #region Attack Finished Stuff

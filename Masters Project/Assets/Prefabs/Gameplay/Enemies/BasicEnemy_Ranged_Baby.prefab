@@ -1194,7 +1194,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5593674444506691334}
   m_LocalRotation: {x: -0, y: 0.7071062, z: -0, w: -0.7071074}
-  m_LocalPosition: {x: -1.147, y: 0.976, z: -0}
+  m_LocalPosition: {x: -1.29, y: 0.976, z: 0}
   m_LocalScale: {x: 0.7077, y: 0.7077, z: 0.7077}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1479,10 +1479,13 @@ GameObject:
   - component: {fileID: 3192397030611913507}
   - component: {fileID: 300941386475307197}
   - component: {fileID: 7139646536534798339}
-  - component: {fileID: 5867305176111294565}
   - component: {fileID: 6878320425555973780}
   - component: {fileID: 3311603916637224723}
-  - component: {fileID: 3171853189552757653}
+  - component: {fileID: 2024859369838679369}
+  - component: {fileID: 6593523673652185635}
+  - component: {fileID: 3680698696202116480}
+  - component: {fileID: 6103605054193528594}
+  - component: {fileID: 5176151732030655657}
   m_Layer: 8
   m_Name: BasicEnemy_Ranged_Baby
   m_TagString: Untagged
@@ -1559,7 +1562,42 @@ MonoBehaviour:
   timeOrb: {fileID: 3071240432754548792, guid: 2001e4aa90ac76a47866171fcaafdf7f, type: 3}
   dropChance: 50
   dropNumerRange: {x: 2, y: 3}
---- !u!114 &5867305176111294565
+--- !u!195 &6878320425555973780
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6621528852895871808}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 1.17
+  m_Speed: 3.5
+  m_Acceleration: 30
+  avoidancePriority: 99
+  m_AngularSpeed: 1500
+  m_StoppingDistance: 3
+  m_AutoTraverseOffMeshLink: 0
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2.14
+  m_BaseOffset: 0
+  m_WalkableMask: 5
+  m_ObstacleAvoidanceType: 3
+--- !u!65 &3311603916637224723
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6621528852895871808}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.42321262, y: 0.48792136, z: 0.6766702}
+  m_Center: {x: 0, y: 0.80183035, z: 0.7200194}
+--- !u!114 &2024859369838679369
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1568,20 +1606,48 @@ MonoBehaviour:
   m_GameObject: {fileID: 6621528852895871808}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7974296e5ead15498afb971ec436e59, type: 3}
+  m_Script: {fileID: 11500000, guid: 980d6e5cae0c81045a175e37375b35c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  centerMass: {fileID: 793414667720240907}
+  characterMovementStates:
+  - name: default
+    moveSpeed: 15
+    rotationSpeed: 3.5
+  currentMoveStates:
+    name: 
+    moveSpeed: 0
+    rotationSpeed: 0
+  activateDelay: 1
+  spawnSound: {fileID: 0}
+  lookBehavior: {fileID: 5176151732030655657}
+  chaseBehavior: {fileID: 6593523673652185635}
+  startChastDist: 12
+  stopChaseDist: 8
+  stopChaseOnLineOfSight: 0
+  noLineOfSightDelay: 5
+  postChaseCD: 0
+  strafeBehavior: {fileID: 3680698696202116480}
+  moveData: 0
+  strafingAttack: {fileID: 0}
+  postStrafeCD: 0
+  mainAttack: {fileID: 6103605054193528594}
+  visionLayer:
+    serializedVersion: 2
+    m_Bits: 2121
+  postAttackCD: 0
+--- !u!114 &6593523673652185635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6621528852895871808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ba7ff148b73f37438bc1fa334792420, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   state: 0
-  moveState: 0
-  hasLineOfSight: 0
-  moveSpeed: 12
-  rotationSpeed: 3.5
-  overshootMult: 3
-  idealRange: 15
-  attackRange: 50
-  moveThreshold: 4
-  fleeMoveModifier: 1
   jumpCurve:
     serializedVersion: 2
     m_Curve:
@@ -1650,62 +1716,105 @@ MonoBehaviour:
     m_RotationOrder: 4
   faceJump: 1
   rotateIntoJump: 0
-  shotPrefab: {fileID: 8727397786430278917, guid: 72ddf08186379004e8a2d2b56de45efb, type: 3}
-  shootPoints:
-  - {fileID: 5086307354650794681}
-  numberOfShots: 3
-  lookRadius: 5
-  visionLayer:
+  collisionLayers:
     serializedVersion: 2
-    m_Bits: 2377
-  aimDuration: 0.2
-  shootDuration: 0.1
-  reloadDuration: 1.4
-  aimMoveModifier: 0
-  shootMoveModifier: 0
-  reloadMoveModifier: 0.5
-  aimRotModifier: 1
-  shootRotModifier: 0
-  reloadRotModifier: 0
-  lockAiming: 1
-  fleeWhileAttacking: 1
-  leadStrength: {x: -1.3, y: 1.3}
---- !u!195 &6878320425555973780
-NavMeshAgent:
+    m_Bits: 2057
+  alwaysFaceTarget: 0
+  mask:
+    serializedVersion: 2
+    m_Bits: 2121
+--- !u!114 &3680698696202116480
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6621528852895871808}
   m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 1.05
-  m_Speed: 3.5
-  m_Acceleration: 30
-  avoidancePriority: 99
-  m_AngularSpeed: 1500
-  m_StoppingDistance: 3
-  m_AutoTraverseOffMeshLink: 0
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2.14
-  m_BaseOffset: 0
-  m_WalkableMask: 5
-  m_ObstacleAvoidanceType: 3
---- !u!65 &3311603916637224723
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6621528852895871808}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.42321262, y: 0.48792136, z: 0.6766702}
-  m_Center: {x: 0, y: 0.80183035, z: 0.7200194}
---- !u!114 &3171853189552757653
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 539a8bf863273a54595678503335b49c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  jumpCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 20.164883
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.017123286
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -3.0208805
+      outSlope: -3.0208805
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.06849325
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  fallCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1.7738563
+      outSlope: 1.7738563
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.13811016
+    - serializedVersion: 3
+      time: 0.035589688
+      value: -0.043307118
+      inSlope: 3.0031147
+      outSlope: 3.0031147
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.8093651
+      value: 2.7352338
+      inSlope: -5.3785667
+      outSlope: -5.3785667
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -4.370391
+      outSlope: -4.370391
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.093566865
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  faceJump: 1
+  rotateIntoJump: 0
+  collisionLayers:
+    serializedVersion: 2
+    m_Bits: 9
+  sideToSideDistance: {x: 1, y: 5}
+  forwardAndBackDistance: {x: 0, y: 1.5}
+  moveProfile: 0
+  maxRange: 12
+  minRange: 5
+  relinquishRotation: 0
+  repositionCooldown: {x: 1, y: 2.5}
+--- !u!114 &6103605054193528594
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1719,21 +1828,124 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentAttackState: 0
   attackReady: 0
-  attackCoolown: 3
-  indicatorDuration: 0.6
-  finishDuration: 1
-  rotationSpeed: 3.5
+  attackCoolown: 2
+  indicatorDuration: 0.5
+  rotateDuringIndication: 1
+  finishDuration: 0.9
+  rotateDuringFinish: 0
+  rotationSpeed: 0
+  autoLoopAttack: 0
+  target: {fileID: 0}
   projectile: {fileID: 8727397786430278917, guid: 72ddf08186379004e8a2d2b56de45efb, type: 3}
   shootPoints:
   - {fileID: 5086307354650794681}
   numOfShots: 3
-  delayBetweenShots: 0.1
+  delayBetweenShots: 0
   leadStrength: {x: 0, y: 1.5}
-  firstShotAccuracy: {x: 0.5, y: 5}
-  normalAccuracyRange: {x: 0, y: 5}
-  visionRange: 15
+  leadConeRadius: 15
+  firstShotAccuracy: {x: 0, y: 12}
+  normalAccuracyRange: {x: 0, y: 12}
+  rotateDuringAttack: 1
+  attackTrackConeRange: 45
+  indicatorTrackConeRange: 60
+  indicatorStunnedDuration: 0.6
   indicatorVFXPrefab: {fileID: 1951622810807663121, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
+  indicatorScale: 1
   shootVFXPrefab: {fileID: 9110516864071591092, guid: 54db9bb81c534aa4e87c63fbd1d7021a, type: 3}
+  shootVFXScale: 1
+  indicatorStunned: 0
+--- !u!114 &5176151732030655657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6621528852895871808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a45f2e172c66d92419f11807a5d1bee1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  jumpCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 20.164883
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.017123286
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -3.0208805
+      outSlope: -3.0208805
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.06849325
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  fallCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1.7738563
+      outSlope: 1.7738563
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.13811016
+    - serializedVersion: 3
+      time: 0.035589688
+      value: -0.043307118
+      inSlope: 3.0031147
+      outSlope: 3.0031147
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.8093651
+      value: 2.7352338
+      inSlope: -5.3785667
+      outSlope: -5.3785667
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -4.370391
+      outSlope: -4.370391
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.093566865
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  faceJump: 0
+  rotateIntoJump: 0
+  collisionLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  lookAtLastPosition: 0
+  visionMask:
+    serializedVersion: 2
+    m_Bits: 0
+  trackConeRadius: 80
+  stunnedDuration: 1
+  stunned: 0
+  stunCooldown: 6
 --- !u!1 &6647373963108662847
 GameObject:
   m_ObjectHideFlags: 0
