@@ -6,6 +6,7 @@
  * Description - Base enemy attack behavior that contains the main routine for attacking
  * ================================================================================================
  */
+using Masters.AI;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
@@ -57,6 +58,15 @@ public abstract class AttackTarget : MonoBehaviour
     [Tooltip("Rotation speed of the enemy")]
     [SerializeField][Range(0f, 5f)] protected float rotationSpeed;
 
+
+    [Tooltip("How infront of the target does player need to be to attack")]
+    [SerializeField] private float attackConeRadius;
+
+    [Tooltip("Whether direct line of sight is required to do the attack")]
+    [SerializeField] private bool lineOfSightReq;
+    [Tooltip("Width of the line of sight inorder to attack")]
+    [SerializeField] private float lineOfSightWidth = 0;
+
     [Header("=== Testing and Debug ===")]
 
     [Tooltip("Whether the enemy will automatically loop its attacks. Use this to test new attacks without the manager.")]
@@ -82,9 +92,22 @@ public abstract class AttackTarget : MonoBehaviour
         finishTracker = new ScaledTimer(finishDuration);
         
 
-        // start attack on cooldown
-        attackTracker.ResetTimer();
-        currentAttackState = AttackState.Cooldown;
+        currentAttackState = AttackState.Ready;
+    }
+
+    public void SetTarget(Transform t)
+    {
+        target = t;
+    }
+
+    public bool CanDoAttack()
+    {
+        bool attackReq = 
+            currentAttackState== AttackState.Ready && 
+            transform.InVisionCone(target, attackConeRadius) && 
+            (!lineOfSightReq || transform.HasLineOfSight(target, manager.visionLayer, lineOfSightWidth));
+
+        return attackReq;
     }
 
     private void FixedUpdate()

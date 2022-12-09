@@ -101,6 +101,7 @@ public abstract class BaseEnemyMovement : MonoBehaviour
     {
         agent.speed = TimeManager.WorldTimeScale * manager.currentMoveStates.moveSpeed;
         agent.angularSpeed = TimeManager.WorldTimeScale * manager.currentMoveStates.rotationSpeed;
+        agent.acceleration = manager.currentMoveStates.acceleration;
         rotationSpeed = manager.currentMoveStates.rotationSpeed;
 
         switch (state)

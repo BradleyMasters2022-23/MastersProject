@@ -390,8 +390,8 @@ MonoBehaviour:
   deathVFX: {fileID: 8273445605695135385, guid: 3c02a13cc5fc9994f8787e38cd6a77ea, type: 3}
   hideUIDelay: 0
   timeOrb: {fileID: 3071240432754548792, guid: 2001e4aa90ac76a47866171fcaafdf7f, type: 3}
-  dropChance: 75
-  dropNumerRange: {x: 3, y: 4}
+  dropChance: 80
+  dropNumerRange: {x: 4, y: 5}
 --- !u!195 &6878320425555973780
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -441,16 +441,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterMovementStates:
   - name: default
-    moveSpeed: 9
+    moveSpeed: 11
     rotationSpeed: 2.5
   - name: strafe
-    moveSpeed: 7
+    moveSpeed: 8
     rotationSpeed: 3
   currentMoveStates:
     name: 
     moveSpeed: 0
     rotationSpeed: 0
-  activateDelay: 0
+  activateDelay: 0.25
   spawnSound: {fileID: 0}
   lookBehavior: {fileID: 5617857952634112433}
   chaseBehavior: {fileID: 6173771787627512305}
@@ -458,16 +458,16 @@ MonoBehaviour:
   stopChaseDist: 30
   stopChaseOnLineOfSight: 1
   noLineOfSightDelay: 5
-  postChaseCD: 0.5
+  postChaseCD: 0.1
   strafeBehavior: {fileID: 3106654524224033663}
   moveData: 1
   strafingAttack: {fileID: 4939085670605044502}
-  postStrafeCD: 1
+  postStrafeCD: 0.1
   mainAttack: {fileID: 9154536958261373458}
   visionLayer:
     serializedVersion: 2
     m_Bits: 2121
-  postAttackCD: 1
+  postAttackCD: 0.1
 --- !u!114 &9154536958261373458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -482,12 +482,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentAttackState: 0
   attackReady: 1
-  attackCoolown: 4
+  attackCoolown: 3
   indicatorDuration: 0.6
   rotateDuringIndication: 1
   finishDuration: 1
   rotateDuringFinish: 0
   rotationSpeed: 3
+  attackConeRadius: 15
+  lineOfSightReq: 1
+  lineOfSightWidth: 1
   autoLoopAttack: 0
   target: {fileID: 0}
   projectile: {fileID: 8727397786430278917, guid: 406069cb0a402f342af7f980f4ed2f6c, type: 3}
@@ -504,7 +507,7 @@ MonoBehaviour:
   indicatorTrackConeRange: 50
   indicatorStunnedDuration: 0.6
   indicatorVFXPrefab: {fileID: 1951622810807663121, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
-  indicatorScale: 3
+  indicatorScale: 5
   shootVFXPrefab: {fileID: 9110516864071591092, guid: 54db9bb81c534aa4e87c63fbd1d7021a, type: 3}
   shootVFXScale: 3
   indicatorStunned: 0
@@ -702,11 +705,14 @@ MonoBehaviour:
   currentAttackState: 0
   attackReady: 0
   attackCoolown: 1
-  indicatorDuration: 0.5
+  indicatorDuration: 0.4
   rotateDuringIndication: 1
   finishDuration: 0
   rotateDuringFinish: 1
   rotationSpeed: 3
+  attackConeRadius: 0
+  lineOfSightReq: 0
+  lineOfSightWidth: 0
   autoLoopAttack: 0
   target: {fileID: 0}
   projectile: {fileID: 8727397786430278917, guid: 72ddf08186379004e8a2d2b56de45efb, type: 3}
@@ -716,14 +722,14 @@ MonoBehaviour:
   delayBetweenShots: 0.1
   leadStrength: {x: 0.5, y: 1.5}
   leadConeRadius: 15
-  firstShotAccuracy: {x: 2, y: 4}
-  normalAccuracyRange: {x: 0, y: 4}
+  firstShotAccuracy: {x: 2, y: 2.8}
+  normalAccuracyRange: {x: 0, y: 2.8}
   rotateDuringAttack: 1
   attackTrackConeRange: 50
   indicatorTrackConeRange: 0
   indicatorStunnedDuration: 0
   indicatorVFXPrefab: {fileID: 1951622810807663121, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
-  indicatorScale: 1
+  indicatorScale: 0.8
   shootVFXPrefab: {fileID: 9110516864071591092, guid: 54db9bb81c534aa4e87c63fbd1d7021a, type: 3}
   shootVFXScale: 1
   indicatorStunned: 0

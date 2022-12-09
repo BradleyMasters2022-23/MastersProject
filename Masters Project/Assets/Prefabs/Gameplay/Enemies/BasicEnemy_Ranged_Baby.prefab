@@ -1611,18 +1611,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterMovementStates:
   - name: default
-    moveSpeed: 15
+    moveSpeed: 17
     rotationSpeed: 3.5
+    acceleration: 35
+  - name: strafe
+    moveSpeed: 25
+    rotationSpeed: 4.5
+    acceleration: 50
   currentMoveStates:
     name: 
     moveSpeed: 0
     rotationSpeed: 0
-  activateDelay: 1
+    acceleration: 0
+  activateDelay: 0.2
   spawnSound: {fileID: 0}
   lookBehavior: {fileID: 5176151732030655657}
   chaseBehavior: {fileID: 6593523673652185635}
-  startChastDist: 12
-  stopChaseDist: 8
+  startChastDist: 18
+  stopChaseDist: 10
   stopChaseOnLineOfSight: 0
   noLineOfSightDelay: 5
   postChaseCD: 0
@@ -1807,11 +1813,11 @@ MonoBehaviour:
   collisionLayers:
     serializedVersion: 2
     m_Bits: 9
-  sideToSideDistance: {x: 1, y: 5}
-  forwardAndBackDistance: {x: 0, y: 1.5}
-  moveProfile: 0
-  maxRange: 12
-  minRange: 5
+  sideToSideDistance: {x: 3, y: 6}
+  forwardAndBackDistance: {x: 0.2, y: 2}
+  moveProfile: 1
+  maxRange: 10
+  minRange: 6
   relinquishRotation: 0
   repositionCooldown: {x: 1, y: 2.5}
 --- !u!114 &6103605054193528594
@@ -1828,12 +1834,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentAttackState: 0
   attackReady: 0
-  attackCoolown: 2
-  indicatorDuration: 0.5
+  attackCoolown: 1
+  indicatorDuration: 0.25
   rotateDuringIndication: 1
-  finishDuration: 0.9
+  finishDuration: 0.42
   rotateDuringFinish: 0
   rotationSpeed: 0
+  attackConeRadius: 5
+  lineOfSightReq: 0
+  lineOfSightWidth: 0
   autoLoopAttack: 0
   target: {fileID: 0}
   projectile: {fileID: 8727397786430278917, guid: 72ddf08186379004e8a2d2b56de45efb, type: 3}
@@ -1841,10 +1850,10 @@ MonoBehaviour:
   - {fileID: 5086307354650794681}
   numOfShots: 3
   delayBetweenShots: 0
-  leadStrength: {x: 0, y: 1.5}
+  leadStrength: {x: 0.75, y: 0.75}
   leadConeRadius: 15
-  firstShotAccuracy: {x: 0, y: 12}
-  normalAccuracyRange: {x: 0, y: 12}
+  firstShotAccuracy: {x: 0, y: 1.5}
+  normalAccuracyRange: {x: 0, y: 4.5}
   rotateDuringAttack: 1
   attackTrackConeRange: 45
   indicatorTrackConeRange: 60
@@ -1945,7 +1954,7 @@ MonoBehaviour:
   trackConeRadius: 80
   stunnedDuration: 1
   stunned: 0
-  stunCooldown: 6
+  stunCooldown: 8
 --- !u!1 &6647373963108662847
 GameObject:
   m_ObjectHideFlags: 0

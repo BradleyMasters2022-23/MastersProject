@@ -56,7 +56,8 @@ public class RepositionBehavior : BaseEnemyMovement
         complete = false;
         target = t;
         agent.stoppingDistance = 0;
-        
+        agent.velocity = Vector3.zero;
+
         strafeCooldownTracker.ResetTimer();
         manager.SetMoveProfile(moveProfile);
         dest = DeterminLocation();

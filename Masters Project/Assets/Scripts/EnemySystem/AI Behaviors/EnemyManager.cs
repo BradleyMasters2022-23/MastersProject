@@ -14,6 +14,7 @@ using Masters.AI;
 using UnityEngine.AI;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
+using JetBrains.Annotations;
 
 [System.Serializable]
 public struct MovementStates
@@ -21,6 +22,7 @@ public struct MovementStates
     public string name;
     public float moveSpeed;
     public float rotationSpeed;
+    public float acceleration;
 }
 public class EnemyManager : MonoBehaviour
 {
@@ -145,7 +147,6 @@ public class EnemyManager : MonoBehaviour
             return;
         }
 
-
         activateTracker = new ScaledTimer(activateDelay);
 
         lineOfSightTracker = new ScaledTimer(noLineOfSightDelay);
@@ -171,6 +172,8 @@ public class EnemyManager : MonoBehaviour
             lookBehavior.SetTarget(player.transform);
             lookBehavior.state = BaseEnemyMovement.MoveState.Standby;
         }
+
+        mainAttack.SetTarget(player.transform);
     }
 
     /// <summary>
@@ -180,6 +183,9 @@ public class EnemyManager : MonoBehaviour
     {
         StartCoroutine(MainAIController());
     }
+
+    
+
 
     /// <summary>
     /// Manage the core logic of the AI. 
@@ -240,34 +246,32 @@ public class EnemyManager : MonoBehaviour
 
 
             }
-            else if ((chaseBehavior != null && chaseBehavior.state == BaseEnemyMovement.MoveState.Standby) 
-                && ((strafeBehavior != null && strafeBehavior.CanStrafe()) || (mainAttack != null && mainAttack.currentAttackState == AttackState.Ready)))
+            else if ( (strafeBehavior != null && strafeBehavior.CanStrafe()) || (mainAttack != null && mainAttack.CanDoAttack()))
             {
-
                 if(strafeBehavior == null)
                 {
                     yield return StartCoroutine(HandleAttack());
                 }
-                else if(strafeBehavior.CanStrafe() && mainAttack.currentAttackState != AttackState.Ready)
+                else if(mainAttack == null)
                 {
                     yield return StartCoroutine(HandleStrafe());
                 }
-                else if(!strafeBehavior.CanStrafe() && mainAttack.currentAttackState == AttackState.Ready)
+                else if(strafeBehavior.CanStrafe() && !mainAttack.CanDoAttack())
                 {
-                    yield return StartCoroutine(HandleAttack());
+                    yield return StartCoroutine(HandleStrafe());
                 }
-                else if (mainAttack.currentAttackState == AttackState.Ready && transform.HasLineOfSight(player.transform, visionLayer))
+                else if(!strafeBehavior.CanStrafe() && mainAttack.CanDoAttack())
                 {
                     yield return StartCoroutine(HandleAttack());
                 }
                 else
                 {
-                    // if both are usable, randomly choose one
+                    // if both are usable, randomly choose one weighted towards attack
 
-                    if (Random.Range(0, 2) == 0)
-                        yield return StartCoroutine(HandleAttack());
-                    else
+                    if (Random.Range(0, 3) == 0)
                         yield return StartCoroutine(HandleStrafe());
+                    else
+                        yield return StartCoroutine(HandleAttack());
                 }
             }
             else
@@ -327,6 +331,20 @@ public class EnemyManager : MonoBehaviour
         //Debug.Log("Chase behavior done!");
         stateChangeCDTracker.ResetTimer(postChaseCD);
         chaseBehavior.state = BaseEnemyMovement.MoveState.Standby;
+
+        
+        Vector3 lookRot = Quaternion.LookRotation(player.transform.position - transform.position).eulerAngles;
+        lookRot.x = 0;
+        lookRot.z = 0;
+        transform.rotation = Quaternion.Euler(lookRot);
+        Debug.Log("[CHASE] Setting look rot to " + lookRot.y);
+
+        // attack after if possible
+        if(mainAttack != null && mainAttack.CanDoAttack())
+        {
+            Debug.Log("[CHASE] Calling attack post strafe");
+            yield return StartCoroutine(HandleAttack());
+        }
     }
 
     private IEnumerator HandleAttack()
@@ -336,6 +354,8 @@ public class EnemyManager : MonoBehaviour
         // Debug.Log("Calling attack behavior!");
 
         lookBehavior.state = BaseEnemyMovement.MoveState.Standby;
+
+        // look at enen
 
         // mainAttack.enabled = true;
         mainAttack.Attack(player.transform);
@@ -415,6 +435,9 @@ public class EnemyManager : MonoBehaviour
 
     public void SetMoveProfile(int i)
     {
+        if (i >= characterMovementStates.Length)
+            return;
+
         //Debug.Log("Setting profile to " + characterMovementStates[i].name);
         currentMoveStates = characterMovementStates[i];
     }
