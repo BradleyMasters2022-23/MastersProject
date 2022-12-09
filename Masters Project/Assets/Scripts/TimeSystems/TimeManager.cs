@@ -416,10 +416,6 @@ public class TimeManager : MonoBehaviour
             currSlowGauge += replenishAmount;
         }
     }
-    public void ChipRefillGauge()
-    {
-        RefillGauge();
-    }
 
     /// <summary>
     /// Add more energy to the time gauge
@@ -457,25 +453,6 @@ public class TimeManager : MonoBehaviour
     public float MaxGauge()
     {
         return slowDuration.Current * FixedUpdateCalls;
-    }
-
-    public void SetRegenTime(float regenMultiplier)
-    {
-        float temp = replenishTime.Current * regenMultiplier;
-        replenishTime.ChangeVal(Mathf.Ceil(temp));
-    }
-
-    public void SetGaugeMax(float gaugeMultiplier)
-    {
-        float temp = slowDuration.Current * gaugeMultiplier;
-        slowDuration.ChangeVal(Mathf.Ceil(temp));
-    }
-
-    public void SetRegenDelay(float delayMultiplier)
-    {
-        float temp = replenishDelay.Current * delayMultiplier;
-        replenishDelay.ChangeVal(Mathf.Ceil(temp));
-        replenishDelayTimer.ResetTimer(replenishDelay.Current);
     }
 
     /// <summary>

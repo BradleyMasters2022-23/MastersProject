@@ -213,16 +213,6 @@ public class PlayerHealthSection : MonoBehaviour
         currentState = _newState;
     }
 
-    public void ChipChangeState(HealthSectionState _newState)
-    {
-        ChangeState(_newState);
-    }
-
-    public HealthSectionState GetState()
-    {
-        return currentState;
-    }
-
     #endregion
 
     /// <summary>
@@ -263,8 +253,7 @@ public class PlayerHealthSection : MonoBehaviour
         return currHealth == maxHealth;
     }
 
-    public void SetMaxHealth(int _maxHealth) {
-        maxHealth = _maxHealth;
-        currHealth = _maxHealth;
+    public void MaxHealthUp(int increment) {
+        maxHealth += increment;
     }
 }

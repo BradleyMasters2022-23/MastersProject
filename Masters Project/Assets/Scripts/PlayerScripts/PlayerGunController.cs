@@ -131,7 +131,7 @@ public class PlayerGunController : MonoBehaviour
         // Shoot projectile, aiming towards passed in target
         GameObject newShot = Instantiate(shotPrefab, shootPoint.position, transform.rotation);
         newShot.transform.LookAt(shootCam.TargetPos);
-        newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current, true);
+        newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current);
 
         if(gunshotSound.Length > 0)
             source.PlayOneShot(gunshotSound[Random.Range(0, gunshotSound.Length)],0.3f);
@@ -171,10 +171,5 @@ public class PlayerGunController : MonoBehaviour
 
     public void SetDamageMultiplier(int newVal) {
         damageMultiplier.ChangeVal(newVal);
-    }
-
-    public int GetBaseDamage()
-    {
-        return shotPrefab.GetComponent<Projectile>().GetDamage();
     }
 }

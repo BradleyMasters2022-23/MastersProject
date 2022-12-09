@@ -145,26 +145,6 @@ public class Projectile : RangeAttack
         }
     }
 
-    public int GetDamage()
-    {
-        return damage;
-    }
-
-    public float GetDistanceCovered()
-    {
-        return distanceCovered;
-    }
-
-    public void ChangeDamageTo(int newDamage)
-    {
-        damage = newDamage;
-    }
-
-    public bool GetShotByPlayer()
-    {
-        return shotByPlayer;
-    }
-
     protected override void Awake()
     {
         lastPos = transform.position;

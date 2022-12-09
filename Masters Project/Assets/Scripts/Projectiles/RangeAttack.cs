@@ -21,7 +21,6 @@ public abstract class RangeAttack : Attack
     [SerializeField] protected float speed;
     [Tooltip("Range of this ranged attack")]
     [SerializeField] protected float range;
-    [SerializeField] protected bool shotByPlayer;
     
     /// <summary>
     /// Base speed this attack moveds at
@@ -36,11 +35,11 @@ public abstract class RangeAttack : Attack
     /// </summary>
     /// <param name="_damageMultiplier">multiplier for the damage. % based.</param>
     /// <param name="_speedMultiplier">multiplier for the speed. % based.</param>
-    public void Initialize(float _damageMultiplier, float _speedMultiplier, bool _shotByPlayer = false)
+    public void Initialize(float _damageMultiplier, float _speedMultiplier)
     {
         damage *= Mathf.FloorToInt(_damageMultiplier);
         speed *= _speedMultiplier;
-        shotByPlayer = _shotByPlayer;
+
         // Activate the projectile after being initialized
         Activate();
     }

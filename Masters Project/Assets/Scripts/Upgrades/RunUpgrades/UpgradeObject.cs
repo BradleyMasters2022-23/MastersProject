@@ -18,6 +18,9 @@ public class UpgradeObject : ScriptableObject {
     [Tooltip("Upgrade display description.")]
     public string displayDesc;
 
+    [Tooltip("Upgrade container color.")]
+    public Color upgradeColor;
+
     [Tooltip("Upgrade ID #.")]
     public int ID;
 
