@@ -66,14 +66,16 @@ public class Projectile : RangeAttack
         if (!active)
             return;
 
-        // Update velocity with world timescale
-        rb.velocity = targetVelocity * TimeManager.WorldTimeScale;
+        //Debug.DrawLine(lastPos, transform.position, Color.red, 1f);
+        //Debug.Log(Vector3.Distance(transform.position, lastPos));
 
         Vector3 futurePos = transform.position + Vector3.forward * rb.velocity.magnitude * TimeManager.WorldDeltaTime;
 
+        float dist = targetVelocity.magnitude * TimeManager.WorldDeltaTime;
+
         // Check if it passed target
         RaycastHit target;
-        if (Physics.SphereCast(transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, (Vector3.Distance(transform.position, lastPos)), targetLayers))
+        if (Physics.SphereCast(transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, dist, targetLayers))
         {
             hitPoint = target.point;
 
@@ -84,7 +86,7 @@ public class Projectile : RangeAttack
         else
         {
             // Check if it directly hit a wall
-            if (Physics.Raycast(transform.position, transform.forward, out target, (Vector3.Distance(transform.position, lastPos)), groundLayer))
+            if (Physics.Raycast(transform.position, transform.forward, out target, dist, groundLayer))
             {
                 hitPoint = target.point;
                 hitRotatation = target.normal;
@@ -97,14 +99,15 @@ public class Projectile : RangeAttack
             }
         }
         
-
-
         // Check if projectile reached its max range
         distanceCovered += targetVelocity.magnitude * TimeManager.WorldDeltaTime;
         if(distanceCovered >= range)
         {
             Hit();
         }
+
+        // Update velocity with world timescale
+        rb.velocity = targetVelocity * TimeManager.WorldTimeScale;
 
         lastPos = transform.position;
     }
@@ -115,7 +118,7 @@ public class Projectile : RangeAttack
         if(onHitEffect != null)
         {
             GameObject t = Instantiate(onHitEffect, hitPoint, Quaternion.identity);
-            t.transform.LookAt(hitRotatation);
+            t.transform.LookAt(t.transform.position + hitRotatation);
         }
 
         if (enemyHit.Length > 0)
