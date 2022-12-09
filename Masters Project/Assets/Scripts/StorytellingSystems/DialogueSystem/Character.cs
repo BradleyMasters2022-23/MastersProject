@@ -6,5 +6,15 @@ using UnityEngine;
 public class Character : ScriptableObject
 {
     public string characterName;
-    public Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
+    public string[] spriteNames;
+    public Sprite[] sprites;
+    public Dictionary<string, Sprite> namedSprites = new Dictionary<string, Sprite>();
+
+    private void Awake()
+    {
+        for(int i = 0; i < spriteNames.Length; i++)
+        {
+            namedSprites.Add(spriteNames[i], sprites[i]);
+        }
+    }
 }
