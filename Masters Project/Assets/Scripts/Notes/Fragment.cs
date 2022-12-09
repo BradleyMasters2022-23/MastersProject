@@ -23,7 +23,9 @@ public class Fragment : ScriptableObject
     public string content;
 
     [Tooltip("Whether or not this fragment has been found.")]
-    public bool found;
+    public bool found = false;
+
+    public bool spawned = false;
 
     public string GetNoteName()
     {

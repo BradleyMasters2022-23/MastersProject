@@ -20,32 +20,23 @@ public class FragmentSpawner : MonoBehaviour
         if(FragShouldSpawn()) {
             GameObject obj = CreateFrag();
             obj.GetComponent<Collider>().enabled = true;
+            Debug.Log(obj.GetComponent<FragmentInteract>().GetFragment().GetFragmentID());
         } 
     }
 
-    public void SpawnFragment(Fragment fragment)
-    {
-        if(FragShouldSpawn())
-        {
-            GameObject obj = CreateFrag(fragment);
-            obj.GetComponent<Collider>().enabled = true;
-        }
-    }
-
     private GameObject CreateFrag() {
+        Fragment temp = AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment();
+        do
+        {
+            temp = AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment();
+        } while (temp.spawned) ;
+
+        temp.spawned = true;
         GameObject obj = Instantiate(fragInteractable, fragSpawnPoint.transform.position, fragSpawnPoint.rotation);
-        obj.GetComponent<FragmentInteract>().SetUp(AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment());
+        obj.GetComponent<FragmentInteract>().SetUp(temp);
 
         return obj;
     }
-
-    private GameObject CreateFrag(Fragment fragment)
-    {
-        GameObject obj = Instantiate(fragInteractable, fragSpawnPoint.transform.position, fragSpawnPoint.rotation);
-        obj.GetComponent<FragmentInteract>().SetUp(fragment);
-
-        return obj;
-    } 
 
     private bool FragShouldSpawn()
     {

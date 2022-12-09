@@ -32,7 +32,7 @@ public class NoteObject : ScriptableObject
     /// <summary>
     /// initial update to initialize lostFragments
     /// </summary>
-    private void Start()
+    private void Awake()
     {
         UpdateNote();
     }
@@ -77,11 +77,6 @@ public class NoteObject : ScriptableObject
     public List<Fragment> GetFragments()
     {
       return fragments;
-    }
-
-    public List<Fragment> GetAllLostFragments()
-    {
-        return lostFragments;
     }
 
     /// <summary>

@@ -89,15 +89,8 @@ public class AllNotesManager : MonoBehaviour
         return notes[index];
     }
 
-    public NoteObject[] GetAllLostNotes() {
-        NoteObject[] temp = new NoteObject[lostNotes.Count];
-        int i = 0;
-        foreach(NoteObject note in lostNotes)
-        {
-            temp[i] = note;
-            i++;
-        }
-
-        return temp;
+    public List<NoteObject> GetNotes()
+    {
+        return notes;
     }
 }

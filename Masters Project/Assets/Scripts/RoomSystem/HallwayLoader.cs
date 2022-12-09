@@ -14,34 +14,21 @@ public class HallwayLoader : SegmentLoader
 {
     [SerializeField] private GameObject fragSpawner;
     [SerializeField] private Transform fragSpawnPoint;
-    private List<Fragment> fragments = new List<Fragment>();
 
     [SerializeField] private GameObject upgradeContainer;
 
     protected override IEnumerator UniquePoolInitialization()
     {
-        NoteObject[] temp = AllNotesManager.instance.GetAllLostNotes();
-        foreach(NoteObject note in temp)
-        {
-            foreach(Fragment fragment in note.GetAllLostFragments())
-            {
-                fragments.Add(fragment);
-            }
-        }
 
         // Leave this stuff alone and as the last item
-
         initialized = true;
         yield return null;
     }
 
     protected override void UniqueActivate()
     {
-        Fragment temp = fragments[Random.Range(0, fragments.Count)];
         fragSpawner.GetComponent<FragmentSpawner>().SetSpawnPoint(fragSpawnPoint);
-        fragSpawner.GetComponent<FragmentSpawner>().SpawnFragment(temp);
-        fragments.Remove(temp);
-        Debug.Log(temp.GetFragmentID());
+        fragSpawner.GetComponent<FragmentSpawner>().SpawnFragment();
         return;
     }
 
