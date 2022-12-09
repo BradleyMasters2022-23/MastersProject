@@ -68,11 +68,11 @@ public abstract class PickupOrb : MonoBehaviour
     private ScaledTimer startDespawnTracker;
     private ScaledTimer despawnTracker;
     private Animator anim;
-    [SerializeField] private bool ready;
-
-    [SerializeField] private float targetVelocity;
-    [SerializeField] private Vector3 targetDir;
-    private Vector3 lastHit;
+    
+    //private bool ready;
+    //[SerializeField] private float targetVelocity;
+    //[SerializeField] private Vector3 targetDir;
+    //private Vector3 lastHit;
 
     protected void Awake()
     {
@@ -94,8 +94,8 @@ public abstract class PickupOrb : MonoBehaviour
         transform.rotation = Quaternion.Euler(angX, angY, 0);
         rb.velocity = transform.forward * vel;
 
-        targetDir = rb.velocity.normalized;
-        targetVelocity = vel;
+        //targetDir = rb.velocity.normalized;
+        //targetVelocity = vel;
 
         GetComponent<SphereCollider>().radius = pickupRadius;
         //ready = false;
