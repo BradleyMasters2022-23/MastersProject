@@ -29,4 +29,9 @@ public class Fragment : ScriptableObject
     {
        return AllNotesManager.instance.GetNote(noteID).displayName;
     }
+
+    public int GetFragmentID() 
+    { 
+        return fragmentID; 
+    }
 }

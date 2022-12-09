@@ -21,7 +21,13 @@ public class HallwayLoader : SegmentLoader
     protected override IEnumerator UniquePoolInitialization()
     {
         NoteObject[] temp = AllNotesManager.instance.GetAllLostNotes();
-
+        foreach(NoteObject note in temp)
+        {
+            foreach(Fragment fragment in note.GetAllLostFragments())
+            {
+                fragments.Add(fragment);
+            }
+        }
 
         // Leave this stuff alone and as the last item
 
@@ -31,8 +37,11 @@ public class HallwayLoader : SegmentLoader
 
     protected override void UniqueActivate()
     {
+        Fragment temp = fragments[Random.Range(0, fragments.Count)];
         fragSpawner.GetComponent<FragmentSpawner>().SetSpawnPoint(fragSpawnPoint);
-        fragSpawner.GetComponent<FragmentSpawner>().SpawnFragment();
+        fragSpawner.GetComponent<FragmentSpawner>().SpawnFragment(temp);
+        fragments.Remove(temp);
+        Debug.Log(temp.GetFragmentID());
         return;
     }
 

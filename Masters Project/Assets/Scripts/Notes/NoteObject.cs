@@ -79,6 +79,11 @@ public class NoteObject : ScriptableObject
       return fragments;
     }
 
+    public List<Fragment> GetAllLostFragments()
+    {
+        return lostFragments;
+    }
+
     /// <summary>
     /// returns a random fragment from lostFragments
     /// </summary>
