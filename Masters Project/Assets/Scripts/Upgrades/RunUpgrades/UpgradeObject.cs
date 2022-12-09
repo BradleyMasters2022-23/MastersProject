@@ -8,7 +8,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Masters.CoreUpgradeVariables;
 
 [CreateAssetMenu(menuName = "Gameplay/Upgrade Data")]
 public class UpgradeObject : ScriptableObject {
