@@ -14,13 +14,17 @@ public class HallwayLoader : SegmentLoader
 {
     [SerializeField] private GameObject fragSpawner;
     [SerializeField] private Transform fragSpawnPoint;
+    private List<Fragment> fragments = new List<Fragment>();
 
     [SerializeField] private GameObject upgradeContainer;
 
     protected override IEnumerator UniquePoolInitialization()
     {
+        NoteObject[] temp = AllNotesManager.instance.GetAllLostNotes();
+
 
         // Leave this stuff alone and as the last item
+
         initialized = true;
         yield return null;
     }

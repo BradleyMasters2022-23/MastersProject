@@ -31,7 +31,7 @@ public class AllNotesManager : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
@@ -43,14 +43,14 @@ public class AllNotesManager : MonoBehaviour
     }
 
     private void Start() {
-      // adds all NoteObjects in notes to lostNotes on first load
-      foreach(NoteObject note in notes)
-      {
-        if(!note.AllFragmentsFound() && !lostNotes.Contains(note))
+        // adds all NoteObjects in notes to lostNotes on first load
+        foreach (NoteObject note in notes)
         {
-          lostNotes.Add(note);
+            if (!note.AllFragmentsFound() && !lostNotes.Contains(note))
+            {
+                lostNotes.Add(note);
+            }
         }
-      }
     }
 
     /// <summary>
@@ -68,7 +68,7 @@ public class AllNotesManager : MonoBehaviour
     /// <param name="note"> note to be removed from lostNotes</param>
     public void FindNote(NoteObject note)
     {
-        if(lostNotes.Contains(note)) {
+        if (lostNotes.Contains(note)) {
             lostNotes.Remove(note);
         }
         return;
@@ -76,7 +76,7 @@ public class AllNotesManager : MonoBehaviour
 
     public bool NoteFindable()
     {
-        if(lostNotes.Count == 0)
+        if (lostNotes.Count == 0)
         {
             return false;
         }
@@ -87,5 +87,17 @@ public class AllNotesManager : MonoBehaviour
     public NoteObject GetNote(int index)
     {
         return notes[index];
+    }
+
+    public NoteObject[] GetAllLostNotes() {
+        NoteObject[] temp = new NoteObject[lostNotes.Count];
+        int i = 0;
+        foreach(NoteObject note in lostNotes)
+        {
+            temp[i] = note;
+            i++;
+        }
+
+        return temp;
     }
 }

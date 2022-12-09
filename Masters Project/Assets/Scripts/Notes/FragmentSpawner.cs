@@ -18,10 +18,18 @@ public class FragmentSpawner : MonoBehaviour
     public void SpawnFragment()
     {
         if(FragShouldSpawn()) {
-            Debug.Log(FragShouldSpawn());
             GameObject obj = CreateFrag();
             obj.GetComponent<Collider>().enabled = true;
         } 
+    }
+
+    public void SpawnFragment(Fragment fragment)
+    {
+        if(FragShouldSpawn())
+        {
+            GameObject obj = CreateFrag(fragment);
+            obj.GetComponent<Collider>().enabled = true;
+        }
     }
 
     private GameObject CreateFrag() {
@@ -30,6 +38,14 @@ public class FragmentSpawner : MonoBehaviour
 
         return obj;
     }
+
+    private GameObject CreateFrag(Fragment fragment)
+    {
+        GameObject obj = Instantiate(fragInteractable, fragSpawnPoint.transform.position, fragSpawnPoint.rotation);
+        obj.GetComponent<FragmentInteract>().SetUp(fragment);
+
+        return obj;
+    } 
 
     private bool FragShouldSpawn()
     {
