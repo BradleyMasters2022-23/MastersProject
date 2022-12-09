@@ -26,10 +26,15 @@ public class FragmentSpawner : MonoBehaviour
 
     private GameObject CreateFrag() {
         Fragment temp = AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment();
-        do
+        
+        if(temp.spawned)
         {
-            temp = AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment();
-        } while (temp.spawned) ;
+            do
+            {
+                temp = AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment();
+
+            } while (temp.spawned);
+        }
 
         temp.spawned = true;
         GameObject obj = Instantiate(fragInteractable, fragSpawnPoint.transform.position, fragSpawnPoint.rotation);
