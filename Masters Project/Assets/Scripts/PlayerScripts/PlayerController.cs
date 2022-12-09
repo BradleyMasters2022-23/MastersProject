@@ -599,7 +599,7 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
-    #region Getters
+    #region Getters & Setters
 
     /// <summary>
     /// get # of jumps
@@ -610,6 +610,12 @@ public class PlayerController : MonoBehaviour
 
     public void RefreshJumps() {
       currentJumps = jumps.Current;
+    }
+
+    public void SetMoveSpeed(float speedMultiplier)
+    {
+        float temp = maxMoveSpeed.Current * speedMultiplier;
+        maxMoveSpeed.ChangeVal(temp);
     }
 
     #endregion
