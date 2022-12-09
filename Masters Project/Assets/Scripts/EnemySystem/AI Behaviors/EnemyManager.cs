@@ -240,15 +240,15 @@ public class EnemyManager : MonoBehaviour
                 || (!stopChaseOnLineOfSight && distToPlayer >= startChastDist && lineOfSightTracker.TimerDone());
 
             // if player is too far, start chasing
-            if (chaseTrigger)
+            if (chaseBehavior != null && chaseTrigger)
             {
                 yield return StartCoroutine(HandleChase());
-
-
             }
             else if ( (strafeBehavior != null && strafeBehavior.CanStrafe()) || (mainAttack != null && mainAttack.CanDoAttack()))
             {
-                if(strafeBehavior == null)
+                Debug.Log("Calling attack!");
+
+                if (strafeBehavior == null)
                 {
                     yield return StartCoroutine(HandleAttack());
                 }
@@ -279,7 +279,7 @@ public class EnemyManager : MonoBehaviour
                 // If nothing else, look at target
                 if (lookBehavior.state == BaseEnemyMovement.MoveState.Standby)
                 {
-                    //Debug.Log("Calling rotate behavior due to nothing else!");
+                    Debug.Log("Calling rotate behavior due to nothing else!");
                     lookBehavior.state = BaseEnemyMovement.MoveState.Moving;
                     lookBehavior.SetTarget(player.transform);
                 }

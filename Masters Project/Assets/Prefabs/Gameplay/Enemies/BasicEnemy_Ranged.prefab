@@ -385,7 +385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxVerticalKnockback: 0
-  maxHealth: 100
+  maxHealth: 140
   immortal: 0
   deathVFX: {fileID: 8273445605695135385, guid: 3c02a13cc5fc9994f8787e38cd6a77ea, type: 3}
   hideUIDelay: 0
@@ -443,19 +443,22 @@ MonoBehaviour:
   - name: default
     moveSpeed: 11
     rotationSpeed: 2.5
+    acceleration: 30
   - name: strafe
     moveSpeed: 8
     rotationSpeed: 3
+    acceleration: 40
   currentMoveStates:
     name: 
     moveSpeed: 0
     rotationSpeed: 0
+    acceleration: 0
   activateDelay: 0.25
   spawnSound: {fileID: 0}
   lookBehavior: {fileID: 5617857952634112433}
   chaseBehavior: {fileID: 6173771787627512305}
   startChastDist: 90
-  stopChaseDist: 30
+  stopChaseDist: 35
   stopChaseOnLineOfSight: 1
   noLineOfSightDelay: 5
   postChaseCD: 0.1
@@ -483,9 +486,9 @@ MonoBehaviour:
   currentAttackState: 0
   attackReady: 1
   attackCoolown: 3
-  indicatorDuration: 0.6
+  indicatorDuration: 0.65
   rotateDuringIndication: 1
-  finishDuration: 1
+  finishDuration: 0.55
   rotateDuringFinish: 0
   rotationSpeed: 3
   attackConeRadius: 15
@@ -507,7 +510,7 @@ MonoBehaviour:
   indicatorTrackConeRange: 50
   indicatorStunnedDuration: 0.6
   indicatorVFXPrefab: {fileID: 1951622810807663121, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
-  indicatorScale: 5
+  indicatorScale: 7
   shootVFXPrefab: {fileID: 9110516864071591092, guid: 54db9bb81c534aa4e87c63fbd1d7021a, type: 3}
   shootVFXScale: 3
   indicatorStunned: 0
@@ -683,13 +686,13 @@ MonoBehaviour:
   collisionLayers:
     serializedVersion: 2
     m_Bits: 9
-  sideToSideDistance: {x: 2.5, y: 6}
+  sideToSideDistance: {x: 3.2, y: 8}
   forwardAndBackDistance: {x: 0.8, y: 2}
   moveProfile: 1
   maxRange: 40
   minRange: 20
   relinquishRotation: 1
-  repositionCooldown: {x: 1, y: 2}
+  repositionCooldown: {x: 2, y: 4}
 --- !u!114 &4939085670605044502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -710,7 +713,7 @@ MonoBehaviour:
   finishDuration: 0
   rotateDuringFinish: 1
   rotationSpeed: 3
-  attackConeRadius: 0
+  attackConeRadius: 45
   lineOfSightReq: 0
   lineOfSightWidth: 0
   autoLoopAttack: 0
@@ -718,18 +721,18 @@ MonoBehaviour:
   projectile: {fileID: 8727397786430278917, guid: 72ddf08186379004e8a2d2b56de45efb, type: 3}
   shootPoints:
   - {fileID: 8900093909637964389}
-  numOfShots: 5
-  delayBetweenShots: 0.1
-  leadStrength: {x: 0.5, y: 1.5}
+  numOfShots: 10
+  delayBetweenShots: 0.07
+  leadStrength: {x: 0, y: 0.6}
   leadConeRadius: 15
-  firstShotAccuracy: {x: 2, y: 2.8}
-  normalAccuracyRange: {x: 0, y: 2.8}
+  firstShotAccuracy: {x: 2, y: 3.2}
+  normalAccuracyRange: {x: 0, y: 3.2}
   rotateDuringAttack: 1
   attackTrackConeRange: 50
-  indicatorTrackConeRange: 0
-  indicatorStunnedDuration: 0
+  indicatorTrackConeRange: 50
+  indicatorStunnedDuration: 0.6
   indicatorVFXPrefab: {fileID: 1951622810807663121, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
-  indicatorScale: 0.8
+  indicatorScale: 1
   shootVFXPrefab: {fileID: 9110516864071591092, guid: 54db9bb81c534aa4e87c63fbd1d7021a, type: 3}
   shootVFXScale: 1
   indicatorStunned: 0

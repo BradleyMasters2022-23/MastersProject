@@ -78,7 +78,8 @@ public abstract class BaseEnemyMovement : MonoBehaviour
 
         // defSpeed = agent.speed;
         // defRot = agent.angularSpeed;
-        agent.updateRotation = false;
+        if(agent!= null)
+            agent.updateRotation = false;
     }
 
     protected virtual void Update()
@@ -99,9 +100,13 @@ public abstract class BaseEnemyMovement : MonoBehaviour
 
     protected virtual void StateUpdate()
     {
-        agent.speed = TimeManager.WorldTimeScale * manager.currentMoveStates.moveSpeed;
-        agent.angularSpeed = TimeManager.WorldTimeScale * manager.currentMoveStates.rotationSpeed;
-        agent.acceleration = manager.currentMoveStates.acceleration;
+        if (agent != null)
+        {
+            agent.speed = TimeManager.WorldTimeScale * manager.currentMoveStates.moveSpeed;
+            agent.angularSpeed = TimeManager.WorldTimeScale * manager.currentMoveStates.rotationSpeed;
+            agent.acceleration = manager.currentMoveStates.acceleration;
+        }
+            
         rotationSpeed = manager.currentMoveStates.rotationSpeed;
 
         switch (state)
@@ -131,19 +136,25 @@ public abstract class BaseEnemyMovement : MonoBehaviour
     /// <param name="target"></param>
     protected virtual void GoToTarget(Vector3 target)
     {
+        if (agent is null)
+            return;
+
         if (target == null)
         {
             Debug.Log("No target detected, resetting path");
+
             agent.ResetPath();
             return;
         }
 
-        if (target != lastTargetPos)
-        {
-            lastTargetPos = target;
-            agent.SetDestination(target);
-        }
-        
+        agent.SetDestination(target);
+
+        //if (target != lastTargetPos)
+        //{
+        //    lastTargetPos = target;
+        //    agent.SetDestination(target);
+        //}
+
     }
 
     /// <summary>
@@ -196,6 +207,9 @@ public abstract class BaseEnemyMovement : MonoBehaviour
     /// <returns></returns>
     protected IEnumerator CurvedJump(AnimationCurve curve, float duration)
     {
+        if (agent is null)
+            yield break;
+
         // Get starting data
         OffMeshLinkData data = agent.currentOffMeshLinkData;
         Vector3 startPos = agent.transform.position;
@@ -244,7 +258,9 @@ public abstract class BaseEnemyMovement : MonoBehaviour
     /// <returns></returns>
     protected IEnumerator RotateTo(Vector3 direction)
     {
-        agent.updateRotation = false;
+
+        if (agent != null)
+            agent.updateRotation = false;
 
         // Get target rotation
         Quaternion rot = Quaternion.LookRotation(direction);
@@ -286,7 +302,8 @@ public abstract class BaseEnemyMovement : MonoBehaviour
         if (state != MoveState.Moving || direction == Vector3.zero)
             return;
 
-        agent.updateRotation = false;
+        if (agent != null)
+            agent.updateRotation = false;
 
         // Get target rotation
         Quaternion rot = Quaternion.LookRotation(direction);
