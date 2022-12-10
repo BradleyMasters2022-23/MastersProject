@@ -56,6 +56,12 @@ public abstract class Attack : MonoBehaviour
     protected void TriggerTarget(Collider other)
     {
         Hit();
+
+        DestroyProjScript test;
+
+        if (other.TryGetComponent<DestroyProjScript>(out test))
+            test.DestroyProj();
+
         DealDamage(other.gameObject);
     }
 
@@ -78,4 +84,11 @@ public abstract class Attack : MonoBehaviour
     /// </summary>
     public abstract void Activate();
 
+    /// <summary>
+    /// Call a hit function, public so others can call it
+    /// </summary>
+    public virtual void ScriptCallHit()
+    {
+        Hit();
+    }
 }

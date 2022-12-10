@@ -6,6 +6,7 @@
  * Description - Concrete projectile that flies straight
  * ================================================================================================
  */
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -73,6 +74,12 @@ public class ProjectileAccelerate : RangeAttack
     private float flyTime;
     private bool reachedTarget;
 
+    [ShowIf("@this.acceleratingRate < 1")]
+    [Tooltip("If this shot is decelerating and can stop, how long does it live for?")]
+    [SerializeField] private float projectileLifetime;
+
+    private ScaledTimer lifetime;
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -119,7 +126,8 @@ public class ProjectileAccelerate : RangeAttack
             Hit();
         }
 
-        
+        if (acceleratingRate < 1 && lifetime.TimerDone())
+            Hit();
 
         lastPos = transform.position;
     }
@@ -150,7 +158,7 @@ public class ProjectileAccelerate : RangeAttack
         rb = GetComponent<Rigidbody>();
         targetVelocity = startSpeed;
         targetDir = transform.forward;
-
+        lifetime = new ScaledTimer(projectileLifetime, affectedByTimestop);
         active = true;
 
         if (enemyShoot.Length > 0)
