@@ -33,7 +33,7 @@ public class AmbianceManager : MonoBehaviour
     {
         if (normalAmbiance != null && TimeManager.WorldTimeScale == 1 && source.clip != normalAmbiance)
         {
-            Debug.Log("Starting normal ambaince");
+            //Debug.Log("Starting normal ambaince");
 
             source.clip = normalAmbiance;
             source.volume = ambianceVolume;
@@ -43,7 +43,7 @@ public class AmbianceManager : MonoBehaviour
         }
         else if (timeStopAmbiance != null && TimeManager.WorldTimeScale == 0 && source.clip != timeStopAmbiance)
         {
-            Debug.Log("Starting timestop ambiance");
+            //Debug.Log("Starting timestop ambiance");
 
             source.clip = timeStopAmbiance;
             source.volume = timeStopAmbianceVolume;
@@ -53,7 +53,7 @@ public class AmbianceManager : MonoBehaviour
         }
         else if (TimeManager.WorldTimeScale != 0 && TimeManager.WorldTimeScale != 1 && source.clip != null)
         {
-            Debug.Log("Cleaing ambiance");
+            //Debug.Log("Cleaing ambiance");
 
             source.Stop();
             source.clip = null;
