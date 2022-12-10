@@ -316,7 +316,11 @@ public class SimpleShoot : AttackTarget
     private Vector3 GetLeadedPosition(Transform target, float strength)
     {
         if (strength == 0)
+        {
+            Debug.Log("No lead strenght, setting to target position at: " + target.position);
             return target.position;
+        }
+            
 
         RangeAttack temp = projectile.GetComponent<RangeAttack>();
 

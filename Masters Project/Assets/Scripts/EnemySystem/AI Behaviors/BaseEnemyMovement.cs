@@ -258,13 +258,13 @@ public abstract class BaseEnemyMovement : MonoBehaviour
     /// <returns></returns>
     protected IEnumerator RotateTo(Vector3 direction)
     {
-
         if (agent != null)
             agent.updateRotation = false;
 
         // Get target rotation
         Quaternion rot = Quaternion.LookRotation(direction);
         rot = Quaternion.Euler(0, rot.eulerAngles.y, 0);
+
 
         while (transform.rotation.eulerAngles.y != rot.eulerAngles.y)
         {
@@ -306,7 +306,7 @@ public abstract class BaseEnemyMovement : MonoBehaviour
             agent.updateRotation = false;
 
         //Debug.Log("calling to rotate towards something");
-        //Debug.DrawRay(transform.position, direction, Color.yellow);
+        Debug.DrawRay(transform.position, direction, Color.yellow);
 
         // Get target rotation
         Quaternion rot = Quaternion.LookRotation(direction);
