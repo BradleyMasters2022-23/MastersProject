@@ -317,7 +317,7 @@ public class SimpleShoot : AttackTarget
     {
         if (strength == 0)
         {
-            Debug.Log("No lead strenght, setting to target position at: " + target.position);
+            // Debug.Log("No lead strenght, setting to target position at: " + target.position);
             return target.position;
         }
             

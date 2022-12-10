@@ -79,7 +79,7 @@ public class LookAtTarget : BaseEnemyMovement
                 // look at player
                 else
                 {
-                    Debug.Log("Rotate to target");
+                    //Debug.Log("Rotate to target");
                     RotateToInUpdate(target);
                 }
             }
@@ -111,7 +111,7 @@ public class LookAtTarget : BaseEnemyMovement
     /// </summary>
     public void EnterStun()
     {
-        Debug.Log("Entering stun!");
+        //Debug.Log("Entering stun!");
         stunnedTracker.ResetTimer();
         stunned = true;
         acquiredTargetOnce = false;
@@ -119,7 +119,7 @@ public class LookAtTarget : BaseEnemyMovement
 
     public void EndStun()
     {
-        Debug.Log("Ending stun!");
+        //Debug.Log("Ending stun!");
         stunnedCooldown.ResetTimer();
         stunned = false;
     }
