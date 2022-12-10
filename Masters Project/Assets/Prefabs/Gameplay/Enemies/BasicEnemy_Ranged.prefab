@@ -390,8 +390,8 @@ MonoBehaviour:
   deathVFX: {fileID: 8273445605695135385, guid: 3c02a13cc5fc9994f8787e38cd6a77ea, type: 3}
   hideUIDelay: 0
   timeOrb: {fileID: 3071240432754548792, guid: 2001e4aa90ac76a47866171fcaafdf7f, type: 3}
-  dropChance: 80
-  dropNumerRange: {x: 4, y: 5}
+  dropChance: 85
+  dropNumerRange: {x: 5, y: 6}
 --- !u!195 &6878320425555973780
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -493,7 +493,7 @@ MonoBehaviour:
   rotationSpeed: 3
   attackConeRadius: 15
   lineOfSightReq: 1
-  lineOfSightWidth: 1
+  lineOfSightWidth: 0.5
   autoLoopAttack: 0
   target: {fileID: 0}
   projectile: {fileID: 8727397786430278917, guid: 406069cb0a402f342af7f980f4ed2f6c, type: 3}
@@ -723,7 +723,7 @@ MonoBehaviour:
   - {fileID: 8900093909637964389}
   numOfShots: 10
   delayBetweenShots: 0.07
-  leadStrength: {x: 0, y: 0.6}
+  leadStrength: {x: 0.3, y: 1.7}
   leadConeRadius: 15
   firstShotAccuracy: {x: 2, y: 3.2}
   normalAccuracyRange: {x: 0, y: 3.2}
@@ -774,6 +774,7 @@ MonoBehaviour:
   stunnedDuration: 2
   stunned: 0
   stunCooldown: 8
+  acquiredTargetOnce: 0
 --- !u!1 &6647373963108662847
 GameObject:
   m_ObjectHideFlags: 0

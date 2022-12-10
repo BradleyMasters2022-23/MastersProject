@@ -41,7 +41,7 @@ public class LookAtTarget : BaseEnemyMovement
     {
         // give quick invulnerability to stun when starting
         target = t;
-        Debug.Log("Looking at " + t.name);
+        //Debug.Log("Looking at " + t.name);
         if(stunnedCooldown != null)
             stunnedCooldown.ResetTimer();
     }
