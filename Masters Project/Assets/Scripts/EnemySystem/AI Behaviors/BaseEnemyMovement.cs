@@ -82,7 +82,7 @@ public abstract class BaseEnemyMovement : MonoBehaviour
             agent.updateRotation = false;
     }
 
-    protected virtual void Update()
+    protected virtual void FixedUpdate()
     {
         // dont do anything while on standby
         if (state == MoveState.Standby)
@@ -304,6 +304,9 @@ public abstract class BaseEnemyMovement : MonoBehaviour
 
         if (agent != null)
             agent.updateRotation = false;
+
+        //Debug.Log("calling to rotate towards something");
+        //Debug.DrawRay(transform.position, direction, Color.yellow);
 
         // Get target rotation
         Quaternion rot = Quaternion.LookRotation(direction);

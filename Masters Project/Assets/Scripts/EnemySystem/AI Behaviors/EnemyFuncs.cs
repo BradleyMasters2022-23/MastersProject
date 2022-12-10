@@ -31,7 +31,7 @@ namespace Masters.AI
             RaycastHit hit;
             bool landed;
 
-            Debug.DrawRay(source.position + Vector3.up, dir, Color.red);
+            // Debug.DrawRay(source.position + Vector3.up, dir, Color.red);
 
             // if no width, use raycast
             if(width <= 0)

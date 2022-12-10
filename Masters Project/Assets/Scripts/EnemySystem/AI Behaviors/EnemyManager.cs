@@ -12,9 +12,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Masters.AI;
 using UnityEngine.AI;
-using Unity.VisualScripting;
-using UnityEngine.UIElements;
-using JetBrains.Annotations;
 
 [System.Serializable]
 public struct MovementStates
@@ -33,7 +30,7 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private MovementStates[] characterMovementStates;
     
     [Tooltip("What is the current move state")]
-    public MovementStates currentMoveStates;
+    [HideInInspector] public MovementStates currentMoveStates;
 
     [Tooltip("When spawned, how long does the AI wait before activating")]
     [SerializeField] private float activateDelay = 0;
@@ -133,11 +130,15 @@ public class EnemyManager : MonoBehaviour
         }
 
         // Check if it has proper player movement
-        if (agent != null && characterMovementStates.Length > 0)
+        if (characterMovementStates.Length > 0)
         {
             currentMoveStates = characterMovementStates[0];
-            agent.speed = currentMoveStates.moveSpeed;
-            agent.angularSpeed = currentMoveStates.rotationSpeed;
+
+            if(agent != null)
+            {
+                agent.speed = currentMoveStates.moveSpeed;
+                agent.angularSpeed = currentMoveStates.rotationSpeed;
+            }
         }
         else if(agent != null && characterMovementStates.Length <= 0)
         {
@@ -246,7 +247,7 @@ public class EnemyManager : MonoBehaviour
             }
             else if ( (strafeBehavior != null && strafeBehavior.CanStrafe()) || (mainAttack != null && mainAttack.CanDoAttack()))
             {
-                Debug.Log("Calling attack!");
+                //Debug.Log("Calling attack!");
 
                 if (strafeBehavior == null)
                 {
@@ -279,7 +280,7 @@ public class EnemyManager : MonoBehaviour
                 // If nothing else, look at target
                 if (lookBehavior.state == BaseEnemyMovement.MoveState.Standby)
                 {
-                    Debug.Log("Calling rotate behavior due to nothing else!");
+                    //Debug.Log("Calling rotate behavior due to nothing else!");
                     lookBehavior.state = BaseEnemyMovement.MoveState.Moving;
                     lookBehavior.SetTarget(player.transform);
                 }
@@ -337,12 +338,12 @@ public class EnemyManager : MonoBehaviour
         lookRot.x = 0;
         lookRot.z = 0;
         transform.rotation = Quaternion.Euler(lookRot);
-        Debug.Log("[CHASE] Setting look rot to " + lookRot.y);
+        //Debug.Log("[CHASE] Setting look rot to " + lookRot.y);
 
         // attack after if possible
         if(mainAttack != null && mainAttack.CanDoAttack())
         {
-            Debug.Log("[CHASE] Calling attack post strafe");
+            //Debug.Log("[CHASE] Calling attack post strafe");
             yield return StartCoroutine(HandleAttack());
         }
     }

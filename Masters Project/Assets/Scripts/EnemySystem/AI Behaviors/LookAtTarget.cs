@@ -25,12 +25,16 @@ public class LookAtTarget : BaseEnemyMovement
     [Tooltip("How long is the cooldown between stuns")]
     [SerializeField] private float stunCooldown;
 
+    [SerializeField] private bool acquiredTargetOnce;
+
+
     protected override void Awake()
     {
         base.Awake();
         stunnedTracker = new ScaledTimer(stunnedDuration);
         stunnedCooldown= new ScaledTimer(stunCooldown);
         stunned = false;
+        acquiredTargetOnce = false;
     }
 
     public void SetTarget(Transform t)
@@ -47,35 +51,48 @@ public class LookAtTarget : BaseEnemyMovement
         if (target == null)
             return;
 
-        if(!stunned)
+
+        if (!stunned)
         {
             // If looking at target...
-            if(LookingAtTarget() || !stunnedCooldown.TimerDone())
+            if (LookingAtTarget() || !stunnedCooldown.TimerDone())
             {
                 // Look at player or last position if no player found
                 if (lookAtLastPosition)
                 {
                     if (transform.HasLineOfSight(target, visionMask))
                     {
+                        //Debug.Log("Rotate to target not last pos");
                         RotateToInUpdate(target);
                         lastPlayerPos = transform.position;
                     }
-                    else
+                    else if(lastPlayerPos != null)
                     {
                         RotateToInUpdate(lastPlayerPos - transform.position);
+                    }
+                    else
+                    {
+                        RotateToInUpdate(target);
+                        lastPlayerPos = transform.position;
                     }
                 }
                 // look at player
                 else
                 {
+                    Debug.Log("Rotate to target");
                     RotateToInUpdate(target);
                 }
             }
             // If not looking at target, enter stun
-            else if(stunnedCooldown.TimerDone())
+            else if(stunnedCooldown.TimerDone() && acquiredTargetOnce)
             {
                 EnterStun();
             }
+
+
+            // acquired target when looking at them once in a tight cone
+            if (!acquiredTargetOnce && transform.InVisionCone(target, 5))
+                acquiredTargetOnce = true;
         }
         else
         {
@@ -94,12 +111,15 @@ public class LookAtTarget : BaseEnemyMovement
     /// </summary>
     public void EnterStun()
     {
+        Debug.Log("Entering stun!");
         stunnedTracker.ResetTimer();
         stunned = true;
+        acquiredTargetOnce = false;
     }
 
     public void EndStun()
     {
+        Debug.Log("Ending stun!");
         stunnedCooldown.ResetTimer();
         stunned = false;
     }
