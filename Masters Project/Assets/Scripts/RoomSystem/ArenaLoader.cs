@@ -39,7 +39,7 @@ public class ArenaLoader : SegmentLoader
     {
         // Get a random encounter from the segment info
         chosenEncounter = segmentInfo.potentialEncounters[Random.Range(0, segmentInfo.potentialEncounters.Length)];
-
+        Debug.Log("Loading in encounter named: " + chosenEncounter.name);
         
 
         // Send necessary data to spawner [spawnpoints, encounters]

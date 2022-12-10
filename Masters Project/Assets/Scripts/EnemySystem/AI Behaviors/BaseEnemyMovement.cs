@@ -306,7 +306,7 @@ public abstract class BaseEnemyMovement : MonoBehaviour
             agent.updateRotation = false;
 
         //Debug.Log("calling to rotate towards something");
-        Debug.DrawRay(transform.position, direction, Color.yellow);
+        //Debug.DrawRay(transform.position, direction, Color.yellow);
 
         // Get target rotation
         Quaternion rot = Quaternion.LookRotation(direction);

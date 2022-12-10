@@ -323,8 +323,8 @@ public abstract class AttackTarget : MonoBehaviour
         Vector3 direction;
         direction = ((targetPos) - transform.position);
 
-        Debug.Log($"Looking at direction: {direction}");
-        Debug.DrawRay(transform.position, direction, Color.yellow);
+        //Debug.Log($"Looking at direction: {direction}");
+        //Debug.DrawRay(transform.position, direction, Color.yellow);
 
         // rotate towards them, clamped
         Quaternion rot = Quaternion.LookRotation(direction);
