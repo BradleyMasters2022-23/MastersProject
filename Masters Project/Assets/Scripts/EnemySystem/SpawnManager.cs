@@ -8,7 +8,9 @@
  */
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -86,6 +88,10 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     private bool finished;
 
+
+    private GameControls controls;
+    private InputAction endCheat;
+
     /// <summary>
     /// Initialize singleton, internal trackers
     /// </summary>
@@ -100,12 +106,22 @@ public class SpawnManager : MonoBehaviour
             Destroy(this);
             return;
         }
-
+        
+        finished = true;
+        
         s = gameObject.AddComponent<AudioSource>();
         spawnQueue = new Queue<GameObject>();
 
         spawnDelayTimer = new ScaledTimer(spawnDelay.x);
         startDelayTimer = new ScaledTimer(startDelay);
+    }
+
+    private void Start()
+    {
+        controls = GameManager.controls;
+        endCheat = controls.PlayerGameplay.ClearEncounter;
+        endCheat.performed += CheatReset;
+        endCheat.Enable();
     }
 
     /// <summary>
@@ -295,6 +311,8 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        endCheat.Disable();
+
         if (spawnRoutine != null)
             StopCoroutine(spawnRoutine);
     }
@@ -382,6 +400,22 @@ public class SpawnManager : MonoBehaviour
     public void AddEnemy()
     {
         enemyCount++;
+    }
+
+    private void CheatReset(InputAction.CallbackContext c)
+    {
+        Debug.Log("Trying to call spawn manager cheat...");
+
+        if (finished)
+            return;
+
+        Debug.Log("Spawn manager cheat can work!");
+
+        if (spawnRoutine!= null)
+            StopCoroutine(spawnRoutine);
+
+        spawnQueue.Clear();
+        CompleteEncounter();
     }
 
 }

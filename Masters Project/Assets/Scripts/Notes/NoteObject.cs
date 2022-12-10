@@ -32,7 +32,7 @@ public class NoteObject : ScriptableObject
     /// <summary>
     /// initial update to initialize lostFragments
     /// </summary>
-    private void Start()
+    private void Awake()
     {
         UpdateNote();
     }
