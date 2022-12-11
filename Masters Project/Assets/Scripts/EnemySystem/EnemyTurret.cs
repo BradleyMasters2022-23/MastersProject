@@ -36,6 +36,8 @@ public class EnemyTurret : EnemyBase
     [Tooltip("What layers affects this enemy's vision")]
     [SerializeField] private LayerMask visionLayer;
 
+    [SerializeField] private AttackTarget attackSystem;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,6 +47,7 @@ public class EnemyTurret : EnemyBase
         neutralLook = turretPoint.transform.forward * 5;
 
         returnNeutralDelay = new ScaledTimer(4f);
+        attackSystem.GetComponent<AttackTarget>();
     }
 
     private void FixedUpdate()
@@ -64,20 +67,25 @@ public class EnemyTurret : EnemyBase
             case EnemyState.Attacking:
                 {
 
-                    // Shoot every few seconds if in range
-                    if (time >= shootTime)
+                    if(attackSystem.currentAttackState == AttackState.Ready)
                     {
-                        foreach (Transform t in shootPoints)
-                        {
-                            Shoot(t);
-                        }
+                        attackSystem.Attack(player.transform);
+                    }
 
-                        time = 0;
-                    }
-                    else if (time < shootTime)
-                    {
-                        time += Time.deltaTime * currTime;
-                    }
+                    // Shoot every few seconds if in range
+                    //if (time >= shootTime)
+                    //{
+                    //    foreach (Transform t in shootPoints)
+                    //    {
+                    //        Shoot(t);
+                    //    }
+
+                    //    time = 0;
+                    //}
+                    //else if (time < shootTime)
+                    //{
+                    //    time += Time.deltaTime * currTime;
+                    //}
 
                     break;
                 }
@@ -85,19 +93,23 @@ public class EnemyTurret : EnemyBase
 
         // Get direction of target, rotate towards them
 
-        Vector3 direction = (target - shootPoints[0].position);
+
+
+
+        Vector3 direction = (target - shootPoints[0].position).normalized;
         Quaternion rot = Quaternion.LookRotation(direction);
 
-        
+        if((attackSystem.currentAttackState == AttackState.Cooldown || attackSystem.currentAttackState == AttackState.Ready))
+        {
+            // Limit the next angles
+            float nextXAng = Mathf.Clamp(Mathf.DeltaAngle(turretPoint.transform.localRotation.eulerAngles.x, rot.eulerAngles.x), -rotationSpeed, rotationSpeed) * currTime;
+            float nextYAng = Mathf.Clamp(Mathf.DeltaAngle(gameObject.transform.rotation.eulerAngles.y, rot.eulerAngles.y), -rotationSpeed, rotationSpeed) * currTime;
 
-        // Limit the next angles
-        float nextXAng = Mathf.Clamp(Mathf.DeltaAngle(turretPoint.transform.localRotation.eulerAngles.x, rot.eulerAngles.x), -rotationSpeed, rotationSpeed) * currTime;
-        float nextYAng = Mathf.Clamp(Mathf.DeltaAngle(gameObject.transform.rotation.eulerAngles.y, rot.eulerAngles.y), -rotationSpeed, rotationSpeed) * currTime;
-
-        // Adjust the vertical neck of the turret
-        turretPoint.transform.localRotation = Quaternion.Euler(turretPoint.transform.localRotation.eulerAngles.x + nextXAng, 0, 0);
-        // Adjust the horizontal base of the turret
-        gameObject.transform.rotation = Quaternion.Euler(0, gameObject.transform.rotation.eulerAngles.y + nextYAng, 0);
+            // Adjust the vertical neck of the turret
+            turretPoint.transform.localRotation = Quaternion.Euler(turretPoint.transform.localRotation.eulerAngles.x + nextXAng, 0, 0);
+            // Adjust the horizontal base of the turret
+            gameObject.transform.rotation = Quaternion.Euler(0, gameObject.transform.rotation.eulerAngles.y + nextYAng, 0);
+        }
     }
 
     /// <summary>
@@ -149,8 +161,8 @@ public class EnemyTurret : EnemyBase
 
         // Set mask to ignore raycasts and enemy layer
         //Debug.DrawRay(turretPoint.transform.position, dir, Color.red, 2f);
-        Debug.DrawRay(turretPoint.transform.position, dirHigh, Color.blue, 2f);
-        Debug.DrawRay(turretPoint.transform.position, dirLow, Color.green, 2f);
+        //Debug.DrawRay(turretPoint.transform.position, dirHigh, Color.blue, 2f);
+        //Debug.DrawRay(turretPoint.transform.position, dirLow, Color.green, 2f);
 
         // Try to get player
         RaycastHit hit;

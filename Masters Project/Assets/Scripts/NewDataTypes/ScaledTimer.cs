@@ -71,6 +71,15 @@ public class ScaledTimer
     public void ResetTimer(float _newTargetTime)
     {
         ChangeTarget(_newTargetTime);
+
+        if (scaled)
+        {
+            startTime = CoreTimeline.instance.ScaledTimeline;
+        }
+        else
+        {
+            startTime = Time.realtimeSinceStartup;
+        }
     }
 
     /// <summary>
@@ -95,6 +104,23 @@ public class ScaledTimer
         else
         {
             return (Time.realtimeSinceStartup - startTime) >= targetTime;
+        }
+    }
+
+    /// <summary>
+    /// Get the progress of the timer on a 0 to 1 scale.
+    /// 0 is not done. 1 is done.
+    /// </summary>
+    /// <returns>% Progress of time passed. </returns>
+    public float TimerProgress()
+    {
+        if (scaled)
+        {
+            return Mathf.Clamp((CoreTimeline.instance.ScaledTimeline - startTime) / targetTime, 0, 1);
+        }
+        else
+        {
+            return Mathf.Clamp((Time.realtimeSinceStartup - startTime) / targetTime, 0, 1);
         }
     }
 }

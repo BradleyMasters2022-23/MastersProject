@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+using UnityEngine.InputSystem;
 
 public class EnemyHealth : Damagable
 {
@@ -61,6 +62,13 @@ public class EnemyHealth : Damagable
     private ScaledTimer hideUITimer;
 
     /// <summary>
+    /// Input stuff for debug kill command
+    /// </summary>
+    private GameControls controls;
+    private InputAction kill;
+    private InputAction endEncounter;
+
+    /// <summary>
     /// Get the connected slider object
     /// </summary>
     private void Awake()
@@ -74,6 +82,17 @@ public class EnemyHealth : Damagable
         // Update slider values to assigned health values
         healthbar.maxValue = maxHealth;
         healthbar.value = maxHealth;
+    }
+
+    private void Start()
+    {
+        controls = GameManager.controls;
+        kill = controls.PlayerGameplay.Kill;
+        kill.performed += DebugKill;
+        kill.Enable();
+        endEncounter = controls.PlayerGameplay.ClearEncounter;
+        endEncounter.performed += DebugKill;
+        endEncounter.Enable();
     }
 
     private void Update()
@@ -116,11 +135,15 @@ public class EnemyHealth : Damagable
         }
     }
 
+
     /// <summary>
     /// Kill the enemy
     /// </summary>
     protected override void Die()
     {
+        kill.Disable();
+        endEncounter.Disable();
+
         DropOrbs();
 
         // Disable all coroutines currently active
@@ -161,5 +184,15 @@ public class EnemyHealth : Damagable
             // Spawn objects, apply rotation and velocity
             Instantiate(timeOrb, transform.position, Quaternion.identity);
         }
+    }
+
+
+    private void DebugKill(InputAction.CallbackContext c)
+    {
+        // Dont do anything if its immortal as its a dummy instead
+        if (immortal)
+            return;
+
+        Die();
     }
 }
