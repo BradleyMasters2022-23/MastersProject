@@ -189,7 +189,8 @@ public class EnemyHealth : Damagable
         for(int i = 0; i < spawnAmount; i++)
         {
             // Spawn objects, apply rotation and velocity
-            Instantiate(timeOrb, transform.position, Quaternion.identity);
+            if(transform != null)
+                Instantiate(timeOrb, transform.position, Quaternion.identity);
         }
     }
 

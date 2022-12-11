@@ -265,7 +265,7 @@ public class SpawnPoint : MonoBehaviour
 
     private void CheatClear(InputAction.CallbackContext c)
     {
-        Debug.Log("Clear spawnpoints called");
+        //Debug.Log("Clear spawnpoints called");
 
         if(spawnRoutine != null)
             StopCoroutine(spawnRoutine);
