@@ -29,9 +29,11 @@ public class LoadCollectedUpgradesUI : MonoBehaviour
                 "Increase the buffer for the options available!");
             return;
         }
-        
+
+        upgradeAndCount.Clear();
+
         // Condense and count repeats
-        for(int i = 0; i < collectedUpgrades.Count; i++)
+        for (int i = 0; i < collectedUpgrades.Count; i++)
         {
             if (upgradeAndCount.ContainsKey(collectedUpgrades[i]))
             {
