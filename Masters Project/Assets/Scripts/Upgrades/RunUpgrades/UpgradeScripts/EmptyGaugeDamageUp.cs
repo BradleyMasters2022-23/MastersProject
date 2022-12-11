@@ -24,13 +24,13 @@ public class EmptyGaugeDamageUp : IUpgrade
     {
       if(time.GetState() == TimeManager.TimeGaugeState.EMPTIED && !damageUp) {
           damageUp = true;
-          timer.ResetTimer();
+           Debug.Log("Damage up!");
+           timer.ResetTimer();
       }
 
       if(damageUp) {
           
           gun.SetDamageMultiplier(originalDamage*damageMultiplier);
-          Debug.Log("Damage up!");
           if(timer.TimerDone()) {
               damageUp = false;
               gun.SetDamageMultiplier(originalDamage);

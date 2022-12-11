@@ -58,8 +58,4 @@ public class EnemyHitbox : Damagable
     {
         return;
     }
-    private void Awake()
-    {
-        source = gameObject.AddComponent<AudioSource>();
-    }
 }

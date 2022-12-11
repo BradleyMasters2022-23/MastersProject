@@ -9,6 +9,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 [CreateAssetMenu(menuName = "Gameplay/Fragment Data")]
 public class Fragment : ScriptableObject
@@ -19,14 +20,21 @@ public class Fragment : ScriptableObject
     [Tooltip("ID of the note this fragment belongs to.")]
     public int noteID;
 
-    [Tooltip("Content of this fragment.")]
+    [Tooltip("Content of this fragment."), TextArea(15, 50)]
     public string content;
 
     [Tooltip("Whether or not this fragment has been found.")]
-    public bool found;
+    public bool found = false;
+
+    public bool spawned = false;
 
     public string GetNoteName()
     {
        return AllNotesManager.instance.GetNote(noteID).displayName;
+    }
+
+    public int GetFragmentID() 
+    { 
+        return fragmentID; 
     }
 }

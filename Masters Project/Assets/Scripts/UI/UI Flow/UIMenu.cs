@@ -91,7 +91,8 @@ public abstract class UIMenu : MonoBehaviour
         if(animator != null)
         {
             animator.SetBool("open", true);
-            source.PlayOneShot(openMenu, 0.5f);
+            if(openMenu!= null)
+                AudioSource.PlayClipAtPoint(openMenu, Camera.main.transform.position, 0.5f);
         }
     }
 
