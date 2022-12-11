@@ -12,6 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
 public enum AttackState
 {
@@ -76,6 +77,8 @@ public abstract class AttackTarget : MonoBehaviour
 
     protected EnemyManager manager;
 
+    protected AudioSource source;
+
     #region Timer Variables
 
     protected ScaledTimer attackTracker;
@@ -87,6 +90,7 @@ public abstract class AttackTarget : MonoBehaviour
     protected virtual void Awake()
     {
         manager = GetComponent<EnemyManager>();
+        source = GetComponent<AudioSource>();
         attackTracker = new ScaledTimer(attackCoolown);
         indicatorTracker = new ScaledTimer(indicatorDuration);
         finishTracker = new ScaledTimer(finishDuration);

@@ -65,6 +65,9 @@ public class SimpleShoot : AttackTarget
     [SerializeField, AssetsOnly] private GameObject shootVFXPrefab;
     [SerializeField] private float shootVFXScale = 1;
 
+    [SerializeField] private AudioClip indicatorSFX;
+    [SerializeField] private AudioClip shootSFX;
+
     /// <summary>
     /// Get the indicator gameobject references
     /// </summary>
@@ -203,8 +206,11 @@ public class SimpleShoot : AttackTarget
             return;
         }
 
+        if (indicatorSFX != null)
+            source.PlayOneShot(indicatorSFX);
+
         // Tell each one to start
-        foreach(GameObject indicator in indicators)
+        foreach (GameObject indicator in indicators)
         {
             indicator.SetActive(true);
 
@@ -293,6 +299,8 @@ public class SimpleShoot : AttackTarget
             shot.transform.rotation = Quaternion.Euler(aimRotation);
             shot.GetComponent<RangeAttack>().Activate();
         }
+        if(shootSFX != null)
+            source.PlayOneShot(shootSFX);
     }
 
     private Vector3 ApplySpread(Vector3 rot, float minSpread, float maxSpread)

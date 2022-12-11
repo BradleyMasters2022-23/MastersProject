@@ -199,6 +199,8 @@ public class EnemyManager : MonoBehaviour
 
         yield return StartCoroutine(ActivateDelay());
 
+
+
         // start the thing here
         if (agent != null)
         {
@@ -431,6 +433,9 @@ public class EnemyManager : MonoBehaviour
         activateTracker.ResetTimer();
         while (!activateTracker.TimerDone())
             yield return null;
+
+        if(spawnSound!=null)
+            audioSource.PlayOneShot(spawnSound);
     }
 
 

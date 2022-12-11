@@ -40,6 +40,8 @@ public class EnemyHealth : Damagable
     [Tooltip("If told to drop, what is the range of orbs that can drop")]
     [SerializeField] private Vector2 dropNumerRange;
 
+    [SerializeField] private AudioClip deathSound;
+    private AudioSource source;
 
     /// <summary>
     /// List of active coroutines that need to be stopped on death
@@ -82,6 +84,8 @@ public class EnemyHealth : Damagable
         // Update slider values to assigned health values
         healthbar.maxValue = maxHealth;
         healthbar.value = maxHealth;
+
+        source = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -145,6 +149,9 @@ public class EnemyHealth : Damagable
         endEncounter.Disable();
 
         DropOrbs();
+
+        if (deathSound != null)
+            AudioSource.PlayClipAtPoint(deathSound, transform.position);
 
         // Disable all coroutines currently active
         for (int i  = activeRoutines.Count - 1; i >= 0; i--)
