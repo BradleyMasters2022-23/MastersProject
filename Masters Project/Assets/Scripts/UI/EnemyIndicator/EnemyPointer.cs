@@ -92,7 +92,7 @@ public class EnemyPointer : MonoBehaviour
     /// <param name="target"></param>
     public void SetTarget(GameObject target)
     {
-        targetEnemy = target.GetComponent<EnemyBase>().centerMass;
+        targetEnemy = target.transform;
         img = transform.GetChild(0).gameObject;
 
         initialized = true;

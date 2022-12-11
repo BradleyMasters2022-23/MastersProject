@@ -162,7 +162,6 @@ public class PlayerHealth : Damagable
 
         // Update total health
         UpdateHealth();
-        Debug.Log(currHealth);
         source.PlayOneShot(playerDamage, 0.5f);
     }
 

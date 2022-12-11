@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem.XR.Haptics;
-
+using Masters.AI;
 
 
 public class EnemyRange : EnemyBase
@@ -134,14 +134,17 @@ public class EnemyRange : EnemyBase
     /// </summary>
     private Coroutine attackRoutine;
 
+
+    private SimpleShoot attackSystem;
+
     // Start is called before the first frame update
     void Start()
     {
         currTime = TimeManager.WorldTimeScale;
         agent = GetComponent<NavMeshAgent>();
+        attackSystem = GetComponent<SimpleShoot>();
 
         shotRadius = shotPrefab.GetComponent<SphereCollider>().radius;
-
         //jumpCooldown = new ScaledTimer(0.8f);
 
         agent.speed = moveSpeed;
@@ -173,7 +176,8 @@ public class EnemyRange : EnemyBase
                     // Attack if vision and not already attacking
                     if (attackRoutine == null && LineOfSight(playerCenter) && InVision(playerCenter))
                     {
-                        attackRoutine = StartCoroutine(Attack());
+                        //attackRoutine = StartCoroutine(Attack());
+                        attackSystem.Attack(player.transform);
                     }
 
                     // Move towards player when out of range and out of threshold, or in the moving state at all
@@ -192,6 +196,12 @@ public class EnemyRange : EnemyBase
 
                     break;
                 }
+        }
+
+        if(attackSystem.currentAttackState != AttackState.Ready &&
+            attackSystem.currentAttackState != AttackState.Cooldown)
+        {
+            return;
         }
 
         if(moveState != MoveState.Offlink || (moveState == MoveState.Offlink && !faceJump) )
@@ -280,7 +290,6 @@ public class EnemyRange : EnemyBase
         return false;
     }
 
-
     private bool InVision(Transform target)
     {
         Vector3 targetPos = new Vector3(target.position.x, centerMass.position.y, target.position.z);
@@ -289,6 +298,9 @@ public class EnemyRange : EnemyBase
         return (Mathf.Abs(angle) <= lookRadius);
     }
 
+    #region Attack Stuff
+
+    /*
     private void Shoot(Vector3 targetPos)
     {
         // Spawn projectile for each barrel
@@ -376,6 +388,8 @@ public class EnemyRange : EnemyBase
             StopCoroutine(attackRoutine);
     }
 
+    */
+    #endregion
 
     #region Movement
 

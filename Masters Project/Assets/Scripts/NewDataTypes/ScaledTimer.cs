@@ -71,6 +71,15 @@ public class ScaledTimer
     public void ResetTimer(float _newTargetTime)
     {
         ChangeTarget(_newTargetTime);
+
+        if (scaled)
+        {
+            startTime = CoreTimeline.instance.ScaledTimeline;
+        }
+        else
+        {
+            startTime = Time.realtimeSinceStartup;
+        }
     }
 
     /// <summary>
