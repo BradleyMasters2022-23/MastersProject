@@ -39,10 +39,10 @@ public class Projectile : RangeAttack
     [Tooltip("What layers should this impact directly with")]
     [SerializeField] private LayerMask groundLayer;
 
-    [Tooltip("Sound when enemy shoots")]
-    [SerializeField] private AudioClip[] enemyShoot;
-    [Tooltip("Sound when enemy takes a hit")]
-    [SerializeField] private AudioClip[] enemyHit;
+    [Tooltip("Sound when this bullet is shot")]
+    [SerializeField] private AudioClip[] bulletShot;
+    [Tooltip("Sound when this bullet hits something")]
+    [SerializeField] private AudioClip[] bulletHit;
     private AudioSource source;
 
     /// <summary>
@@ -121,9 +121,9 @@ public class Projectile : RangeAttack
             t.transform.LookAt(t.transform.position + hitRotatation);
         }
 
-        if (enemyHit.Length > 0)
+        if (bulletHit.Length > 0)
         {
-            source.PlayOneShot(enemyHit[Random.Range(0, enemyHit.Length)], 0.3f);
+            AudioSource.PlayClipAtPoint(bulletHit[Random.Range(0, bulletHit.Length)], transform.position, 0.3f);
         }
 
         // End this projectile attack
@@ -139,9 +139,9 @@ public class Projectile : RangeAttack
         targetVelocity = transform.forward * speed;
         active = true;
 
-        if (enemyShoot.Length > 0)
+        if (bulletShot.Length > 0)
         {
-            source.PlayOneShot(enemyShoot[Random.Range(0, enemyShoot.Length)], 0.3f);
+            source.PlayOneShot(bulletShot[Random.Range(0, bulletShot.Length)], 0.3f);
         }
     }
 

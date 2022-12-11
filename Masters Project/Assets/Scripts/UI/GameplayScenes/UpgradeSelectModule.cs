@@ -16,6 +16,9 @@ public class UpgradeSelectModule : MonoBehaviour
     [Tooltip("Reference to the icon img")]
     [SerializeField] private Image upgradeIcon;
 
+    [Tooltip("Reference to box that keeps count of upgrades")]
+    [SerializeField] private TextMeshProUGUI countBox;
+
     public void InitializeUIElement(UpgradeObject o)
     {
         upgradeData = o;
@@ -27,6 +30,15 @@ public class UpgradeSelectModule : MonoBehaviour
         gameObject.SetActive(true);
     }
 
+
+    public void InitializeUIElement(UpgradeObject o, string count)
+    {
+        InitializeUIElement(o);
+
+        if (countBox != null)
+            countBox.text = count;
+    }
+
     public void ClearUI()
     {
         upgradeData = null;
@@ -34,6 +46,9 @@ public class UpgradeSelectModule : MonoBehaviour
         titleText.text = "";
         descriptionText.text = "";
         upgradeIcon.sprite = null;
+
+        if (countBox != null)
+            countBox.text = "";
 
         gameObject.SetActive(false);
     }

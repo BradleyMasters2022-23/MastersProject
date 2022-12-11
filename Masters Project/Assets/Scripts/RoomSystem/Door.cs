@@ -12,9 +12,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using static Cinemachine.DocumentationSortingAttribute;
+using UnityEngine.Rendering;
 
 public class Door : MonoBehaviour
 {
+
+    [Tooltip("Sound when door opens")]
+    [SerializeField] private AudioClip openDoor;
+    [Tooltip("Sound when door closes")]
+    [SerializeField] private AudioClip closeDoor;
+
+    private AudioSource source;
+
     public enum PlayerDoorType
     {
         Door,
@@ -92,7 +102,8 @@ public class Door : MonoBehaviour
         {
             UnlockDoor();
         }
-            
+        source = gameObject.AddComponent<AudioSource>();
+
     }
 
     /// <summary>
@@ -133,10 +144,12 @@ public class Door : MonoBehaviour
         if(open)
         {
             door.SetActive(false);
+            source.PlayOneShot(openDoor, 0.5f);
         }
         else
         {
             door.SetActive(true);
+            source.PlayOneShot(closeDoor, 0.5f);
         }
     }
 

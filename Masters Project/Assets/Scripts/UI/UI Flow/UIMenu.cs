@@ -10,15 +10,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
+using static Cinemachine.DocumentationSortingAttribute;
+using static Unity.VisualScripting.Member;
 
 public abstract class UIMenu : MonoBehaviour
 {
     [Tooltip("On controller, which option is selected when screen is opened?")]
     [SerializeField] private GameObject controllerDefault;
 
+    [Tooltip("Sound when Menu is opened")]
+    [SerializeField] private AudioClip openMenu;
+
     [Tooltip("Whether this can be easily closed with the back system." +
         "Use on one way screens, such as the death screen")]
+
+
+    private AudioSource source;
+
+
     [SerializeField] private bool closable = true;
     /// <summary>
     /// Whether this screen can close
@@ -42,6 +53,8 @@ public abstract class UIMenu : MonoBehaviour
     protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
+
+        source = gameObject.AddComponent<AudioSource>();
     }
 
     /// <summary>
@@ -78,6 +91,8 @@ public abstract class UIMenu : MonoBehaviour
         if(animator != null)
         {
             animator.SetBool("open", true);
+            if(openMenu!= null)
+                AudioSource.PlayClipAtPoint(openMenu, Camera.main.transform.position, 0.5f);
         }
     }
 

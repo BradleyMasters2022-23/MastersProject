@@ -133,8 +133,8 @@ public class PlayerGunController : MonoBehaviour
         newShot.transform.LookAt(shootCam.TargetPos);
         newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current, true);
 
-
-        source.PlayOneShot(gunshotSound[Random.Range(0, gunshotSound.Length)],0.3f);
+        if(gunshotSound.Length > 0)
+            source.PlayOneShot(gunshotSound[Random.Range(0, gunshotSound.Length)],0.3f);
     }
 
     /// <summary>
