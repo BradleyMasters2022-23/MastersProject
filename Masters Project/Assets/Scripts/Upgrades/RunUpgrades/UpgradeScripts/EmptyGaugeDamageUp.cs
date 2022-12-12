@@ -23,7 +23,7 @@ public class EmptyGaugeDamageUp : IUpgrade
     private void Update()
     {
       if(time.GetState() == TimeManager.TimeGaugeState.EMPTIED && !damageUp) {
-          damageUp = true;
+           damageUp = true;
            Debug.Log("Damage up!");
            timer.ResetTimer();
       }
