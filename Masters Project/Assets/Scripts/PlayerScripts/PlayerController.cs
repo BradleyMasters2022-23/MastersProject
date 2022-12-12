@@ -287,7 +287,6 @@ public class PlayerController : MonoBehaviour
                         ChangeState(PlayerState.MIDAIR);
                     }
 
-
                     break;
                 }
             case PlayerState.MIDAIR:
@@ -524,8 +523,6 @@ public class PlayerController : MonoBehaviour
     /// <param name="c">Input callback context [ignorable]</param>
     private void Jump(InputAction.CallbackContext c)
     {
-        
-
         if(currentJumps > 0 && jumpTimer.TimerDone())
         {
             midAirTimer.ResetTimer();
