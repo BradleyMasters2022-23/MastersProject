@@ -207,7 +207,11 @@ public class SimpleShoot : AttackTarget
         }
 
         if (indicatorSFX != null)
+        {
+            source.Stop();
             source.PlayOneShot(indicatorSFX);
+        }
+            
 
         // Tell each one to start
         foreach (GameObject indicator in indicators)
@@ -299,8 +303,14 @@ public class SimpleShoot : AttackTarget
             shot.transform.rotation = Quaternion.Euler(aimRotation);
             shot.GetComponent<RangeAttack>().Activate();
         }
+        
         if(shootSFX != null)
-            source.PlayOneShot(shootSFX);
+        {
+            source.Stop();
+            source.clip = shootSFX;
+            source.Play();
+        }
+            
     }
 
     private Vector3 ApplySpread(Vector3 rot, float minSpread, float maxSpread)
