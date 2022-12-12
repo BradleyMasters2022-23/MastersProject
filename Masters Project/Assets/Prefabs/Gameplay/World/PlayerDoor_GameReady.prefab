@@ -1275,6 +1275,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3f80e8180c1c17469302773e33aec07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  openDoor: {fileID: 0}
+  closeDoor: {fileID: 0}
   type: 0
   door: {fileID: 3588759496681603778}
   syncPoint: {fileID: 8200428784670616731}
@@ -1284,7 +1286,7 @@ MonoBehaviour:
   overrideOpen: 0
   doorLight: {fileID: 8453785738761340956}
   lockedColor: {fileID: 2100000, guid: cd730b692accb1b47bdd63b13b30adae, type: 2}
-  unlockedColor: {fileID: 2100000, guid: f97cbe49f5659e341a14dc5e0d1fd34a, type: 2}
+  unlockedColor: {fileID: 2100000, guid: b9ceab99ae1790442892510cf392b5da, type: 2}
   disabledColor: {fileID: 2100000, guid: 52c8ad3ea7cd59145b2ec51e49b6c63e, type: 2}
 --- !u!65 &8200428784903921718
 BoxCollider:
@@ -1469,6 +1471,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Screen
       objectReference: {fileID: 0}
+    - target: {fileID: 4619313344733732247, guid: 1659dd25a5e26e846a0a3bd14952cbbc, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 15ebed1c1984b104d917c1ce2f1f83e4, type: 2}
     - target: {fileID: 6799216183377552128, guid: 1659dd25a5e26e846a0a3bd14952cbbc, type: 3}
       propertyPath: m_IsActive
       value: 0
