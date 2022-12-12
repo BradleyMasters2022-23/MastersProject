@@ -10,11 +10,6 @@ public class FragmentSpawner : MonoBehaviour
     [SerializeField] private GameObject fragInteractable;
     private float max;
 
-    private void Start()
-    {
-        max = 100/luck-1;
-    }
-
     public void SpawnFragment()
     {
         if(FragShouldSpawn()) {
@@ -34,7 +29,7 @@ public class FragmentSpawner : MonoBehaviour
 
     private bool FragShouldSpawn()
     {
-        if(Random.Range(0, max) == 0 && AllNotesManager.instance.NoteFindable()) {
+        if(Random.Range(0f, 100f) <= luck && AllNotesManager.instance.NoteFindable()) {
             return true;
         }
 
