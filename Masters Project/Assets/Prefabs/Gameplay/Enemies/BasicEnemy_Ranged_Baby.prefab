@@ -1401,7 +1401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxVerticalKnockback: 0
-  maxHealth: 80
+  maxHealth: 100
   immortal: 0
   deathVFX: {fileID: 8273445605695135385, guid: 3c02a13cc5fc9994f8787e38cd6a77ea, type: 3}
   hideUIDelay: 0
@@ -1445,12 +1445,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterMovementStates:
   - name: default
-    moveSpeed: 16
-    rotationSpeed: 3.5
+    moveSpeed: 20
+    rotationSpeed: 5
     acceleration: 35
   - name: strafe
-    moveSpeed: 24
-    rotationSpeed: 4.5
+    moveSpeed: 30
+    rotationSpeed: 5
     acceleration: 50
   currentMoveStates:
     name: 
@@ -1461,8 +1461,8 @@ MonoBehaviour:
   spawnSound: {fileID: 0}
   lookBehavior: {fileID: 5176151732030655657}
   chaseBehavior: {fileID: 6593523673652185635}
-  startChastDist: 18
-  stopChaseDist: 10
+  startChastDist: 30
+  stopChaseDist: 15
   stopChaseOnLineOfSight: 0
   noLineOfSightDelay: 5
   postChaseCD: 0
@@ -1682,9 +1682,9 @@ MonoBehaviour:
   projectile: {fileID: 8727397786430278917, guid: 72ddf08186379004e8a2d2b56de45efb, type: 3}
   shootPoints:
   - {fileID: 5086307354650794681}
-  numOfShots: 3
+  numOfShots: 5
   delayBetweenShots: 0
-  leadStrength: {x: 0.75, y: 1.25}
+  leadStrength: {x: 0.25, y: 0.75}
   leadConeRadius: 15
   firstShotAccuracy: {x: 0, y: 1.5}
   normalAccuracyRange: {x: 0, y: 4.5}
