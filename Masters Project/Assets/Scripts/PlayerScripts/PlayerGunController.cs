@@ -19,7 +19,7 @@ public class PlayerGunController : MonoBehaviour
     [Header("=====Gameplay=====")]
 
     [Tooltip("Damage of the bullets this gun fires")]
-    [SerializeField] private UpgradableInt damageMultiplier;
+    [SerializeField] private UpgradableFloat damageMultiplier;
     [Tooltip("Speed of the bullets this gun fires")]
     [SerializeField] private UpgradableFloat speedMultiplier;
     [Tooltip("Seconds takes between each shot")]
@@ -165,15 +165,15 @@ public class PlayerGunController : MonoBehaviour
         shoot.canceled -= ToggleTrigger;
     }
 
-    public int GetDamageMultiplier() {
+    public float GetDamageMultiplier() {
         return damageMultiplier.Current;
     }
 
-    public void SetDamageMultiplier(int newVal) {
+    public void SetDamageMultiplier(float newVal) {
         damageMultiplier.ChangeVal(newVal);
     }
 
-    public int GetBaseDamage()
+    public float GetBaseDamage()
     {
         return shotPrefab.GetComponent<Projectile>().GetDamage();
     }

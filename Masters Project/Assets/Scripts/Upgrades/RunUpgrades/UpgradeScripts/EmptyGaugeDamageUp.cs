@@ -6,8 +6,8 @@ public class EmptyGaugeDamageUp : IUpgrade
 {
     private TimeManager time;
     private PlayerGunController gun;
-    private int originalDamage;
-    [SerializeField] private int damageMultiplier;
+    private float originalDamage;
+    [SerializeField] private float damageMultiplier;
     [SerializeField] private int duration;
     private ScaledTimer timer;
     private bool damageUp;
