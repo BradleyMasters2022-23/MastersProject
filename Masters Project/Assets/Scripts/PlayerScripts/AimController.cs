@@ -18,7 +18,7 @@ public class AimController : MonoBehaviour
     [Tooltip("Channel to check for settings change")]
     [SerializeField] private ChannelVoid onSettingsChangedChannel;
 
-    private float mouseSensitivity;
+    [SerializeField] private float mouseSensitivity;
     private bool mouseXInverted;
     private bool mouseYInverted;
     
