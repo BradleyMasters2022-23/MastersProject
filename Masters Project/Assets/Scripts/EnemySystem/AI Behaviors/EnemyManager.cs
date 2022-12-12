@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Masters.AI;
 using UnityEngine.AI;
+using System.Net;
 
 [System.Serializable]
 public struct MovementStates
@@ -233,7 +234,7 @@ public class EnemyManager : MonoBehaviour
                     lookBehavior.SetTarget(player.transform);
                 }
                 yield return tick;
-                continue;
+                yield return null;
             }
 
 
@@ -431,8 +432,19 @@ public class EnemyManager : MonoBehaviour
     private IEnumerator ActivateDelay()
     {
         activateTracker.ResetTimer();
+        int c  = 0;
         while (!activateTracker.TimerDone())
+        {
+            c++;
+            if (c >= 10000)
+            {
+                Debug.Log("curved jump getting infinite stucked");
+                yield break;
+            }
+
             yield return null;
+        }
+            
 
         if(spawnSound!=null)
             audioSource.PlayOneShot(spawnSound);
