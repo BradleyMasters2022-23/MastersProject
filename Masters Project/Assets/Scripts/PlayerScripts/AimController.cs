@@ -117,10 +117,14 @@ public class AimController : MonoBehaviour
 
         // Manage horizontal rotation
         transform.rotation *= Quaternion.AngleAxis(lookDelta.x * sensitivity * horizontalInversion * Time.deltaTime, Vector3.up);
+        
+
 
         // Manage vertical rotaiton
         Quaternion temp = cameraLook.transform.localRotation *
             Quaternion.AngleAxis(-lookDelta.y * sensitivity * verticalInversion * Time.deltaTime, Vector3.right);
+
+        Debug.Log("Mouse vertical change sensitivity: " + temp.eulerAngles);
 
         // Make sure to clamp vertical angle first
         float newYAngle = temp.eulerAngles.x;
