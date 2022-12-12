@@ -22,6 +22,7 @@ public abstract class UIMenu : MonoBehaviour
 
     [Tooltip("Sound when Menu is opened")]
     [SerializeField] private AudioClip openMenu;
+    [SerializeField] private float volume = 0.5f;
 
     [Tooltip("Whether this can be easily closed with the back system." +
         "Use on one way screens, such as the death screen")]
@@ -55,6 +56,8 @@ public abstract class UIMenu : MonoBehaviour
         animator = GetComponent<Animator>();
 
         source = gameObject.AddComponent<AudioSource>();
+        source.clip= openMenu;
+        source.volume= volume;
     }
 
     /// <summary>
@@ -91,8 +94,24 @@ public abstract class UIMenu : MonoBehaviour
         if(animator != null)
         {
             animator.SetBool("open", true);
-            if(openMenu!= null)
-                AudioSource.PlayClipAtPoint(openMenu, Camera.main.transform.position, 0.5f);
+
+            if (openMenu != null)
+            {
+                //Debug.Log("Playing menu open");
+                //AudioSource.PlayClipAtPoint(openMenu, Camera.main.transform.position, 0.3f);
+                source.Stop();
+                source.Play();
+            }
+        }
+        else
+        {
+            if (openMenu != null)
+            {
+                //Debug.Log("Playing menu open");
+                //AudioSource.PlayClipAtPoint(openMenu, Camera.main.transform.position, 0.3f);
+                source.Stop();
+                source.Play();
+            }
         }
     }
 
