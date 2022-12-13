@@ -92,6 +92,7 @@ public class SpawnPoint : MonoBehaviour
         spawnLight = GetComponentInChildren<Light>();
         spawnParticles = GetComponentInChildren<ParticleSystem>();
         s = gameObject.AddComponent<AudioSource>();
+        s.spatialBlend = 1;
 
         // Initialize timers
         spawnDelayTimer = new ScaledTimer(spawnDelay);
