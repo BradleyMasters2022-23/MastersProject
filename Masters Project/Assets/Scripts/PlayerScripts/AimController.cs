@@ -93,6 +93,8 @@ public class AimController : MonoBehaviour
             lookDelta = aim.ReadValue<Vector2>();
             sensitivity = mouseSensitivity;
 
+            // Debug.Log("Using sensitivity with : " + sensitivity);
+
             if (mouseXInverted)
                 horizontalInversion *= -1;
             if (mouseYInverted)
@@ -123,8 +125,6 @@ public class AimController : MonoBehaviour
         // Manage vertical rotaiton
         Quaternion temp = cameraLook.transform.localRotation *
             Quaternion.AngleAxis(-lookDelta.y * sensitivity * verticalInversion * Time.deltaTime, Vector3.right);
-
-        Debug.Log("Mouse vertical change sensitivity: " + temp.eulerAngles);
 
         // Make sure to clamp vertical angle first
         float newYAngle = temp.eulerAngles.x;
