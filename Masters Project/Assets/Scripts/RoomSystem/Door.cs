@@ -25,6 +25,8 @@ public class Door : MonoBehaviour
 
     private AudioSource source;
 
+    public int id;
+
     public enum PlayerDoorType
     {
         Door,
@@ -83,11 +85,13 @@ public class Door : MonoBehaviour
     /// <summary>
     /// Whether the door is currently locked 
     /// </summary>
-    private bool locked;
+    [SerializeField] private bool locked;
+    
+    
     public bool Locked { get { return locked; } }
 
 
-    private bool triggered;
+    private bool initialized = false;
 
     #region Initialization Functions
 
@@ -111,9 +115,19 @@ public class Door : MonoBehaviour
     /// </summary>
     public void Initialize()
     {
+        if (initialized)
+            return;
+
+        initialized = true;
         animator = GetComponent<Animator>();
         col = GetComponents<Collider>();
+        // Debug.Log($"Initializing door {id} to locked");
         locked = true;
+
+        id = Random.Range(0, 9999);
+
+        foreach (Collider c in col)
+            c.enabled = false;
     }
 
     #endregion
@@ -126,6 +140,7 @@ public class Door : MonoBehaviour
     /// <param name="t">Tyope of door this should be</param>
     public void SetType(PlayerDoorType t)
     {
+        // Debug.Log($"Door {id} being set to {t}");
         type = t;
 
         // Disable door if possible
@@ -168,6 +183,8 @@ public class Door : MonoBehaviour
         if (type == PlayerDoorType.Null)
             return;
 
+        // Debug.Log($"Door {id} having locked state set to lock");
+
         doorLight.GetComponent<Renderer>().material = lockedColor;
         locked = true;
 
@@ -199,6 +216,7 @@ public class Door : MonoBehaviour
     }
 
     #endregion
+
 
     /// <summary>
     /// When player enters, tell the room generator to load next room
