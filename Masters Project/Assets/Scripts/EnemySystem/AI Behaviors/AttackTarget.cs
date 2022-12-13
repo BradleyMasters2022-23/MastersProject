@@ -213,11 +213,20 @@ public abstract class AttackTarget : MonoBehaviour
         // Enable indicator stuff here
         ShowIndicator();
 
+        int c = 0;
+
         // Wait
         indicatorTracker.ResetTimer();
         while(!indicatorTracker.TimerDone())
         {
             // Do things while waiting (spin indicator VFX?)
+
+            c++;
+            if (c >= 10000)
+            {
+                Debug.Log("attack indicator infinite stuck");
+                yield break;
+            }
             yield return null;
         }
 
@@ -277,12 +286,19 @@ public abstract class AttackTarget : MonoBehaviour
     {
         // Enable delay stuff here
         ShowAttackDone();
-
+        int c = 0;
         // Wait
         finishTracker.ResetTimer();
         while (!finishTracker.TimerDone())
         {
             // Do things while waiting (spin indicator VFX?)
+
+            c++;
+            if (c >= 10000)
+            {
+                Debug.Log("Finished attack stuck infinite stuck");
+                yield break;
+            }
             yield return null;
         }
 

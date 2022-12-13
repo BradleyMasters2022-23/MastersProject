@@ -73,6 +73,8 @@ public class RepositionBehavior : BaseEnemyMovement
         NavMeshHit hit;
         Vector3 temp;
 
+        int c = 0;
+
         // Try to get a new position thats still on navmesh
         do
         {
@@ -114,6 +116,13 @@ public class RepositionBehavior : BaseEnemyMovement
 
             // TODO - later on, maybe try changing directions for the front/back?
             // but this works right now since it seems to let player corner enemies which imo is good
+            c++;
+            if(c >= 10000)
+            {
+                Debug.Log("Searching for reposition determine location infinite looping");
+                return transform.position;
+            }
+
 
         } while (!NavMesh.SamplePosition(temp, out hit, 1f, agent.areaMask));
 

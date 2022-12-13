@@ -142,9 +142,17 @@ public class SimpleShoot : AttackTarget
             if (i == numOfShots - 1)
                 break;
 
+            int c = 0;
             shotTimer.ResetTimer();
             while(!shotTimer.TimerDone())
             {
+                c++;
+                if(c >= 10000)
+                {
+                    Debug.Log("Damage action shot timer stuck in infinite loop");
+                    yield break;
+                }
+
                 yield return null;
             }
         }

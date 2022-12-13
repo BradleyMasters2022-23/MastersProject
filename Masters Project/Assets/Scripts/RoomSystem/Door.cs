@@ -130,7 +130,10 @@ public class Door : MonoBehaviour
 
         // Disable door if possible
         if(t == PlayerDoorType.Null)
+        {
             doorLight.GetComponent<Renderer>().material = disabledColor;
+        }
+            
     }
 
     /// <summary>
@@ -144,12 +147,16 @@ public class Door : MonoBehaviour
         if(open)
         {
             door.SetActive(false);
-            source.PlayOneShot(openDoor, 0.5f);
+
+            if(openDoor != null)
+                source.PlayOneShot(openDoor, 0.5f);
         }
         else
         {
             door.SetActive(true);
-            source.PlayOneShot(closeDoor, 0.5f);
+
+            if(closeDoor!= null)
+                source.PlayOneShot(closeDoor, 0.5f);
         }
     }
 
@@ -201,7 +208,6 @@ public class Door : MonoBehaviour
     {
         if (other.CompareTag("Player") && col[0].enabled)
         {
-            Debug.Log("Trigger triggered!");
 
             foreach(Collider c in col)
                 c.enabled= false;

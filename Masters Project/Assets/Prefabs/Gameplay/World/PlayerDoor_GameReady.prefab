@@ -292,8 +292,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.7623324, y: 0.6627835, z: 0.8682658}
-  m_Center: {x: 0.018362045, y: -0.32872194, z: 0}
+  m_Size: {x: 3.7623324, y: 0.51681787, z: 1.6659882}
+  m_Center: {x: 0.018362045, y: -0.40170476, z: 0.39886117}
 --- !u!1 &3588759496681603778
 GameObject:
   m_ObjectHideFlags: 0
@@ -1186,8 +1186,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.036724, y: 5.4986877, z: 0.7716048}
-  m_Center: {x: 0.018361986, y: 2.3870592, z: 0}
+  m_Size: {x: 2.0187826, y: 6.419762, z: 1.7265182}
+  m_Center: {x: -0.6520138, y: 2.8475964, z: 0.4774568}
 --- !u!1 &8200428784670616730
 GameObject:
   m_ObjectHideFlags: 0
@@ -1275,8 +1275,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3f80e8180c1c17469302773e33aec07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  openDoor: {fileID: 8300000, guid: f8320cd0e5d19df4a8108dd366223aa7, type: 3}
-  closeDoor: {fileID: 8300000, guid: f8320cd0e5d19df4a8108dd366223aa7, type: 3}
+  openDoor: {fileID: 0}
+  closeDoor: {fileID: 0}
   type: 0
   door: {fileID: 3588759496681603778}
   syncPoint: {fileID: 8200428784670616731}
@@ -1286,7 +1286,7 @@ MonoBehaviour:
   overrideOpen: 0
   doorLight: {fileID: 8453785738761340956}
   lockedColor: {fileID: 2100000, guid: cd730b692accb1b47bdd63b13b30adae, type: 2}
-  unlockedColor: {fileID: 2100000, guid: f97cbe49f5659e341a14dc5e0d1fd34a, type: 2}
+  unlockedColor: {fileID: 2100000, guid: b9ceab99ae1790442892510cf392b5da, type: 2}
   disabledColor: {fileID: 2100000, guid: 52c8ad3ea7cd59145b2ec51e49b6c63e, type: 2}
 --- !u!65 &8200428784903921718
 BoxCollider:
@@ -1299,8 +1299,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 6.3579087, y: 3.5685596, z: 0.30289435}
-  m_Center: {x: 0.002270937, y: 1.3495626, z: 1.9869572}
+  m_Size: {x: 6.3579087, y: 3.5685596, z: 0.5176997}
+  m_Center: {x: 0.002270937, y: 1.3495626, z: 5.044426}
 --- !u!65 &9078091731006959273
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1312,8 +1312,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.17494488, y: 3.5615501, z: 1.6642294}
-  m_Center: {x: 3.3019304, y: 1.3825223, z: 1.0981548}
+  m_Size: {x: 0.2547369, y: 3.5615501, z: 5.013753}
+  m_Center: {x: 3.472828, y: 1.3825223, z: 2.7729173}
 --- !u!65 &6049075035026933214
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1325,8 +1325,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.20272827, y: 3.5615501, z: 1.5999988}
-  m_Center: {x: -3.2723575, y: 1.3825223, z: 1.13027}
+  m_Size: {x: 0.31826735, y: 3.5615501, z: 5.164481}
+  m_Center: {x: -3.4453971, y: 1.3825223, z: 2.9125109}
 --- !u!1 &8200428785144063656
 GameObject:
   m_ObjectHideFlags: 0
@@ -1405,8 +1405,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.7623324, y: 2.2853394, z: 0.7716048}
-  m_Center: {x: 0.018361986, y: 3.9937334, z: 0}
+  m_Size: {x: 6.5191126, y: 3.14589, z: 1.3115566}
+  m_Center: {x: -0.098023415, y: 4.567804, z: 0.65073323}
 --- !u!1 &8200428785725578413
 GameObject:
   m_ObjectHideFlags: 0
@@ -1450,8 +1450,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.036724, y: 5.4986877, z: 0.7716048}
-  m_Center: {x: 0.018361986, y: 2.3870592, z: 0}
+  m_Size: {x: 2.0898447, y: 6.5748577, z: 1.5074117}
+  m_Center: {x: 0.6199498, y: 2.9251442, z: 0.69693375}
 --- !u!1001 &7411533031799768303
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1471,6 +1471,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Screen
       objectReference: {fileID: 0}
+    - target: {fileID: 4619313344733732247, guid: 1659dd25a5e26e846a0a3bd14952cbbc, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 15ebed1c1984b104d917c1ce2f1f83e4, type: 2}
     - target: {fileID: 6799216183377552128, guid: 1659dd25a5e26e846a0a3bd14952cbbc, type: 3}
       propertyPath: m_IsActive
       value: 0
