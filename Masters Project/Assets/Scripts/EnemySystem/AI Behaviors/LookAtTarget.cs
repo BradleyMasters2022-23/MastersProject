@@ -27,12 +27,17 @@ public class LookAtTarget : BaseEnemyMovement
 
     [SerializeField] private bool acquiredTargetOnce;
 
+    [SerializeField] private Transform lineOfSightOrigin;
 
     protected override void Awake()
     {
         base.Awake();
         stunnedTracker = new ScaledTimer(stunnedDuration);
         stunnedCooldown= new ScaledTimer(stunCooldown);
+
+        if (lineOfSightOrigin == null)
+            lineOfSightOrigin = transform;
+
         stunned = false;
         acquiredTargetOnce = false;
     }
@@ -60,7 +65,7 @@ public class LookAtTarget : BaseEnemyMovement
                 // Look at player or last position if no player found
                 if (lookAtLastPosition)
                 {
-                    if (transform.HasLineOfSight(target, visionMask))
+                    if (lineOfSightOrigin.HasLineOfSight(target, visionMask))
                     {
                         //Debug.Log("Rotate to target not last pos");
                         RotateToInUpdate(target);
