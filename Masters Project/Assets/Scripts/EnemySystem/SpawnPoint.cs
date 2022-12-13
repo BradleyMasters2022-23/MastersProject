@@ -161,10 +161,10 @@ public class SpawnPoint : MonoBehaviour
         bool _allowed = false;
         if (enemyWhitelist.Length > 0)
         {
-            EnemyBase proposed = proposedEnemy.GetComponent<EnemyBase>();
+            //EnemyManager proposed = proposedEnemy.GetComponent<EnemyManager>();
             foreach (GameObject type in enemyWhitelist)
             {
-                if (type.GetComponent<EnemyBase>() == proposed)
+                if (type == proposedEnemy)
                     _allowed = true;
             }
 
