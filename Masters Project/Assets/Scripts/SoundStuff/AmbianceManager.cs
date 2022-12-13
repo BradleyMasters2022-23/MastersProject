@@ -41,7 +41,7 @@ public class AmbianceManager : MonoBehaviour
             source.loop = true;
             source.Play();
         }
-        else if (timeStopAmbiance != null && TimeManager.WorldTimeScale == 0 && source.clip != timeStopAmbiance)
+        else if (timeStopAmbiance != null && TimeManager.WorldTimeScale <= 0.2 && source.clip != timeStopAmbiance)
         {
             //Debug.Log("Starting timestop ambiance");
 
@@ -51,7 +51,7 @@ public class AmbianceManager : MonoBehaviour
             source.loop = true;
             source.Play();
         }
-        else if (TimeManager.WorldTimeScale != 0 && TimeManager.WorldTimeScale != 1 && source.clip != null)
+        else if (TimeManager.WorldTimeScale > 0.2f && TimeManager.WorldTimeScale != 1 && source.clip != null)
         {
             //Debug.Log("Cleaing ambiance");
 

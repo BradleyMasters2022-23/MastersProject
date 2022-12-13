@@ -47,6 +47,11 @@ public class FragmentInteract : Interactable
             dataSent = true;
         }
 
+        if(fragment.found)
+        {
+            fragment = AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment();
+        }
+
         ui.OpenScreen();
         PlayerNotesManager.instance.FindFragment(fragment);
 

@@ -235,12 +235,23 @@ public abstract class BaseEnemyMovement : MonoBehaviour
 
         // This is set to one because of how animation curves work
         // TODO - detect keypoints in leap and tie into animators
+
+        int c = 0;
+
         float normalizedTime = 0.0f;
         while (normalizedTime < 1.0f)
         {
             float yOffset = curve.Evaluate(normalizedTime);
             agent.transform.position = Vector3.Lerp(startPos, endPos, normalizedTime) + yOffset * Vector3.up;
             normalizedTime += TimeManager.WorldDeltaTime / duration;
+
+
+            c++;
+            if(c >= 10000)
+            {
+                Debug.Log("curved jump getting infinite stucked");
+                yield break;
+            }
 
             yield return null;
         }
@@ -265,7 +276,7 @@ public abstract class BaseEnemyMovement : MonoBehaviour
         Quaternion rot = Quaternion.LookRotation(direction);
         rot = Quaternion.Euler(0, rot.eulerAngles.y, 0);
 
-
+        int c = 0;
         while (transform.rotation.eulerAngles.y != rot.eulerAngles.y)
         {
             // rotate towards the target, limited by rotation
@@ -281,6 +292,14 @@ public abstract class BaseEnemyMovement : MonoBehaviour
             // Adjust angle for timestop, apply
             float nextYAng = clampedAngle * TimeManager.WorldTimeScale;
             transform.rotation = Quaternion.Euler(0, (transform.rotation.eulerAngles.y + nextYAng) % 360, 0);
+
+
+            c++;
+            if (c >= 10000)
+            {
+                Debug.Log("rotate to infinite stuck");
+                yield break;
+            }
 
             // Keep this on fixed update to prevent framerate differences
             yield return new WaitForFixedUpdate();

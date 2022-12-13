@@ -10,11 +10,6 @@ public class FragmentSpawner : MonoBehaviour
     [SerializeField] private GameObject fragInteractable;
     private float max;
 
-    private void Start()
-    {
-        max = 100/luck-1;
-    }
-
     public void SpawnFragment()
     {
         if(FragShouldSpawn()) {
@@ -26,33 +21,15 @@ public class FragmentSpawner : MonoBehaviour
 
     private GameObject CreateFrag() {
         Fragment temp = AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment();
-        
-        if(temp.spawned)
-        {
-            int i = 0;
-            do
-            {
-                if(i > 100)
-                {
-                    Debug.Log("Couldn't find an unspawned fragment.");
-                    break;
-                }
-
-                temp = AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment();
-                i++;
-
-            } while (temp.spawned);
-        }
         GameObject obj = Instantiate(fragInteractable, fragSpawnPoint.transform.position, fragSpawnPoint.rotation);
         obj.GetComponent<FragmentInteract>().SetUp(temp);
-        temp.spawned = true;
 
         return obj;
     }
 
     private bool FragShouldSpawn()
     {
-        if(Random.Range(0, max) == 0 && AllNotesManager.instance.NoteFindable()) {
+        if(Random.Range(0f, 100f) <= luck && AllNotesManager.instance.NoteFindable()) {
             return true;
         }
 
