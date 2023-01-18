@@ -13,6 +13,9 @@ using UnityEngine;
 public class LoadSettings : MonoBehaviour
 {
     [Header("Default Values")]
+
+    [Tooltip("Default value for master volume")]
+    [SerializeField] private float defaultMasterVolume;
     [Tooltip("Default value for mouse sensitivity")]
     [SerializeField] private float defaultMouseSensitivity;
     [Tooltip("Default value for x inversion")]
@@ -32,6 +35,8 @@ public class LoadSettings : MonoBehaviour
     private void Awake()
     {
         // Load Camera Option's settings
+        Settings.masterVolume = PlayerPrefs.GetFloat("MasterVolume", defaultMasterVolume);
+
         Settings.mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", defaultMouseSensitivity);
         Settings.mouseInvertX = IntToBool(PlayerPrefs.GetInt("MouseInvertX", BoolToInt(defaultMouseInvertX)));
         Settings.mouseInvertY = IntToBool(PlayerPrefs.GetInt("MouseInvertY", BoolToInt(defaultMouseInvertY)));

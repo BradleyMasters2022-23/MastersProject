@@ -6,18 +6,32 @@
  * Description - Base class for all ranged enemies
  * ================================================================================================
  */
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem.XR.Haptics;
+using Masters.AI;
+
 
 public class EnemyRange : EnemyBase
 {
+    private enum MoveState
+    {
+        Moving,
+        Offlink
+    }
+
     /// <summary>
     /// Current state of the enemy
     /// </summary>
     [SerializeReference] private EnemyState state;
+
+    [SerializeField] private MoveState moveState;
+
+    [SerializeField] private bool hasLineOfSight;
+
     /// <summary>
     /// The navmesh component for the enemy
     /// </summary>
@@ -30,9 +44,9 @@ public class EnemyRange : EnemyBase
     [Header("======Move Information======")]
 
     [Tooltip("Movement speed of the enemy")]
-    [SerializeField] float walkSpeed;
+    [SerializeField] float moveSpeed;
     [Tooltip("Rotation speed of the enemy")]
-    [SerializeField][Range(0f, 1f)] private float rotationSpeed;
+    [SerializeField][Range(0f, 5f)] private float rotationSpeed;
     [Tooltip("How much does this enemy overshoot its movement, such as rounding corners")]
     [SerializeField] private float overshootMult;
 
@@ -45,6 +59,22 @@ public class EnemyRange : EnemyBase
 
     [Tooltip("The movement modifier(%) when fleeing. Multiplies with attack move modifiers.")]
     [SerializeField][Range(0, 2)] private float fleeMoveModifier = 1;
+
+    private Vector3 lastTargetPos;
+
+    [SerializeField] private AnimationCurve jumpCurve;
+    //[SerializeField] private float jumpDuration;
+
+    [SerializeField] private AnimationCurve fallCurve;
+    //[SerializeField] private float fallDuration;
+
+    [Tooltip("Whether or not the enemy should face the jump direction before jumping")]
+    [SerializeField] private bool faceJump;
+    [Tooltip("Whether or not the enemy actually rotates to the landing position before jumping")]
+    [HideIf("@this.faceJump == false")]
+    [SerializeField] private bool rotateIntoJump;
+
+    //private ScaledTimer jumpCooldown;
 
     /// <summary>
     /// Current distance between this enemy and player
@@ -104,15 +134,20 @@ public class EnemyRange : EnemyBase
     /// </summary>
     private Coroutine attackRoutine;
 
+
+    private SimpleShoot attackSystem;
+
     // Start is called before the first frame update
     void Start()
     {
-        currTime = TimeManager.WorldTimeScale; ;
+        currTime = TimeManager.WorldTimeScale;
         agent = GetComponent<NavMeshAgent>();
+        attackSystem = GetComponent<SimpleShoot>();
 
-        shotRadius = shotPrefab.GetComponent<SphereCollider>().radius + 0.1f;
+        shotRadius = shotPrefab.GetComponent<SphereCollider>().radius;
+        //jumpCooldown = new ScaledTimer(0.8f);
 
-        agent.speed = walkSpeed;
+        agent.speed = moveSpeed;
         agent.updateRotation = false;
         state = EnemyState.Moving;
     }
@@ -124,21 +159,7 @@ public class EnemyRange : EnemyBase
         currTime = TimeManager.WorldTimeScale;
 
         currDist = Vector3.Distance(playerCenter.position, transform.position);
-        agent.speed = walkSpeed * currTime;
-
-        // Move towards player when out of range and out of threshold, or in the moving state at all
-        if (state == EnemyState.Moving || (Mathf.Abs(currDist - idealRange) > moveThreshold && currDist > idealRange))
-        {
-            agent.speed = walkSpeed * currTime;
-            agent.SetDestination(playerCenter.position);
-        }
-        // flee from player when too close
-        else if (fleeWhileAttacking && Mathf.Abs(currDist - idealRange) > moveThreshold && currDist < idealRange)
-        {
-            Vector3 awayDir = ((transform.position + Vector3.up) - playerCenter.position).normalized * walkSpeed * fleeMoveModifier;
-            agent.speed = walkSpeed * currTime;
-            agent.SetDestination(transform.position + awayDir);
-        }
+        agent.speed = moveSpeed * currTime;
 
 
         switch (state)
@@ -146,31 +167,62 @@ public class EnemyRange : EnemyBase
             case EnemyState.Moving:
                 {
                     // Move towards player position
-
-                    //agent.speed = walkSpeed * currTime;
-                    //agent.SetDestination(p.transform.position);
+                    MoveStateUpdate();
 
                     break;
                 }
             case EnemyState.Attacking:
                 {
-                    //Debug.Log($"Attacking State of {name}" +
-                    //    $"Routine : {attackRoutine == null} | line of sight : {LineOfSight(playerCenter)} | In Vision : {InVision(playerCenter)}");
                     // Attack if vision and not already attacking
                     if (attackRoutine == null && LineOfSight(playerCenter) && InVision(playerCenter))
                     {
-                        attackRoutine = StartCoroutine(Attack());
+                        //attackRoutine = StartCoroutine(Attack());
+                        attackSystem.Attack(player.transform);
                     }
+
+                    // Move towards player when out of range and out of threshold, or in the moving state at all
+                    //if ((Mathf.Abs(currDist - idealRange) > moveThreshold && currDist > idealRange))
+                    //{
+                    //    agent.speed = moveSpeed * currTime;
+                    //    agent.SetDestination(playerCenter.position);
+                    //}
+                    //// flee from player when too close
+                    //else if (fleeWhileAttacking && Mathf.Abs(currDist - idealRange) > moveThreshold && currDist < idealRange)
+                    //{
+                    //    Vector3 awayDir = ((transform.position + Vector3.up) - playerCenter.position).normalized * moveSpeed * fleeMoveModifier;
+                    //    agent.speed = moveSpeed * currTime;
+                    //    agent.SetDestination(transform.position + awayDir);
+                    //}
 
                     break;
                 }
         }
 
-        // Get direction of player, rotate towards them
-        Vector3 direction = playerCenter.position - (transform.position + Vector3.up);
-        float angle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-        float nextAng = Mathf.LerpAngle(transform.rotation.eulerAngles.y, angle, rotationSpeed * currTime);
-        transform.rotation = Quaternion.Euler(0, nextAng, 0);
+        if(attackSystem.currentAttackState != AttackState.Ready &&
+            attackSystem.currentAttackState != AttackState.Cooldown)
+        {
+            return;
+        }
+
+        if(moveState != MoveState.Offlink || (moveState == MoveState.Offlink && !faceJump) )
+        {
+            Vector3 direction;
+
+            // Get direction of player, or next jump
+            if (agent.nextOffMeshLinkData.valid && (faceJump || !InVision(playerCenter)))
+            {
+                direction = (agent.nextOffMeshLinkData.startPos - transform.position);
+            }
+            else
+            {
+                direction = (playerCenter.position - transform.position);
+            }
+
+            // rotate towards them, clamped
+            Quaternion rot = Quaternion.LookRotation(direction);
+            float nextYAng = Mathf.Clamp(Mathf.DeltaAngle(gameObject.transform.rotation.eulerAngles.y, rot.eulerAngles.y), -rotationSpeed, rotationSpeed) * currTime;
+            transform.rotation = Quaternion.Euler(0, gameObject.transform.rotation.eulerAngles.y + nextYAng, 0);
+        }
     }
 
     /// <summary>
@@ -184,7 +236,8 @@ public class EnemyRange : EnemyBase
             case EnemyState.Moving:
                 {
                     // Switch to attacking if line of sight and within ideal range
-                    if (LineOfSight(playerCenter) && currDist <= idealRange)
+                    if (LineOfSight(playerCenter) && currDist <= idealRange
+                        && moveState != MoveState.Offlink)
                     {
                         state = EnemyState.Attacking;
 
@@ -202,6 +255,7 @@ public class EnemyRange : EnemyBase
                     // Resume moving if outside of attack range and not already attacking
                     if (!LineOfSight(playerCenter) && attackRoutine == null)
                     {
+                        Debug.Log("Switching to moving");
                         state = EnemyState.Moving;
                     }
 
@@ -221,27 +275,32 @@ public class EnemyRange : EnemyBase
 
         // Try to get player
         RaycastHit hit;
-        
+
+        Debug.DrawRay(shootPoints[0].position, direction, Color.red, 0.5f);
+
         // Use a cast to make sure it accounts for the shot's radius
-        if (Physics.SphereCast(centerMass.position, shotRadius, direction, out hit, attackRange, visionLayer))
+        if (Physics.SphereCast(shootPoints[0].position, shotRadius, direction, out hit, attackRange, visionLayer))
         {
-            
+            hasLineOfSight = true;
             if (hit.transform.CompareTag("Player"))
                 return true;
         }
 
-
+        hasLineOfSight = false;
         return false;
     }
 
-
     private bool InVision(Transform target)
     {
-        Vector3 temp = (target.position - centerMass.position).normalized;
+        Vector3 targetPos = new Vector3(target.position.x, centerMass.position.y, target.position.z);
+        Vector3 temp = (targetPos - centerMass.position).normalized;
         float angle = Vector3.SignedAngle(temp, transform.forward, Vector3.up);
         return (Mathf.Abs(angle) <= lookRadius);
     }
 
+    #region Attack Stuff
+
+    /*
     private void Shoot(Vector3 targetPos)
     {
         // Spawn projectile for each barrel
@@ -271,11 +330,11 @@ public class EnemyRange : EnemyBase
     {
         // Temp timer variables used for each substate
         float attackTimer = 0;
-        float _originalMovement = walkSpeed;
+        float _originalMovement = moveSpeed;
         float _originalRotation = rotationSpeed;
 
         // Aim Substate
-        walkSpeed = (_originalMovement * aimMoveModifier);
+        moveSpeed = (_originalMovement * aimMoveModifier);
         rotationSpeed = _originalRotation * aimRotModifier;
         while (attackTimer < aimDuration)
         {
@@ -287,7 +346,7 @@ public class EnemyRange : EnemyBase
         Vector3 targetPos = playerCenter.position;
 
         // Shoot Substate
-        walkSpeed = (_originalMovement * shootMoveModifier);
+        moveSpeed = (_originalMovement * shootMoveModifier);
         rotationSpeed = _originalRotation * shootRotModifier;
         for (int i = 0; i < numberOfShots; i++)
         {
@@ -306,7 +365,7 @@ public class EnemyRange : EnemyBase
 
         // Recover/Reload Substate
         attackTimer = 0;
-        walkSpeed = (_originalMovement * reloadMoveModifier);
+        moveSpeed = (_originalMovement * reloadMoveModifier);
         rotationSpeed = _originalRotation * reloadRotModifier;
         while (attackTimer < reloadDuration)
         {
@@ -316,7 +375,7 @@ public class EnemyRange : EnemyBase
 
         // Return original values
         rotationSpeed = _originalRotation;
-        walkSpeed = _originalMovement;
+        moveSpeed = _originalMovement;
 
         // Clear attack routine 
         attackRoutine = null;
@@ -328,4 +387,178 @@ public class EnemyRange : EnemyBase
         if (attackRoutine != null)
             StopCoroutine(attackRoutine);
     }
+
+    */
+    #endregion
+
+    #region Movement
+
+    private void MoveStateUpdate()
+    {
+        switch (moveState)
+        {
+            case MoveState.Moving:
+                {
+                    Chase();
+
+                    break;
+                }
+            case MoveState.Offlink:
+                {
+                    break;
+                }
+        }
+    }
+
+    private void Chase()
+    {
+        if (player == null)
+        {
+            agent.ResetPath();
+            return;
+        }
+
+        if (player.transform.position != lastTargetPos)
+        {
+            lastTargetPos = player.transform.position;
+            agent.SetDestination(player.transform.position);
+        }
+
+        if (agent.isOnOffMeshLink && moveState != MoveState.Offlink)
+        {
+            JumpToLedge();
+        }
+    }
+
+    private void JumpToLedge()
+    {
+        moveState = MoveState.Offlink;
+
+        OffMeshLinkData data = agent.currentOffMeshLinkData;
+        float duration = agent.currentOffMeshLinkData.offMeshLink.gameObject.GetComponent<LedgeData>().traverseTime;
+        // Check whether to use jump or fall curve
+        if (data.endPos.y >= data.startPos.y)
+        {
+            StartCoroutine(CurvedJump(jumpCurve, duration));
+        }
+        else
+        {
+            StartCoroutine(CurvedJump(fallCurve, duration));
+        }
+
+    }
+
+    /// <summary>
+    /// Jump between two points given a curve and duration
+    /// </summary>
+    /// <param name="curve"></param>
+    /// <param name="duration"></param>
+    /// <returns></returns>
+    private IEnumerator CurvedJump(AnimationCurve curve, float duration)
+    {
+        // Get starting data
+        OffMeshLinkData data = agent.currentOffMeshLinkData;
+        Vector3 startPos = agent.transform.position;
+        Vector3 endPos = data.endPos + Vector3.up * agent.baseOffset;
+
+        // If enabled, wait until this entity has turned to their land position before jumping
+        if (faceJump && rotateIntoJump)
+        {
+            agent.updateRotation = false;
+            Vector3 lookDirection = (endPos - transform.position).normalized;
+            yield return StartCoroutine(RotateTo(lookDirection));
+        }
+        // Instantly look towards the jump instead
+        else if(faceJump && !rotateIntoJump)
+        {
+            agent.updateRotation = false;
+            Vector3 lookDirection = (endPos - transform.position).normalized;
+
+            Quaternion rot = Quaternion.LookRotation(lookDirection);
+            rot = Quaternion.Euler(0, rot.eulerAngles.y, 0);
+            transform.rotation = rot;
+        }
+
+        // Check to break before starting jump
+        // Check if target is now on its own level and if this should stop
+
+        // This is set to one because of how animation curves work
+        // TODO - detect keypoints in leap and tie into animators
+        float normalizedTime = 0.0f;
+        while (normalizedTime < 1.0f)
+        {
+            float yOffset = curve.Evaluate(normalizedTime);
+            agent.transform.position = Vector3.Lerp(startPos, endPos, normalizedTime) + yOffset * Vector3.up;
+            normalizedTime += TimeManager.WorldDeltaTime / duration;
+
+            yield return null;
+        }
+
+        // Reset to normal
+        agent.CompleteOffMeshLink();
+        //agent.ResetPath();
+        //agent.SetDestination(player.transform.position);
+        //jumpCooldown.ResetTimer();
+        moveState = MoveState.Moving;
+    }
+
+    /// <summary>
+    /// Lerp rotate this entity to aim in the direction desired
+    /// </summary>
+    /// <param name="direction">Direction to look towards. Automatically flattened</param>
+    /// <returns></returns>
+    private IEnumerator RotateTo(Vector3 direction)
+    {
+        Debug.Log("Rotate towards started");
+
+        agent.updateRotation = false;
+
+        // Get target rotation
+        Quaternion rot = Quaternion.LookRotation(direction);
+        rot = Quaternion.Euler(0, rot.eulerAngles.y, 0);
+
+        while (transform.rotation.eulerAngles.y != rot.eulerAngles.y)
+        {
+            // Check if target is now on its own level and if this should stop
+            //if (PlayerMovedPlatform())
+            //    yield break;
+
+            // rotate towards the target, limited by rotation
+            float deltaAngle = Mathf.DeltaAngle(transform.rotation.eulerAngles.y, rot.eulerAngles.y);
+            float clampedAngle = Mathf.Clamp(deltaAngle, -rotationSpeed, rotationSpeed);
+
+            // Check if its finished. used because of some of the rotation scaling wont match when done
+            if (clampedAngle == 0)
+            {
+                break;
+            }
+
+            // Adjust angle for timestop, apply
+            float nextYAng = clampedAngle * TimeManager.WorldTimeScale;
+            transform.rotation = Quaternion.Euler(0, (transform.rotation.eulerAngles.y + nextYAng) % 360, 0);
+
+            // Keep this on fixed update to prevent framerate differences
+            yield return new WaitForFixedUpdate();
+            yield return null;
+        }
+        Debug.Log("Rotate towards ended");
+
+        transform.rotation = rot;
+        yield return null;
+    }
+
+    private bool PlayerMovedPlatform()
+    {
+        agent.SetDestination(player.transform.position);
+        if(!agent.nextOffMeshLinkData.valid)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    #endregion
 }

@@ -39,10 +39,10 @@ public class Projectile : RangeAttack
     [Tooltip("What layers should this impact directly with")]
     [SerializeField] private LayerMask groundLayer;
 
-    [Tooltip("Sound when enemy shoots")]
-    [SerializeField] private AudioClip[] enemyShoot;
-    [Tooltip("Sound when enemy takes a hit")]
-    [SerializeField] private AudioClip[] enemyHit;
+    [Tooltip("Sound when this bullet is shot")]
+    [SerializeField] private AudioClip[] bulletShot;
+    [Tooltip("Sound when this bullet hits something")]
+    [SerializeField] private AudioClip[] bulletHit;
     private AudioSource source;
 
     /// <summary>
@@ -66,14 +66,16 @@ public class Projectile : RangeAttack
         if (!active)
             return;
 
-        // Update velocity with world timescale
-        rb.velocity = targetVelocity * TimeManager.WorldTimeScale;
+        //Debug.DrawLine(lastPos, transform.position, Color.red, 1f);
+        //Debug.Log(Vector3.Distance(transform.position, lastPos));
 
         Vector3 futurePos = transform.position + Vector3.forward * rb.velocity.magnitude * TimeManager.WorldDeltaTime;
 
+        float dist = targetVelocity.magnitude * TimeManager.WorldDeltaTime;
+
         // Check if it passed target
         RaycastHit target;
-        if (Physics.SphereCast(transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, (Vector3.Distance(transform.position, lastPos)), targetLayers))
+        if (Physics.SphereCast(transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, dist, targetLayers))
         {
             hitPoint = target.point;
 
@@ -84,7 +86,7 @@ public class Projectile : RangeAttack
         else
         {
             // Check if it directly hit a wall
-            if (Physics.Raycast(transform.position, transform.forward, out target, (Vector3.Distance(transform.position, lastPos)), groundLayer))
+            if (Physics.Raycast(transform.position, transform.forward, out target, dist, groundLayer))
             {
                 hitPoint = target.point;
                 hitRotatation = target.normal;
@@ -97,14 +99,15 @@ public class Projectile : RangeAttack
             }
         }
         
-
-
         // Check if projectile reached its max range
         distanceCovered += targetVelocity.magnitude * TimeManager.WorldDeltaTime;
         if(distanceCovered >= range)
         {
             Hit();
         }
+
+        // Update velocity with world timescale
+        rb.velocity = targetVelocity * TimeManager.WorldTimeScale;
 
         lastPos = transform.position;
     }
@@ -115,12 +118,12 @@ public class Projectile : RangeAttack
         if(onHitEffect != null)
         {
             GameObject t = Instantiate(onHitEffect, hitPoint, Quaternion.identity);
-            t.transform.LookAt(hitRotatation);
+            t.transform.LookAt(t.transform.position + hitRotatation);
         }
 
-        if (enemyHit.Length > 0)
+        if (bulletHit.Length > 0)
         {
-            source.PlayOneShot(enemyHit[Random.Range(0, enemyHit.Length)], 0.3f);
+            AudioSource.PlayClipAtPoint(bulletHit[Random.Range(0, bulletHit.Length)], transform.position, 0.3f);
         }
 
         // End this projectile attack
@@ -136,10 +139,30 @@ public class Projectile : RangeAttack
         targetVelocity = transform.forward * speed;
         active = true;
 
-        if (enemyShoot.Length > 0)
+        if (bulletShot.Length > 0)
         {
-            source.PlayOneShot(enemyShoot[Random.Range(0, enemyShoot.Length)], 0.3f);
+            source.PlayOneShot(bulletShot[Random.Range(0, bulletShot.Length)], 0.3f);
         }
+    }
+
+    public int GetDamage()
+    {
+        return damage;
+    }
+
+    public float GetDistanceCovered()
+    {
+        return distanceCovered;
+    }
+
+    public void ChangeDamageTo(int newDamage)
+    {
+        damage = newDamage;
+    }
+
+    public bool GetShotByPlayer()
+    {
+        return shotByPlayer;
     }
 
     protected override void Awake()

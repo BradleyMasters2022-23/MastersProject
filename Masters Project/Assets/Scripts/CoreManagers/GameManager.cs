@@ -372,7 +372,7 @@ public class GameManager : MonoBehaviour
         if (controllerType == ControllerType.MOUSE
             && checkController.ReadValue<Vector2>() != Vector2.zero)
         {
-            Debug.Log("Controller detected, hiding cursor");
+            // Debug.Log("Controller detected, hiding cursor");
 
             controllerType = ControllerType.CONTROLLER;
 
@@ -393,7 +393,7 @@ public class GameManager : MonoBehaviour
         if (controllerType == ControllerType.CONTROLLER
             && checkCursor.ReadValue<Vector2>() != Vector2.zero)
         {
-            Debug.Log("Mouse detected, showing cursor");
+            // Debug.Log("Mouse detected, showing cursor");
 
             controllerType = ControllerType.MOUSE;
 
@@ -487,7 +487,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void CloseTopMenu(InputAction.CallbackContext c = default)
     {
-        Debug.Log("Close was called! " + c.action);
+        //Debug.Log("Close was called! " + c.action);
 
         // Check if there are no options available
         if (menuStack.Count <= 0)

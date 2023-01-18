@@ -16,6 +16,25 @@ public class Settings : MonoBehaviour
     [Tooltip("Channel that sends out signal when the settings are changed")]
     [SerializeField] private ChannelVoid settingsChangedChannel;
 
+    #region SoundSettings
+
+    [Header("===== Audio =====")]
+
+    [Header("--- Default Values ---")]
+    [Tooltip("Default value for master volume"), Range(0, 1)]
+    [SerializeField] private float defaultMasterVolume;
+
+    /// <summary>
+    /// sensitivity of the mouse
+    /// </summary>
+    public static float masterVolume;
+
+    [Header("--- Setup ---")]
+    [Tooltip("Slider element for master volume")]
+    [SerializeField] private Slider masterVolumeSlider;
+
+    #endregion
+
     #region Mouse and Keyboard Variables
 
     [Header("===== Mouse & Keyboard =====")]
@@ -92,6 +111,8 @@ public class Settings : MonoBehaviour
     private void Awake()
     {
         // Get player prefs data
+        masterVolume = PlayerPrefs.GetFloat("MasterVolume", defaultMasterVolume);
+
         mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", defaultMouseSensitivity);
         mouseInvertX = IntToBool(PlayerPrefs.GetInt("MouseInvertX", BoolToInt(defaultMouseInvertX)));
         mouseInvertY = IntToBool(PlayerPrefs.GetInt("MouseInvertY", BoolToInt(defaultMouseInvertY)));
@@ -108,6 +129,8 @@ public class Settings : MonoBehaviour
     /// </summary>
     private void UpdateUI()
     {
+        masterVolumeSlider.value = masterVolume;
+
         mouseSensitivitySlider.value = mouseSensitivity;
         mouseInvertXToggle.isOn = mouseInvertX;
         mouseInvertYToggle.isOn = mouseInvertY;
@@ -120,6 +143,13 @@ public class Settings : MonoBehaviour
     #endregion
 
     #region ChangeFunctions
+
+    public void ChangeMasterVolume()
+    {
+        masterVolume = masterVolumeSlider.value;
+        PlayerPrefs.SetFloat("MasterVolume", masterVolume);
+        SettingsConfirmed();
+    }
 
     /// <summary>
     /// changing mouse sensitivity
@@ -184,6 +214,7 @@ public class Settings : MonoBehaviour
     public void RevertToDefault()
     {
         // Reset to default values
+        masterVolume = defaultMasterVolume;
         mouseSensitivity = defaultMouseSensitivity;
         mouseInvertY = defaultMouseInvertY;
         mouseInvertX = defaultMouseInvertX;
@@ -192,6 +223,8 @@ public class Settings : MonoBehaviour
         controllerInvertY = defaultControllerInvertY;
 
         // Save playerprefs
+        PlayerPrefs.SetFloat("MasterVolume", masterVolume);
+
         PlayerPrefs.SetFloat("MouseSensitivity", mouseSensitivity);
         PlayerPrefs.SetInt("MouseInvertX", BoolToInt(mouseInvertX));
         PlayerPrefs.SetInt("MouseInvertY", BoolToInt(mouseInvertY));
@@ -254,6 +287,10 @@ public class Settings : MonoBehaviour
         settingsChangedChannel.RaiseEvent();
     }
 
+    private void OnDisable()
+    {
+        settingsChangedChannel.RaiseEvent();
+    }
 
     #endregion
 

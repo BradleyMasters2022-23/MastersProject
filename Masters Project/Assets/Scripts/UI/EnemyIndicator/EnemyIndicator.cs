@@ -40,10 +40,10 @@ public class EnemyIndicator : MonoBehaviour
         enemyList.TrimExcess();
 
         // get enemies
-        EnemyBase[] enemies = FindObjectsOfType<EnemyBase>();
+        EnemyHealth[] enemies = FindObjectsOfType<EnemyHealth>();
 
         // Check list for new enemies. Add new pointers for each new enemy
-        foreach(EnemyBase enemy in enemies)
+        foreach(EnemyHealth enemy in enemies)
         {
             if(!enemyList.Contains(enemy.gameObject))
             {

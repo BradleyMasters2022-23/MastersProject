@@ -2140,6 +2140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onSettingsChangedChannel: {fileID: 11400000, guid: 0c8d55cade4ec7748a24f8fe270230cc, type: 2}
+  mouseSensitivity: 5
   angleClamp: {x: -80, y: 80}
   cameraLook: {fileID: 8810997312557230426}
   onStateChangedChannel: {fileID: 11400000, guid: 2770aed5fbc083e4d8279c944f0242e2, type: 2}
@@ -2159,9 +2160,9 @@ MonoBehaviour:
   currentState: 0
   centerMass: {fileID: 8728288572005836809}
   maxMoveSpeed:
-    startingValue: 20
-    lowerLimit: 13
-    upperLimit: 27
+    startingValue: 50
+    lowerLimit: 45
+    upperLimit: 55
   sprintModifier:
     startingValue: 1.25
     lowerLimit: 0
@@ -2173,17 +2174,18 @@ MonoBehaviour:
   accelerationTime: 0.2
   startingSpeedPercentage: 0.4
   decelerationTime: 0.3
+  sprintHeld: 0
   jumps:
     startingValue: 1
     lowerLimit: 0
     upperLimit: 3
-  jumpForce: 140
+  jumpForce: 180
   jumpCooldown: 0.2
   disableFirstJumpOnFall: 1
   jumpPivot: 1
   jumpSound: {fileID: 8300000, guid: 2bb9e30607604ed4192c34c68ac28cc9, type: 3}
   landSound: {fileID: 8300000, guid: 5bacf464ba2449d4789b7bf5f9bfce62, type: 3}
-  gravityMultiplier: 4
+  gravityMultiplier: 5
   groundMask:
     serializedVersion: 2
     m_Bits: 2056
@@ -2204,13 +2206,13 @@ MonoBehaviour:
   damageMultiplier:
     startingValue: 1
     lowerLimit: 0
-    upperLimit: 0
+    upperLimit: 20
   speedMultiplier:
     startingValue: 1
     lowerLimit: 0
     upperLimit: 0
   fireDelay:
-    startingValue: 0.2
+    startingValue: 0.18
     lowerLimit: 0
     upperLimit: 0
   shotPrefab: {fileID: 8727397786430278917, guid: 2d7acdce40227f14f958278db894727c, type: 3}
@@ -2273,6 +2275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 453dfd55a443d874798c03d9fc9dc6d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultMasterVolume: 1
   defaultMouseSensitivity: 10
   defaultMouseInvertX: 0
   defaultMouseInvertY: 0

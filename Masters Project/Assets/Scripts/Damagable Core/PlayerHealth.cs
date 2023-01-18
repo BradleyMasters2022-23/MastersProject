@@ -162,7 +162,6 @@ public class PlayerHealth : Damagable
 
         // Update total health
         UpdateHealth();
-
         source.PlayOneShot(playerDamage, 0.5f);
     }
 
@@ -263,8 +262,23 @@ public class PlayerHealth : Damagable
       return healthSections;
     }
 
-    public void HealthPerSectionUp(int increment) {
-      healthPerSection.Increment(increment);
+    public void SetHealthPerSection(int newHealth) {
+      healthPerSection.ChangeVal(newHealth);
+    }
+
+    public int GetNumSections()
+    {
+        return numOfSections.Current;
+    }
+
+    public int GetHealthPerSection()
+    {
+        return healthPerSection.Current;
+    }
+
+    public void ResetSectionIndex()
+    {
+        healthSectionIndex = healthSections.Length - 1;
     }
 
     private void OnDisable()

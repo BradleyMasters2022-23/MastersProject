@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 2016436074611498754}
   - component: {fileID: 4195182275828480208}
   - component: {fileID: 1799733926088497341}
+  - component: {fileID: 1371022503994936991}
   - component: {fileID: 2503664508196489384}
   m_Layer: 5
   m_Name: UI_Button_Base
@@ -258,6 +259,83 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1371022503994936991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7021963679193751583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2503664508196489384}
+          m_TargetAssemblyTypeName: ButtonAudioManager, Assembly-CSharp
+          m_MethodName: PlayHoverSound
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 9
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2503664508196489384}
+          m_TargetAssemblyTypeName: ButtonAudioManager, Assembly-CSharp
+          m_MethodName: PlayHoverSound
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 15
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2503664508196489384}
+          m_TargetAssemblyTypeName: ButtonAudioManager, Assembly-CSharp
+          m_MethodName: PlayClickSound
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2503664508196489384}
+          m_TargetAssemblyTypeName: ButtonAudioManager, Assembly-CSharp
+          m_MethodName: PlayClickSound
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &2503664508196489384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270,3 +348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6520b50f036522e41ab75aab1d3d94a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onHoverSound: {fileID: 8300000, guid: 0b940a6d1654f3f45a1b935c96a8300b, type: 3}
+  hoverVolume: 0.1
+  onPressSound: {fileID: 8300000, guid: 8310d7865c499064dab820c57fa46406, type: 3}
+  pressVolume: 0.1

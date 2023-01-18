@@ -57,6 +57,14 @@ public class PauseMenu : MonoBehaviour
         Application.Quit();
     }
 
+    /// <summary>
+    /// Request the ability to quit the game
+    /// </summary>
+    public void RequestQuitGame()
+    {
+        FindObjectOfType<ConfirmationBox>(true).RequestConfirmation(QuitGame);
+    }
+
     private void OnEnable()
     {
         onStateChangeChannel.OnEventRaised += TogglePause;
