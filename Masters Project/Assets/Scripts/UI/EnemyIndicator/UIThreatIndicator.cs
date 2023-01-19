@@ -9,7 +9,7 @@ public class UIThreatIndicator : MonoBehaviour
 
     private List<GameObject> enemyList;
 
-    public Canvas indicatorDisplay;
+    public RectTransform indicatorDisplay;
 
     private void Awake()
     {
@@ -37,7 +37,7 @@ public class UIThreatIndicator : MonoBehaviour
             if (!enemyList.Contains(enemy.gameObject))
             {
                 enemyList.Add(enemy.gameObject);
-                GameObject a = Instantiate(arrow, transform);
+                GameObject a = Instantiate(arrow, indicatorDisplay);
                 a.GetComponent<UIEnemyPointer>().SetTarget(enemy.gameObject);
             }
         }

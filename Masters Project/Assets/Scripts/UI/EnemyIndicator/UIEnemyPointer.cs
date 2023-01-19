@@ -8,6 +8,7 @@ using UnityEngine;
 public class UIEnemyPointer : MonoBehaviour
 {
     [SerializeField] private CameraShoot cameraRef;
+    private RectTransform t;
     private Transform target;
     private Transform player;
     private bool initialized;
@@ -20,8 +21,8 @@ public class UIEnemyPointer : MonoBehaviour
     void Awake()
     {
         initialized = false;
-        player = GetComponentInParent<PlayerController>().transform;
-        //cameraRef = FindObjectOfType<CameraShoot>(true);
+        player = FindObjectOfType<PlayerController>(true).transform;
+        t = GetComponent<RectTransform>();
     }
 
     // Update is called once per frame
@@ -45,7 +46,8 @@ public class UIEnemyPointer : MonoBehaviour
             return;
         }
 
-        RotateToTarget();
+        RotateToTargetFlat();
+        RotateToTargetPop();
     }
 
     private void CheckEnemyVisibility()
@@ -69,24 +71,37 @@ public class UIEnemyPointer : MonoBehaviour
         }
     }
 
-    private void RotateToTarget()
+    private void RotateToTargetFlat()
     {
-
-        // TODO
-        // Make point based on center vision of player. Essentially, project the position difference to a 2D plane
-        // and rotate like that. Not sure how tf to do it but try it
-
-        Plane test = new Plane(cameraRef.transform.forward, cameraRef.transform.position);
         Vector3 direction = target.position - player.position;
-        
-        direction = Vector3.ProjectOnPlane(direction, cameraRef.transform.forward);
-        
-        //transform.LookAt(target);
-        Vector3 r = Quaternion.LookRotation(direction).eulerAngles;
-        r.z = 0;
-        transform.rotation = Quaternion.Euler(r);
 
+        Quaternion r = Quaternion.LookRotation(direction);
+        r.z = -r.y;
+        r.x = 0;
+        r.y = 0;
+
+        Vector3 north = new Vector3(0, 0, player.eulerAngles.y);
+        t.rotation = r * Quaternion.Euler(north);
+    }
+
+    private void RotateToTargetPop()
+    {
+        //Plane plane = new Plane(cameraRef.transform.forward, cameraRef.transform.position);
         
+        Vector3 direction = 
+            Vector3.ProjectOnPlane(target.position-player.position, cameraRef.transform.forward);
+
+        Debug.DrawRay(transform.position, direction, Color.red);
+
+        /*
+        Quaternion r = Quaternion.LookRotation(direction);
+        r.z = -r.y;
+        r.x = 0;
+        r.y = 0;
+
+        Vector3 north = new Vector3(0, 0, player.eulerAngles.y);
+        t.rotation = r * Quaternion.Euler(north);
+        */
     }
 
     /// <summary>
