@@ -1554,14 +1554,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3561970298473886109}
-  - component: {fileID: 5276735920879411644}
+  - component: {fileID: 3985397699272195760}
   m_Layer: 0
   m_Name: EnemyIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3561970298473886109
 Transform:
   m_ObjectHideFlags: 0
@@ -1569,15 +1569,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5884976913454640737}
-  m_LocalRotation: {x: -0, y: -0.13052545, z: -0, w: 0.99144495}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 0.99999976, y: 1, z: 0.99999976}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.106, y: 0.24300003, z: 1.276}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8810997313966297023}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: -15, z: 0}
---- !u!114 &5276735920879411644
+  m_Father: {fileID: 8810997312557230426}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3985397699272195760
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1586,10 +1586,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5884976913454640737}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c824611b1036a4e4e921065e225bc73e, type: 3}
+  m_Script: {fileID: 11500000, guid: 2f3c74fd656e4c441954eb429712e34d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arrow: {fileID: 7737661628805945766, guid: 302989c3fbcfd6c4c8f34970ff889852, type: 3}
+  arrow: {fileID: 7737661628805945766, guid: 18fa7085d23e22a4785c4db147c45d43, type: 3}
+  indicatorDisplay: {fileID: 0}
 --- !u!1 &6065832765740259175
 GameObject:
   m_ObjectHideFlags: 0
@@ -2462,6 +2463,7 @@ Transform:
   - {fileID: 4144220760584907843}
   - {fileID: 3382173019639883335}
   - {fileID: 1701509412264814789}
+  - {fileID: 3561970298473886109}
   m_Father: {fileID: 8810997313966297023}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2505,7 +2507,6 @@ Transform:
   - {fileID: 8728288572005836809}
   - {fileID: 8810997312557230426}
   - {fileID: 8158009832470167709}
-  - {fileID: 3561970298473886109}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
