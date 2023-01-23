@@ -13,12 +13,14 @@ public class ParticleDespawner : MonoBehaviour
     /// <summary>
     /// Reference to the main module of the particle system
     /// </summary>
-    [SerializeField] private ParticleSystem[] particles;
+    private ParticleSystem[] particles;
 
     /// <summary>
     /// Whether this particle system loops
     /// </summary>
     private bool loops;
+
+    [SerializeField] private bool keepReserved;
 
     /// <summary>
     /// tracker for lifetime
@@ -65,7 +67,7 @@ public class ParticleDespawner : MonoBehaviour
         }
 
         // If not looping and reached its duration, destroy self
-        if (!loops && lifeTimer.TimerDone())
+        if (!keepReserved && !loops && lifeTimer.TimerDone())
             Destroy(gameObject);
 
         lastTimeScale = TimeManager.WorldTimeScale;

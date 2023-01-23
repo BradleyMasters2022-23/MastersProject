@@ -125,6 +125,24 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Kill"",
+                    ""type"": ""Button"",
+                    ""id"": ""605f4127-32d8-486b-807d-c58ed7c027f6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ClearEncounter"",
+                    ""type"": ""Button"",
+                    ""id"": ""91e97500-8876-420b-9d33-fb4ae9b66c7b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -489,6 +507,8 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_PlayerGameplay_Heal = m_PlayerGameplay.FindAction("Heal", throwIfNotFound: true);
         m_PlayerGameplay_Reset = m_PlayerGameplay.FindAction("Reset", throwIfNotFound: true);
         m_PlayerGameplay_Interact = m_PlayerGameplay.FindAction("Interact", throwIfNotFound: true);
+        m_PlayerGameplay_Kill = m_PlayerGameplay.FindAction("Kill", throwIfNotFound: true);
+        m_PlayerGameplay_ClearEncounter = m_PlayerGameplay.FindAction("ClearEncounter", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Mouse = m_UI.FindAction("Mouse", throwIfNotFound: true);
@@ -564,6 +584,8 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_Heal;
     private readonly InputAction m_PlayerGameplay_Reset;
     private readonly InputAction m_PlayerGameplay_Interact;
+    private readonly InputAction m_PlayerGameplay_Kill;
+    private readonly InputAction m_PlayerGameplay_ClearEncounter;
     public struct PlayerGameplayActions
     {
         private @GameControls m_Wrapper;
@@ -579,6 +601,8 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @Heal => m_Wrapper.m_PlayerGameplay_Heal;
         public InputAction @Reset => m_Wrapper.m_PlayerGameplay_Reset;
         public InputAction @Interact => m_Wrapper.m_PlayerGameplay_Interact;
+        public InputAction @Kill => m_Wrapper.m_PlayerGameplay_Kill;
+        public InputAction @ClearEncounter => m_Wrapper.m_PlayerGameplay_ClearEncounter;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -621,6 +645,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Interact.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnInteract;
+                @Kill.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnKill;
+                @Kill.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnKill;
+                @Kill.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnKill;
+                @ClearEncounter.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnClearEncounter;
+                @ClearEncounter.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnClearEncounter;
+                @ClearEncounter.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnClearEncounter;
             }
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -658,6 +688,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @Kill.started += instance.OnKill;
+                @Kill.performed += instance.OnKill;
+                @Kill.canceled += instance.OnKill;
+                @ClearEncounter.started += instance.OnClearEncounter;
+                @ClearEncounter.performed += instance.OnClearEncounter;
+                @ClearEncounter.canceled += instance.OnClearEncounter;
             }
         }
     }
@@ -724,6 +760,8 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnHeal(InputAction.CallbackContext context);
         void OnReset(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnKill(InputAction.CallbackContext context);
+        void OnClearEncounter(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

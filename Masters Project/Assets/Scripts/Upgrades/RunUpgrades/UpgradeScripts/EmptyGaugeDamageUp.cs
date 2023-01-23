@@ -6,8 +6,8 @@ public class EmptyGaugeDamageUp : IUpgrade
 {
     private TimeManager time;
     private PlayerGunController gun;
-    private int originalDamage;
-    [SerializeField] private int damageMultiplier;
+    private float originalDamage;
+    [SerializeField] private float damageMultiplier;
     [SerializeField] private int duration;
     private ScaledTimer timer;
     private bool damageUp;
@@ -23,18 +23,18 @@ public class EmptyGaugeDamageUp : IUpgrade
     private void Update()
     {
       if(time.GetState() == TimeManager.TimeGaugeState.EMPTIED && !damageUp) {
-          damageUp = true;
-          timer.ResetTimer();
+           damageUp = true;
+           Debug.Log("Damage up!");
+           timer.ResetTimer();
       }
 
       if(damageUp) {
           
           gun.SetDamageMultiplier(originalDamage*damageMultiplier);
-          Debug.Log("Damage up!");
           if(timer.TimerDone()) {
               damageUp = false;
               gun.SetDamageMultiplier(originalDamage);
-              Debug.Log("Damage back to normal.");
+              Debug.Log("Damage back to normal. " + originalDamage);
           }
       }
     }

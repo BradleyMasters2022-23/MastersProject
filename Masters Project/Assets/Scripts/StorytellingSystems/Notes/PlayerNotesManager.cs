@@ -14,7 +14,7 @@ public class PlayerNotesManager : MonoBehaviour
   /// <summary>
   /// notes player has completed
   /// </summary>
-    private List<NoteObject> playerNotes = new List<NoteObject>();
+    [SerializeField] private List<NoteObject> playerNotes = new List<NoteObject>();
 
     /// <summary>
     /// call this class easily
@@ -87,4 +87,12 @@ public class PlayerNotesManager : MonoBehaviour
         UpdateNotes();
     }
 
+    /// <summary>
+    /// Get currently collected player notes
+    /// </summary>
+    /// <returns></returns>
+    public List<NoteObject> GetCollectedNotes()
+    {
+        return playerNotes;
+    }
 }

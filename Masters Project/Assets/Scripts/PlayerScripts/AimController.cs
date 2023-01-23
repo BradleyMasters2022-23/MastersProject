@@ -18,7 +18,7 @@ public class AimController : MonoBehaviour
     [Tooltip("Channel to check for settings change")]
     [SerializeField] private ChannelVoid onSettingsChangedChannel;
 
-    private float mouseSensitivity;
+    [SerializeField] private float mouseSensitivity;
     private bool mouseXInverted;
     private bool mouseYInverted;
     
@@ -93,6 +93,8 @@ public class AimController : MonoBehaviour
             lookDelta = aim.ReadValue<Vector2>();
             sensitivity = mouseSensitivity;
 
+            // Debug.Log("Using sensitivity with : " + sensitivity);
+
             if (mouseXInverted)
                 horizontalInversion *= -1;
             if (mouseYInverted)
@@ -117,6 +119,8 @@ public class AimController : MonoBehaviour
 
         // Manage horizontal rotation
         transform.rotation *= Quaternion.AngleAxis(lookDelta.x * sensitivity * horizontalInversion * Time.deltaTime, Vector3.up);
+        
+
 
         // Manage vertical rotaiton
         Quaternion temp = cameraLook.transform.localRotation *

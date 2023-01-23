@@ -9,6 +9,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class SpawnPoint : MonoBehaviour
 {
@@ -78,6 +79,10 @@ public class SpawnPoint : MonoBehaviour
     [Tooltip("What enemies are allowed to spawn on this spawnpoint. Drag enemy prefabs here.")]
     [SerializeField] private GameObject[] enemyWhitelist;
 
+    private GameControls controls;
+    private InputAction endCheat;
+
+
     /// <summary>
     /// Initialize settings
     /// </summary>
@@ -87,6 +92,7 @@ public class SpawnPoint : MonoBehaviour
         spawnLight = GetComponentInChildren<Light>();
         spawnParticles = GetComponentInChildren<ParticleSystem>();
         s = gameObject.AddComponent<AudioSource>();
+        s.spatialBlend = 1;
 
         // Initialize timers
         spawnDelayTimer = new ScaledTimer(spawnDelay);
@@ -109,6 +115,11 @@ public class SpawnPoint : MonoBehaviour
     {
         player = FindObjectOfType<PlayerController>().transform;
         spawnManager = SpawnManager.instance;
+
+        controls = GameManager.controls;
+        endCheat = controls.PlayerGameplay.ClearEncounter;
+        endCheat.performed += CheatClear;
+        endCheat.Enable();
     }
 
     /// <summary>
@@ -151,10 +162,10 @@ public class SpawnPoint : MonoBehaviour
         bool _allowed = false;
         if (enemyWhitelist.Length > 0)
         {
-            EnemyBase proposed = proposedEnemy.GetComponent<EnemyBase>();
+            //EnemyManager proposed = proposedEnemy.GetComponent<EnemyManager>();
             foreach (GameObject type in enemyWhitelist)
             {
-                if (type.GetComponent<EnemyBase>() == proposed)
+                if (type == proposedEnemy)
                     _allowed = true;
             }
 
@@ -248,8 +259,26 @@ public class SpawnPoint : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-
+        endCheat.Disable();
         if (spawnRoutine != null)
             StopCoroutine(spawnRoutine);
+    }
+
+    private void CheatClear(InputAction.CallbackContext c)
+    {
+        //Debug.Log("Clear spawnpoints called");
+
+        if(spawnRoutine != null)
+            StopCoroutine(spawnRoutine);
+
+        enemyStorage = null;
+        spawnRoutine = null;
+        spawnLight.enabled = false;
+        if (spawnParticles != null)
+            spawnParticles.Stop();
+        if (spawnSound != null)
+            s.Stop();
+        spawning = false;
+        spawnManager.SpawnedEnemy();
     }
 }

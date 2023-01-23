@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CloseDamageUp : IUpgrade {
     private PlayerGunController gun;
-    private int baseDamage;
+    private float baseDamage;
     [SerializeField] private float maxPercentIncrease;
 
     public override void LoadUpgrade(PlayerController player) {
