@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class UIEnemyPointer : MonoBehaviour
 {
-    [SerializeField] private CameraShoot cameraRef;
+    private CameraShoot cameraRef;
     private RectTransform t;
     private Transform target;
     private Transform player;
