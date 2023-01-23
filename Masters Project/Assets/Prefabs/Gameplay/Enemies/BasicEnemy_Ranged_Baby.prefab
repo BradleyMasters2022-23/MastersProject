@@ -1255,9 +1255,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxVerticalKnockback: 0
   damageMultiplier: 5
-  weakPoint: {fileID: 0}
-  armoredPoint: {fileID: 0}
-  basicHit: {fileID: 0}
+  weakPoint: {fileID: 8300000, guid: 07bb9e13676cd0d44bf41d2a94cdb242, type: 3}
+  armoredPoint: {fileID: 8300000, guid: 783625c99ffed2c47b4b650fc0fee16b, type: 3}
+  basicHit: {fileID: 8300000, guid: c8f86fc7748ff914a8b2855390669915, type: 3}
 --- !u!1 &6338953847128549188
 GameObject:
   m_ObjectHideFlags: 0
@@ -1401,7 +1401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxVerticalKnockback: 0
-  maxHealth: 80
+  maxHealth: 100
   immortal: 0
   deathVFX: {fileID: 8273445605695135385, guid: 3c02a13cc5fc9994f8787e38cd6a77ea, type: 3}
   hideUIDelay: 0
@@ -1445,12 +1445,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterMovementStates:
   - name: default
-    moveSpeed: 16
-    rotationSpeed: 3.5
+    moveSpeed: 20
+    rotationSpeed: 5
     acceleration: 35
   - name: strafe
-    moveSpeed: 24
-    rotationSpeed: 4.5
+    moveSpeed: 30
+    rotationSpeed: 5
     acceleration: 50
   currentMoveStates:
     name: 
@@ -1461,8 +1461,8 @@ MonoBehaviour:
   spawnSound: {fileID: 0}
   lookBehavior: {fileID: 5176151732030655657}
   chaseBehavior: {fileID: 6593523673652185635}
-  startChastDist: 18
-  stopChaseDist: 10
+  startChastDist: 30
+  stopChaseDist: 15
   stopChaseOnLineOfSight: 0
   noLineOfSightDelay: 5
   postChaseCD: 0
@@ -1669,7 +1669,7 @@ MonoBehaviour:
   currentAttackState: 0
   attackReady: 0
   attackCoolown: 1
-  indicatorDuration: 0.5
+  indicatorDuration: 0.6
   rotateDuringIndication: 1
   finishDuration: 0.42
   rotateDuringFinish: 0
@@ -1679,12 +1679,13 @@ MonoBehaviour:
   lineOfSightWidth: 0.1
   autoLoopAttack: 0
   target: {fileID: 0}
+  lineOfSightOrigin: {fileID: 0}
   projectile: {fileID: 8727397786430278917, guid: 72ddf08186379004e8a2d2b56de45efb, type: 3}
   shootPoints:
   - {fileID: 5086307354650794681}
-  numOfShots: 3
+  numOfShots: 5
   delayBetweenShots: 0
-  leadStrength: {x: 0.75, y: 1.25}
+  leadStrength: {x: 0.25, y: 0.75}
   leadConeRadius: 15
   firstShotAccuracy: {x: 0, y: 1.5}
   normalAccuracyRange: {x: 0, y: 4.5}
@@ -1696,8 +1697,8 @@ MonoBehaviour:
   indicatorScale: 1
   shootVFXPrefab: {fileID: 9110516864071591092, guid: 4c8c1cac5e88a70428c5db240d66f36c, type: 3}
   shootVFXScale: 1
-  indicatorSFX: {fileID: 0}
-  shootSFX: {fileID: 0}
+  indicatorSFX: {fileID: 8300000, guid: 10651d9864d17a74ebedbe2905774197, type: 3}
+  shootSFX: {fileID: 8300000, guid: d56d956f049d1854dafebbe10d2fda49, type: 3}
   indicatorStunned: 0
 --- !u!114 &5176151732030655657
 MonoBehaviour:
@@ -1792,6 +1793,7 @@ MonoBehaviour:
   stunned: 0
   stunCooldown: 8
   acquiredTargetOnce: 0
+  lineOfSightOrigin: {fileID: 0}
 --- !u!82 &6012950062300150945
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1815,7 +1817,7 @@ AudioSource:
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -1823,23 +1825,23 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
+      time: 0.002
       value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     - serializedVersion: 3
-      time: 1
+      time: 0.13637161
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: -1.002004
+      outSlope: -1.002004
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -1848,7 +1850,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -2045,9 +2047,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxVerticalKnockback: 0
   damageMultiplier: 1
-  weakPoint: {fileID: 0}
-  armoredPoint: {fileID: 0}
-  basicHit: {fileID: 0}
+  weakPoint: {fileID: 8300000, guid: 07bb9e13676cd0d44bf41d2a94cdb242, type: 3}
+  armoredPoint: {fileID: 8300000, guid: 783625c99ffed2c47b4b650fc0fee16b, type: 3}
+  basicHit: {fileID: 8300000, guid: c8f86fc7748ff914a8b2855390669915, type: 3}
 --- !u!1 &8028579012812630097
 GameObject:
   m_ObjectHideFlags: 0

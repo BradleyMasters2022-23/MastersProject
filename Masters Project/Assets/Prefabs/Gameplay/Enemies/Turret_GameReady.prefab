@@ -593,10 +593,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxVerticalKnockback: 0
-  damageMultiplier: 0.75
-  weakPoint: {fileID: 0}
-  armoredPoint: {fileID: 0}
-  basicHit: {fileID: 0}
+  damageMultiplier: 0.7
+  weakPoint: {fileID: 8300000, guid: 07bb9e13676cd0d44bf41d2a94cdb242, type: 3}
+  armoredPoint: {fileID: 8300000, guid: 783625c99ffed2c47b4b650fc0fee16b, type: 3}
+  basicHit: {fileID: 8300000, guid: c8f86fc7748ff914a8b2855390669915, type: 3}
 --- !u!1 &4565767903238201078
 GameObject:
   m_ObjectHideFlags: 0
@@ -863,7 +863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxVerticalKnockback: 0
-  maxHealth: 270
+  maxHealth: 350
   immortal: 0
   deathVFX: {fileID: 8273445605695135385, guid: 3c02a13cc5fc9994f8787e38cd6a77ea, type: 3}
   hideUIDelay: 0
@@ -886,7 +886,7 @@ MonoBehaviour:
   characterMovementStates:
   - name: lmao turrets dont move
     moveSpeed: 0
-    rotationSpeed: 1.65
+    rotationSpeed: 1.75
     acceleration: 0
   currentMoveStates:
     name: 
@@ -941,7 +941,7 @@ MonoBehaviour:
   collisionLayers:
     serializedVersion: 2
     m_Bits: 1
-  lookAtLastPosition: 1
+  lookAtLastPosition: 0
   visionMask:
     serializedVersion: 2
     m_Bits: 2121
@@ -950,6 +950,7 @@ MonoBehaviour:
   stunned: 0
   stunCooldown: 5.5
   acquiredTargetOnce: 0
+  lineOfSightOrigin: {fileID: 8360387513118762235}
 --- !u!114 &1794628268212698115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -975,6 +976,7 @@ MonoBehaviour:
   lineOfSightWidth: 0.3
   autoLoopAttack: 0
   target: {fileID: 0}
+  lineOfSightOrigin: {fileID: 8360387513118762235}
   projectile: {fileID: 4730330725648419445, guid: da8fbe537a132c04fb690a95af9b1b35, type: 3}
   shootPoints:
   - {fileID: 1315929774350081781}
@@ -992,8 +994,8 @@ MonoBehaviour:
   indicatorScale: 5
   shootVFXPrefab: {fileID: 9110516864071591092, guid: 4c8c1cac5e88a70428c5db240d66f36c, type: 3}
   shootVFXScale: 3
-  indicatorSFX: {fileID: 0}
-  shootSFX: {fileID: 0}
+  indicatorSFX: {fileID: 8300000, guid: 10651d9864d17a74ebedbe2905774197, type: 3}
+  shootSFX: {fileID: 8300000, guid: d56d956f049d1854dafebbe10d2fda49, type: 3}
   indicatorStunned: 0
 --- !u!82 &7031348770677665391
 AudioSource:
@@ -1018,7 +1020,7 @@ AudioSource:
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -1026,23 +1028,23 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
+      time: 0.002
       value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     - serializedVersion: 3
-      time: 1
+      time: 0.13636398
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: -1.002004
+      outSlope: -1.002004
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -1051,7 +1053,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -1358,9 +1360,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxVerticalKnockback: 0
   damageMultiplier: 1
-  weakPoint: {fileID: 0}
-  armoredPoint: {fileID: 0}
-  basicHit: {fileID: 0}
+  weakPoint: {fileID: 8300000, guid: 07bb9e13676cd0d44bf41d2a94cdb242, type: 3}
+  armoredPoint: {fileID: 8300000, guid: 783625c99ffed2c47b4b650fc0fee16b, type: 3}
+  basicHit: {fileID: 8300000, guid: c8f86fc7748ff914a8b2855390669915, type: 3}
 --- !u!1 &8988617009113605978
 GameObject:
   m_ObjectHideFlags: 0

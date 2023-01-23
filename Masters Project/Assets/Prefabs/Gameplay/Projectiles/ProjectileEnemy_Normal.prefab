@@ -128,11 +128,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83837c8b4b5a4d344afd789cbfd3cc3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 6
+  damage: 4
   knockback: 3
   addativeKnockback: 1
-  speed: 42.5
+  speed: 45
   range: 200
+  shotByPlayer: 0
   onHitEffect: {fileID: 8273445605695135385, guid: 3c02a13cc5fc9994f8787e38cd6a77ea, type: 3}
   targetLayers:
     serializedVersion: 2
@@ -140,12 +141,8 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 2056
-  enemyShoot:
-  - {fileID: 8300000, guid: 9c64281aa7548784f82e002f655fe02d, type: 3}
-  - {fileID: 8300000, guid: 3216a7b43fc913247937ffc6cbb3c19e, type: 3}
-  - {fileID: 8300000, guid: a1cf490eb9aaafb44a7264e4dc46bd4a, type: 3}
-  - {fileID: 8300000, guid: 9c64281aa7548784f82e002f655fe02d, type: 3}
-  enemyHit: []
+  bulletShot: []
+  bulletHit: []
 --- !u!1001 &7998447158193354191
 PrefabInstance:
   m_ObjectHideFlags: 0

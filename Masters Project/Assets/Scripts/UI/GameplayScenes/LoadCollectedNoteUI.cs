@@ -13,6 +13,9 @@ public class LoadCollectedNoteUI : MonoBehaviour
 
     private void OnEnable()
     {
+        if (PlayerNotesManager.instance == null)
+            return;
+
         collectedNotes = new List<NoteObject>(PlayerNotesManager.instance.GetCollectedNotes());
         PopulateList();
     }

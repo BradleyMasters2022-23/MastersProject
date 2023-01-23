@@ -75,6 +75,8 @@ public abstract class AttackTarget : MonoBehaviour
     [Tooltip("The target of the attack."), HideIf("@this.autoLoopAttack == false")]
     [SerializeField] protected Transform target;
 
+    [SerializeField] protected Transform lineOfSightOrigin;
+
     protected EnemyManager manager;
 
     protected AudioSource source;
@@ -94,7 +96,9 @@ public abstract class AttackTarget : MonoBehaviour
         attackTracker = new ScaledTimer(attackCoolown);
         indicatorTracker = new ScaledTimer(indicatorDuration);
         finishTracker = new ScaledTimer(finishDuration);
-        
+
+        if (lineOfSightOrigin == null)
+            lineOfSightOrigin = transform;
 
         currentAttackState = AttackState.Ready;
     }
@@ -107,9 +111,9 @@ public abstract class AttackTarget : MonoBehaviour
     public bool CanDoAttack()
     {
         bool attackReq = 
-            currentAttackState== AttackState.Ready && 
-            transform.InVisionCone(target, attackConeRadius) && 
-            (!lineOfSightReq || transform.HasLineOfSight(target, manager.visionLayer, lineOfSightWidth));
+            currentAttackState== AttackState.Ready &&
+            lineOfSightOrigin.InVisionCone(target, attackConeRadius) && 
+            (!lineOfSightReq || lineOfSightOrigin.HasLineOfSight(target, manager.visionLayer, lineOfSightWidth));
 
         return attackReq;
     }

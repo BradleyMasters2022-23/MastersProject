@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controllerDefault: {fileID: 4833642112477802830}
-  openMenu: {fileID: 0}
+  openMenu: {fileID: 8300000, guid: ad6a146003cae7b4a92f67ce117ba1d3, type: 3}
   closable: 1
 --- !u!1 &4833642112011677868
 GameObject:
@@ -576,8 +576,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4833642113125113563}
   m_HandleRect: {fileID: 4833642113125113562}
   m_Direction: 2
-  m_Value: 1.0000002
-  m_Size: 0.7265162
+  m_Value: 1
+  m_Size: 0.7237555
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -695,7 +695,7 @@ RectTransform:
   m_Father: {fileID: 4833642113151401693}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.2734838}
+  m_AnchorMin: {x: 0, y: 0.27624452}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
@@ -903,7 +903,7 @@ MonoBehaviour:
   - {fileID: 5446592377508395966}
   - {fileID: 5446592377385742647}
   - {fileID: 5446592377020278738}
-  contentDrawer: {fileID: 0}
+  contentDrawer: {fileID: 7146892624305658900}
 --- !u!1 &4833642113496831190
 GameObject:
   m_ObjectHideFlags: 0
@@ -914,6 +914,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4833642113496831191}
   - component: {fileID: 4833642113496831188}
+  - component: {fileID: 7146892624305658900}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -972,6 +973,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &7146892624305658900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4833642113496831190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b39cd5ddff853f4abc00080b72fe5ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5885444332175830490
 GameObject:
   m_ObjectHideFlags: 0
@@ -1298,7 +1311,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -30.555, y: 1112.019}
+  m_SizeDelta: {x: -30.555, y: 2574.091}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &5885444332627241819
 GameObject:
@@ -1422,7 +1435,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 5885444333220392545}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.5698119
+  m_Size: 0.24516611
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1723,7 +1736,7 @@ RectTransform:
   m_Father: {fileID: 5885444332716894256}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.43018812}
+  m_AnchorMin: {x: 0, y: 0.7548339}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
@@ -2777,7 +2790,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 430342160513685565, guid: 77da07a13571f6f4aa8d98be1d20e83b, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -4.184265
+      value: -4.1842346
       objectReference: {fileID: 0}
     - target: {fileID: 430342160513685565, guid: 77da07a13571f6f4aa8d98be1d20e83b, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2834,6 +2847,10 @@ PrefabInstance:
     - target: {fileID: 8973357340518730194, guid: 77da07a13571f6f4aa8d98be1d20e83b, type: 3}
       propertyPath: m_text
       value: Back
+      objectReference: {fileID: 0}
+    - target: {fileID: 8973357340518730194, guid: 77da07a13571f6f4aa8d98be1d20e83b, type: 3}
+      propertyPath: m_margin.x
+      value: 14.295952
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77da07a13571f6f4aa8d98be1d20e83b, type: 3}
@@ -2972,6 +2989,10 @@ PrefabInstance:
     - target: {fileID: 8973357340518730194, guid: 77da07a13571f6f4aa8d98be1d20e83b, type: 3}
       propertyPath: m_text
       value: Back
+      objectReference: {fileID: 0}
+    - target: {fileID: 8973357340518730194, guid: 77da07a13571f6f4aa8d98be1d20e83b, type: 3}
+      propertyPath: m_margin.x
+      value: 11.885483
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77da07a13571f6f4aa8d98be1d20e83b, type: 3}

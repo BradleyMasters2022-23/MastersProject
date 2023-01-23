@@ -126,6 +126,8 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private float decelerateLerp;
 
+    [SerializeField] private bool sprintHeld;
+
     #endregion
 
     #region Vertical Movement Variables
@@ -268,11 +270,17 @@ public class PlayerController : MonoBehaviour
                     HorizontalMovement();
                     AdjustForSlope();
 
+                    if(currentJumps != jumps.Current)
+                        currentJumps = jumps.Current;
+
                     // If not on ground, set state to midair. Disable sprint
                     if (!Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask))
                     {
                         ChangeState(PlayerState.MIDAIR);
                     }
+
+                    if (sprintHeld)
+                        ChangeState(PlayerState.SPRINTING);
 
                     break;
                 }
@@ -286,6 +294,9 @@ public class PlayerController : MonoBehaviour
                     {
                         ChangeState(PlayerState.MIDAIR);
                     }
+
+                    if (!sprintHeld)
+                        ChangeState(PlayerState.GROUNDED);
 
                     break;
                 }
@@ -376,14 +387,17 @@ public class PlayerController : MonoBehaviour
     private void ToggleSprint(InputAction.CallbackContext ctx)
     {
         // If player is grounded and started input, start sprinting
-        if (currentState == PlayerState.GROUNDED && ctx.started)
+        if (ctx.started)
         {
-            ChangeState(PlayerState.SPRINTING);
+            sprintHeld = true;
+
+            //ChangeState(PlayerState.SPRINTING);
         }
         // If player is sprinting and canceled input, stop sprinting
-        else if (currentState == PlayerState.SPRINTING && ctx.canceled)
+        else if (ctx.canceled)
         {
-            ChangeState(PlayerState.GROUNDED);
+            sprintHeld = false;
+            //ChangeState(PlayerState.GROUNDED);
         }
     }
 
