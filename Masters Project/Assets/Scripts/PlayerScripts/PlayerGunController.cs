@@ -129,13 +129,13 @@ public class PlayerGunController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Tell the accuracy to recover over time while not firing
         if(!firing && currBloom != baseBloom)
         {
             float newAccuracy = currBloom - bloomRecoveryRate * Time.deltaTime;
             if(newAccuracy < baseBloom)
             {
                 newAccuracy = baseBloom;
-                Debug.Log("Accuracy recovered fully");
             }
                 
 
@@ -172,19 +172,20 @@ public class PlayerGunController : MonoBehaviour
                 Random.Range(-maxShootDisplacement, maxShootDisplacement),
                 Random.Range(-maxShootDisplacement, maxShootDisplacement),
                 Random.Range(-maxShootDisplacement, maxShootDisplacement));
-
             newShot.transform.position += displacement;
 
+            // Aim to center screen, apply inaccuracy bonuses
             newShot.transform.LookAt(shootCam.TargetPos);
-
             newShot.transform.eulerAngles = ApplySpread(newShot.transform.eulerAngles);
 
+            // Tell bullet to initialize
             newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current, true);
         }
 
         if(gunshotSound.Length > 0)
             source.PlayOneShot(gunshotSound[Random.Range(0, gunshotSound.Length)],0.3f);
 
+        // Increase bloom after shot
         currBloom = Mathf.Clamp(currBloom + bloomPerShot, baseBloom, maxBloom);
     }
 
