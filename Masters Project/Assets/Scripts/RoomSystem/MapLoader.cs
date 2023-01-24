@@ -138,7 +138,7 @@ public class MapLoader : MonoBehaviour
         foreach(MapSegmentSO segment in mapOrder)
         {
             // Create map segment, give its info to it, add to list
-            GameObject t = Instantiate(segment.segmentPrefab, Vector3.zero, Quaternion.Euler(Vector3.zero));
+            GameObject t = Instantiate(segment.segmentPrefab, Vector3.left * 1000, Quaternion.Euler(Vector3.zero));
             t.GetComponent<SegmentLoader>().segmentInfo = segment;
             loadedMap.Add(t.GetComponent<SegmentLoader>());
 

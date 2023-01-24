@@ -14,22 +14,37 @@ using UnityEngine.EventSystems;
 public class ButtonAudioManager : MonoBehaviour
 {
     [SerializeField] private AudioClip onHoverSound;
+    [SerializeField] float hoverVolume = 0.5f;
 
     [SerializeField] private AudioClip onPressSound;
+    [SerializeField] private float pressVolume = 0.5f;
+
+    private AudioSource source;
+
+    private void Awake()
+    {
+        source = gameObject.AddComponent<AudioSource>();
+    }
 
     public void PlayHoverSound()
     {
-        // Debug.Log("Play hover sound called");
-
         if(onHoverSound != null)
-            AudioSource.PlayClipAtPoint(onHoverSound, Camera.main.transform.position);
+        {
+            source.Stop();
+            source.volume= hoverVolume;
+            source.clip = onHoverSound;
+            source.Play();
+        }
     }
 
     public void PlayClickSound()
     {
-        // Debug.Log("Play click sound called");
-
         if (onPressSound != null)
-            AudioSource.PlayClipAtPoint(onHoverSound, Camera.main.transform.position);
+        {
+            source.Stop();
+            source.volume = pressVolume;
+            source.clip = onPressSound;
+            source.Play();
+        }
     }
 }

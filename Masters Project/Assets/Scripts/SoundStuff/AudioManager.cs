@@ -23,6 +23,12 @@ public class AudioManager : MonoBehaviour
         UpdateSettings();
     }
 
+    private void Update()
+    {
+        if(masterVolume != AudioListener.volume)
+            UpdateSettings();
+    }
+
     private void UpdateSettings()
     {
         masterVolume = Settings.masterVolume;

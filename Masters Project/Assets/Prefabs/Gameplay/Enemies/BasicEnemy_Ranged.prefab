@@ -106,9 +106,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxVerticalKnockback: 0
   damageMultiplier: 1
-  weakPoint: {fileID: 0}
-  armoredPoint: {fileID: 0}
-  basicHit: {fileID: 0}
+  weakPoint: {fileID: 8300000, guid: 07bb9e13676cd0d44bf41d2a94cdb242, type: 3}
+  armoredPoint: {fileID: 8300000, guid: 783625c99ffed2c47b4b650fc0fee16b, type: 3}
+  basicHit: {fileID: 8300000, guid: c8f86fc7748ff914a8b2855390669915, type: 3}
 --- !u!1 &5110983048130871982
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,13 +246,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxVerticalKnockback: 0
-  maxHealth: 180
+  maxHealth: 300
   immortal: 0
   deathVFX: {fileID: 8273445605695135385, guid: 3c02a13cc5fc9994f8787e38cd6a77ea, type: 3}
   hideUIDelay: 0
   timeOrb: {fileID: 3071240432754548792, guid: 2001e4aa90ac76a47866171fcaafdf7f, type: 3}
-  dropChance: 85
-  dropNumerRange: {x: 5, y: 6}
+  dropChance: 100
+  dropNumerRange: {x: 3, y: 6}
   deathSound: {fileID: 0}
 --- !u!195 &6878320425555973780
 NavMeshAgent:
@@ -290,8 +290,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterMovementStates:
   - name: default
-    moveSpeed: 11
-    rotationSpeed: 2.5
+    moveSpeed: 8
+    rotationSpeed: 3.8
     acceleration: 30
   - name: strafe
     moveSpeed: 8
@@ -345,6 +345,7 @@ MonoBehaviour:
   lineOfSightWidth: 1
   autoLoopAttack: 0
   target: {fileID: 0}
+  lineOfSightOrigin: {fileID: 0}
   projectile: {fileID: 8727397786430278917, guid: 406069cb0a402f342af7f980f4ed2f6c, type: 3}
   shootPoints:
   - {fileID: 8900093909637964389}
@@ -362,8 +363,8 @@ MonoBehaviour:
   indicatorScale: 7
   shootVFXPrefab: {fileID: 9110516864071591092, guid: 4c8c1cac5e88a70428c5db240d66f36c, type: 3}
   shootVFXScale: 3
-  indicatorSFX: {fileID: 0}
-  shootSFX: {fileID: 0}
+  indicatorSFX: {fileID: 8300000, guid: cbe22d05ba1776e498f594bf23ffb562, type: 3}
+  shootSFX: {fileID: 8300000, guid: 0f0797c8954fcc04abc1cf92e2868ff2, type: 3}
   indicatorStunned: 0
 --- !u!114 &6173771787627512305
 MonoBehaviour:
@@ -569,6 +570,7 @@ MonoBehaviour:
   lineOfSightWidth: 0.3
   autoLoopAttack: 0
   target: {fileID: 0}
+  lineOfSightOrigin: {fileID: 0}
   projectile: {fileID: 8727397786430278917, guid: 72ddf08186379004e8a2d2b56de45efb, type: 3}
   shootPoints:
   - {fileID: 8900093909637964389}
@@ -586,8 +588,8 @@ MonoBehaviour:
   indicatorScale: 1
   shootVFXPrefab: {fileID: 9110516864071591092, guid: 4c8c1cac5e88a70428c5db240d66f36c, type: 3}
   shootVFXScale: 1
-  indicatorSFX: {fileID: 0}
-  shootSFX: {fileID: 0}
+  indicatorSFX: {fileID: 8300000, guid: 10651d9864d17a74ebedbe2905774197, type: 3}
+  shootSFX: {fileID: 8300000, guid: d56d956f049d1854dafebbe10d2fda49, type: 3}
   indicatorStunned: 0
 --- !u!114 &5617857952634112433
 MonoBehaviour:
@@ -628,6 +630,7 @@ MonoBehaviour:
   stunned: 0
   stunCooldown: 8
   acquiredTargetOnce: 0
+  lineOfSightOrigin: {fileID: 0}
 --- !u!82 &8452023684772447732
 AudioSource:
   m_ObjectHideFlags: 0
@@ -651,7 +654,7 @@ AudioSource:
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -659,23 +662,23 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
+      time: 0.002
       value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     - serializedVersion: 3
-      time: 1
+      time: 0.13637161
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: -1.002004
+      outSlope: -1.002004
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -684,7 +687,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -699,7 +702,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.03888889
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -771,9 +774,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxVerticalKnockback: 0
   damageMultiplier: 2
-  weakPoint: {fileID: 0}
-  armoredPoint: {fileID: 0}
-  basicHit: {fileID: 0}
+  weakPoint: {fileID: 8300000, guid: 07bb9e13676cd0d44bf41d2a94cdb242, type: 3}
+  armoredPoint: {fileID: 8300000, guid: 783625c99ffed2c47b4b650fc0fee16b, type: 3}
+  basicHit: {fileID: 8300000, guid: c8f86fc7748ff914a8b2855390669915, type: 3}
 --- !u!64 &927205269294769694
 MeshCollider:
   m_ObjectHideFlags: 0

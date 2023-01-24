@@ -34,7 +34,7 @@ public class EmptyGaugeDamageUp : IUpgrade
           if(timer.TimerDone()) {
               damageUp = false;
               gun.SetDamageMultiplier(originalDamage);
-              Debug.Log("Damage back to normal.");
+              Debug.Log("Damage back to normal. " + originalDamage);
           }
       }
     }
