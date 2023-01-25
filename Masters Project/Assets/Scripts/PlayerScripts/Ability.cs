@@ -83,15 +83,14 @@ public abstract class Ability : MonoBehaviour
     /// <returns></returns>
     protected virtual IEnumerator UseAbility()
     {
-        // Reduce charge
-        currentCharges--;
-
         // prepare the windup
         currentState = AbilityStates.Windup;
         yield return StartCoroutine(OnWindup());
-        
+
         // do the actual ability. Children classes will implement concrete implementation.
         yield return StartCoroutine(OnAbility());
+        // Reduce charge
+        currentCharges--;
 
         // Enter recovery state
         currentState = AbilityStates.Recovery;
@@ -103,8 +102,6 @@ public abstract class Ability : MonoBehaviour
             currentState = AbilityStates.NotReady;
         else
             currentState = AbilityStates.Ready;
-
-        Debug.Log("activate ability done");
 
         yield return null;
     }
