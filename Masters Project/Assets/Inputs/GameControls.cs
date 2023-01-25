@@ -143,6 +143,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Tactical"",
+                    ""type"": ""Button"",
+                    ""id"": ""43833b58-0f0f-460c-8195-a2b48cb722b3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -253,17 +262,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Shoot"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""1fe5a9ec-d002-4444-afc1-1cc79b8fe92b"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Heal"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -398,6 +396,17 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""ClearEncounter"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ba1c79c5-0447-4802-af9c-a7d946f6e458"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Tactical"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -520,6 +529,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_PlayerGameplay_Interact = m_PlayerGameplay.FindAction("Interact", throwIfNotFound: true);
         m_PlayerGameplay_Kill = m_PlayerGameplay.FindAction("Kill", throwIfNotFound: true);
         m_PlayerGameplay_ClearEncounter = m_PlayerGameplay.FindAction("ClearEncounter", throwIfNotFound: true);
+        m_PlayerGameplay_Tactical = m_PlayerGameplay.FindAction("Tactical", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Mouse = m_UI.FindAction("Mouse", throwIfNotFound: true);
@@ -597,6 +607,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_Interact;
     private readonly InputAction m_PlayerGameplay_Kill;
     private readonly InputAction m_PlayerGameplay_ClearEncounter;
+    private readonly InputAction m_PlayerGameplay_Tactical;
     public struct PlayerGameplayActions
     {
         private @GameControls m_Wrapper;
@@ -614,6 +625,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @Interact => m_Wrapper.m_PlayerGameplay_Interact;
         public InputAction @Kill => m_Wrapper.m_PlayerGameplay_Kill;
         public InputAction @ClearEncounter => m_Wrapper.m_PlayerGameplay_ClearEncounter;
+        public InputAction @Tactical => m_Wrapper.m_PlayerGameplay_Tactical;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -662,6 +674,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @ClearEncounter.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnClearEncounter;
                 @ClearEncounter.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnClearEncounter;
                 @ClearEncounter.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnClearEncounter;
+                @Tactical.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
+                @Tactical.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
+                @Tactical.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
             }
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -705,6 +720,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @ClearEncounter.started += instance.OnClearEncounter;
                 @ClearEncounter.performed += instance.OnClearEncounter;
                 @ClearEncounter.canceled += instance.OnClearEncounter;
+                @Tactical.started += instance.OnTactical;
+                @Tactical.performed += instance.OnTactical;
+                @Tactical.canceled += instance.OnTactical;
             }
         }
     }
@@ -773,6 +791,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnInteract(InputAction.CallbackContext context);
         void OnKill(InputAction.CallbackContext context);
         void OnClearEncounter(InputAction.CallbackContext context);
+        void OnTactical(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

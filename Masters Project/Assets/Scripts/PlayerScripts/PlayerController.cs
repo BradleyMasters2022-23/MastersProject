@@ -10,9 +10,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static Cinemachine.DocumentationSortingAttribute;
-using UnityEngine.Rendering;
-using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour
 {
@@ -83,6 +80,10 @@ public class PlayerController : MonoBehaviour
     /// Input for sprinting
     /// </summary>
     private InputAction sprint;
+    /// <summary>
+    /// Input for special Q abilioty
+    /// </summary>
+    private InputAction qInput;
 
     #endregion
 
@@ -185,6 +186,13 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
+    #region Combat Stuff
+
+    [Tooltip("Ability to activate when pressing 'Q'")]
+    [SerializeField] private Ability QAbility;
+
+    #endregion
+
     #region Initialization
 
     /// <summary>
@@ -203,6 +211,8 @@ public class PlayerController : MonoBehaviour
         midAirTimer = new ScaledTimer(0.5f, false);
         currentJumps = jumps.Current;
         targetMaxSpeed = maxMoveSpeed.Current;
+
+
 
         // Initialize normal
         RaycastHit normal;
@@ -232,6 +242,10 @@ public class PlayerController : MonoBehaviour
         sprint.started += ToggleSprint;
         sprint.canceled += ToggleSprint;
         sprint.Enable();
+
+        qInput = controller.PlayerGameplay.Tactical;
+        qInput.performed += ActivateQAbility;
+        qInput.Enable();
 
         // Get initial references
         rb = GetComponent<Rigidbody>();
@@ -398,6 +412,18 @@ public class PlayerController : MonoBehaviour
         {
             sprintHeld = false;
             //ChangeState(PlayerState.GROUNDED);
+        }
+    }
+
+    #endregion
+
+    #region Combat and Ability Calls
+
+    private void ActivateQAbility(InputAction.CallbackContext ctx)
+    {
+        if(QAbility != null && QAbility.IsReady())
+        {
+            QAbility.Activate();
         }
     }
 
@@ -642,6 +668,7 @@ public class PlayerController : MonoBehaviour
         jump.performed -= Jump;
         sprint.started -= ToggleSprint;
         sprint.canceled -= ToggleSprint;
+        qInput.performed-= ActivateQAbility;
 
         instance = null;
     }
