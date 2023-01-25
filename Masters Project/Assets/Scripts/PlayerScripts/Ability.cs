@@ -46,7 +46,7 @@ public abstract class Ability : MonoBehaviour
     /// <summary>
     /// current number of charges held
     /// </summary>
-    [ShowInInspector] protected int currentCharges;
+    [SerializeField, ReadOnly] protected int currentCharges;
     /// <summary>
     /// Timer tracker for cooldown
     /// </summary>
@@ -87,17 +87,16 @@ public abstract class Ability : MonoBehaviour
         currentCharges--;
 
         // prepare the windup
-        OnWindup();
         currentState = AbilityStates.Windup;
-        yield return new WaitForSeconds(windupLength / performSpeedModifier);
-
+        yield return StartCoroutine(OnWindup());
+        
         // do the actual ability. Children classes will implement concrete implementation.
-        OnAbility();
+        yield return StartCoroutine(OnAbility());
 
         // Enter recovery state
-        OnRecovery();
         currentState = AbilityStates.Recovery;
-        yield return new WaitForSeconds(windupLength / performSpeedModifier);
+        yield return StartCoroutine(OnRecovery());
+        
 
         // Based on charges amount, determine which state to return to. 
         if (currentCharges <= 0)
@@ -113,20 +112,20 @@ public abstract class Ability : MonoBehaviour
     /// <summary>
     /// Call to activate the actual ability
     /// </summary>
-    protected abstract void OnAbility();
+    protected abstract IEnumerator OnAbility();
     /// <summary>
     /// Bonus functionality called on windup
     /// </summary>
-    protected virtual void OnWindup()
+    protected virtual IEnumerator OnWindup()
     {
-        return;
+        yield return new WaitForSeconds(windupLength / performSpeedModifier);
     }
     /// <summary>
     /// Bonus functionality called on recovery
     /// </summary>
-    protected virtual void OnRecovery()
+    protected virtual IEnumerator OnRecovery()
     {
-        return;
+        yield return new WaitForSeconds(recoveryLength / performSpeedModifier);
     }
 
     #endregion
