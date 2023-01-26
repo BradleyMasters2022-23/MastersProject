@@ -30,7 +30,7 @@ public class Conversation : ScriptableObject
         UNREAD, 
         READ 
     }
-    [SerializeField] private ConversationState currentState = ConversationState.LOCKED;
+    public ConversationState currentState = ConversationState.LOCKED;
 
     public void Read()
     {

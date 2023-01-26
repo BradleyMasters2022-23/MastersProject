@@ -1,4 +1,4 @@
-using System;
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,7 +32,7 @@ public class CallManager : MonoBehaviour
                 foreach(int i in conversation.dependencies)
                 {
                     bool a = true;
-                    if (conversations[i] != read)
+                    if (conversations[i].currentState != Conversation.ConversationState.READ)
                     {
                         a = false;
                     }
@@ -51,10 +51,10 @@ public class CallManager : MonoBehaviour
         }     
     }
 
-    public NoteObject GetRandomAvailableConversation()
+    public Conversation GetRandomAvailableConversation()
     {
         UpdateCalls();
-        Conversation c = Random.Range(0, availableConversations.Count);
+        Conversation c = availableConversations[Random.Range(0, availableConversations.Count)];
         return c;
     }
 }
