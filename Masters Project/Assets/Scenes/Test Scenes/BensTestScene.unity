@@ -2805,13 +2805,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24a8e24958e03624683124887d0b1358, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  performSpeedModifier: 1
+  performSpeedModifier: 5
   windupLength: 0.1
   recoveryLength: 0.3
-  cooldown: 5
+  cooldown: 0
   cooldownSpeedModifier: 1
   maxCharges: 3
   currentCharges: 0
+  projectile: {fileID: 4567465521035316112, guid: d5ec0e2eb9ac4674db9e77f83828b31f, type: 3}
+  numOfProjectiles: 1
+  spawnPoint: {fileID: 1027882891}
+  verticalArcForce: 0
+  force: 30
+  throwInaccuracy: 0
+  includePlayerVelocity: 0
 --- !u!1 &1751024123 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 509043470614975084, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
@@ -3170,7 +3177,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7147118641431205708, guid: e0efed53c644f6c478304a02e5c92fc9, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7147118641431205708, guid: e0efed53c644f6c478304a02e5c92fc9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3415,7 +3422,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4991898045111321936, guid: 44b733910c3650542aa79a5f0d1f0da9, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4991898045111321936, guid: 44b733910c3650542aa79a5f0d1f0da9, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3468,7 +3475,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5019193506394667627, guid: 77431f279bb168e4f8cb03b52cb87766, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5019193506394667627, guid: 77431f279bb168e4f8cb03b52cb87766, type: 3}
       propertyPath: m_LocalPosition.x
