@@ -20,6 +20,20 @@ public class Conversation : ScriptableObject
 {
     public Character penny;
     public Character nonPennyCharacter;
+    public int ID;
+    public int[] dependencies;
 
     public Line[] lines;
+    public enum ConversationState 
+    { 
+        LOCKED, 
+        UNREAD, 
+        READ 
+    }
+    [SerializeField] private ConversationState currentState = ConversationState.LOCKED;
+
+    public void Read()
+    {
+        currentState = ConversationState.READ;
+    }
 }

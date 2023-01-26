@@ -12,7 +12,7 @@ public class DisplayDialogueUI : MonoBehaviour
     private EventSystem eventSystem;
     private int activeLineIndex = 0;
 
-    [SerializeField] private Conversation dialogue;
+    public Conversation dialogue;
 
     private void Awake()
     {
@@ -21,8 +21,9 @@ public class DisplayDialogueUI : MonoBehaviour
         e.performed += AdvanceDialogue;
     }
 
-    public void OpenScreen()
+    public void OpenScreen(Conversation conversation)
     {
+        dialogue = conversation;
         if (eventSystem == null)
         {
             eventSystem = EventSystem.current;
@@ -51,10 +52,5 @@ public class DisplayDialogueUI : MonoBehaviour
     {
         Line line = dialogue.lines[activeLineIndex];
         Character character = line.character;
-    }
-
-    private void SetDialogue()
-    {
-
     }
 }
