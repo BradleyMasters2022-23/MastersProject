@@ -113,15 +113,16 @@ public class Explosive : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        GameObject rootTgt = other.transform.root.gameObject;
         // if target was already damaged or not marked for team, then
-        if (affectedEnemies.Contains(other.gameObject)
+        if (affectedEnemies.Contains(rootTgt)
             && !damagableTags.Contains(other.tag))
             return;
 
         Damagable target;
-        if(other.TryGetComponent<Damagable>(out target))
+        if(rootTgt.TryGetComponent<Damagable>(out target))
         {
-            affectedEnemies.Add(other.gameObject);
+            affectedEnemies.Add(rootTgt);
             target.Damage(damage);
             target.ExplosiveKnockback(transform.position, transform.localScale.x,
                 horizontalForce, verticalForce, explosiveRadius, knockbackFalloff);
