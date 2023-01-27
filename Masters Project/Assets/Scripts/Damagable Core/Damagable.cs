@@ -70,22 +70,45 @@ public abstract class Damagable : MonoBehaviour
         rb.velocity = newForce;
     }
 
-    public virtual void NewKnockback(Vector3 _origin, float _horizontalForce, float _verticalForce, float radius)
+    /// <summary>
+    /// Apply a knockback with horizontal and vertial forces, acting more explosive
+    /// </summary>
+    /// <param name="_origin">origin of knockback</param>
+    /// <param name="_horizontalForce">default horizontal force applied to player</param>
+    /// <param name="_verticalForce">default vertical force applied to player</param>
+    /// <param name="falloff">Curve determining falloff of knockback</param>
+    public virtual void ExplosiveKnockback(Vector3 _origin, float scale,
+        float _horizontalForce, float _verticalForce, 
+        float radius, AnimationCurve falloff)
     {
+        // Get RB to apply physics. Exit if no RB
         Rigidbody rb = GetComponent<Rigidbody>();
+        if(rb is null) 
+            return;
 
-        if(rb is null) return;
-
-        //Vector3 dir = (transform.position - _origin).normalized;
-
-        //rb.AddExplosionForce(_horizontalForce, _origin, radius, _verticalForce);
+        // Determine direction to launch the object in 
         Vector3 dir = (transform.position - _origin).normalized;
         dir.y = 0;
 
+        // Determine force to apply based on distance to target
+        float dist = Mathf.Abs(Vector3.Distance(transform.position, _origin));
+        float horKnockback = _horizontalForce;
+        float verKnockback = _verticalForce;
+        float mod = dist / (radius*scale);
+        Debug.Log("Distance to explosion is " + dist);
+
+        horKnockback *= falloff.Evaluate(mod);
+        verKnockback *= falloff.Evaluate(mod);
+
+        Debug.Log("modified knockback by " + falloff.Evaluate(mod));
+
         rb.velocity = Vector3.zero;
+        rb.position += Vector3.up * 0.5f;
 
-        rb.AddForce(dir * _horizontalForce + Vector3.up * _verticalForce, ForceMode.Impulse);
+        Vector3 knockback = dir * horKnockback + Vector3.up * verKnockback;
 
-        Debug.DrawLine(rb.position, rb.position + dir * _horizontalForce + Vector3.up * _verticalForce, Color.red, 2f);
+        rb.AddForce(knockback, ForceMode.Impulse);
+
+        Debug.DrawLine(rb.position, rb.position + knockback, Color.red, 2f);
     }
 }

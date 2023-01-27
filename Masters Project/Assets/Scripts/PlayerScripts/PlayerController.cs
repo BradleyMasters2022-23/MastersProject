@@ -585,10 +585,10 @@ public class PlayerController : MonoBehaviour
 
         if (rb.velocity == Vector3.zero || !midAirTimer.TimerDone())
         {
-            Debug.DrawLine(castPos, castPos + ((-lastSurfaceNormal).normalized * 1f), Color.red);
+            //Debug.DrawLine(castPos, castPos + ((-lastSurfaceNormal).normalized * 1f), Color.red);
             return;
         }
-        Debug.DrawLine(castPos, castPos + ((-lastSurfaceNormal).normalized * 1f), Color.green);
+        //Debug.DrawLine(castPos, castPos + ((-lastSurfaceNormal).normalized * 1f), Color.green);
         
 
         Vector3 horVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);

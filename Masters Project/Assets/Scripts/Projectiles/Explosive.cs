@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.ParticleSystem;
+using Sirenix.OdinInspector;
 
 public class Explosive : MonoBehaviour
 {
@@ -9,9 +9,12 @@ public class Explosive : MonoBehaviour
 
     [SerializeField] private List<GameObject> affectedEnemies;
     [SerializeField] private float explosiveRadius;
-    [SerializeField, Range(0.01f, 999)] private float duration;
-    [SerializeField] private bool affectedByTimestop;
-    private ScaledTimer lifeTracker;
+    [SerializeField] private float damageDuration = 1;
+    [SerializeField] private float VFXDuration = 1;
+    [SerializeField] private bool affectedByTimestop = true;
+    [SerializeField] private bool solidInTimetop = false;
+    private ScaledTimer VFXLifeTracker;
+    private ScaledTimer damageLifeTracker;
 
     private SphereCollider col;
     [SerializeField] private ParticleSystem VFX;
@@ -21,14 +24,18 @@ public class Explosive : MonoBehaviour
 
     private float lastTimeScale;
 
-    public float horizontalForce;
-    public float verticalForce;
+    public float horizontalForce = 200;
+    public float verticalForce = 50;
+
+    [SerializeField] private AnimationCurve knockbackFalloff;
 
     private void Awake()
     {
         // Prepare references and values
         affectedEnemies = new List<GameObject>();
-        lifeTracker = new ScaledTimer(duration, affectedByTimestop);
+        damageLifeTracker = new ScaledTimer(damageDuration, affectedByTimestop);
+        VFXLifeTracker = new ScaledTimer(VFXDuration, affectedByTimestop);
+
         col = GetComponent<SphereCollider>();
         lastTimeScale = TimeManager.WorldTimeScale;
 
@@ -36,7 +43,7 @@ public class Explosive : MonoBehaviour
         ParticleSystem.MainModule main = VFX.main;
         VFX.Stop();
         main.playOnAwake = false;
-        speedMod = VFX.main.duration / duration;
+        speedMod = VFX.main.duration / VFXDuration;
         main.simulationSpeed = main.simulationSpeed * speedMod;
     }
 
@@ -60,12 +67,26 @@ public class Explosive : MonoBehaviour
 
     private void Update()
     {
-        if(lifeTracker.TimerDone())
+        if(VFXLifeTracker.TimerDone() && damageLifeTracker.TimerDone())
         {
             Destroy(gameObject);
         }
+        else if(VFXLifeTracker.TimerDone() && VFX.gameObject.activeInHierarchy)
+        {
+            VFX.Stop();
+            VFX.gameObject.SetActive(false);
+        }
+        else if(damageLifeTracker.TimerDone() && col.enabled)
+        {
+            col.enabled = false;
+        }
 
         VFXTimeSlow();
+        if (col.enabled && solidInTimetop)
+        {
+            ExplosionCol();
+        }
+
         lastTimeScale = TimeManager.WorldTimeScale;
     }
 
@@ -75,6 +96,18 @@ public class Explosive : MonoBehaviour
         {
             ParticleSystem.MainModule main = VFX.main;
             main.simulationSpeed = 1 * speedMod * TimeManager.WorldTimeScale;
+        }
+    }
+
+    private void ExplosionCol()
+    {
+        if(TimeManager.WorldTimeScale != 1 && col.isTrigger)
+        {
+            col.isTrigger = false;
+        }
+        else if(TimeManager.WorldTimeScale == 1 && !col.isTrigger)
+        {
+            col.isTrigger = true;
         }
     }
 
@@ -88,12 +121,10 @@ public class Explosive : MonoBehaviour
         Damagable target;
         if(other.TryGetComponent<Damagable>(out target))
         {
-            //affectedEnemies.Add(other.gameObject);
-            Debug.Log("Damaging the bastard of " + other.gameObject.name);
+            affectedEnemies.Add(other.gameObject);
             target.Damage(damage);
-            //target.ApplyKnockback(transform.position, 100, false);
-            target.NewKnockback(transform.position, horizontalForce, verticalForce, explosiveRadius);
+            target.ExplosiveKnockback(transform.position, transform.localScale.x,
+                horizontalForce, verticalForce, explosiveRadius, knockbackFalloff);
         }
     }
-
 }
