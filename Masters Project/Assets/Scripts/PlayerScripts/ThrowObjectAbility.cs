@@ -56,11 +56,13 @@ public class ThrowObjectAbility : Ability
                 if (includePlayerVelocity)
                 {
                     Vector3 currVel = GetComponent<Rigidbody>().velocity;
-                    projRB.AddForce(upwardsForce + currVel + newProj.transform.forward * force, ForceMode.Impulse);
+                    projRB.GetComponent<Throwable>().ApplyStartingForce(upwardsForce + currVel + newProj.transform.forward * force);
+                    //projRB.AddForce(upwardsForce + currVel + newProj.transform.forward * force, ForceMode.Impulse);
                 }
                 else
                 {
-                    projRB.AddForce(upwardsForce + newProj.transform.forward * force, ForceMode.Impulse);
+                    projRB.GetComponent<Throwable>().ApplyStartingForce(upwardsForce + newProj.transform.forward * force);
+                    //projRB.AddForce(upwardsForce + newProj.transform.forward * force, ForceMode.Impulse);
                 }
                 
             }

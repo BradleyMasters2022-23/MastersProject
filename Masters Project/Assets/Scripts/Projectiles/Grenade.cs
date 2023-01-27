@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grenade : MonoBehaviour
+public class Grenade : Throwable
 {
     [SerializeField] private GameObject explosive;
 
@@ -15,16 +15,12 @@ public class Grenade : MonoBehaviour
     private int bounces;
 
     [SerializeField] private List<string> instantDetonateTags;
-    private Rigidbody rb;
-    private float savedMag;
-    private Vector3 savedDir;
-    private float lastTimeScale;
+    
 
     private void Start()
     {
         if (bounceToTimer <= 0)
             StartTimer();
-        rb = GetComponent<Rigidbody>();
     }
 
     private void Update()
@@ -33,9 +29,6 @@ public class Grenade : MonoBehaviour
         {
             AdjustProjectileForTimestop();
         }
-
-
-
 
         if (timer != null && timer.TimerDone())
             Activate();
@@ -70,7 +63,6 @@ public class Grenade : MonoBehaviour
 
     private void AdjustProjectileForTimestop()
     {
-
         if(TimeManager.WorldTimeScale == 1 && rb.isKinematic)
         {
             rb.isKinematic = false;
@@ -78,12 +70,11 @@ public class Grenade : MonoBehaviour
         }
         else if(TimeManager.WorldTimeScale != 1 && !rb.isKinematic)
         {
-            savedDir= rb.velocity.normalized;
-            savedMag= rb.velocity.magnitude;
+            savedDir = rb.velocity.normalized;
+            savedMag = rb.velocity.magnitude;
 
             rb.isKinematic = true;
             rb.velocity = Vector3.zero;
         }
-        lastTimeScale = TimeManager.WorldTimeScale;
     }
 }
