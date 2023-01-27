@@ -282,7 +282,7 @@ public class PlayerController : MonoBehaviour
             case PlayerState.GROUNDED:
                 {
                     HorizontalMovement();
-                    AdjustForSlope();
+                    //AdjustForSlope();
 
                     if(currentJumps != jumps.Current)
                         currentJumps = jumps.Current;
@@ -301,7 +301,7 @@ public class PlayerController : MonoBehaviour
             case PlayerState.SPRINTING:
                 {
                     HorizontalMovement();
-                    AdjustForSlope();
+                    //AdjustForSlope();
 
                     // If not on ground, set state to midair. Disable sprint
                     if (!Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask))
@@ -431,11 +431,57 @@ public class PlayerController : MonoBehaviour
 
     #region Player Movement
 
+    public float testMaxSpeed;
+    public float testAcceleration;
+    public float dr = 1;
+    
+
+
     /// <summary>
     /// Manage the player's horizontal movement
     /// </summary>
     private void HorizontalMovement()
     {
+        
+
+        // TODO - work with acceleration and max speed on this
+        Vector3 vel = rb.velocity;
+        Vector2 horVel = new Vector2(vel.x, vel.z);
+        if(direction != Vector3.zero)
+        {
+            if(currentState == PlayerState.GROUNDED || currentState == PlayerState.SPRINTING)
+            {
+                rb.AddForce(direction * testAcceleration, ForceMode.Force);
+
+            }
+            else if(currentState == PlayerState.MIDAIR)
+            {
+                rb.AddForce(direction * testAcceleration * airModifier.Current, ForceMode.Force);
+            }
+            horVel.x = rb.velocity.x;
+            horVel.y = rb.velocity.z;
+
+            if(horVel.magnitude > testMaxSpeed)
+            {
+                Vector2 newVel = horVel.normalized * testMaxSpeed;
+                rb.velocity = new Vector3(newVel.x, rb.velocity.y, newVel.y);
+
+            }
+
+            //vel = rb.velocity;
+            //vel.y = 0;
+            //if(vel.magnitude > )
+        }
+        else if(vel.x != 0 || vel.z == 0)
+        {
+            vel.x /= dr;
+            vel.z /= dr;
+            rb.velocity = vel;
+        }
+
+        //Debug.DrawRay(transform.position, rb.velocity);
+        AdjustForSlope();
+        /*
         // If not inputing, try decelerating
         if (direction == Vector3.zero)
         {
@@ -498,32 +544,63 @@ public class PlayerController : MonoBehaviour
 
         // apply new velocity
         rb.velocity = newVelocity;
+        */
+    }
 
-        // === ANIMATION STUFF ===
-        float _xaxis = rb.velocity.x;
-        float _zaxis = rb.velocity.z;
+    private Vector3 SlopedVector(Vector3 direction)
+    {
+        Vector3 castPos = transform.position + Vector3.up * transform.localScale.y / 2;
+        Debug.DrawRay(castPos, -lastSurfaceNormal, Color.blue, 1f);
 
-        //animator.SetFloat("X Move", _xaxis);
-        //animator.SetFloat("Y Move", _zaxis);
+        RaycastHit slopeCheck;
+        if (Physics.Raycast(castPos, -lastSurfaceNormal, out slopeCheck, 1f, groundMask))
+        {
+
+            // if on a slope, disable gravity to prevent sliding
+            if (slopeCheck.normal != Vector3.up && rb.useGravity)
+            {
+                rb.useGravity = false;
+            }
+            // Else, return to normal
+            else if (slopeCheck.normal == Vector3.up && !rb.useGravity)
+            {
+                rb.useGravity = true;
+            }
+
+            // project velocity onto plane player is standing on
+            Vector3 slopedVelocity = Vector3.ProjectOnPlane(direction, slopeCheck.normal);
+
+            return slopedVelocity;
+        }
+        else
+        {
+            return direction;
+        }
     }
 
     private void AdjustForSlope()
     {
+        Vector3 castPos = transform.position + Vector3.up * transform.localScale.y / 2;
+        
+
         if (rb.velocity == Vector3.zero || !midAirTimer.TimerDone())
+        {
+            Debug.DrawLine(castPos, castPos + ((-lastSurfaceNormal).normalized * 1f), Color.red);
             return;
+        }
+        Debug.DrawLine(castPos, castPos + ((-lastSurfaceNormal).normalized * 1f), Color.green);
+        
 
-        // Predict where the player will be, check ray from there to help with lip issues
         Vector3 horVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-        Vector3 castPos = transform.position + (horVel.normalized * 0.3f) + Vector3.up * transform.localScale.y/2;
-        //Debug.DrawRay(castPos, -lastSurfaceNormal, Color.blue, 10f);
-
+        
+        //Debug.DrawRay(castPos, -lastSurfaceNormal, Color.green);
         // Modify velocity to be slope/friendly
         RaycastHit slopeCheck;
         if (Physics.Raycast(castPos, -lastSurfaceNormal, out slopeCheck, 1f, groundMask))
         {
 
             // project velocity onto plane player is standing on
-            Vector3 temp = Vector3.ProjectOnPlane(rb.velocity, slopeCheck.normal);
+            Vector3 slopedVelocity = Vector3.ProjectOnPlane(rb.velocity, slopeCheck.normal);
 
             // if on a slope, disable gravity to prevent sliding
             if (slopeCheck.normal != Vector3.up && rb.useGravity)
@@ -538,13 +615,13 @@ public class PlayerController : MonoBehaviour
 
             // If on flat ground and on same plane, keep the Y velocity
             if (slopeCheck.normal == Vector3.up && lastSurfaceNormal == slopeCheck.normal)
-                temp.y = rb.velocity.y;
+                slopedVelocity.y = rb.velocity.y;
 
             // Check the difference between the normals. If significant, reduce the y velocity
             float normalDifference = Vector3.Angle(lastSurfaceNormal, slopeCheck.normal);
             if (normalDifference >= 10)
             {
-                temp += Vector3.down * 2 * Time.deltaTime;
+                slopedVelocity += Vector3.down * 2 * Time.deltaTime;
             }
 
             // Update last surface normal
@@ -552,7 +629,52 @@ public class PlayerController : MonoBehaviour
 
 
             // apply force based on ground's normal
-            rb.velocity = temp;
+            rb.velocity = slopedVelocity;
+
+            /*
+            // Predict where the player will be, check ray from there to help with lip issues
+            Vector3 horVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            Vector3 castPos = transform.position + (horVel.normalized * 0.3f) + Vector3.up * transform.localScale.y/2;
+            //Debug.DrawRay(castPos, -lastSurfaceNormal, Color.blue, 10f);
+
+            // Modify velocity to be slope/friendly
+            RaycastHit slopeCheck;
+            if (Physics.Raycast(castPos, -lastSurfaceNormal, out slopeCheck, 1f, groundMask))
+            {
+
+                // project velocity onto plane player is standing on
+                Vector3 temp = Vector3.ProjectOnPlane(rb.velocity, slopeCheck.normal);
+
+                // if on a slope, disable gravity to prevent sliding
+                if (slopeCheck.normal != Vector3.up && rb.useGravity)
+                {
+                    rb.useGravity = false;
+                }
+                // Else, return to normal
+                else if (slopeCheck.normal == Vector3.up && !rb.useGravity)
+                {
+                    rb.useGravity = true;
+                }
+
+                // If on flat ground and on same plane, keep the Y velocity
+                if (slopeCheck.normal == Vector3.up && lastSurfaceNormal == slopeCheck.normal)
+                    temp.y = rb.velocity.y;
+
+                // Check the difference between the normals. If significant, reduce the y velocity
+                float normalDifference = Vector3.Angle(lastSurfaceNormal, slopeCheck.normal);
+                if (normalDifference >= 10)
+                {
+                    temp += Vector3.down * 2 * Time.deltaTime;
+                }
+
+                // Update last surface normal
+                lastSurfaceNormal = slopeCheck.normal;
+
+
+                // apply force based on ground's normal
+                rb.velocity = temp;
+            }
+            */
         }
     }
 
