@@ -70,7 +70,7 @@ public abstract class Damagable : MonoBehaviour
         rb.velocity = newForce;
     }
 
-    public virtual void NewKnockback(Vector3 _origin, float _horizontalForce, float _verticalForce)
+    public virtual void NewKnockback(Vector3 _origin, float _horizontalForce, float _verticalForce, float radius)
     {
         Rigidbody rb = GetComponent<Rigidbody>();
 
@@ -78,6 +78,14 @@ public abstract class Damagable : MonoBehaviour
 
         //Vector3 dir = (transform.position - _origin).normalized;
 
-        rb.AddExplosionForce(_horizontalForce, _origin, 5, _verticalForce);
+        //rb.AddExplosionForce(_horizontalForce, _origin, radius, _verticalForce);
+        Vector3 dir = (transform.position - _origin).normalized;
+        dir.y = 0;
+
+        rb.velocity = Vector3.zero;
+
+        rb.AddForce(dir * _horizontalForce + Vector3.up * _verticalForce, ForceMode.Impulse);
+
+        Debug.DrawLine(rb.position, rb.position + dir * _horizontalForce + Vector3.up * _verticalForce, Color.red, 2f);
     }
 }

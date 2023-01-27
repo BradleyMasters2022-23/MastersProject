@@ -324,7 +324,7 @@ public class PlayerController : MonoBehaviour
 
                     // If player lands and is moving downward, move back to grounded state
                     if (Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask) 
-                        && rb.velocity.y < 0)
+                        && rb.velocity.y <= 0)
                     {
                         ChangeState(PlayerState.GROUNDED);
                     }

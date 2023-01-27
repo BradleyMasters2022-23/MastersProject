@@ -9,7 +9,7 @@ public class Explosive : MonoBehaviour
 
     [SerializeField] private List<GameObject> affectedEnemies;
     [SerializeField] private float explosiveRadius;
-    [SerializeField, Range(0.01f, 10)] private float duration;
+    [SerializeField, Range(0.01f, 999)] private float duration;
     [SerializeField] private bool affectedByTimestop;
     private ScaledTimer lifeTracker;
 
@@ -20,6 +20,9 @@ public class Explosive : MonoBehaviour
     public int damage;
 
     private float lastTimeScale;
+
+    public float horizontalForce;
+    public float verticalForce;
 
     private void Awake()
     {
@@ -85,11 +88,11 @@ public class Explosive : MonoBehaviour
         Damagable target;
         if(other.TryGetComponent<Damagable>(out target))
         {
-            affectedEnemies.Add(other.gameObject);
+            //affectedEnemies.Add(other.gameObject);
             Debug.Log("Damaging the bastard of " + other.gameObject.name);
             target.Damage(damage);
             //target.ApplyKnockback(transform.position, 100, false);
-            target.NewKnockback(transform.position, 100, 10);
+            target.NewKnockback(transform.position, horizontalForce, verticalForce, explosiveRadius);
         }
     }
 
