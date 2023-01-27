@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 using Sirenix.OdinInspector;
 
 public class Explosive : MonoBehaviour
@@ -18,6 +19,7 @@ public class Explosive : MonoBehaviour
 
     private SphereCollider col;
     [SerializeField] private ParticleSystem VFX;
+    [SerializeField] private VisualEffect newVFX;
     private float speedMod;
 
     public int damage;
@@ -35,16 +37,17 @@ public class Explosive : MonoBehaviour
         damagedTargets = new List<Damagable>();
         damageLifeTracker = new ScaledTimer(damageDuration, affectedByTimestop);
         VFXLifeTracker = new ScaledTimer(VFXDuration, affectedByTimestop);
-
+        newVFX.Stop();
         col = GetComponent<SphereCollider>();
         lastTimeScale = TimeManager.WorldTimeScale;
-
+        
         // Modify VFX playback to fit explosive duration
-        ParticleSystem.MainModule main = VFX.main;
-        VFX.Stop();
-        main.playOnAwake = false;
-        speedMod = VFX.main.duration / VFXDuration;
-        main.simulationSpeed = main.simulationSpeed * speedMod;
+        //ParticleSystem.MainModule main = VFX.main;
+        //VFX.Stop();
+        //main.playOnAwake = false;
+        //speedMod = VFX.main.duration / VFXDuration;
+        //main.simulationSpeed = main.simulationSpeed * speedMod;
+        //newVFX.playRate = speedMod;
     }
 
 
@@ -57,7 +60,8 @@ public class Explosive : MonoBehaviour
         col.radius = explosiveRadius;
         col.enabled = true;
 
-        VFX.Play();
+        //VFX.Play();
+        newVFX.Play();
     }
 
     private void Update()
@@ -68,8 +72,10 @@ public class Explosive : MonoBehaviour
         }
         else if(VFXLifeTracker.TimerDone() && VFX.gameObject.activeInHierarchy)
         {
-            VFX.Stop();
-            VFX.gameObject.SetActive(false);
+            newVFX.Stop();
+            newVFX.gameObject.SetActive(false);
+            //VFX.Stop();
+            //VFX.gameObject.SetActive(false);
         }
         else if(damageLifeTracker.TimerDone() && col.enabled)
         {
@@ -89,8 +95,9 @@ public class Explosive : MonoBehaviour
     {
         if (lastTimeScale != TimeManager.WorldTimeScale)
         {
-            ParticleSystem.MainModule main = VFX.main;
-            main.simulationSpeed = 1 * speedMod * TimeManager.WorldTimeScale;
+            //ParticleSystem.MainModule main = VFX.main;
+            //main.simulationSpeed = 1 * speedMod * TimeManager.WorldTimeScale;
+            newVFX.playRate = 1 * TimeManager.WorldTimeScale;
         }
     }
 
