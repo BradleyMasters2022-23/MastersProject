@@ -123,37 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &13883023
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 13883024}
-  m_Layer: 6
-  m_Name: nadethrow
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &13883024
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 13883023}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.416, y: -0.218, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 863063953}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &219653131
 GameObject:
   m_ObjectHideFlags: 0
@@ -1911,11 +1880,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
---- !u!4 &863063953 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8810997312557230426, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
-  m_PrefabInstance: {fileID: 8927462659866613488}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &864125672
 GameObject:
   m_ObjectHideFlags: 0
@@ -3720,32 +3684,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8810997313966297016, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
   m_PrefabInstance: {fileID: 8927462659866613488}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1696493299
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1696493288}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24a8e24958e03624683124887d0b1358, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  performSpeedModifier: 1
-  windupLength: 0.1
-  recoveryLength: 0.3
-  cooldown: 0
-  cooldownSpeedModifier: 1
-  maxCharges: 1
-  currentCharges: 0
-  projectile: {fileID: 4567465521035316112, guid: d5ec0e2eb9ac4674db9e77f83828b31f, type: 3}
-  numOfProjectiles: 1
-  spawnPoint: {fileID: 13883024}
-  verticalArcForce: 8
-  force: 12
-  throwInaccuracy: 0
-  includePlayerVelocity: 0
 --- !u!1 &1751024123 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 509043470614975084, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
@@ -4484,22 +4422,6 @@ PrefabInstance:
     - target: {fileID: 8810997313966297016, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 8810997313966297022, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
-      propertyPath: dr
-      value: 1.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8810997313966297022, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
-      propertyPath: QAbility
-      value: 
-      objectReference: {fileID: 1696493299}
-    - target: {fileID: 8810997313966297022, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
-      propertyPath: testMaxSpeed
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 8810997313966297022, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
-      propertyPath: testAcceleration
-      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 8810997313966297023, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
       propertyPath: m_RootOrder

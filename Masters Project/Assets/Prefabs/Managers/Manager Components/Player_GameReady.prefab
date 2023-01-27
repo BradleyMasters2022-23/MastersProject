@@ -2484,6 +2484,7 @@ GameObject:
   - component: {fileID: 8810997313966297008}
   - component: {fileID: 8665962098944256790}
   - component: {fileID: -4782539468412231022}
+  - component: {fileID: 806225559006294033}
   m_Layer: 6
   m_Name: Player_GameReady
   m_TagString: Player
@@ -2603,6 +2604,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2056
   groundCheck: {fileID: 8810997314421572952}
+  QAbility: {fileID: 806225559006294033}
+  testMaxSpeed: 12
+  testAcceleration: 1500
+  dr: 1.2
 --- !u!114 &8810997313966297015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2717,6 +2722,32 @@ MonoBehaviour:
   detectableLayer:
     serializedVersion: 2
     m_Bits: 8192
+--- !u!114 &806225559006294033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8810997313966297016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24a8e24958e03624683124887d0b1358, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  performSpeedModifier: 1
+  windupLength: 0.1
+  recoveryLength: 0.3
+  cooldown: 10
+  cooldownSpeedModifier: 1
+  maxCharges: 1
+  currentCharges: 0
+  projectile: {fileID: 4567465521035316112, guid: d5ec0e2eb9ac4674db9e77f83828b31f, type: 3}
+  numOfProjectiles: 1
+  spawnPoint: {fileID: 8810997314044839442}
+  verticalArcForce: 15
+  force: 20
+  throwInaccuracy: 0
+  includePlayerVelocity: 0
 --- !u!1 &8810997314044839443
 GameObject:
   m_ObjectHideFlags: 0

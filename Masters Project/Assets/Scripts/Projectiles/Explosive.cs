@@ -7,7 +7,7 @@ public class Explosive : MonoBehaviour
 {
     [SerializeField] private List<string> damagableTags;
 
-    [SerializeField] private List<GameObject> affectedEnemies;
+    [SerializeField] private List<Damagable> damagedTargets;
     [SerializeField] private float explosiveRadius;
     [SerializeField] private float damageDuration = 1;
     [SerializeField] private float VFXDuration = 1;
@@ -32,7 +32,7 @@ public class Explosive : MonoBehaviour
     private void Awake()
     {
         // Prepare references and values
-        affectedEnemies = new List<GameObject>();
+        damagedTargets = new List<Damagable>();
         damageLifeTracker = new ScaledTimer(damageDuration, affectedByTimestop);
         VFXLifeTracker = new ScaledTimer(VFXDuration, affectedByTimestop);
 
@@ -45,11 +45,6 @@ public class Explosive : MonoBehaviour
         main.playOnAwake = false;
         speedMod = VFX.main.duration / VFXDuration;
         main.simulationSpeed = main.simulationSpeed * speedMod;
-    }
-
-    private void Start()
-    {
-        //Detonate();
     }
 
 
@@ -114,15 +109,20 @@ public class Explosive : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         GameObject rootTgt = other.transform.root.gameObject;
+        //Debug.Log("Checking object with of " + rootTgt.name);
         // if target was already damaged or not marked for team, then
-        if (affectedEnemies.Contains(rootTgt)
-            && !damagableTags.Contains(rootTgt.tag))
+        if (!damagableTags.Contains(rootTgt.tag))
             return;
 
         Damagable target;
         if(rootTgt.TryGetComponent<Damagable>(out target))
         {
-            affectedEnemies.Add(rootTgt);
+            if(damagedTargets.Contains(target))
+            {
+                //Debug.Log(rootTgt.name + " has already been damaged by this grenade");
+                return;
+            }
+            damagedTargets.Add(target);
             target.Damage(damage);
             target.ExplosiveKnockback(transform.position, transform.localScale.x,
                 horizontalForce, verticalForce, explosiveRadius, knockbackFalloff);
