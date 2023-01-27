@@ -23,6 +23,8 @@ public class Conversation : ScriptableObject
     public int ID;
     public int[] dependencies;
 
+    public bool soloDialogue = false;
+
     public Line[] lines;
     public enum ConversationState 
     { 

@@ -28,18 +28,20 @@ public class CallManager : MonoBehaviour
         foreach(Conversation conversation in conversations)
         {
             if(conversation.currentState == Conversation.ConversationState.LOCKED)
-            {
-                foreach(int i in conversation.dependencies)
+            {   if(conversation.dependencies.Count > 0)
                 {
-                    bool a = true;
-                    if (conversations[i].currentState != Conversation.ConversationState.READ)
+                    foreach (int i in conversation.dependencies)
                     {
-                        a = false;
-                    }
+                        bool a = true;
+                        if (conversations[i].currentState != Conversation.ConversationState.READ)
+                        {
+                            a = false;
+                        }
 
-                    if(a == true)
-                    {
-                        conversation.currentState = Conversation.ConversationState.UNREAD;
+                        if (a == true)
+                        {
+                            conversation.currentState = Conversation.ConversationState.UNREAD;
+                        }
                     }
                 }
             }
