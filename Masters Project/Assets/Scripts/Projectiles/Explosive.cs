@@ -49,7 +49,7 @@ public class Explosive : MonoBehaviour
 
     private void Start()
     {
-        Detonate();
+        //Detonate();
     }
 
 
@@ -116,7 +116,7 @@ public class Explosive : MonoBehaviour
         GameObject rootTgt = other.transform.root.gameObject;
         // if target was already damaged or not marked for team, then
         if (affectedEnemies.Contains(rootTgt)
-            && !damagableTags.Contains(other.tag))
+            && !damagableTags.Contains(rootTgt.tag))
             return;
 
         Damagable target;

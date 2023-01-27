@@ -12,8 +12,10 @@ GameObject:
   - component: {fileID: 6026621344970749633}
   - component: {fileID: 3779191190506638568}
   - component: {fileID: 2731977875953563557}
-  m_Layer: 0
-  m_Name: test proj
+  - component: {fileID: 4390342676599923742}
+  - component: {fileID: 8292282978249359353}
+  m_Layer: 7
+  m_Name: Player Grenade
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 4567465521035316112}
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
   m_LocalPosition: {x: -0.266, y: 1.5780001, z: -0.36700004}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -92,11 +94,42 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4567465521035316112}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 0.3
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 10
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Constraints: 112
+  m_CollisionDetection: 1
+--- !u!135 &4390342676599923742
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4567465521035316112}
+  m_Material: {fileID: 13400000, guid: d86741fec79b530489c67027dfa3e2c7, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5000001
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8292282978249359353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4567465521035316112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0095fbc8655ffd2458102e7fe9b121f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosive: {fileID: 9190282065216066553, guid: 814f38b5085ab7646921f0dd0c040b47, type: 3}
+  detonateTimer: 3
+  affectedByTimestop: 1
+  bounceToTimer: 1
+  instantDetonateTags:
+  - Enemy
