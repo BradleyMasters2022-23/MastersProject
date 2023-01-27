@@ -15,16 +15,28 @@ public class Grenade : MonoBehaviour
     private int bounces;
 
     [SerializeField] private List<string> instantDetonateTags;
-
+    private Rigidbody rb;
+    private float savedMag;
+    private Vector3 savedDir;
+    private float lastTimeScale;
 
     private void Start()
     {
         if (bounceToTimer <= 0)
             StartTimer();
+        rb = GetComponent<Rigidbody>();
     }
 
     private void Update()
     {
+        if(affectedByTimestop)
+        {
+            AdjustProjectileForTimestop();
+        }
+
+
+
+
         if (timer != null && timer.TimerDone())
             Activate();
     }
@@ -54,5 +66,24 @@ public class Grenade : MonoBehaviour
                 StartTimer();
             }
         }
+    }
+
+    private void AdjustProjectileForTimestop()
+    {
+
+        if(TimeManager.WorldTimeScale == 1 && rb.isKinematic)
+        {
+            rb.isKinematic = false;
+            rb.velocity = savedDir * savedMag;
+        }
+        else if(TimeManager.WorldTimeScale != 1 && !rb.isKinematic)
+        {
+            savedDir= rb.velocity.normalized;
+            savedMag= rb.velocity.magnitude;
+
+            rb.isKinematic = true;
+            rb.velocity = Vector3.zero;
+        }
+        lastTimeScale = TimeManager.WorldTimeScale;
     }
 }
