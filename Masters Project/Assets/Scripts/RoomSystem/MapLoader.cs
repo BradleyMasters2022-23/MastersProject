@@ -199,7 +199,7 @@ public class MapLoader : MonoBehaviour
 
         roomIndex = -1;
 
-        navMesh.BuildNavMesh();
+        yield return StartCoroutine(PrepareNavmesh());
 
         currState = States.Start;
 
@@ -379,6 +379,12 @@ public class MapLoader : MonoBehaviour
         if (roomIndex + 2 < loadedMap.Count)
             loadedMap[roomIndex + 2].ActivateSegment();
 
+        StartCoroutine(PrepareNavmesh());
+    }
+
+    private IEnumerator PrepareNavmesh()
+    {
+        yield return new WaitForSecondsRealtime(0.1f);
         navMesh.BuildNavMesh();
     }
 

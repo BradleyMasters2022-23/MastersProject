@@ -103,7 +103,7 @@ public class Projectile : RangeAttack
         distanceCovered += targetVelocity.magnitude * TimeManager.WorldDeltaTime;
         if(distanceCovered >= range)
         {
-            Hit();
+            End();
         }
 
         // Update velocity with world timescale

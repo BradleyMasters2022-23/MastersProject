@@ -26,6 +26,8 @@ public class PlayerGunController : MonoBehaviour
     [SerializeField] private UpgradableFloat fireDelay;
     [Tooltip("Projectile thats fired from this gun")]
     [SerializeField] private GameObject shotPrefab;
+    [Tooltip("How many projectiles are actually fired when shot")]
+    [SerializeField] private int bulletsPerShot;
     [Tooltip("VFX for firing the gun")]
     [SerializeField] private GameObject muzzleflashVFX;
     [Tooltip("Minimum range for aiming to take effect. " +
@@ -35,6 +37,22 @@ public class PlayerGunController : MonoBehaviour
     [Tooltip("Sound that happens when gun go pew pew")]
     [SerializeField] private AudioClip[] gunshotSound;
     private AudioSource source;
+
+    [Header("=====Weapon Bloom [Accuracy]=====")]
+    [Tooltip("What is the default/target bloom. 0 for perfect accuracy")]
+    [SerializeField] private float baseBloom;
+    [Tooltip("Amount of bloom (inaccuracy) gained per shot. Based on the shot, not bullets")]
+    [SerializeField] private float bloomPerShot;
+    [Tooltip("Maximum amount of bloom (inaccuracy) allowed.")]
+    [SerializeField] private float maxBloom;
+    [Tooltip("Speed at which bloom decreases back to base bloom when not firing")]
+    [SerializeField] private float bloomRecoveryRate;
+    /// <summary>
+    /// Current amount of bloom currently active
+    /// </summary>
+    private float currBloom;
+    [Tooltip("When a bullet is spawned, how much displacement from its origin can it have.")]
+    [SerializeField] private float maxShootDisplacement;
 
     [Header("=====Setup=====")]
 
@@ -109,6 +127,22 @@ public class PlayerGunController : MonoBehaviour
         shootCam.Initialize(defaultTarget, layersToIgnore, minAimRange);
     }
 
+    private void FixedUpdate()
+    {
+        // Tell the accuracy to recover over time while not firing
+        if(!firing && currBloom != baseBloom)
+        {
+            float newAccuracy = currBloom - bloomRecoveryRate * Time.deltaTime;
+            if(newAccuracy < baseBloom)
+            {
+                newAccuracy = baseBloom;
+            }
+                
+
+            currBloom=newAccuracy;
+        }
+    }
+
     /// <summary>
     /// Toggle firing based on input
     /// </summary>
@@ -128,13 +162,44 @@ public class PlayerGunController : MonoBehaviour
             Instantiate(muzzleflashVFX, shootPoint.position, shootPoint.transform.rotation);
         }
 
-        // Shoot projectile, aiming towards passed in target
-        GameObject newShot = Instantiate(shotPrefab, shootPoint.position, transform.rotation);
-        newShot.transform.LookAt(shootCam.TargetPos);
-        newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current, true);
+        for(int i = 0; i < bulletsPerShot; i++)
+        {
+            // Shoot projectile, aiming towards passed in target
+            GameObject newShot = Instantiate(shotPrefab, shootPoint.position, transform.rotation);
+
+            // Calculate & apply the new minor displacement
+            Vector3 displacement = new Vector3(
+                Random.Range(-maxShootDisplacement, maxShootDisplacement),
+                Random.Range(-maxShootDisplacement, maxShootDisplacement),
+                Random.Range(-maxShootDisplacement, maxShootDisplacement));
+            newShot.transform.position += displacement;
+
+            // Aim to center screen, apply inaccuracy bonuses
+            newShot.transform.LookAt(shootCam.TargetPos);
+            newShot.transform.eulerAngles = ApplySpread(newShot.transform.eulerAngles);
+
+            // Tell bullet to initialize
+            newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current, true);
+        }
 
         if(gunshotSound.Length > 0)
             source.PlayOneShot(gunshotSound[Random.Range(0, gunshotSound.Length)],0.3f);
+
+        // Increase bloom after shot
+        currBloom = Mathf.Clamp(currBloom + bloomPerShot, baseBloom, maxBloom);
+    }
+
+
+    private Vector3 ApplySpread(Vector3 rot)
+    {
+        float xMod = Random.Range(-currBloom, currBloom);
+        float yMod = Random.Range(-currBloom, currBloom);
+
+        // calculate and apply rotation between given range
+        rot.x += xMod;
+        rot.y += yMod;
+
+        return rot;
     }
 
     /// <summary>
