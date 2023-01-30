@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,18 @@ public class ConversationInteract : Interactable
     // eventually, should instead pull up a screen with a list of characters & info about them
     // when a conversation is available, screen should blink; eventually, screen & contact both blink
     private DisplayDialogueUI ui;
+
+    private MeshRenderer flashRenderer;
+    //private Color original;
+
+    private void Awake()
+    {
+        ui = FindObjectOfType<DisplayDialogueUI>(true);
+        //flashRenderer = gameObject.GetComponent<MeshRenderer>();
+        //original = flashRenderer.Color;
+    }
+
+
 
     public override void OnInteract(PlayerController player)
     {

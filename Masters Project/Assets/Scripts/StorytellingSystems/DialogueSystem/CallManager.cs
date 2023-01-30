@@ -21,6 +21,8 @@ public class CallManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+
+        UnlockConversation(conversations[0]);
     }
 
     private void UpdateCalls()
@@ -28,7 +30,7 @@ public class CallManager : MonoBehaviour
         foreach(Conversation conversation in conversations)
         {
             if(conversation.currentState == Conversation.ConversationState.LOCKED)
-            {   if(conversation.dependencies.Count > 0)
+            {   if(conversation.dependencies.Length > 0)
                 {
                     foreach (int i in conversation.dependencies)
                     {
@@ -53,10 +55,15 @@ public class CallManager : MonoBehaviour
         }     
     }
 
+    public void UnlockConversation(Conversation conversation)
+    {
+        conversation.Unlock();
+    }
+
     public Conversation GetRandomAvailableConversation()
     {
         UpdateCalls();
-        Conversation c = availableConversations[Random.Range(0, availableConversations.Count)];
-        return c;
+        //Debug.Log(conversations.Count);
+        return availableConversations[Random.Range(0, availableConversations.Count)];
     }
 }

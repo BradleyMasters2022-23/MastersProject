@@ -8,7 +8,8 @@ using UnityEngine;
 public struct Line
 {
     public Character character;
-    public string SpriteName;
+    public int pennySpriteID;
+    public int npcSpriteID;
 
     [TextArea(2, 5)]
     public string text;
@@ -22,6 +23,7 @@ public class Conversation : ScriptableObject
     public Character nonPennyCharacter;
     public int ID;
     public int[] dependencies;
+    public int runReq;
 
     public bool soloDialogue = false;
 
@@ -37,5 +39,18 @@ public class Conversation : ScriptableObject
     public void Read()
     {
         currentState = ConversationState.READ;
+    }
+
+    public void Unlock()
+    {
+        if(currentState== ConversationState.LOCKED)
+        {
+            currentState = ConversationState.UNREAD;
+            Debug.Log("conversation is now available");
+        }
+        else
+        {
+            Debug.Log("conversation is not locked");
+        }
     }
 }

@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
-using TMPro;
 
 public class DisplayDialogueUI : MonoBehaviour
 {
@@ -12,45 +14,69 @@ public class DisplayDialogueUI : MonoBehaviour
     private EventSystem eventSystem;
     private int activeLineIndex = 0;
 
-    public Conversation dialogue;
+    private Conversation conversation;
+
+    [SerializeField] private TextMeshProUGUI nameText;
+    [SerializeField] private TextMeshProUGUI dialogueText;
+    [SerializeField] private Image pennySprite;
+    [SerializeField] private Image npcSprite;
 
     private void Awake()
     {
         c = new GameControls();
         e = c.PlayerGameplay.Interact;
-        e.performed += AdvanceDialogue;
+        e.performed += DisplayDialogue;
     }
 
-    public void OpenScreen(Conversation conversation)
+    public void OpenScreen(Conversation c)
     {
-        dialogue = conversation;
+        conversation = c;
         if (eventSystem == null)
         {
             eventSystem = EventSystem.current;
         }
 
         GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
+        DisplayDialogue();
         gameObject.SetActive(true);
         e.Enable();
     }
 
-    private void AdvanceDialogue(InputAction.CallbackContext c)
+    private void DisplayDialogue(InputAction.CallbackContext c)
     {
-        AdvanceDialogue();
+        DisplayDialogue();
     }
 
-    public void AdvanceDialogue()
+    public void DisplayDialogue()
     {
-        activeLineIndex++;
-        if (activeLineIndex < dialogue.lines.Length)
+        if (activeLineIndex < conversation.lines.Length)
         {
-            DisplayLine();
+            nameText.text = conversation.lines[activeLineIndex].character.characterName;
+            dialogueText.text = conversation.lines[activeLineIndex].text;
+            if (conversation.lines[activeLineIndex].character.characterName == "Penny")
+            {
+                pennySprite.sprite = conversation.lines[activeLineIndex].character.sprites[conversation.lines[activeLineIndex].pennySpriteID];
+                npcSprite.sprite = conversation.nonPennyCharacter.sprites[conversation.lines[activeLineIndex].npcSpriteID];
+            }
+            else
+            {
+                npcSprite.sprite = conversation.lines[activeLineIndex].character.sprites[conversation.lines[activeLineIndex].npcSpriteID];
+                pennySprite.sprite = conversation.penny.sprites[conversation.lines[activeLineIndex].pennySpriteID];
+            }
+            
         }
+        else
+        {
+            CloseScreen();
+        }
+
+        activeLineIndex++;
     }
 
-    private void DisplayLine()
+    public void CloseScreen()
     {
-        Line line = dialogue.lines[activeLineIndex];
-        Character character = line.character;
+        gameObject.SetActive(false);
+        GameManager.instance.ChangeState(GameManager.States.HUB);
     }
+
 }
