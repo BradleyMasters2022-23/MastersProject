@@ -162,6 +162,20 @@ public abstract class Ability : MonoBehaviour
             cooldownTimer.ResetTimer();
         }
     }
-    
+
+    #endregion
+
+    #region Input Holding
+
+
+    public virtual void OnHold()
+    {
+        return;
+    }
+    public virtual void Cancel()
+    {
+        return;
+    }
+
     #endregion
 }

@@ -19,13 +19,19 @@ public class Grenade : Throwable
 
     private void Start()
     {
+        if (_isGhost)
+            return;
+
         if (bounceToTimer <= 0)
             StartTimer();
     }
 
     private void Update()
     {
-        if(affectedByTimestop)
+        if (_isGhost)
+            return;
+
+        if (affectedByTimestop)
         {
             AdjustProjectileForTimestop();
         }
@@ -40,12 +46,24 @@ public class Grenade : Throwable
     }
     private void Activate()
     {
+        if (_isGhost)
+            return;
+
         Instantiate(explosive, transform.position, Quaternion.identity).GetComponent<Explosive>().Detonate();
         Destroy(gameObject);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+        // if ghost, stop
+        if (_isGhost)
+        {
+            //rb.velocity= Vector3.zero;
+            //rb.isKinematic = true;
+            return;
+        }
+            
+
         GameObject rootTgt = collision.transform.root.gameObject;
         if (instantDetonateTags.Contains(rootTgt.tag))
         {
@@ -63,7 +81,10 @@ public class Grenade : Throwable
 
     private void AdjustProjectileForTimestop()
     {
-        if(TimeManager.WorldTimeScale == 1 && rb.isKinematic)
+        if (_isGhost)
+            return;
+
+        if (TimeManager.WorldTimeScale == 1 && rb.isKinematic)
         {
             rb.isKinematic = false;
             rb.velocity = savedDir * savedMag;

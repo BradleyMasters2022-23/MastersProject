@@ -63,6 +63,10 @@ public class PlayerGunController : MonoBehaviour
     [Tooltip("Layers for raycast to ignore")]
     [SerializeField] LayerMask layersToIgnore;
 
+
+    [Header("Enhanced Bullets")]
+    [SerializeField] private GameObject enhancedBulletPrefab;
+
     /// <summary>
     /// Whether this gun is shooting
     /// </summary>
@@ -189,6 +193,27 @@ public class PlayerGunController : MonoBehaviour
         currBloom = Mathf.Clamp(currBloom + bloomPerShot, baseBloom, maxBloom);
     }
 
+    private void EnhancedShoot()
+    {
+        if (muzzleflashVFX != null)
+        {
+            Instantiate(muzzleflashVFX, shootPoint.position, shootPoint.transform.rotation);
+        }
+
+        GameObject newShot = Instantiate(enhancedBulletPrefab, shootPoint.position, transform.rotation);
+
+        // Calculate & apply the new minor displacement
+        Vector3 displacement = new Vector3(
+            Random.Range(-maxShootDisplacement, maxShootDisplacement),
+            Random.Range(-maxShootDisplacement, maxShootDisplacement),
+            Random.Range(-maxShootDisplacement, maxShootDisplacement));
+        newShot.transform.position += displacement;
+
+        // Aim to center screen, apply inaccuracy bonuses
+        newShot.transform.LookAt(shootCam.TargetPos);
+
+
+    }
 
     private Vector3 ApplySpread(Vector3 rot)
     {

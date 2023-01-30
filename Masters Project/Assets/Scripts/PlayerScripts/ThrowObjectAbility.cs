@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ThrowObjectAbility : Ability
 {
@@ -21,6 +22,31 @@ public class ThrowObjectAbility : Ability
     [SerializeField] protected float throwInaccuracy;
     [Tooltip("Whether the player's velocity is added to the thrown projectile")]
     [SerializeField] protected bool includePlayerVelocity;
+
+    [Header("Arc Trajectory")]
+    [SerializeField] protected LineRenderer trajectoryArc;
+    [Range(1, 50)]
+    [SerializeField] protected int trajectoryStepCount;
+    [Range(0.01f, 1f)]
+    [SerializeField] private float timeBetweenPoints = 0.1f;
+    private Rigidbody projectileRBRef;
+
+    private void Awake()
+    {
+        HideLine();
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+
+        if(projectileRBRef is null)
+            projectileRBRef = projectile.GetComponent<Rigidbody>();
+        if(trajectoryArc.enabled)
+            Trajectory(Vector3.up * verticalArcForce + spawnPoint.transform.forward * force,
+                projectileRBRef,
+                spawnPoint.position);
+    }
 
     protected override IEnumerator OnAbility()
     {
@@ -56,12 +82,12 @@ public class ThrowObjectAbility : Ability
                 if (includePlayerVelocity)
                 {
                     Vector3 currVel = GetComponent<Rigidbody>().velocity;
-                    projRB.GetComponent<Throwable>().ApplyStartingForce(upwardsForce + currVel + newProj.transform.forward * force);
+                    projRB.GetComponent<Throwable>().ApplyStartingForce(upwardsForce + currVel + spawnPoint.transform.forward * force);
                     //projRB.AddForce(upwardsForce + currVel + newProj.transform.forward * force, ForceMode.Impulse);
                 }
                 else
                 {
-                    projRB.GetComponent<Throwable>().ApplyStartingForce(upwardsForce + newProj.transform.forward * force);
+                    projRB.GetComponent<Throwable>().ApplyStartingForce(upwardsForce + spawnPoint.transform.forward * force);
                     //projRB.AddForce(upwardsForce + newProj.transform.forward * force, ForceMode.Impulse);
                 }
                 
@@ -72,6 +98,7 @@ public class ThrowObjectAbility : Ability
             }
         }
 
+        HideLine();
         yield return null;
     }
 
@@ -81,5 +108,47 @@ public class ThrowObjectAbility : Ability
             rot.x + Random.Range(-throwInaccuracy, throwInaccuracy),
             rot.y + Random.Range(-throwInaccuracy, throwInaccuracy),
             rot.z + Random.Range(-throwInaccuracy, throwInaccuracy));
+    }
+
+
+    protected virtual void Trajectory(Vector3 launchVector, Rigidbody projRB, Vector3 startPoint)
+    {
+        // if not loading in, then dont bother
+        if (!trajectoryArc.enabled)
+            return;
+
+        Vector3 startVelocity = (launchVector / projRB.mass);
+
+        int i = 0;
+        trajectoryArc.positionCount = Mathf.CeilToInt(trajectoryStepCount / timeBetweenPoints) + 1;
+        trajectoryArc.SetPosition(i, startPoint);
+
+        for (float time = 0; time < trajectoryStepCount; time += timeBetweenPoints)
+        {
+            i++;
+            Vector3 point = startPoint + time * startVelocity;
+            point.y = startPoint.y + startVelocity.y * time + (Physics.gravity.y / 2f * time * time);
+            trajectoryArc.SetPosition(i, point);
+        }
+    }
+
+    private void ShowLine()
+    {
+        if(trajectoryArc != null)
+            trajectoryArc.enabled = true;
+    }
+    private void HideLine()
+    {
+        if (trajectoryArc != null)
+            trajectoryArc.enabled = false;
+    }
+
+    public override void OnHold()
+    {
+        ShowLine();
+    }
+    public override void Cancel()
+    {
+        HideLine();
     }
 }
