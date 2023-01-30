@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6917116579656316654}
   - component: {fileID: 1854241841643496755}
   m_Layer: 7
-  m_Name: ProjectilePlayer
+  m_Name: ProjectilePlayerEnhanced
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -128,7 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83837c8b4b5a4d344afd789cbfd3cc3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 14
+  damage: 16
   knockback: 0
   addativeKnockback: 0
   speed: 120
@@ -151,6 +151,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1507506903280815946}
     m_Modifications:
+    - target: {fileID: 3080858766161950074, guid: e38b66fa2b3ff35449b8383cab7d76ea, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 54fbd9c086ac5da419bfee2869642a82, type: 2}
+    - target: {fileID: 3080858767380078727, guid: e38b66fa2b3ff35449b8383cab7d76ea, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 36c39d3415795474187e5f3582c84aad, type: 2}
+    - target: {fileID: 3585310373239701842, guid: e38b66fa2b3ff35449b8383cab7d76ea, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4395791516593488721, guid: e38b66fa2b3ff35449b8383cab7d76ea, type: 3}
       propertyPath: m_IsActive
       value: 0
