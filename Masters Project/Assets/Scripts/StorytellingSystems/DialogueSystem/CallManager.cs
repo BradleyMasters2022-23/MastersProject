@@ -23,6 +23,7 @@ public class CallManager : MonoBehaviour
         }
 
         UnlockConversation(conversations[0]);
+        UpdateCalls();
     }
 
     private void UpdateCalls()
@@ -48,10 +49,19 @@ public class CallManager : MonoBehaviour
                 }
             }
 
+            if(availableConversations.Contains(conversation))
+            {
+                if(conversation.currentState == Conversation.ConversationState.READ)
+                {
+                    availableConversations.Remove(conversation);
+                }
+            }
+
             if(conversation.currentState == Conversation.ConversationState.UNREAD)
             {
                 availableConversations.Add(conversation);
             }
+
         }     
     }
 
@@ -65,5 +75,16 @@ public class CallManager : MonoBehaviour
         UpdateCalls();
         //Debug.Log(conversations.Count);
         return availableConversations[Random.Range(0, availableConversations.Count)];
+    }
+
+    public bool HasAvailable()
+    {
+        if(availableConversations.Count > 0)
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
     }
 }

@@ -10,7 +10,7 @@ public class ConversationInteract : Interactable
     // when a conversation is available, screen should blink; eventually, screen & contact both blink
     private DisplayDialogueUI ui;
 
-    private MeshRenderer flashRenderer;
+    //private MeshRenderer flashRenderer;
     //private Color original;
 
     private void Awake()
@@ -35,6 +35,15 @@ public class ConversationInteract : Interactable
             return;
         }
 
-        ui.OpenScreen(calls.GetRandomAvailableConversation());
+        if (calls.HasAvailable())
+        {
+            ui.OpenScreen(calls.GetRandomAvailableConversation());
+        }
+        else
+        {
+            Debug.Log("No available calls.");
+        }
+
+        
     }
 }

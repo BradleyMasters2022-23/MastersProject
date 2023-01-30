@@ -75,6 +75,7 @@ public class DisplayDialogueUI : MonoBehaviour
 
     public void CloseScreen()
     {
+        conversation.Read();
         gameObject.SetActive(false);
         GameManager.instance.ChangeState(GameManager.States.HUB);
     }
