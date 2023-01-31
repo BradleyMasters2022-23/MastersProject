@@ -131,8 +131,8 @@ public class Explosive : MonoBehaviour
             }
             damagedTargets.Add(target);
             target.Damage(damage);
-            target.ExplosiveKnockback(transform.position, transform.localScale.x,
-                horizontalForce, verticalForce, explosiveRadius, knockbackFalloff);
+            //target.ExplosiveKnockback(transform.position, transform.localScale.x,
+            //   horizontalForce, verticalForce, explosiveRadius, knockbackFalloff);
         }
     }
 }
