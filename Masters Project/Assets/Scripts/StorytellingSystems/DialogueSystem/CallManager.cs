@@ -73,7 +73,6 @@ public class CallManager : MonoBehaviour
     public Conversation GetRandomAvailableConversation()
     {
         UpdateCalls();
-        //Debug.Log(conversations.Count);
         return availableConversations[Random.Range(0, availableConversations.Count)];
     }
 
