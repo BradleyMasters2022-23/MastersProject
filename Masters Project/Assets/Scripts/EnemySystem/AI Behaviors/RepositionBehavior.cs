@@ -109,7 +109,7 @@ public class RepositionBehavior : BaseEnemyMovement
                 // check again if its going to be colliding something. If so, dont apply left or right
                 if(CheckForCollision(temp - transform.position))
                 {
-                    Debug.Log("Wall found on each side!!!");
+                    //Debug.Log("Wall found on each side!!!");
                     temp = transform.position + (transform.forward * forMod);
                 }
             }
@@ -119,7 +119,7 @@ public class RepositionBehavior : BaseEnemyMovement
             c++;
             if(c >= 10000)
             {
-                Debug.Log("Searching for reposition determine location infinite looping");
+                //Debug.Log("Searching for reposition determine location infinite looping");
                 return transform.position;
             }
 
