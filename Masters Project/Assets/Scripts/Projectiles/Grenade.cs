@@ -15,12 +15,12 @@ public class Grenade : Throwable
     private int bounces;
 
     [SerializeField] private List<string> instantDetonateTags;
-    
+    [Tooltip("How much velocity is decreased by when it bounces")]
+    [Range(0, 1)]
+    [SerializeField] protected float velocityLossOnBounce;
 
     private void Start()
     {
-        if (_isGhost)
-            return;
 
         if (bounceToTimer <= 0)
             StartTimer();
@@ -28,9 +28,6 @@ public class Grenade : Throwable
 
     private void Update()
     {
-        if (_isGhost)
-            return;
-
         if (affectedByTimestop)
         {
             AdjustProjectileForTimestop();
@@ -46,21 +43,18 @@ public class Grenade : Throwable
     }
     private void Activate()
     {
-        if (_isGhost)
-            return;
-
         Instantiate(explosive, transform.position, Quaternion.identity).GetComponent<Explosive>().Detonate();
         Destroy(gameObject);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        // if ghost, stop
-        if (_isGhost)
+        if(velocityLossOnBounce > 0)
         {
-            //rb.velocity= Vector3.zero;
-            //rb.isKinematic = true;
-            return;
+            Vector3 temp = rb.velocity;
+            temp.x *= (1 - velocityLossOnBounce);
+            temp.z *= (1 - velocityLossOnBounce);
+            rb.velocity = temp;
         }
             
 
@@ -81,9 +75,6 @@ public class Grenade : Throwable
 
     private void AdjustProjectileForTimestop()
     {
-        if (_isGhost)
-            return;
-
         if (TimeManager.WorldTimeScale == 1 && rb.isKinematic)
         {
             rb.isKinematic = false;
