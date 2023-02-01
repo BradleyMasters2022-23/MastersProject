@@ -67,6 +67,7 @@ public class PlayerGunController : MonoBehaviour
     [Header("Enhanced Bullets")]
     [SerializeField] private GameObject enhancedBulletPrefab;
     [SerializeField] private float enhancedSpeedMultiplier;
+    [SerializeField, Range(0, 1f)] private float enhancedShotThreshold;
 
     /// <summary>
     /// Whether this gun is shooting
@@ -172,7 +173,7 @@ public class PlayerGunController : MonoBehaviour
             // Shoot projectile, aiming towards passed in target
             GameObject newShot;
 
-            if(TimeManager.WorldTimeScale == 1)
+            if(TimeManager.WorldTimeScale > enhancedShotThreshold)
             {
                 newShot=Instantiate(shotPrefab, shootPoint.position, transform.rotation);
             }
@@ -190,7 +191,7 @@ public class PlayerGunController : MonoBehaviour
 
             // Aim to center screen, apply inaccuracy bonuses
             newShot.transform.LookAt(shootCam.TargetPos);
-            if (TimeManager.WorldTimeScale == 1)
+            if (TimeManager.WorldTimeScale > enhancedShotThreshold)
             {
                 newShot.transform.eulerAngles = ApplySpread(newShot.transform.eulerAngles);
                 newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current, true);
@@ -210,28 +211,6 @@ public class PlayerGunController : MonoBehaviour
 
         // Increase bloom after shot
         currBloom = Mathf.Clamp(currBloom + bloomPerShot, baseBloom, maxBloom);
-    }
-
-    private void EnhancedShoot()
-    {
-        if (muzzleflashVFX != null)
-        {
-            Instantiate(muzzleflashVFX, shootPoint.position, shootPoint.transform.rotation);
-        }
-
-        GameObject newShot = Instantiate(enhancedBulletPrefab, shootPoint.position, transform.rotation);
-
-        // Calculate & apply the new minor displacement
-        Vector3 displacement = new Vector3(
-            Random.Range(-maxShootDisplacement, maxShootDisplacement),
-            Random.Range(-maxShootDisplacement, maxShootDisplacement),
-            Random.Range(-maxShootDisplacement, maxShootDisplacement));
-        newShot.transform.position += displacement;
-
-        // Aim to center screen, apply inaccuracy bonuses
-        newShot.transform.LookAt(shootCam.TargetPos);
-
-
     }
 
     private Vector3 ApplySpread(Vector3 rot)

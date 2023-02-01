@@ -34,10 +34,10 @@ public class Projectile : RangeAttack
     [SerializeField] public GameObject onHitEffect;
 
     [Tooltip("What layers should this projectile hit with a larger radius")]
-    [SerializeField] private LayerMask targetLayers;
+    [SerializeField] protected LayerMask targetLayers;
 
     [Tooltip("What layers should this impact directly with")]
-    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] protected LayerMask groundLayer;
 
     [Tooltip("Sound when this bullet is shot")]
     [SerializeField] private AudioClip[] bulletShot;
