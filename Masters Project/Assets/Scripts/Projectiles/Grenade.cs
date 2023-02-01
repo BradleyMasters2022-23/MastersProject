@@ -7,7 +7,13 @@ public class Grenade : Throwable
     [SerializeField] private GameObject explosive;
 
     [SerializeField] private float detonateTimer;
+    
     [SerializeField] private bool affectedByTimestop;
+
+    [SerializeField] private float triggerDelay;
+    [SerializeField] private float triggerRadius;
+    [SerializeField] private SphereCollider triggerCol;
+    private bool triggered;
 
     private ScaledTimer timer;
 
@@ -21,9 +27,13 @@ public class Grenade : Throwable
 
     private void Start()
     {
-
         if (bounceToTimer <= 0)
-            StartTimer();
+            StartTimer(detonateTimer);
+
+        triggered = false;
+        triggerCol.radius= triggerRadius;
+        triggerCol.isTrigger= true;
+        triggerCol.enabled= true;
     }
 
     private void Update()
@@ -37,9 +47,12 @@ public class Grenade : Throwable
             Activate();
     }
 
-    private void StartTimer()
+    private void StartTimer(float time)
     {
-        timer = new ScaledTimer(detonateTimer, affectedByTimestop);
+        if (timer == null)
+            timer = new ScaledTimer(time, affectedByTimestop);
+        else
+            timer.ResetTimer(time);
     }
     private void Activate()
     {
@@ -68,8 +81,18 @@ public class Grenade : Throwable
             bounces++;
             if(bounces == bounceToTimer && timer is null)
             {
-                StartTimer();
+                StartTimer(detonateTimer);
             }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        GameObject rootTgt = other.transform.root.gameObject;
+        if (instantDetonateTags.Contains(rootTgt.tag) && !triggered)
+        {
+            triggered = true;
+            StartTimer(triggerDelay);
         }
     }
 
