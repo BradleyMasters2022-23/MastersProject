@@ -1,0 +1,138 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - February 2nd, 2022
+ * Last Edited - February 2nd, 2022 by Ben Schuster
+ * Description - Base class for ALL targetable entities
+ * ================================================================================================
+ */
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public enum Team
+{
+    UNASSIGNED,
+    PLAYER,
+    ENEMY,
+    WORLD
+}
+
+[RequireComponent(typeof(HealthManager))]
+public abstract class Target : MonoBehaviour
+{
+    [Header("Core Target Info")]
+
+    [Tooltip("The center point of this entity, used for targeting and spawning")]
+    [SerializeField] protected Transform _center;
+    [Tooltip("The team this target is a part of")]
+    [SerializeField] protected Team _team = Team.UNASSIGNED;
+    [Tooltip("The threat of this target, used for AI targeting")]
+    [SerializeField] protected float _targetThreat = 0;
+
+    /// <summary>
+    /// The manager controlling health for this target
+    /// </summary>
+    protected HealthManager _healthManager;
+
+    // The manger controlling buffs and debuffs for this target
+    //private EffectManager _effectManager;
+
+    /// <summary>
+    /// Whether or not this entity has already been killed
+    /// </summary>
+    protected bool _killed = false;
+
+    [Header("Core Audio Info")]
+    [Tooltip("Damage made when this target is damaged")]
+    [SerializeField] protected AudioClip damagedSound;
+    [Tooltip("Damage made when this target is killed")]
+    [SerializeField] protected AudioClip deathSound;
+
+    /// <summary>
+    /// Audiosource for this target
+    /// </summary>
+    protected AudioSource audioSource;
+
+
+
+    // Placeholder, needs to take in 'TargetableEffect' figure out whether to send this data to the health manager or effect manager
+    /// <summary>
+    /// Register an effect against this target.
+    /// </summary>
+    /// <param name="dmg">PLACEHOLDER - pass damage to deal to this target</param>
+    public virtual void RegisterEffect(float dmg)
+    {
+        if(_killed) return;
+
+        if (damagedSound != null)
+            AudioSource.PlayClipAtPoint(damagedSound, _center.position);
+
+        if (!_killed && _healthManager.Damage(dmg))
+        {
+            _killed = true;
+        }
+            
+    }
+
+    /// <summary>
+    /// Kill this target. Default with little functionality
+    /// </summary>
+    protected virtual void KillTarget()
+    {
+        if (deathSound != null)
+            AudioSource.PlayClipAtPoint(deathSound, _center.position);
+
+
+        Debug.Log($"Entity {gameObject.name} has been killed but does not have its own kill function, destroying self.");
+        Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// Determine if drops should drop, and spawn them
+    /// </summary>
+    protected void DropOrbs(GameObject orb, float dropChance, Vector2 dropAmountRange)
+    {
+        // Roll the dice. If the value is higher than the value, exit
+        if (Random.Range(1, 101) > dropChance || orb is null)
+        {
+            return;
+        }
+
+        int spawnAmount = Random.Range((int)dropAmountRange.x, (int)dropAmountRange.y);
+
+        // Spawn the randomized amount at random ranges, as long as they aren't intersecting
+        for (int i = 0; i < spawnAmount; i++)
+        {
+            // Spawn objects, apply rotation and velocity
+            if (transform != null)
+                Instantiate(orb, _center.position, Quaternion.identity);
+        }
+    }
+
+    #region Getters
+
+    /// <summary>
+    /// The center point of this entity, used for targeting and spawning
+    /// </summary>
+    public Transform Center
+    {
+        get { return _center; }
+    }
+    /// <summary>
+    /// The team this target is a part of
+    /// </summary>
+    public Team Team
+    {
+        get { return _team; }
+    }
+    /// <summary>
+    /// The threat of this target, used for AI targeting
+    /// </summary>
+    public float Threat
+    {
+        get { return _targetThreat; }
+    }
+
+    #endregion
+}

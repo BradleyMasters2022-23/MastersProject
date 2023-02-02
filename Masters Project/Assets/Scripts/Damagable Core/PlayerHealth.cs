@@ -7,8 +7,8 @@
  * ================================================================================================
  */
 using UnityEngine;
-using static Cinemachine.DocumentationSortingAttribute;
 using UnityEngine.Rendering;
+
 
 public class PlayerHealth : Damagable
 {

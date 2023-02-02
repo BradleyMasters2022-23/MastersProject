@@ -1,10 +1,24 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - Februrary 1st, 2022
+ * Last Edited - Februrary 1st, 2022 by Ben Schuster
+ * Description - Controls a value contained within a resource bar
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static PlayerHealthSection;
-
+using Sirenix.OdinInspector;
 public class ResourceBar : MonoBehaviour
 {
+    public enum BarType
+    {
+        NA,
+        Health,
+        Shield
+    }
+
     protected enum State
     {
         FULL, 
@@ -13,13 +27,17 @@ public class ResourceBar : MonoBehaviour
         REGENERATING
     }
 
+    [SerializeField] private BarType _type;
+
     [SerializeField] private State _currState;
 
     [SerializeField] private float _maxAmount;
     [SerializeField] private float _currAmount;
 
     [SerializeField] private bool _regen;
+    [HideIf("@this._regen == false")]
     [SerializeField] private float _regenRate;
+    [HideIf("@this._regen == false")]
     [SerializeField] private float _regenDelay;
 
     private ScaledTimer _regenTracker;
@@ -31,13 +49,6 @@ public class ResourceBar : MonoBehaviour
 
         // Set current state
         NonRegenStateCheck();
-
-        InvokeRepeating("TestDamage", 5, 2);
-    }
-
-    public void TestDamage()
-    {
-        ModifyCurrent(-10);
     }
 
     public void Init(float max, float curr, bool regen, float reganRate, float regenDelay)
@@ -163,30 +174,11 @@ public class ResourceBar : MonoBehaviour
     #region Current Value Modifying Functions
 
     /// <summary>
-    /// Change this resource bar's current value. 
-    /// Pass a positive value to increase or a negative value to decrease
-    /// </summary>
-    /// <param name="amt">Amount to increase or decrease by. sign dependent</param>
-    /// <returns>Overflow from the change bar</returns>
-    public float ModifyCurrent(float amt)
-    {
-        if(amt <= 0)
-        {
-            // quickly invert the sign for ease
-            return -1 * Decrease(-amt);
-        }
-        else
-        {
-            return Increase(amt);
-        }
-    }
-
-    /// <summary>
     /// Decrease the current gauge of this resource bar
     /// </summary>
     /// <param name="amt">amount to reduce this resource by</param>
     /// <returns>Overflow after decreasing this gauge to 0</returns>
-    private float Decrease(float amt)
+    public float Decrease(float amt)
     {
         if(_currAmount - amt >= 0)
         {
@@ -211,7 +203,7 @@ public class ResourceBar : MonoBehaviour
     /// </summary>
     /// <param name="amt">amount to increase this resource by</param>
     /// <returns>Overflow after increasing this gauge to max</returns>
-    private float Increase(float amt)
+    public float Increase(float amt)
     {
         if (_currAmount + amt <= _maxAmount)
         {
@@ -231,6 +223,11 @@ public class ResourceBar : MonoBehaviour
     #endregion
 
     #region Getters
+
+    public BarType Type()
+    {
+        return _type;
+    }
 
     public bool IsFull()
     {
@@ -281,7 +278,7 @@ public class ResourceBar : MonoBehaviour
         float replenishAmount = (_maxAmount / _regenRate) / 50;
 
         // Replenish the gauge, determine if state should change
-        ModifyCurrent(replenishAmount);
+        Increase(replenishAmount);
     }
 
     #endregion

@@ -1660,23 +1660,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 826146752030350675, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 826146752030350675, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 826146752584805837, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 826146752584805837, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 826146753056965490, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
       propertyPath: m_Name
       value: Gameplay_UI_GameReady
+      objectReference: {fileID: 0}
+    - target: {fileID: 826146753056965490, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 826146753056965494, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
       propertyPath: m_Pivot.x
@@ -2814,6 +2818,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1112620181}
   - component: {fileID: 1112620180}
+  - component: {fileID: 1112620183}
+  - component: {fileID: 1112620182}
   m_Layer: 0
   m_Name: Test Resource Bar
   m_TagString: Untagged
@@ -2834,11 +2840,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currState: 0
-  _maxAmount: 100
-  _currAmount: 1
+  _maxAmount: 33
+  _currAmount: 33
   _regen: 1
-  _regenRate: 10
-  _regenDelay: 1
+  _regenRate: 1
+  _regenDelay: 4
 --- !u!4 &1112620181
 Transform:
   m_ObjectHideFlags: 0
@@ -2854,6 +2860,42 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1112620182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1112620179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df5a001e63515124d9fff01548e22564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _healthbars:
+  - {fileID: 1112620183}
+  - {fileID: 1112620180}
+  _damagedInvulnerabilityDuration: 0
+  _gateHealthbarDamage: 1
+  _gateHealthbarHealing: 0
+--- !u!114 &1112620183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1112620179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7260432c9211d44ca6d826bb3d6c8da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _currState: 0
+  _maxAmount: 100
+  _currAmount: 100
+  _regen: 0
+  _regenRate: 0
+  _regenDelay: 0
 --- !u!1 &1152679378 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 826146753056965490, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
