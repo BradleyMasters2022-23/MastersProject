@@ -23,6 +23,7 @@ public class Conversation : ScriptableObject
     public Character nonPennyCharacter;
     public int ID;
     public int[] dependencies;
+    // runs after last unlocked dependency OR total runs if no dependencies
     public int runReq;
 
     public bool soloDialogue = false;
@@ -46,7 +47,7 @@ public class Conversation : ScriptableObject
         if(currentState== ConversationState.LOCKED)
         {
             currentState = ConversationState.UNREAD;
-            Debug.Log("conversation is now available");
+            Debug.Log("conversation " + ID + " is now available");
         }
         else
         {

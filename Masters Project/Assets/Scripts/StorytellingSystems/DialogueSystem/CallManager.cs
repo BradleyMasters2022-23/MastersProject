@@ -21,45 +21,48 @@ public class CallManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-
-        UnlockConversation(conversations[0]);
-        UpdateCalls();
     }
 
     private void UpdateCalls()
     {
+        // loop through available conversations
+        foreach(Conversation conversation in availableConversations) 
+        {
+            if (conversation.currentState != Conversation.ConversationState.READ)
+            {
+                availableConversations.Remove(conversation);
+            }
+        }
+
+        // loop through conversations
         foreach(Conversation conversation in conversations)
         {
-            if(conversation.currentState == Conversation.ConversationState.LOCKED)
+
+            // check each locked conversation's dependencies. once run counting is implemented that lives here too
+            if (conversation.currentState == Conversation.ConversationState.LOCKED)
             {   if(conversation.dependencies.Length > 0)
                 {
                     foreach (int i in conversation.dependencies)
                     {
-                        bool a = true;
+                        bool unlockable = true;
                         if (conversations[i].currentState != Conversation.ConversationState.READ)
                         {
-                            a = false;
+                            unlockable = false;
                         }
 
-                        if (a == true)
+                        if (unlockable == true)
                         {
-                            conversation.currentState = Conversation.ConversationState.UNREAD;
+                            conversation.Unlock();
                         }
                     }
                 }
             }
 
-            if(availableConversations.Contains(conversation))
-            {
-                if(conversation.currentState == Conversation.ConversationState.READ)
-                {
-                    availableConversations.Remove(conversation);
-                }
-            }
-
-            if(conversation.currentState == Conversation.ConversationState.UNREAD)
+            // check each conversation, add to available conversations if unread
+            if(conversation.currentState == Conversation.ConversationState.UNREAD && !availableConversations.Contains(conversation))
             {
                 availableConversations.Add(conversation);
+                Debug.Log(conversation.ID + "added to available");
             }
 
         }     
@@ -72,18 +75,16 @@ public class CallManager : MonoBehaviour
 
     public Conversation GetRandomAvailableConversation()
     {
-        UpdateCalls();
         return availableConversations[Random.Range(0, availableConversations.Count)];
     }
 
     public bool HasAvailable()
     {
-        if(availableConversations.Count > 0)
-        {
-            return true;
-        } else
+        UpdateCalls();
+        if (availableConversations.Count <= 0)
         {
             return false;
         }
+        return true;
     }
 }

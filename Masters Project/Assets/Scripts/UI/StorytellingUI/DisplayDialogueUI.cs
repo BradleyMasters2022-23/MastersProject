@@ -10,7 +10,7 @@ using UnityEngine.EventSystems;
 public class DisplayDialogueUI : MonoBehaviour
 {
     GameControls c;
-    InputAction e;
+    InputAction click;
     private EventSystem eventSystem;
     private int activeLineIndex = 0;
 
@@ -24,8 +24,8 @@ public class DisplayDialogueUI : MonoBehaviour
     private void Awake()
     {
         c = new GameControls();
-        e = c.PlayerGameplay.Interact;
-        e.performed += DisplayDialogue;
+        click = c.Dialogue.Advance;
+        click.performed += DisplayDialogue;
     }
 
     public void OpenScreen(Conversation c)
@@ -39,7 +39,7 @@ public class DisplayDialogueUI : MonoBehaviour
         GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
         DisplayDialogue();
         gameObject.SetActive(true);
-        e.Enable();
+        click.Enable();
     }
 
     private void DisplayDialogue(InputAction.CallbackContext c)
@@ -75,6 +75,7 @@ public class DisplayDialogueUI : MonoBehaviour
 
     public void CloseScreen()
     {
+        activeLineIndex = 0;
         conversation.Read();
         gameObject.SetActive(false);
         GameManager.instance.ChangeState(GameManager.States.HUB);
