@@ -7,6 +7,7 @@ public class CallManager : MonoBehaviour
 {
     public List<Conversation> conversations = new List<Conversation>();
     private List<Conversation> availableConversations = new List<Conversation>();
+    public Conversation defaultConversation;
     public static CallManager instance;
 
     private void Awake()
@@ -21,19 +22,22 @@ public class CallManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+
+        
+    }
+
+    private void Start()
+    {
+        foreach (Conversation conversation in conversations)
+        {
+            conversation.Lock();
+        }
+
+        conversations[0].Unlock();
     }
 
     private void UpdateCalls()
     {
-        // loop through available conversations
-        foreach(Conversation conversation in availableConversations) 
-        {
-            if (conversation.currentState != Conversation.ConversationState.READ)
-            {
-                availableConversations.Remove(conversation);
-            }
-        }
-
         // loop through conversations
         foreach(Conversation conversation in conversations)
         {
@@ -68,11 +72,6 @@ public class CallManager : MonoBehaviour
         }     
     }
 
-    public void UnlockConversation(Conversation conversation)
-    {
-        conversation.Unlock();
-    }
-
     public Conversation GetRandomAvailableConversation()
     {
         return availableConversations[Random.Range(0, availableConversations.Count)];
@@ -81,10 +80,15 @@ public class CallManager : MonoBehaviour
     public bool HasAvailable()
     {
         UpdateCalls();
-        if (availableConversations.Count <= 0)
+        if (availableConversations.Count > 0)
         {
-            return false;
+            return true;
         }
-        return true;
+        return false;
+    }
+
+    public Conversation GetDefault()
+    {
+        return defaultConversation;
     }
 }

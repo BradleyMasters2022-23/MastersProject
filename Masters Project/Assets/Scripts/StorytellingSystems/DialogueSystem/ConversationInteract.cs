@@ -41,7 +41,7 @@ public class ConversationInteract : Interactable
         }
         else
         {
-            Debug.Log("No available calls.");
+            ui.OpenScreen(calls.GetDefault());
         }
 
         
