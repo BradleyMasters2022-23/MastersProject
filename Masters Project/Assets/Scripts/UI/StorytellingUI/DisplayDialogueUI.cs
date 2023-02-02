@@ -30,12 +30,13 @@ public class DisplayDialogueUI : MonoBehaviour
 
     public void OpenScreen(Conversation c)
     {
-        conversation = c;
         if (eventSystem == null)
         {
             eventSystem = EventSystem.current;
         }
 
+        conversation = c;
+        activeLineIndex = 0;
         GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
         DisplayDialogue();
         gameObject.SetActive(true);
@@ -75,7 +76,6 @@ public class DisplayDialogueUI : MonoBehaviour
 
     public void CloseScreen()
     {
-        activeLineIndex = 0;
         conversation.Read();
         gameObject.SetActive(false);
         GameManager.instance.ChangeState(GameManager.States.HUB);

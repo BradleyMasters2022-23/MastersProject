@@ -39,7 +39,15 @@ public class Conversation : ScriptableObject
 
     public void Read()
     {
-        currentState = ConversationState.READ;
+        if(currentState== ConversationState.LOCKED)
+        {
+            Debug.Log("Conversation is locked and cannot be read");
+        }
+        else
+        {
+            currentState = ConversationState.READ;
+        }
+        
     }
 
     public void Unlock()
