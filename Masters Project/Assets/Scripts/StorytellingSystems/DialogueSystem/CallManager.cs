@@ -1,6 +1,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CallManager : MonoBehaviour
@@ -34,12 +35,13 @@ public class CallManager : MonoBehaviour
         }
 
         conversations[0].Unlock();
+        UpdateCalls();
     }
 
     private void UpdateCalls()
     {
         // loop through conversations
-        foreach(Conversation conversation in conversations)
+        foreach(Conversation conversation in conversations.ToList<Conversation>())
         {
 
             // check each locked conversation's dependencies. once run counting is implemented that lives here too
@@ -69,7 +71,15 @@ public class CallManager : MonoBehaviour
                 Debug.Log(conversation.ID + "added to available");
             }
 
-        }     
+        }
+        
+        foreach(Conversation conversation in availableConversations.ToList<Conversation>())
+        {
+            if(conversation.currentState == Conversation.ConversationState.READ)
+            {
+                availableConversations.Remove(conversation);
+            }
+        }
     }
 
     public Conversation GetRandomAvailableConversation()

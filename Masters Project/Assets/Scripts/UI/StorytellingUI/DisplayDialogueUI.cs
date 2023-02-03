@@ -80,7 +80,8 @@ public class DisplayDialogueUI : MonoBehaviour
         {
             conversation.Read();
         }
-        
+
+        click.Disable();
         gameObject.SetActive(false);
         GameManager.instance.ChangeState(GameManager.States.HUB);
     }

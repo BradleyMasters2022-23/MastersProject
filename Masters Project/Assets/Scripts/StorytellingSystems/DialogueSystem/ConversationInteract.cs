@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ConversationInteract : Interactable
 {
-    [SerializeField] private CallManager calls;
+    private CallManager calls;
     // eventually, should instead pull up a screen with a list of characters & info about them
     // when a conversation is available, screen should blink; eventually, screen & contact both blink
     private DisplayDialogueUI ui;
@@ -13,9 +13,10 @@ public class ConversationInteract : Interactable
     //private MeshRenderer flashRenderer;
     //private Color original;
 
-    private void Awake()
+    private void Start()
     {
         ui = FindObjectOfType<DisplayDialogueUI>(true);
+        calls = CallManager.instance;
         //flashRenderer = gameObject.GetComponent<MeshRenderer>();
         //original = flashRenderer.Color;
     }
