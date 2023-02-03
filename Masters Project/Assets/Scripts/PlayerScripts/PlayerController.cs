@@ -190,8 +190,7 @@ public class PlayerController : MonoBehaviour
 
     [Tooltip("Ability to activate when pressing 'Q'")]
     [SerializeField] private Ability QAbility;
-
-    private bool qAbilityHold = false;
+    // private bool qAbilityHold = false;
 
     #endregion
 
@@ -270,11 +269,11 @@ public class PlayerController : MonoBehaviour
         // Perform state-based update functionality
         UpdateStateFunction();
 
-        if(qAbilityHold && !qInput.IsInProgress())
-        {
-            QAbility.Cancel();
-            qAbilityHold = false;
-        }
+        //if(qAbilityHold && !qInput.IsInProgress())
+        //{
+        //    QAbility.Cancel();
+        //    qAbilityHold = false;
+        //}
     }
 
 
@@ -429,7 +428,12 @@ public class PlayerController : MonoBehaviour
 
     private void ActivateQAbility(InputAction.CallbackContext ctx)
     {
-        //Debug.Log($"Input | Started : {ctx.started} | Performed: {ctx.performed} | Canceled : {ctx.canceled} | Phase : {ctx.phase}");
+        if(ctx.performed && QAbility.IsReady())
+        {
+            QAbility.Activate();
+        }
+
+        /*
         if(ctx.performed && !qAbilityHold)
         {
             QAbility.OnHold();
@@ -440,6 +444,7 @@ public class PlayerController : MonoBehaviour
             QAbility.Activate();
             qAbilityHold = false;
         }
+        */
     }
 
     #endregion

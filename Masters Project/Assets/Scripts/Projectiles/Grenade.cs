@@ -7,7 +7,13 @@ public class Grenade : Throwable
     [SerializeField] private GameObject explosive;
 
     [SerializeField] private float detonateTimer;
+    
     [SerializeField] private bool affectedByTimestop;
+
+    [SerializeField] private float triggerDelay;
+    [SerializeField] private float triggerRadius;
+    [SerializeField] private SphereCollider triggerCol;
+    private bool triggered;
 
     private ScaledTimer timer;
 
@@ -15,22 +21,23 @@ public class Grenade : Throwable
     private int bounces;
 
     [SerializeField] private List<string> instantDetonateTags;
-    
+    [Tooltip("How much velocity is decreased by when it bounces")]
+    [Range(0, 1)]
+    [SerializeField] protected float velocityLossOnBounce;
 
     private void Start()
     {
-        if (_isGhost)
-            return;
-
         if (bounceToTimer <= 0)
-            StartTimer();
+            StartTimer(detonateTimer);
+
+        triggered = false;
+        triggerCol.radius= triggerRadius;
+        triggerCol.isTrigger= true;
+        triggerCol.enabled= true;
     }
 
     private void Update()
     {
-        if (_isGhost)
-            return;
-
         if (affectedByTimestop)
         {
             AdjustProjectileForTimestop();
@@ -40,27 +47,27 @@ public class Grenade : Throwable
             Activate();
     }
 
-    private void StartTimer()
+    private void StartTimer(float time)
     {
-        timer = new ScaledTimer(detonateTimer, affectedByTimestop);
+        if (timer == null)
+            timer = new ScaledTimer(time, affectedByTimestop);
+        else
+            timer.ResetTimer(time);
     }
     private void Activate()
     {
-        if (_isGhost)
-            return;
-
         Instantiate(explosive, transform.position, Quaternion.identity).GetComponent<Explosive>().Detonate();
         Destroy(gameObject);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        // if ghost, stop
-        if (_isGhost)
+        if(velocityLossOnBounce > 0)
         {
-            //rb.velocity= Vector3.zero;
-            //rb.isKinematic = true;
-            return;
+            Vector3 temp = rb.velocity;
+            temp.x *= (1 - velocityLossOnBounce);
+            temp.z *= (1 - velocityLossOnBounce);
+            rb.velocity = temp;
         }
             
 
@@ -74,16 +81,23 @@ public class Grenade : Throwable
             bounces++;
             if(bounces == bounceToTimer && timer is null)
             {
-                StartTimer();
+                StartTimer(detonateTimer);
             }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        GameObject rootTgt = other.transform.root.gameObject;
+        if (instantDetonateTags.Contains(rootTgt.tag) && !triggered)
+        {
+            triggered = true;
+            StartTimer(triggerDelay);
         }
     }
 
     private void AdjustProjectileForTimestop()
     {
-        if (_isGhost)
-            return;
-
         if (TimeManager.WorldTimeScale == 1 && rb.isKinematic)
         {
             rb.isKinematic = false;
