@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Track the last state
     /// </summary>
-    private States lastState;
+    [SerializeField] private States lastState;
 
     public static GameControls controls;
     private InputAction escape;
@@ -324,6 +324,8 @@ public class GameManager : MonoBehaviour
     /// <param name="c"></param>
     public void TogglePause(InputAction.CallbackContext c = default)
     {
+        Debug.Log("Toggle pause called");
+
         // try pausing
         if (ValidateStateChange(States.PAUSED))
         {
@@ -497,7 +499,7 @@ public class GameManager : MonoBehaviour
         }
         else if(!menuStack.Peek().Closable)
         {
-            Debug.Log("[GameManager] Tried to close the menu, but its marked as permenant!");
+            Debug.Log($"[GameManager] Tried to close the menu {menuStack.Peek().name}, but its marked as permenant!");
             return;
         }
 
@@ -512,6 +514,7 @@ public class GameManager : MonoBehaviour
         // Close the top menu and remove from stack
         UIMenu menu = menuStack.Pop();
         menu.Close();
+        Debug.Log($"Closing menu named {menu.name}");
 
         // Tell the stack below it to load its select
         if (menuStack.Count > 0)

@@ -82,8 +82,10 @@ public class DisplayDialogueUI : MonoBehaviour
         }
 
         click.Disable();
-        gameObject.SetActive(false);
-        GameManager.instance.ChangeState(GameManager.States.HUB);
+
+        GameManager.instance.CloseTopMenu();
+        //gameObject.SetActive(false);
+        //GameManager.instance.ChangeState(GameManager.States.HUB);
     }
 
 }
