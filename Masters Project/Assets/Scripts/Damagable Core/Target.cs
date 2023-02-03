@@ -29,7 +29,8 @@ public abstract class Target : MonoBehaviour
     [SerializeField] protected Team _team = Team.UNASSIGNED;
     [Tooltip("The threat of this target, used for AI targeting")]
     [SerializeField] protected float _targetThreat = 0;
-
+    [Tooltip("Whether or not this target is killable. Unkillable targets still take damage but cannot die.")]
+    [SerializeField] protected bool _unkillable;
     /// <summary>
     /// The manager controlling health for this target
     /// </summary>
@@ -79,6 +80,9 @@ public abstract class Target : MonoBehaviour
 
         if (!_killed && _healthManager.Damage(dmg))
         {
+            if (_unkillable)
+                return;
+
             _killed = true;
             KillTarget();
         }
