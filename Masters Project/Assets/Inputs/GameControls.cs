@@ -150,7 +150,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""id"": ""43833b58-0f0f-460c-8195-a2b48cb722b3"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Press(pressPoint=0.5,behavior=2)"",
+                    ""interactions"": """",
                     ""initialStateCheck"": false
                 }
             ],
