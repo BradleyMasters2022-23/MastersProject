@@ -58,6 +58,11 @@ public abstract class Target : MonoBehaviour
     private void Awake()
     {
         _healthManager = GetComponent<HealthManager>();
+        // If initialization of health manager fails, destroy itself
+        if(_healthManager == null || !_healthManager.Init())
+        {
+            KillTarget();
+        }
     }
 
     // Placeholder, needs to take in 'TargetableEffect' figure out whether to send this data to the health manager or effect manager

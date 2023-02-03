@@ -14,26 +14,22 @@ using Sirenix.OdinInspector;
 
 public class ResourceBar : MonoBehaviour
 {
-    public enum BarType
-    {
-        NA,
-        Health,
-        Shield
-    }
-
     protected enum State
     {
+        UNINITIALIZED,
         FULL, 
         IDLE,
         EMPTIED,
         REGENERATING
     }
 
-    [Header("Core Bar Info")]
+    [Header("Core Bar Info - READ ONLY")]
 
-    [SerializeField] private BarType _type;
+    private BarType _type;
 
-    [SerializeField] private State _currState;
+    [SerializeField] private ResourceBarSO _barData;
+
+    [SerializeField] private State _currState = State.UNINITIALIZED;
 
     [SerializeField] private float _maxAmount;
     [SerializeField] private float _currAmount;
@@ -48,22 +44,15 @@ public class ResourceBar : MonoBehaviour
 
     private ScaledTimer _regenTracker;
 
-    private void Start()
+    public void Init(ResourceBarSO barInfo)
     {
-        if (_regen)
-            _regenTracker = new ScaledTimer(_regenDelay, false);
+        _barData = barInfo;
 
-        // Set current state
-        NonRegenStateCheck();
-    }
-
-    public void Init(float max, float curr, bool regen, float reganRate, float regenDelay)
-    {
-        _maxAmount= max;
-        _currAmount= curr;
-        _regen = regen;
-        _regenRate= reganRate;
-        _regenDelay= regenDelay;
+        _maxAmount = barInfo._maxValue;
+        _currAmount= _maxAmount;
+        _regen = barInfo._regen;
+        _regenRate= barInfo._regenRate;
+        _regenDelay= barInfo._regenDelay;
 
         if (_regen)
             _regenTracker = new ScaledTimer(_regenDelay, false);
@@ -74,6 +63,9 @@ public class ResourceBar : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_currState == State.UNINITIALIZED)
+            return;
+
         StateUpdateFunction();
     }
 
@@ -103,7 +95,7 @@ public class ResourceBar : MonoBehaviour
     /// <summary>
     /// Change the current state, activate any cross-section functionality
     /// </summary>
-    private void StateUpdateFunction()
+    public void StateUpdateFunction()
     {
         switch (_currState)
         {
@@ -253,6 +245,11 @@ public class ResourceBar : MonoBehaviour
     public float MaxValue()
     {
         return _maxAmount;
+    }
+
+    public ResourceBarSO BarData
+    {
+        get { return _barData;}
     }
 
     #endregion

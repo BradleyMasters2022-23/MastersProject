@@ -293,6 +293,7 @@ GameObject:
   - component: {fileID: 671644478858017053}
   - component: {fileID: 115257059143747583}
   - component: {fileID: 6445182641303533574}
+  - component: {fileID: 3402813018557646957}
   m_Layer: 8
   m_Name: UI_EnemyHealthbar_Base
   m_TagString: Untagged
@@ -364,7 +365,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &115257059143747583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -394,6 +395,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77d736ec45db0064483a5c3934c4b656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3402813018557646957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5042779374246505407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9c846d8ec7fe86469fc0f13845d3278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _targetResource: {fileID: 0}
+  _targetIndex: 0
+  _mainSlider: {fileID: 5456170345752046514}
+  fillArea: {fileID: 3043801418134011686}
+  emptyArea: {fileID: 6771018710207540564}
 --- !u!1 &5877905834039523235
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,7 +447,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000002861023}
+  m_AnchoredPosition: {x: 0, y: -0}
   m_SizeDelta: {x: 6.2, y: 8.76}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8063693020673965668

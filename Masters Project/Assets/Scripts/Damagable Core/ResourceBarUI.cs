@@ -13,25 +13,69 @@ using UnityEngine.UI;
 
 public class ResourceBarUI : MonoBehaviour
 {
+    private ResourceBar _targetData;
+    private ResourceBarSO _displayData;
     [Tooltip("The target resourcebar to visually display")]
-    [SerializeField] private ResourceBar _targetResource;
+    [SerializeField] private HealthManager _targetResource;
+    [Tooltip("The target index of health manager's healthbars to display")]
+    [SerializeField] private int _targetIndex = 0;
     [Tooltip("The slider to display the data to")]
     [SerializeField] private Slider _mainSlider;
 
+    [SerializeField] private Image fillArea;
+    [SerializeField] private Image emptyArea;
+
     private float lastVal;
+
+    private bool initialized = false;
+
+    private void Start()
+    {
+        StartCoroutine(TryInitialize());
+    }
+
+    private IEnumerator TryInitialize()
+    {
+        int i = 0;
+        while(_targetData == null)
+        {
+            _targetData = _targetResource.ResourceBarAtIndex(_targetIndex);
+
+            yield return new WaitForSecondsRealtime(0.5f);
+            yield return null;
+
+            i++;
+            if (i >= 1000)
+            {
+                this.enabled = false;
+                yield break;
+            }
+        }
+
+        _displayData = _targetData.BarData;
+
+        fillArea.color = _displayData._fillColor;
+        emptyArea.color = _displayData._emptyColor;
+
+        initialized = true;
+        yield return null;
+    }
 
     private void Update()
     {
+        if (!initialized)
+            return;
+
         UpdateCoreSlider();
         UpdateCurrVal();
     }
 
     private void UpdateCurrVal()
     {
-        if (_targetResource.CurrentValue() != lastVal)
+        if (_targetData.CurrentValue() != lastVal)
         {
             lastVal = _mainSlider.value;
-            _mainSlider.value = _targetResource.CurrentValue();
+            _mainSlider.value = _targetData.CurrentValue();
 
             if (_mainSlider.value <= 0)
                 OnDeplete();
@@ -46,9 +90,9 @@ public class ResourceBarUI : MonoBehaviour
 
     private void UpdateCoreSlider()
     {
-        if(_mainSlider.maxValue != _targetResource.MaxValue())
+        if(_mainSlider.maxValue != _targetData.MaxValue())
         {
-            _mainSlider.maxValue = _targetResource.MaxValue();
+            _mainSlider.maxValue = _targetData.MaxValue();
         }
     }
 

@@ -357,7 +357,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh112608
+  m_Name: pb_Mesh102608
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -521,7 +521,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh112546
+  m_Name: pb_Mesh102548
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -685,7 +685,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh112624
+  m_Name: pb_Mesh102624
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2093,7 +2093,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh112656
+  m_Name: pb_Mesh102652
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -2688,7 +2688,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7260432c9211d44ca6d826bb3d6c8da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 0
+  _barData: {fileID: 0}
   _currState: 0
   _maxAmount: 33
   _currAmount: 33
@@ -2723,9 +2723,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df5a001e63515124d9fff01548e22564, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _healthbars:
-  - {fileID: 1112620183}
-  - {fileID: 1112620180}
+  _healthbarData: []
   _damagedInvulnerabilityDuration: 0.5
   _gateHealthbarDamage: 1
   _gateHealthbarHealing: 1
@@ -2742,7 +2740,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7260432c9211d44ca6d826bb3d6c8da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _type: 0
+  _barData: {fileID: 0}
   _currState: 0
   _maxAmount: 100
   _currAmount: 100
@@ -2756,7 +2754,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh112570
+  m_Name: pb_Mesh102572
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3227,7 +3225,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh112688
+  m_Name: pb_Mesh102676
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -3447,7 +3445,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh112592
+  m_Name: pb_Mesh102594
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -4538,7 +4536,6 @@ GameObject:
   - component: {fileID: 8110230337889411509}
   - component: {fileID: 4129732322208537016}
   - component: {fileID: 8110230337889411511}
-  - component: {fileID: 8110230337889411510}
   m_Layer: 8
   m_Name: Healthbar
   m_TagString: Untagged
@@ -5384,26 +5381,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &8110230337889411510
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3460105738023195067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7260432c9211d44ca6d826bb3d6c8da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _type: 1
-  _currState: 0
-  _maxAmount: 220
-  _currAmount: 220
-  _regen: 1
-  _affectedByTimestop: 1
-  _regenRate: 0.5
-  _regenDelay: 0.2
 --- !u!114 &8110230337889411511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5416,8 +5393,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9c846d8ec7fe86469fc0f13845d3278, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetResource: {fileID: 8110230337889411510}
+  _targetResource: {fileID: 8553823579790103389}
+  _targetIndex: 0
   _mainSlider: {fileID: 4129732322208537016}
+  fillArea: {fileID: 6397986610433445164}
+  emptyArea: {fileID: 3386858702640504670}
 --- !u!54 &8154358143235374471
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10251,8 +10231,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df5a001e63515124d9fff01548e22564, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _healthbars:
-  - {fileID: 8110230337889411510}
+  _healthbarData:
+  - {fileID: 11400000, guid: 43f2154af998500449f229bccb0d1a00, type: 2}
   _damagedInvulnerabilityDuration: 0
   _gateHealthbarDamage: 0
   _gateHealthbarHealing: 0

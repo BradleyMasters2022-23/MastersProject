@@ -164,7 +164,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5851429651645590636}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.829, z: -0.37}
+  m_LocalPosition: {x: 0, y: 1.9, z: -0.37}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -181,8 +181,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3157863991490307576}
   - component: {fileID: 3192397030611913507}
-  - component: {fileID: 7139646536534798339}
   - component: {fileID: 6878320425555973780}
+  - component: {fileID: 4607616419769618728}
+  - component: {fileID: 8883192647120031764}
   - component: {fileID: 4647644648073243378}
   - component: {fileID: 9154536958261373458}
   - component: {fileID: 6173771787627512305}
@@ -233,27 +234,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 1
---- !u!114 &7139646536534798339
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6621528852895871808}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70b6c29db3287e04bad6724502b17cee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxVerticalKnockback: 0
-  maxHealth: 220
-  immortal: 0
-  deathVFX: {fileID: 7428150280865193490, guid: 6e221f18ca47d5547a8bd26d21fd46a8, type: 3}
-  hideUIDelay: 0
-  timeOrb: {fileID: 3071240432754548792, guid: 2001e4aa90ac76a47866171fcaafdf7f, type: 3}
-  dropChance: 100
-  dropNumerRange: {x: 3, y: 6}
-  deathSound: {fileID: 0}
 --- !u!195 &6878320425555973780
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -276,6 +256,45 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 2
+--- !u!114 &4607616419769618728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6621528852895871808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58a7794549a027e4dac175e049ecb438, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _center: {fileID: 5940177062539629436}
+  _team: 2
+  _targetThreat: 40
+  damagedSound: {fileID: 0}
+  deathSound: {fileID: 0}
+  deathVFX: {fileID: 7428150280865193490, guid: 6e221f18ca47d5547a8bd26d21fd46a8, type: 3}
+  timeOrb: {fileID: 3071240432754548792, guid: 2001e4aa90ac76a47866171fcaafdf7f, type: 3}
+  dropChance: 90
+  dropNumerRange: {x: 4, y: 6}
+--- !u!114 &8883192647120031764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6621528852895871808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df5a001e63515124d9fff01548e22564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _healthbarData:
+  - {fileID: 11400000, guid: 43f2154af998500449f229bccb0d1a00, type: 2}
+  _damagedInvulnerabilityDuration: 0
+  _gateHealthbarDamage: 0
+  _gateHealthbarHealing: 0
+  _godMode: 0
 --- !u!114 &4647644648073243378
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -859,6 +878,10 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3402813018557646957, guid: deabab1230b973c428b02ce67c8bb042, type: 3}
+      propertyPath: _targetResource
+      value: 
+      objectReference: {fileID: 8883192647120031764}
     - target: {fileID: 5042779374246505407, guid: deabab1230b973c428b02ce67c8bb042, type: 3}
       propertyPath: m_Name
       value: UI_EnemyHealthbar_Base

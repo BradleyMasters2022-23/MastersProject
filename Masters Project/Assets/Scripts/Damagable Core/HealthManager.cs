@@ -19,8 +19,15 @@ public enum HealthType
 
 public class HealthManager : MonoBehaviour
 {
-    [Tooltip("The stack of healthbars this entity has. The 0 index is the most nested/final healthbar and others are damaged in that order")]
-    [SerializeField] private ResourceBar[] _healthbars;
+    [Tooltip("The healthbars to load for this entity. Index 0 is the last required healthbar")]
+    [SerializeField] private ResourceBarSO[] _healthbarData;
+    /// <summary>
+    /// Direct references to the required resource bar modules
+    /// </summary>
+    private ResourceBar[] _healthbars;
+
+    private bool initialized = false;
+
     [Tooltip("Duration of time to remain invulnerable after taking damage")]
     [SerializeField] private float _damagedInvulnerabilityDuration;
     [Tooltip("Whether or not to gate damage. Gated damage will not overflow to the healthbar below it.")]
@@ -39,11 +46,35 @@ public class HealthManager : MonoBehaviour
     /// </summary>
     private ScaledTimer invulnerabilityTracker;
 
+    public bool Init()
+    {
+        if(_healthbarData.Length <= 0)
+        {
+            Debug.LogError($"Entity {gameObject.name} has a health manager, but no healthbar data!" +
+                            $"Did you forget to assign its data? \nDestroying entity this run.");
+            return false;
+        }
+
+        _healthbars = new ResourceBar[_healthbarData.Length];
+        for(int i = 0; i < _healthbarData.Length; i++)
+        {
+            _healthbars[i] = gameObject.AddComponent<ResourceBar>();
+            _healthbars[i].Init(_healthbarData[i]);
+        }
+
+        initialized = true;
+        return true;
+    }
+
     /// <summary>
     /// Update to check if invulnerability is done
     /// </summary>
     private void Update()
     {
+        if (!initialized)
+            return;
+
+
         if(_invulnerable && invulnerabilityTracker.TimerDone())
         {
             _invulnerable = false;
@@ -112,14 +143,14 @@ public class HealthManager : MonoBehaviour
     /// </summary>
     /// <param name="hp">Amount of HP to restore</param>
     /// <param name="healthType">The type of bar this healing applies to</param>
-    public void Heal(float hp, ResourceBar.BarType healthType = ResourceBar.BarType.NA)
+    public void Heal(float hp, BarType healthType = BarType.NA)
     {
         float healPool = hp;
 
         for(int i = 0; i < _healthbars.Length-1; i++)
         {
             // If the bar does not fit this type, then skip it
-            if (_healthbars[i].Type() != healthType && healthType != ResourceBar.BarType.NA)
+            if (_healthbars[i].Type() != healthType && healthType != BarType.NA)
                 continue;
 
             healPool = _healthbars[i].Increase(healPool);
@@ -152,5 +183,14 @@ public class HealthManager : MonoBehaviour
     public bool God
     {
        get { return _godMode; }
+    }
+
+    public ResourceBar ResourceBarAtIndex(int index)
+    {
+        return _healthbars[index];
+    }
+    public ResourceBarSO ResourceDataAtIndex(int index)
+    {
+        return _healthbarData[index];
     }
 }
