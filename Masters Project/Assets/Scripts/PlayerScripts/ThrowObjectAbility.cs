@@ -13,16 +13,16 @@ public class ThrowObjectAbility : Ability
     [SerializeField] private int numOfProjectiles;
     [Tooltip("Where the projectile spawns from")]
     [SerializeField] private Transform spawnPoint;
-    [Tooltip("Extra force to increase initial height")]
-    [SerializeField] private float verticalArcForce;
-
     [Tooltip("Force of the projectile being launched forwards")]
     [SerializeField] private float force;
+    [Tooltip("Extra force to increase initial height")]
+    [SerializeField] private float verticalArcForce;
     [Tooltip("Amount of inaccuracy. 0 results in perfect accuracy.")]
     [SerializeField] protected float throwInaccuracy;
     [Tooltip("Whether the player's velocity is added to the thrown projectile")]
     [SerializeField] protected bool includePlayerVelocity;
 
+    /*
     [Header("Arc Trajectory")]
     [SerializeField] protected LineRenderer trajectoryArc;
     [Range(1, 50)]
@@ -30,6 +30,7 @@ public class ThrowObjectAbility : Ability
     [Range(0.01f, 1f)]
     [SerializeField] private float timeBetweenPoints = 0.1f;
     private Rigidbody projectileRBRef;
+    
 
     private void Awake()
     {
@@ -40,19 +41,20 @@ public class ThrowObjectAbility : Ability
     {
         base.Update();
 
-        if(projectileRBRef is null)
+        if (projectileRBRef is null)
             projectileRBRef = projectile.GetComponent<Rigidbody>();
-        if(trajectoryArc.enabled)
+        if (trajectoryArc.enabled)
             Trajectory(Vector3.up * verticalArcForce + spawnPoint.transform.forward * force,
                 projectileRBRef,
                 spawnPoint.position);
     }
+    */
 
     protected override IEnumerator OnAbility()
     {
         if(projectile is null)
         {
-            Debug.Log("Tried throwing projectile, but no projectile added!");
+            Debug.LogError("Tried throwing projectile, but no projectile added!");
             yield break;
         }
 
@@ -98,7 +100,7 @@ public class ThrowObjectAbility : Ability
             }
         }
 
-        HideLine();
+        //HideLine();
         yield return null;
     }
 
@@ -110,7 +112,8 @@ public class ThrowObjectAbility : Ability
             rot.z + Random.Range(-throwInaccuracy, throwInaccuracy));
     }
 
-
+    // Line projection stuff
+    /*
     protected virtual void Trajectory(Vector3 launchVector, Rigidbody projRB, Vector3 startPoint)
     {
         // if not loading in, then dont bother
@@ -134,7 +137,7 @@ public class ThrowObjectAbility : Ability
 
     private void ShowLine()
     {
-        if(trajectoryArc != null)
+        if (trajectoryArc != null)
             trajectoryArc.enabled = true;
     }
     private void HideLine()
@@ -151,4 +154,5 @@ public class ThrowObjectAbility : Ability
     {
         HideLine();
     }
+    */
 }
