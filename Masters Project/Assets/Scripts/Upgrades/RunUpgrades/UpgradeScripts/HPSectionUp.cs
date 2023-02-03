@@ -4,20 +4,18 @@ using UnityEngine;
 
 public class HPSectionUp : IUpgrade
 {
-    private PlayerHealth hp;
-    public int healthIncrease;
+    private HealthManager hp;
+    [Tooltip("Amount of health to increase by")]
+    public float healthIncrease;
+    [Tooltip("Healthbar index to increase by. 0 is the primary health bar while 1 is the shield")]
+    public int healthbarIndex = 0;
+
     public override void LoadUpgrade(PlayerController player)
     {
-        hp = FindObjectOfType<PlayerHealth>();
+        hp = player.gameObject.GetComponent<HealthManager>();
 
-        int temp = hp.GetHealthPerSection() + healthIncrease;
-        hp.SetHealthPerSection(temp);
-        PlayerHealthSection[] sections = hp.GetSections();
+        // Use index of 0, 
+        hp.IncreaseMaxHealth(healthIncrease, healthbarIndex);
 
-        for (int i = 0; i < sections.Length; i++)
-        {
-            if (sections[i] != null)
-                sections[i].SetMaxHealth(temp);
-        }
     }
 }

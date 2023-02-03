@@ -171,6 +171,8 @@ public class HealthManager : MonoBehaviour
         Debug.Log("Indicator for health manager not yet implemented");
     }
 
+    #region Getters
+
     /// <summary>
     /// Enable godmode. Used for cheats or gameflow only (no idea if we doin cutscenes)
     /// </summary>
@@ -193,4 +195,15 @@ public class HealthManager : MonoBehaviour
     {
         return _healthbarData[index];
     }
+
+    #endregion
+
+    #region Upgrade Functions
+
+    public void IncreaseMaxHealth(float increment, int healthbarIndex = 0)
+    {
+        _healthbars[healthbarIndex].IncreaseMax(increment, true);
+    }
+
+    #endregion
 }
