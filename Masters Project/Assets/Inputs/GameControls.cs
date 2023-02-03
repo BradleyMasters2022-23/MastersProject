@@ -152,6 +152,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GodCheat"",
+                    ""type"": ""Button"",
+                    ""id"": ""b7c236a8-f560-4cef-bc54-50c645ffa869"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -418,6 +427,17 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""Tactical"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""50dad40e-c6e7-495b-932b-81bf7d7fa75a"",
+                    ""path"": ""<Keyboard>/equals"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GodCheat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -569,6 +589,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_PlayerGameplay_Kill = m_PlayerGameplay.FindAction("Kill", throwIfNotFound: true);
         m_PlayerGameplay_ClearEncounter = m_PlayerGameplay.FindAction("ClearEncounter", throwIfNotFound: true);
         m_PlayerGameplay_Tactical = m_PlayerGameplay.FindAction("Tactical", throwIfNotFound: true);
+        m_PlayerGameplay_GodCheat = m_PlayerGameplay.FindAction("GodCheat", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Mouse = m_UI.FindAction("Mouse", throwIfNotFound: true);
@@ -650,6 +671,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_Kill;
     private readonly InputAction m_PlayerGameplay_ClearEncounter;
     private readonly InputAction m_PlayerGameplay_Tactical;
+    private readonly InputAction m_PlayerGameplay_GodCheat;
     public struct PlayerGameplayActions
     {
         private @GameControls m_Wrapper;
@@ -668,6 +690,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @Kill => m_Wrapper.m_PlayerGameplay_Kill;
         public InputAction @ClearEncounter => m_Wrapper.m_PlayerGameplay_ClearEncounter;
         public InputAction @Tactical => m_Wrapper.m_PlayerGameplay_Tactical;
+        public InputAction @GodCheat => m_Wrapper.m_PlayerGameplay_GodCheat;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -719,6 +742,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Tactical.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
                 @Tactical.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
                 @Tactical.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
+                @GodCheat.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnGodCheat;
+                @GodCheat.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnGodCheat;
+                @GodCheat.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnGodCheat;
             }
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -765,6 +791,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Tactical.started += instance.OnTactical;
                 @Tactical.performed += instance.OnTactical;
                 @Tactical.canceled += instance.OnTactical;
+                @GodCheat.started += instance.OnGodCheat;
+                @GodCheat.performed += instance.OnGodCheat;
+                @GodCheat.canceled += instance.OnGodCheat;
             }
         }
     }
@@ -867,6 +896,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnKill(InputAction.CallbackContext context);
         void OnClearEncounter(InputAction.CallbackContext context);
         void OnTactical(InputAction.CallbackContext context);
+        void OnGodCheat(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
