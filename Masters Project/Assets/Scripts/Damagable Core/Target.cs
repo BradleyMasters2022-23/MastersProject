@@ -44,6 +44,7 @@ public abstract class Target : MonoBehaviour
     protected bool _killed = false;
 
     [Header("Core Audio Info")]
+
     [Tooltip("Damage made when this target is damaged")]
     [SerializeField] protected AudioClip damagedSound;
     [Tooltip("Damage made when this target is killed")]
@@ -54,7 +55,10 @@ public abstract class Target : MonoBehaviour
     /// </summary>
     protected AudioSource audioSource;
 
-
+    private void Awake()
+    {
+        _healthManager = GetComponent<HealthManager>();
+    }
 
     // Placeholder, needs to take in 'TargetableEffect' figure out whether to send this data to the health manager or effect manager
     /// <summary>
@@ -71,6 +75,7 @@ public abstract class Target : MonoBehaviour
         if (!_killed && _healthManager.Damage(dmg))
         {
             _killed = true;
+            KillTarget();
         }
             
     }

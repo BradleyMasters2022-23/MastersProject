@@ -56,6 +56,11 @@ public class HealthManager : MonoBehaviour
     /// <param name="duration">Duration to remain in invulnerability state</param>
     public void InvulnerabilityDuration(float duration)
     {
+        if(duration<= 0)
+        {
+            return;
+        }
+
         _invulnerable = true;
 
         if(invulnerabilityTracker == null) 

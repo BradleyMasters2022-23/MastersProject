@@ -9,7 +9,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Sirenix.OdinInspector;
+
 public class ResourceBar : MonoBehaviour
 {
     public enum BarType
@@ -27,6 +29,8 @@ public class ResourceBar : MonoBehaviour
         REGENERATING
     }
 
+    [Header("Core Bar Info")]
+
     [SerializeField] private BarType _type;
 
     [SerializeField] private State _currState;
@@ -35,6 +39,8 @@ public class ResourceBar : MonoBehaviour
     [SerializeField] private float _currAmount;
 
     [SerializeField] private bool _regen;
+    [HideIf("@this._regen == false")]
+    [SerializeField] private bool _affectedByTimestop;
     [HideIf("@this._regen == false")]
     [SerializeField] private float _regenRate;
     [HideIf("@this._regen == false")]
@@ -238,6 +244,16 @@ public class ResourceBar : MonoBehaviour
     {
         return _currAmount <= 0;
     }
+    
+    public float CurrentValue()
+    {
+        return _currAmount;
+    }
+
+    public float MaxValue()
+    {
+        return _maxAmount;
+    }
 
     #endregion
 
@@ -271,7 +287,7 @@ public class ResourceBar : MonoBehaviour
     private void RegenTick()
     {
         // If not allowed to regen, then exit
-        if (!_regen)
+        if (!_regen || (_affectedByTimestop && TimeManager.WorldTimeScale != 1))
             return;
 
         // calculate amount to recharge, rounding down. Add to buffer

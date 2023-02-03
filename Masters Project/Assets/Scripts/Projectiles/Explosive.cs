@@ -8,7 +8,7 @@ public class Explosive : MonoBehaviour
 {
     [SerializeField] private List<string> damagableTags;
 
-    [SerializeField] private List<Damagable> damagedTargets;
+    [SerializeField] private List<Target> damagedTargets;
     [SerializeField] private float explosiveRadius;
     [SerializeField] private float damageDuration = 1;
     [SerializeField] private float VFXDuration = 1;
@@ -34,7 +34,7 @@ public class Explosive : MonoBehaviour
     private void Awake()
     {
         // Prepare references and values
-        damagedTargets = new List<Damagable>();
+        damagedTargets = new List<Target>();
         damageLifeTracker = new ScaledTimer(damageDuration, affectedByTimestop);
         VFXLifeTracker = new ScaledTimer(VFXDuration, affectedByTimestop);
         newVFX.Stop();
@@ -121,8 +121,8 @@ public class Explosive : MonoBehaviour
         if (!damagableTags.Contains(rootTgt.tag))
             return;
 
-        Damagable target;
-        if(rootTgt.TryGetComponent<Damagable>(out target))
+        Target target;
+        if(rootTgt.TryGetComponent<Target>(out target))
         {
             if(damagedTargets.Contains(target))
             {
@@ -130,7 +130,7 @@ public class Explosive : MonoBehaviour
                 return;
             }
             damagedTargets.Add(target);
-            target.Damage(damage);
+            target.RegisterEffect(damage);
             //target.ExplosiveKnockback(transform.position, transform.localScale.x,
             //   horizontalForce, verticalForce, explosiveRadius, knockbackFalloff);
         }
