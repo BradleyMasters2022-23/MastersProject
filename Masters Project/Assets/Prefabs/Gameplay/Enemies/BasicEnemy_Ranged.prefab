@@ -271,12 +271,14 @@ MonoBehaviour:
   _center: {fileID: 5940177062539629436}
   _team: 2
   _targetThreat: 40
+  _unkillable: 0
+  _deathVFX: {fileID: 7428150280865193490, guid: 6e221f18ca47d5547a8bd26d21fd46a8, type: 3}
   damagedSound: {fileID: 0}
   deathSound: {fileID: 0}
-  deathVFX: {fileID: 7428150280865193490, guid: 6e221f18ca47d5547a8bd26d21fd46a8, type: 3}
-  timeOrb: {fileID: 3071240432754548792, guid: 2001e4aa90ac76a47866171fcaafdf7f, type: 3}
-  dropChance: 90
-  dropNumerRange: {x: 4, y: 6}
+  dropList:
+  - spawnObject: {fileID: 3071240432754548792, guid: 2001e4aa90ac76a47866171fcaafdf7f, type: 3}
+    quantityRange: {x: 4, y: 6}
+    dropChance: 100
 --- !u!114 &8883192647120031764
 MonoBehaviour:
   m_ObjectHideFlags: 0

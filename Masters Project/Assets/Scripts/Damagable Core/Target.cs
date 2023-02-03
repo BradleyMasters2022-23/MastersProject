@@ -9,6 +9,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 public enum Team
 {
@@ -16,6 +17,15 @@ public enum Team
     PLAYER,
     ENEMY,
     WORLD
+}
+
+
+[System.Serializable]
+public class DroppableQuantity
+{
+    [AssetsOnly] public GameObject spawnObject;
+    public Vector2 quantityRange;
+    [Range(0, 100)] public float dropChance;
 }
 
 [RequireComponent(typeof(HealthManager))]
@@ -44,12 +54,17 @@ public abstract class Target : MonoBehaviour
     /// </summary>
     protected bool _killed = false;
 
-    [Header("Core Audio Info")]
+    [Header("Core Visual Info")]
+
+    [SerializeField, AssetsOnly] private GameObject _deathVFX;
 
     [Tooltip("Damage made when this target is damaged")]
     [SerializeField] protected AudioClip damagedSound;
     [Tooltip("Damage made when this target is killed")]
     [SerializeField] protected AudioClip deathSound;
+
+    [Header("Drop Stuff")]
+    [SerializeField] private List<DroppableQuantity> dropList;
 
     /// <summary>
     /// Audiosource for this target
@@ -97,18 +112,25 @@ public abstract class Target : MonoBehaviour
         if (deathSound != null)
             AudioSource.PlayClipAtPoint(deathSound, _center.position);
 
+        if (_deathVFX != null)
+            Instantiate(_deathVFX, _center.position, Quaternion.identity);
 
-        Debug.Log($"Entity {gameObject.name} has been killed but does not have its own kill function, destroying self.");
+        foreach (DroppableQuantity obj in dropList)
+        {
+            SpawnDrops(obj.spawnObject, obj.dropChance, obj.quantityRange);
+        }
+
+        // Debug.Log($"Entity {gameObject.name} has been killed but does not have its own kill function, destroying self.");
         Destroy(gameObject);
     }
 
     /// <summary>
     /// Determine if drops should drop, and spawn them
     /// </summary>
-    protected void DropOrbs(GameObject orb, float dropChance, Vector2 dropAmountRange)
+    protected void SpawnDrops(GameObject orb, float dropChance, Vector2 dropAmountRange)
     {
         // Roll the dice. If the value is higher than the value, exit
-        if (Random.Range(1, 101) > dropChance || orb is null)
+        if (Random.Range(1f, 100f) > dropChance || orb is null)
         {
             return;
         }

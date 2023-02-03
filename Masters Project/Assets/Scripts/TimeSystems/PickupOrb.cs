@@ -125,7 +125,7 @@ public abstract class PickupOrb : MonoBehaviour
 
     //                break;
     //            }
-                
+
     //            // if not, modify velocity for time stop
     //            else if (affectedByTimestop)
     //            {
@@ -159,6 +159,15 @@ public abstract class PickupOrb : MonoBehaviour
 
     //    ready = true;
     //}
+    private void OnCollisionEnter(Collision collision)
+    {
+        rb.isKinematic = true;
+        Vector3 temp = rb.velocity;
+        temp.x = 0;
+        temp.y = 0;
+        rb.velocity = temp;
+        rb.mass /= 2;
+    }
 
     protected void Update()
     {

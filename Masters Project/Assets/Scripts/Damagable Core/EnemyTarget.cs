@@ -14,22 +14,6 @@ using UnityEngine.InputSystem;
 
 public class EnemyTarget : Target
 {
-    [Header("Enemy Target Info")]
-    
-    [Tooltip("The VFX for the player dying")]
-    [SerializeField] private GameObject deathVFX;
-
-    [Header("Time Orbs")]
-
-    [Tooltip("Prefab of the time orb itself")]
-    [SerializeField, AssetsOnly] private GameObject timeOrb;
-
-    [Tooltip("Chance of dropping any time orbs at all")]
-    [SerializeField, Range(0, 100)] private float dropChance;
-
-    [Tooltip("If told to drop, what is the range of orbs that can drop")]
-    [SerializeField] private Vector2 dropNumerRange;
-
     /// <summary>
     /// Input stuff for debug kill command
     /// </summary>
@@ -52,23 +36,14 @@ public class EnemyTarget : Target
     /// </summary>
     protected override void KillTarget()
     {
+        // remove cheat to prevent bugs
         endEncounter.performed -= DebugKill;
-
-        DropOrbs(timeOrb, dropChance, dropNumerRange);
-
-        if (deathSound != null)
-            AudioSource.PlayClipAtPoint(deathSound, _center.position);
-
-        // Play death VFX at center of enemy
-        if (deathVFX != null)
-            Instantiate(deathVFX, _center.position, transform.rotation);
 
         // Try telling spawn manager to destroy self, if needed
         if (SpawnManager.instance != null)
             SpawnManager.instance.DestroyEnemy();
 
-        // Destroy object, later make pooler
-        Destroy(this.gameObject);
+        base.KillTarget();
     }
 
     /// <summary>

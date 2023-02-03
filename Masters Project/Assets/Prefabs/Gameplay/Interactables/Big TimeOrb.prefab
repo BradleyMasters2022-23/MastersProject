@@ -177,9 +177,9 @@ GameObject:
   - component: {fileID: 2551133878448879965}
   - component: {fileID: 362847238882995153}
   - component: {fileID: 8657110956391530870}
-  - component: {fileID: 6890313897543463009}
+  - component: {fileID: 3806014747134079180}
   m_Layer: 13
-  m_Name: TimeOrb
+  m_Name: Big TimeOrb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -194,7 +194,7 @@ Transform:
   m_GameObject: {fileID: 3071240432754548792}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -11.65, y: 4.0741973, z: -16.12}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6059694608719368090}
@@ -262,7 +262,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.62691855
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &2551133878448879965
 Rigidbody:
@@ -306,7 +306,7 @@ MonoBehaviour:
   despawnTime: 4.5
   despawnTimeAffectedByTimestop: 1
   despawnAnimationScaling: 8
-  refillAmount: 0.2
+  refillAmount: 1
   pickupWhileSlowing: 0
 --- !u!95 &8657110956391530870
 Animator:
@@ -328,7 +328,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!135 &6890313897543463009
+--- !u!135 &3806014747134079180
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -339,5 +339,5 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.2
+  m_Radius: 0.3
   m_Center: {x: 0, y: 0, z: 0}

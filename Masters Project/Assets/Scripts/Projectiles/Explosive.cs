@@ -31,6 +31,8 @@ public class Explosive : MonoBehaviour
 
     [SerializeField] private AnimationCurve knockbackFalloff;
 
+    [SerializeField] private bool instantDetoante = false;
+
     private void Awake()
     {
         // Prepare references and values
@@ -40,14 +42,9 @@ public class Explosive : MonoBehaviour
         newVFX.Stop();
         col = GetComponent<SphereCollider>();
         lastTimeScale = TimeManager.WorldTimeScale;
-        
-        // Modify VFX playback to fit explosive duration
-        //ParticleSystem.MainModule main = VFX.main;
-        //VFX.Stop();
-        //main.playOnAwake = false;
-        //speedMod = VFX.main.duration / VFXDuration;
-        //main.simulationSpeed = main.simulationSpeed * speedMod;
-        //newVFX.playRate = speedMod;
+
+        if (instantDetoante)
+            Detonate();
     }
 
 

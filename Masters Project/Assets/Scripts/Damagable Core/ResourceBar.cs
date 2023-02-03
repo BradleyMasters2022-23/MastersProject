@@ -47,7 +47,7 @@ public class ResourceBar : MonoBehaviour
     public void Init(ResourceBarSO barInfo)
     {
         _barData = barInfo;
-
+        _type = barInfo._type;
         _maxAmount = barInfo._maxValue;
         _currAmount= _maxAmount;
         _regen = barInfo._regen;

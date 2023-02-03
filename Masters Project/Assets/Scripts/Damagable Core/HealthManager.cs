@@ -139,15 +139,35 @@ public class HealthManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Determine if this target can be healed based on the corresponding health type
+    /// </summary>
+    /// <param name="healthType">Type of healthbar trying to be healed</param>
+    /// <returns>Whether the target can heal</returns>
+    public bool CanHeal(BarType healthType)
+    {
+        // Check each healthbar of this type, see if any of them are empty
+        for (int i = 0; i < _healthbars.Length; i++)
+        {
+            Debug.Log($"Comparing healthbar index {i} | Type : {_healthbars[i].Type()} | Can heal : {!_healthbars[i].IsFull()}");
+            if (_healthbars[i].Type() == healthType && !_healthbars[i].IsFull())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>
     /// Heal this entity's lowest healthbar
     /// </summary>
     /// <param name="hp">Amount of HP to restore</param>
     /// <param name="healthType">The type of bar this healing applies to</param>
-    public void Heal(float hp, BarType healthType = BarType.NA)
+    /// <return>Whether any healing was done</return>
+    public bool Heal(float hp, BarType healthType = BarType.NA)
     {
         float healPool = hp;
 
-        for(int i = 0; i < _healthbars.Length-1; i++)
+        for(int i = 0; i < _healthbars.Length; i++)
         {
             // If the bar does not fit this type, then skip it
             if (_healthbars[i].Type() != healthType && healthType != BarType.NA)
@@ -161,6 +181,8 @@ public class HealthManager : MonoBehaviour
                 break;
             }
         }
+
+        return hp != healPool;
     }
 
     /// <summary>
