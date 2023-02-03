@@ -52,7 +52,6 @@ public class EnemyTarget : Target
     /// </summary>
     protected override void KillTarget()
     {
-        endEncounter.Disable();
         endEncounter.performed -= DebugKill;
 
         DropOrbs(timeOrb, dropChance, dropNumerRange);

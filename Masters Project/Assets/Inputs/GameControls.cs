@@ -407,6 +407,17 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""Tactical"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""daf87aa2-9acf-46c7-95fc-28a55a575c9c"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Tactical"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
