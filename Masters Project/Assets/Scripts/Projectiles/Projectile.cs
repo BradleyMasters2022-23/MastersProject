@@ -45,6 +45,14 @@ public class Projectile : RangeAttack
     [SerializeField] private AudioClip[] bulletHit;
     private AudioSource source;
 
+    [Header("Distance Stuff")]
+    [Tooltip("The gameobject that actually holds the visual model of the bullet")]
+    [SerializeField] private Transform bulletVisual;
+    [Tooltip("How does the scale of the bullet change over distance")]
+    [SerializeField] private AnimationCurve scaleOverDistance;
+    [Tooltip("The VFX that plays when this bullet despawns due to distance limit")]
+    [SerializeField] private GameObject fadeVFX;
+
     /// <summary>
     /// Distance covered to calculate when to despawn
     /// </summary>
@@ -103,7 +111,18 @@ public class Projectile : RangeAttack
         distanceCovered += targetVelocity.magnitude * TimeManager.WorldDeltaTime;
         if(distanceCovered >= range)
         {
+            if(fadeVFX != null)
+            {
+                Instantiate(fadeVFX, transform.position, transform.rotation);
+            }
+
             End();
+        }
+        else if(scaleOverDistance != null && bulletVisual != null)
+        {
+            float newScale = scaleOverDistance.Evaluate(distanceCovered / range);
+
+            bulletVisual.localScale = new Vector3(newScale, newScale, newScale);
         }
 
         // Update velocity with world timescale
@@ -171,4 +190,5 @@ public class Projectile : RangeAttack
 
         source = gameObject.AddComponent<AudioSource>();
     }
+
 }

@@ -29,8 +29,9 @@ public class TrailTimescale : MonoBehaviour
         else if(TimeManager.WorldTimeScale != 0 && !ren.emitting)
         {
             ren.time = (Time.time - pauseTime) + trailTime;
-
             ren.emitting=true;
         }
     }
+
+
 }
