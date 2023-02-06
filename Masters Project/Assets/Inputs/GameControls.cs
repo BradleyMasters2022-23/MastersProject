@@ -161,6 +161,24 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HealCheat"",
+                    ""type"": ""Button"",
+                    ""id"": ""7e12cfbb-575c-4286-8552-e132ef486236"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DamageCheat"",
+                    ""type"": ""Button"",
+                    ""id"": ""bb0ecfa8-48fb-44e7-af13-53d3a82cec30"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -438,6 +456,28 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""GodCheat"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3498ea44-a9ec-41d1-b928-f0c56e04f7d4"",
+                    ""path"": ""<Keyboard>/leftBracket"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HealCheat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ae549a00-eaaf-4f0b-ac51-d368724ff3dd"",
+                    ""path"": ""<Keyboard>/rightBracket"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DamageCheat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -590,6 +630,8 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_PlayerGameplay_ClearEncounter = m_PlayerGameplay.FindAction("ClearEncounter", throwIfNotFound: true);
         m_PlayerGameplay_Tactical = m_PlayerGameplay.FindAction("Tactical", throwIfNotFound: true);
         m_PlayerGameplay_GodCheat = m_PlayerGameplay.FindAction("GodCheat", throwIfNotFound: true);
+        m_PlayerGameplay_HealCheat = m_PlayerGameplay.FindAction("HealCheat", throwIfNotFound: true);
+        m_PlayerGameplay_DamageCheat = m_PlayerGameplay.FindAction("DamageCheat", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Mouse = m_UI.FindAction("Mouse", throwIfNotFound: true);
@@ -672,6 +714,8 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_ClearEncounter;
     private readonly InputAction m_PlayerGameplay_Tactical;
     private readonly InputAction m_PlayerGameplay_GodCheat;
+    private readonly InputAction m_PlayerGameplay_HealCheat;
+    private readonly InputAction m_PlayerGameplay_DamageCheat;
     public struct PlayerGameplayActions
     {
         private @GameControls m_Wrapper;
@@ -691,6 +735,8 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @ClearEncounter => m_Wrapper.m_PlayerGameplay_ClearEncounter;
         public InputAction @Tactical => m_Wrapper.m_PlayerGameplay_Tactical;
         public InputAction @GodCheat => m_Wrapper.m_PlayerGameplay_GodCheat;
+        public InputAction @HealCheat => m_Wrapper.m_PlayerGameplay_HealCheat;
+        public InputAction @DamageCheat => m_Wrapper.m_PlayerGameplay_DamageCheat;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -745,6 +791,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @GodCheat.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnGodCheat;
                 @GodCheat.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnGodCheat;
                 @GodCheat.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnGodCheat;
+                @HealCheat.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnHealCheat;
+                @HealCheat.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnHealCheat;
+                @HealCheat.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnHealCheat;
+                @DamageCheat.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDamageCheat;
+                @DamageCheat.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDamageCheat;
+                @DamageCheat.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDamageCheat;
             }
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -794,6 +846,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @GodCheat.started += instance.OnGodCheat;
                 @GodCheat.performed += instance.OnGodCheat;
                 @GodCheat.canceled += instance.OnGodCheat;
+                @HealCheat.started += instance.OnHealCheat;
+                @HealCheat.performed += instance.OnHealCheat;
+                @HealCheat.canceled += instance.OnHealCheat;
+                @DamageCheat.started += instance.OnDamageCheat;
+                @DamageCheat.performed += instance.OnDamageCheat;
+                @DamageCheat.canceled += instance.OnDamageCheat;
             }
         }
     }
@@ -897,6 +955,8 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnClearEncounter(InputAction.CallbackContext context);
         void OnTactical(InputAction.CallbackContext context);
         void OnGodCheat(InputAction.CallbackContext context);
+        void OnHealCheat(InputAction.CallbackContext context);
+        void OnDamageCheat(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

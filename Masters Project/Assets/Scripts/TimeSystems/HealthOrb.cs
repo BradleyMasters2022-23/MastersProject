@@ -33,7 +33,6 @@ public class HealthOrb : PickupOrb
     private void Start()
     {
         col = GetComponent<SphereCollider>();
-        refillAmount *= 50;
     }
 
     /// <summary>
@@ -83,6 +82,7 @@ public class HealthOrb : PickupOrb
     /// </summary>
     protected override void OnPickup()
     {
+        Debug.Log("Healing called for amt of " + refillAmount);
         if(playerHealth.Heal(refillAmount, BarType.Health))
         {
             Destroy(gameObject);

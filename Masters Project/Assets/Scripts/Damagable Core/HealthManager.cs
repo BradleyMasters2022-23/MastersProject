@@ -148,7 +148,7 @@ public class HealthManager : MonoBehaviour
         // Check each healthbar of this type, see if any of them are empty
         for (int i = 0; i < _healthbars.Length; i++)
         {
-            Debug.Log($"Comparing healthbar index {i} | Type : {_healthbars[i].Type()} | Can heal : {!_healthbars[i].IsFull()}");
+            //Debug.Log($"Comparing healthbar index {i} | Type : {_healthbars[i].Type()} | Can heal : {!_healthbars[i].IsFull()}");
             if (_healthbars[i].Type() == healthType && !_healthbars[i].IsFull())
             {
                 return true;
