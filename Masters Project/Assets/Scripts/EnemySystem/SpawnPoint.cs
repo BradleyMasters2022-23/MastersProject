@@ -259,7 +259,7 @@ public class SpawnPoint : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        endCheat.Disable();
+        endCheat.performed -= CheatClear;
         if (spawnRoutine != null)
             StopCoroutine(spawnRoutine);
     }
