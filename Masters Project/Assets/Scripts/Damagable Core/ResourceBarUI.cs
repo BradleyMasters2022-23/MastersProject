@@ -10,9 +10,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Sirenix.OdinInspector;
 
 public class ResourceBarUI : MonoBehaviour
 {
+    [Header("Data and target info")]
+
     private ResourceBar _targetData;
     private ResourceBarSO _displayData;
     [Tooltip("The target resourcebar to visually display")]
@@ -22,12 +25,21 @@ public class ResourceBarUI : MonoBehaviour
     [Tooltip("The slider to display the data to")]
     [SerializeField] private Slider _mainSlider;
 
-    [SerializeField] private Image fillArea;
-    [SerializeField] private Image emptyArea;
-
     private float lastVal;
 
     private bool initialized = false;
+
+    [Header("Display info")]
+
+    [SerializeField] private Image fillArea;
+    [SerializeField] private Image emptyArea;
+
+    [SerializeField] private bool scaleWithMax;
+    [HideIf("@this.scaleWithMax == false")]
+    [SerializeField] private RectTransform coreReference;
+    private float pixelsPerHealth;
+
+    
 
     private void Start()
     {
@@ -57,10 +69,26 @@ public class ResourceBarUI : MonoBehaviour
         fillArea.color = _displayData._fillColor;
         emptyArea.color = _displayData._emptyColor;
 
+        _mainSlider.maxValue= _targetData.MaxValue();
+        _mainSlider.value = _targetData.CurrentValue();
+
+        GetScalingData();
+
         initialized = true;
         yield return null;
     }
 
+    private void GetScalingData()
+    {
+        // calculate the original scale of it currently
+        if (!scaleWithMax)
+        {
+            return;
+        }
+
+        pixelsPerHealth = coreReference.sizeDelta.x / _mainSlider.maxValue;
+        Debug.Log("Calculated pixels per healthpoint : " + pixelsPerHealth);
+    }
     private void Update()
     {
         if (!initialized)
@@ -93,6 +121,7 @@ public class ResourceBarUI : MonoBehaviour
         if(_mainSlider.maxValue != _targetData.MaxValue())
         {
             _mainSlider.maxValue = _targetData.MaxValue();
+            coreReference.sizeDelta = new Vector2(pixelsPerHealth * _mainSlider.maxValue, coreReference.sizeDelta.y);
         }
     }
 
