@@ -39,7 +39,12 @@ public class ResourceBarUI : MonoBehaviour
     [SerializeField] private RectTransform coreReference;
     private float pixelsPerHealth;
 
-    
+    [Header("Event HUD Impulse Effects")]
+    [SerializeField] private ImpulseEffect effectSource;
+    [SerializeField] private Color replenishColor;
+    [SerializeField] private Color decreaseColor;
+    [SerializeField] private Color fullColor;
+    [SerializeField] private Color emptyColor;
 
     private void Start()
     {
@@ -87,9 +92,8 @@ public class ResourceBarUI : MonoBehaviour
         }
 
         pixelsPerHealth = coreReference.sizeDelta.x / _mainSlider.maxValue;
-        Debug.Log("Calculated pixels per healthpoint : " + pixelsPerHealth);
     }
-    private void Update()
+    private void LateUpdate()
     {
         if (!initialized)
             return;
@@ -100,8 +104,9 @@ public class ResourceBarUI : MonoBehaviour
 
     private void UpdateCurrVal()
     {
-        if (_targetData.CurrentValue() != lastVal)
+        if (_targetData.CurrentValue() != _mainSlider.value)
         {
+            
             lastVal = _mainSlider.value;
             _mainSlider.value = _targetData.CurrentValue();
 
@@ -127,21 +132,39 @@ public class ResourceBarUI : MonoBehaviour
 
     public void OnDecrease()
     {
+        //Debug.Log($"Decrease called from {gameObject.name}");
         // Do any other visual representation when the value decreases
+        if (effectSource!=null && decreaseColor!=null)
+        {
+            effectSource.ActivateImpulse(decreaseColor);
+        }
     }
 
     public void OnIncrease()
     {
+        //Debug.Log($"Replenish called from {gameObject.name}");
         // Do any other visual representation when the value increases
+        if (effectSource != null && replenishColor != null)
+        {
+            effectSource.ActivateImpulse(replenishColor);
+        }
     }
 
     public void OnFull()
     {
         // Do any other visual representation on fill
+        if (effectSource != null && fullColor != null)
+        {
+            effectSource.ActivateImpulse(fullColor);
+        }
     }
 
     public void OnDeplete()
     {
-        // Do any other visual representation on deplete 
+        // Do any other visual representation on deplete
+        if(effectSource!=null && emptyColor!=null)
+        {
+            effectSource.ActivateImpulse(emptyColor);
+        }
     }
 }
