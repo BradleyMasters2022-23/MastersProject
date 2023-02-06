@@ -33,19 +33,21 @@ public abstract class Attack : MonoBehaviour
 
     protected virtual void DealDamage(GameObject _target)
     {
+        Transform parent = _target.transform;
+        Target target;
+
+        // continually escelate up for a targetable reference
+        while (!parent.TryGetComponent<Target>(out target) && parent.parent != null)
+        {
+            parent = parent.parent;
+        }
+
         // Check if the target can be damaged
-        Damagable target;
-        if(!hitTarget && _target.TryGetComponent<Damagable>(out target))
+        if(!hitTarget && target != null)
         {
             // Damage target, prevent multi damaging
-            target.Damage(damage);
+            target.RegisterEffect(damage);
             hitTarget = true;
-
-            // Check if any knockback should be applied, apply it
-            if(knockback > 0)
-            {
-                target.ApplyKnockback(transform.position, knockback, addativeKnockback);
-            }
         }
     }
 

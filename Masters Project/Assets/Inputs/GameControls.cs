@@ -152,6 +152,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GodCheat"",
+                    ""type"": ""Button"",
+                    ""id"": ""b7c236a8-f560-4cef-bc54-50c645ffa869"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -407,6 +416,28 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""Tactical"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""daf87aa2-9acf-46c7-95fc-28a55a575c9c"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Tactical"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""50dad40e-c6e7-495b-932b-81bf7d7fa75a"",
+                    ""path"": ""<Keyboard>/equals"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GodCheat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -510,6 +541,34 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Dialogue"",
+            ""id"": ""3f566404-c07b-4704-8228-96ce37ff01ed"",
+            ""actions"": [
+                {
+                    ""name"": ""Advance"",
+                    ""type"": ""Button"",
+                    ""id"": ""85fdbd4d-0430-40bc-946b-274b20a05bfc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""50cb1752-ce23-43c8-b875-c72901b801a2"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Advance"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -530,11 +589,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_PlayerGameplay_Kill = m_PlayerGameplay.FindAction("Kill", throwIfNotFound: true);
         m_PlayerGameplay_ClearEncounter = m_PlayerGameplay.FindAction("ClearEncounter", throwIfNotFound: true);
         m_PlayerGameplay_Tactical = m_PlayerGameplay.FindAction("Tactical", throwIfNotFound: true);
+        m_PlayerGameplay_GodCheat = m_PlayerGameplay.FindAction("GodCheat", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Mouse = m_UI.FindAction("Mouse", throwIfNotFound: true);
         m_UI_Controller = m_UI.FindAction("Controller", throwIfNotFound: true);
         m_UI_Back = m_UI.FindAction("Back", throwIfNotFound: true);
+        // Dialogue
+        m_Dialogue = asset.FindActionMap("Dialogue", throwIfNotFound: true);
+        m_Dialogue_Advance = m_Dialogue.FindAction("Advance", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -608,6 +671,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_Kill;
     private readonly InputAction m_PlayerGameplay_ClearEncounter;
     private readonly InputAction m_PlayerGameplay_Tactical;
+    private readonly InputAction m_PlayerGameplay_GodCheat;
     public struct PlayerGameplayActions
     {
         private @GameControls m_Wrapper;
@@ -626,6 +690,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @Kill => m_Wrapper.m_PlayerGameplay_Kill;
         public InputAction @ClearEncounter => m_Wrapper.m_PlayerGameplay_ClearEncounter;
         public InputAction @Tactical => m_Wrapper.m_PlayerGameplay_Tactical;
+        public InputAction @GodCheat => m_Wrapper.m_PlayerGameplay_GodCheat;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -677,6 +742,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Tactical.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
                 @Tactical.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
                 @Tactical.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
+                @GodCheat.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnGodCheat;
+                @GodCheat.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnGodCheat;
+                @GodCheat.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnGodCheat;
             }
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -723,6 +791,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Tactical.started += instance.OnTactical;
                 @Tactical.performed += instance.OnTactical;
                 @Tactical.canceled += instance.OnTactical;
+                @GodCheat.started += instance.OnGodCheat;
+                @GodCheat.performed += instance.OnGodCheat;
+                @GodCheat.canceled += instance.OnGodCheat;
             }
         }
     }
@@ -776,6 +847,39 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         }
     }
     public UIActions @UI => new UIActions(this);
+
+    // Dialogue
+    private readonly InputActionMap m_Dialogue;
+    private IDialogueActions m_DialogueActionsCallbackInterface;
+    private readonly InputAction m_Dialogue_Advance;
+    public struct DialogueActions
+    {
+        private @GameControls m_Wrapper;
+        public DialogueActions(@GameControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Advance => m_Wrapper.m_Dialogue_Advance;
+        public InputActionMap Get() { return m_Wrapper.m_Dialogue; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(DialogueActions set) { return set.Get(); }
+        public void SetCallbacks(IDialogueActions instance)
+        {
+            if (m_Wrapper.m_DialogueActionsCallbackInterface != null)
+            {
+                @Advance.started -= m_Wrapper.m_DialogueActionsCallbackInterface.OnAdvance;
+                @Advance.performed -= m_Wrapper.m_DialogueActionsCallbackInterface.OnAdvance;
+                @Advance.canceled -= m_Wrapper.m_DialogueActionsCallbackInterface.OnAdvance;
+            }
+            m_Wrapper.m_DialogueActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Advance.started += instance.OnAdvance;
+                @Advance.performed += instance.OnAdvance;
+                @Advance.canceled += instance.OnAdvance;
+            }
+        }
+    }
+    public DialogueActions @Dialogue => new DialogueActions(this);
     public interface IPlayerGameplayActions
     {
         void OnPause(InputAction.CallbackContext context);
@@ -792,11 +896,16 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnKill(InputAction.CallbackContext context);
         void OnClearEncounter(InputAction.CallbackContext context);
         void OnTactical(InputAction.CallbackContext context);
+        void OnGodCheat(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
         void OnMouse(InputAction.CallbackContext context);
         void OnController(InputAction.CallbackContext context);
         void OnBack(InputAction.CallbackContext context);
+    }
+    public interface IDialogueActions
+    {
+        void OnAdvance(InputAction.CallbackContext context);
     }
 }

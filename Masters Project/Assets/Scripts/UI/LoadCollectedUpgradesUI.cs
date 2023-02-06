@@ -16,7 +16,11 @@ public class LoadCollectedUpgradesUI : MonoBehaviour
 
     private void OnEnable()
     {
-        collectedUpgrades = new List<UpgradeObject>(PlayerUpgradeManager.instance.upgrades);
+        if (PlayerUpgradeManager.instance != null)
+            collectedUpgrades = new List<UpgradeObject>(PlayerUpgradeManager.instance.upgrades);
+        else
+            collectedUpgrades = new List<UpgradeObject>();
+
         PopulateList();
     }
 

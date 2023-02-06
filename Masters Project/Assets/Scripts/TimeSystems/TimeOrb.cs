@@ -1,9 +1,9 @@
 /*
  * ================================================================================================
  * Author - Ben Schuster
- * Date Created - November 4th, 2022
- * Last Edited - November 4th, 2022 by Ben Schuster
- * Description - Manages the concrete behavior of a time orb
+ * Date Created - February 3rd, 2022
+ * Last Edited - February 3rd, 2022 by Ben Schuster
+ * Description - Manages the concrete behavior of a health orb
  * ================================================================================================
  */
 using System.Collections;

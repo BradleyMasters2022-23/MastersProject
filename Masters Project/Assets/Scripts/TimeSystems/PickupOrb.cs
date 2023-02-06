@@ -55,6 +55,9 @@ public abstract class PickupOrb : MonoBehaviour
     [Tooltip("Speed it goes to the player at")]
     [SerializeField] protected float chaseSpeed;
 
+    [Tooltip("The collider for the actual core collider")]
+    [SerializeField] protected Collider realCollider;
+
     [Header("=====Despawn=====")]
     [Tooltip("How long until the despawn sequence starts")]
     [SerializeField] protected float startDespawnTime;
@@ -125,7 +128,7 @@ public abstract class PickupOrb : MonoBehaviour
 
     //                break;
     //            }
-                
+
     //            // if not, modify velocity for time stop
     //            else if (affectedByTimestop)
     //            {
@@ -159,6 +162,16 @@ public abstract class PickupOrb : MonoBehaviour
 
     //    ready = true;
     //}
+    private void OnCollisionEnter(Collision collision)
+    {
+        realCollider.enabled = false;
+        rb.isKinematic = true;
+        Vector3 temp = rb.velocity;
+        temp.x = 0;
+        temp.y = 0;
+        rb.velocity = temp;
+        rb.mass /= 2;
+    }
 
     protected void Update()
     {
@@ -172,6 +185,7 @@ public abstract class PickupOrb : MonoBehaviour
             // Check if it needs to start floating
             if (rb.velocity.y < 0 && Physics.Raycast(transform.position, Vector3.down, out hitInfo, floatHeight, groundMask))
             {
+                realCollider.enabled = false;
                 rb.isKinematic = true;
                 rb.velocity = Vector3.zero;
                 rb.mass /= 2;
