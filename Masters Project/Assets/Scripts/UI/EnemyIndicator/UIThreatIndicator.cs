@@ -29,16 +29,16 @@ public class UIThreatIndicator : MonoBehaviour
         enemyList.TrimExcess();
 
         // get enemies
-        EnemyHealth[] enemies = FindObjectsOfType<EnemyHealth>();
+        EnemyTarget[] enemies = FindObjectsOfType<EnemyTarget>();
 
         // Check list for new enemies. Add new pointers for each new enemy
-        foreach (EnemyHealth enemy in enemies)
+        foreach (EnemyTarget enemy in enemies)
         {
             if (!enemyList.Contains(enemy.gameObject))
             {
                 enemyList.Add(enemy.gameObject);
                 GameObject a = Instantiate(arrow, indicatorDisplay);
-                a.GetComponent<UIEnemyPointer>().SetTarget(enemy.gameObject);
+                a.GetComponent<UIEnemyPointer>().SetTarget(enemy.Center.gameObject);
             }
         }
     }
