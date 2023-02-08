@@ -51,6 +51,18 @@ public class PlayerGunController : MonoBehaviour
     /// Current amount of bloom currently active
     /// </summary>
     private float currBloom;
+    public float CurrBloom
+    {
+        get { return currBloom; }
+    }
+    public float BaseBloom
+    {
+        get { return baseBloom; }
+    }
+    public float MaxBloom
+    {
+        get { return maxBloom; }
+    }
     [Tooltip("When a bullet is spawned, how much displacement from its origin can it have.")]
     [SerializeField] private float maxShootDisplacement;
 
@@ -63,6 +75,15 @@ public class PlayerGunController : MonoBehaviour
     [Tooltip("Layers for raycast to ignore")]
     [SerializeField] LayerMask layersToIgnore;
 
+
+    [Header("Enhanced Bullets")]
+    [SerializeField] private GameObject enhancedBulletPrefab;
+    [SerializeField] private float enhancedSpeedMultiplier;
+    [SerializeField, Range(0, 1f)] private float enhancedShotThreshold;
+    public float EnhancedShotThreshold
+    {
+        get { return enhancedShotThreshold; }
+    }
     /// <summary>
     /// Whether this gun is shooting
     /// </summary>
@@ -130,9 +151,9 @@ public class PlayerGunController : MonoBehaviour
     private void FixedUpdate()
     {
         // Tell the accuracy to recover over time while not firing
-        if(!firing && currBloom != baseBloom)
+        if(!firing && currBloom != baseBloom && TimeManager.WorldTimeScale > enhancedShotThreshold)
         {
-            float newAccuracy = currBloom - bloomRecoveryRate * Time.deltaTime;
+            float newAccuracy = currBloom - bloomRecoveryRate * TimeManager.WorldDeltaTime;
             if(newAccuracy < baseBloom)
             {
                 newAccuracy = baseBloom;
@@ -165,7 +186,16 @@ public class PlayerGunController : MonoBehaviour
         for(int i = 0; i < bulletsPerShot; i++)
         {
             // Shoot projectile, aiming towards passed in target
-            GameObject newShot = Instantiate(shotPrefab, shootPoint.position, transform.rotation);
+            GameObject newShot;
+
+            if(TimeManager.WorldTimeScale > enhancedShotThreshold)
+            {
+                newShot=Instantiate(shotPrefab, shootPoint.position, transform.rotation);
+            }
+            else
+            {
+                newShot=Instantiate(enhancedBulletPrefab, shootPoint.position, transform.rotation);
+            }
 
             // Calculate & apply the new minor displacement
             Vector3 displacement = new Vector3(
@@ -176,19 +206,28 @@ public class PlayerGunController : MonoBehaviour
 
             // Aim to center screen, apply inaccuracy bonuses
             newShot.transform.LookAt(shootCam.TargetPos);
-            newShot.transform.eulerAngles = ApplySpread(newShot.transform.eulerAngles);
+            if (TimeManager.WorldTimeScale > enhancedShotThreshold)
+            {
+                newShot.transform.eulerAngles = ApplySpread(newShot.transform.eulerAngles);
+                newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current, true);
+            }
+            else
+            {
+                newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current * enhancedSpeedMultiplier, true);
+            }
+            
 
             // Tell bullet to initialize
-            newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current, true);
+            
         }
 
         if(gunshotSound.Length > 0)
             source.PlayOneShot(gunshotSound[Random.Range(0, gunshotSound.Length)],0.3f);
 
         // Increase bloom after shot
-        currBloom = Mathf.Clamp(currBloom + bloomPerShot, baseBloom, maxBloom);
+        if(TimeManager.WorldTimeScale > enhancedShotThreshold)
+            currBloom = Mathf.Clamp(currBloom + bloomPerShot, baseBloom, maxBloom);
     }
-
 
     private Vector3 ApplySpread(Vector3 rot)
     {

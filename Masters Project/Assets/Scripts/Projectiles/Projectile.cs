@@ -34,16 +34,24 @@ public class Projectile : RangeAttack
     [SerializeField] public GameObject onHitEffect;
 
     [Tooltip("What layers should this projectile hit with a larger radius")]
-    [SerializeField] private LayerMask targetLayers;
+    [SerializeField] protected LayerMask targetLayers;
 
     [Tooltip("What layers should this impact directly with")]
-    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] protected LayerMask groundLayer;
 
     [Tooltip("Sound when this bullet is shot")]
     [SerializeField] private AudioClip[] bulletShot;
     [Tooltip("Sound when this bullet hits something")]
     [SerializeField] private AudioClip[] bulletHit;
     private AudioSource source;
+
+    [Header("Distance Stuff")]
+    [Tooltip("The gameobject that actually holds the visual model of the bullet")]
+    [SerializeField] private Transform bulletVisual;
+    [Tooltip("How does the scale of the bullet change over distance")]
+    [SerializeField] private AnimationCurve scaleOverDistance;
+    [Tooltip("The VFX that plays when this bullet despawns due to distance limit")]
+    [SerializeField] private GameObject fadeVFX;
 
     /// <summary>
     /// Distance covered to calculate when to despawn
@@ -103,7 +111,18 @@ public class Projectile : RangeAttack
         distanceCovered += targetVelocity.magnitude * TimeManager.WorldDeltaTime;
         if(distanceCovered >= range)
         {
+            if(fadeVFX != null)
+            {
+                Instantiate(fadeVFX, transform.position, transform.rotation);
+            }
+
             End();
+        }
+        else if(scaleOverDistance != null && bulletVisual != null)
+        {
+            float newScale = scaleOverDistance.Evaluate(distanceCovered / range);
+
+            bulletVisual.localScale = new Vector3(newScale, newScale, newScale);
         }
 
         // Update velocity with world timescale
@@ -171,4 +190,5 @@ public class Projectile : RangeAttack
 
         source = gameObject.AddComponent<AudioSource>();
     }
+
 }

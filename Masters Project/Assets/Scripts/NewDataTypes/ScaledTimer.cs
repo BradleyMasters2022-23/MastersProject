@@ -26,6 +26,13 @@ public class ScaledTimer
     private bool scaled;
 
     /// <summary>
+    /// Timer speed modifier. % based, with 1 acting as 100%. cannot be 0
+    /// </summary>
+    private float timerModifier = 1;
+    
+    private float minModifier = 0.1f;
+
+    /// <summary>
     /// Create a new timer with 
     /// </summary>
     /// <param name="_targetTime">Target time for this value</param>
@@ -99,11 +106,11 @@ public class ScaledTimer
     {
         if(scaled)
         {
-            return (CoreTimeline.instance.ScaledTimeline - startTime) >= targetTime;
+            return (CoreTimeline.instance.ScaledTimeline - startTime) >= (targetTime/ timerModifier);
         }
         else
         {
-            return (Time.realtimeSinceStartup - startTime) >= targetTime;
+            return (Time.realtimeSinceStartup - startTime) >= (targetTime/ timerModifier);
         }
     }
 
@@ -116,11 +123,44 @@ public class ScaledTimer
     {
         if (scaled)
         {
-            return Mathf.Clamp((CoreTimeline.instance.ScaledTimeline - startTime) / targetTime, 0, 1);
+            return Mathf.Clamp((CoreTimeline.instance.ScaledTimeline - startTime) / (targetTime/ timerModifier), 0, 1);
         }
         else
         {
-            return Mathf.Clamp((Time.realtimeSinceStartup - startTime) / targetTime, 0, 1);
+            return Mathf.Clamp((Time.realtimeSinceStartup - startTime) / (targetTime/ timerModifier), 0, 1);
         }
+    }
+
+    /// <summary>
+    /// Get the current target time for this timer
+    /// </summary>
+    /// <returns>The current target time</returns>
+    public float CurrentTargetTime()
+    {
+        return targetTime;
+    }
+
+    /// <summary>
+    /// Set the speed modifier for this timer 
+    /// </summary>
+    /// <param name="modifier">The new speed modifier to use</param>
+    public void SetModifier(float modifier)
+    {
+        timerModifier = Mathf.Clamp(modifier, minModifier, Mathf.Infinity);
+    }
+    /// <summary>
+    /// Increment the speed modifier for this timer
+    /// </summary>
+    /// <param name="modifier">Amount to increment the speed modifier by</param>
+    public void IncrementModifier(float modifier)
+    {
+        timerModifier = Mathf.Clamp(timerModifier+modifier, minModifier, Mathf.Infinity);
+    }
+    /// <summary>
+    /// Resets the timer's speed modifier back to normal
+    /// </summary>
+    public void ResetModifier()
+    {
+        SetModifier(1);
     }
 }
