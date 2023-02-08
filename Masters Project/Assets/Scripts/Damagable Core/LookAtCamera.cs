@@ -19,6 +19,8 @@ public class LookAtCamera : MonoBehaviour
     void OnEnable()
     {
         mainCamera = Camera.main;
+        if (mainCamera == null)
+            Destroy(this);
     }
 
     /// <summary>
