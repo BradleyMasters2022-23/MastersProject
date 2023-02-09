@@ -45,6 +45,8 @@ public class CameraShoot : MonoBehaviour
     [Tooltip("How accurate is the 'in camera' system. 0 is perfect accuracy")]
     [SerializeField] private float viewPlanesTolerance;
 
+    public bool inMinRange;
+
     private void Awake()
     {
         planes = GeometryUtility.CalculateFrustumPlanes(Camera.main);
@@ -90,17 +92,20 @@ public class CameraShoot : MonoBehaviour
             // If distance is below minimum range, fire at default target instead
             if(hitInfo.distance < minRange)
             {
+                inMinRange = true;
                 targetPos = defaultTarget.position;
             }
             // Otherwise, update target position with hit
             else
             {
+                inMinRange = false;
                 targetPos = hitInfo.point;
             }
         }
         else
         {
             // If no hit, use default target
+            inMinRange = false;
             targetPos = defaultTarget.position;
         }
     }
