@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.UI.Image;
 
 public class PlayerController : MonoBehaviour
 {
@@ -195,6 +196,9 @@ public class PlayerController : MonoBehaviour
     /// The last time a slope was detected
     /// </summary>
     private RaycastHit slopeHit;
+    private RaycastHit lastSlopeHit;
+    [SerializeField] private bool grounded;
+
     /// <summary>
     /// the last angle that was detected
     /// </summary>
@@ -280,6 +284,8 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         // Perform state-based update functionality
+        GetGroundData();
+
         UpdateStateFunction();
         MoveSpeedThrottle();
 
@@ -310,25 +316,28 @@ public class PlayerController : MonoBehaviour
                         currentJumps = jumps.Current;
 
                     // If not on ground, set state to midair. Disable sprint
-                    if (!Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask) && !kyoteTimeActive)
-                    {
-                        //ChangeState(PlayerState.MIDAIR);
-                        Debug.Log("Kyote time started!");
-                        kyoteTimeActive = true;
-                        kyoteTracker.ResetTimer();
-                    }
-                    else if(!Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask) && kyoteTracker.TimerDone())
-                    {
-                        Debug.Log("Kyote time ended!");
-                        kyoteTimeActive = false;
-                        kyoteTracker.ResetTimer();
+                    //if (!IsGrounded() && !kyoteTimeActive)
+                    //{
+                    //    //ChangeState(PlayerState.MIDAIR);
+                    //    Debug.Log("Kyote time started!");
+                    //    kyoteTimeActive = true;
+                    //    kyoteTracker.ResetTimer();
+                    //}
+                    //else if(!IsGrounded() && kyoteTracker.TimerDone())
+                    //{
+                    //    Debug.Log("Kyote time ended!");
+                    //    kyoteTimeActive = false;
+                    //    kyoteTracker.ResetTimer();
+                    //    ChangeState(PlayerState.MIDAIR);
+                    //}
+                    //else if (kyoteTimeActive && IsGrounded())
+                    //{
+                    //    kyoteTimeActive = false;
+                    //    Debug.Log("Kyote time canceled!");
+                    //}
+
+                    if (!grounded)
                         ChangeState(PlayerState.MIDAIR);
-                    }
-                    else if (kyoteTimeActive && Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask))
-                    {
-                        kyoteTimeActive = false;
-                        Debug.Log("Kyote time canceled!");
-                    }
 
                     if (sprintHeld)
                         ChangeState(PlayerState.SPRINTING);
@@ -338,9 +347,8 @@ public class PlayerController : MonoBehaviour
             case PlayerState.SPRINTING:
                 {
                     HorizontalMovement();
-
                     // If not on ground, set state to midair. Disable sprint
-                    if (!Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask))
+                    if (!grounded)
                     {
                         ChangeState(PlayerState.MIDAIR);
                     }
@@ -353,10 +361,8 @@ public class PlayerController : MonoBehaviour
             case PlayerState.MIDAIR:
                 {
                     HorizontalMovement();
-
                     // If player lands and is moving downward, move back to grounded state
-                    if (Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask) 
-                        && rb.velocity.y <= 0 && jumpTimer.TimerDone())
+                    if (grounded && rb.velocity.y <= 0 && jumpTimer.TimerDone())
                     {
                         ChangeState(PlayerState.GROUNDED);
                     }
@@ -459,15 +465,34 @@ public class PlayerController : MonoBehaviour
     #region Player Movement
 
     /// <summary>
+    /// Check the current ground status of the player
+    /// </summary>
+    private void GetGroundData()
+    {
+        RaycastHit temp = slopeHit;
+        Debug.DrawLine(groundCheck.position, groundCheck.position + Vector3.down * groundCheckRadius, Color.red);
+        if (Physics.Raycast(groundCheck.position, Vector3.down, out slopeHit, groundCheckRadius, groundMask))
+        {
+            lastSlopeHit = temp;
+            grounded = true;
+        }
+        else
+        {
+            grounded = false;
+        }
+    }
+
+    /// <summary>
     /// Manage the player's horizontal movement
     /// </summary>
     private void HorizontalMovement()
     {
+
         // On slope, project the velocity and make sure the player sticks to it while moving
         if (OnSlope() && currentState != PlayerState.MIDAIR)
         {
             rb.AddForce(SlopedVector() * accelerationSpeed, ForceMode.Force);
-            //Debug.Log("Applying slopped force");
+            Debug.Log("Applying slopped force");
 
             if (rb.velocity.y > 0)
                 rb.AddForce(Vector3.down * slopeStickForce, ForceMode.Force);
@@ -477,17 +502,19 @@ public class PlayerController : MonoBehaviour
         else if (currentState != PlayerState.MIDAIR)
         {
             rb.AddForce(inputDirection.normalized * accelerationSpeed, ForceMode.Force);
-            //Debug.Log("Applying ground force");
+            Debug.Log("Applying ground force");
         }
            
 
         // if midair, then add air modifier 
         else if (currentState == PlayerState.MIDAIR)
         {
-            //Debug.Log("Applying midair force");
+            Debug.Log("Applying midair force");
             rb.AddForce(inputDirection.normalized * accelerationSpeed * airModifier.Current, ForceMode.Force);
         }
-            
+
+        rb.velocity = AdjustVelocityToSlope(rb.velocity);
+
         // determine when drag should be applied 
         if (currentState != PlayerState.MIDAIR)
             rb.drag = drag;
@@ -528,7 +555,9 @@ public class PlayerController : MonoBehaviour
     /// <returns>Movement vector adjusted for slope</returns>
     private Vector3 SlopedVector()
     {
-        return Vector3.ProjectOnPlane(inputDirection, slopeHit.normal).normalized;
+        Vector3 temp = Vector3.ProjectOnPlane(inputDirection, slopeHit.normal).normalized;
+        //Debug.DrawRay(transform.position, temp);
+        return temp;
     }
 
     public float angleTheshold;
@@ -541,40 +570,37 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 origin = groundCheck.position;
 
-        // Determine where to check. Predictive on ground, standard mid air
+        //Determine where to check. Predictive on ground, standard mid air
         //if (currentState != PlayerState.MIDAIR)
         //    origin = groundCheck.position + rb.velocity * 0.1f;
         //else
         //    origin = groundCheck.position;
-
-        lastSurfaceAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
-
-        Debug.DrawLine(origin, origin + Vector3.down * slopeHitDist, Color.red);
-        if (Physics.Raycast(origin, Vector3.down, out slopeHit, slopeHitDist, groundMask))
+        
+        if (grounded)
         {
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-
-            if (currentState != PlayerState.MIDAIR && 
-                Mathf.Abs(lastSurfaceAngle - angle) >= angleTheshold)
-            {
-                Debug.Log($"Major angle shift detected of {Mathf.Abs(lastSurfaceAngle - angle)}!");
-                RedirectVelocity();
-            }
-
-            return (angle != 0 && angle < maxAngle);
+            return (angle != 0 && angle < maxAngle && currentState != PlayerState.MIDAIR);
         }
 
         return false;
     }
 
-    private void RedirectVelocity()
+    private Vector3 AdjustVelocityToSlope(Vector3 velocity)
     {
-        Vector3 velocity = rb.velocity;
+        //return Vector3.ProjectOnPlane(velocity, slopeHit.normal);
 
-        velocity = Vector3.ProjectOnPlane(velocity, slopeHit.normal);
-        lastSurfaceAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
+        if(grounded)
+        {
+            Quaternion slopeRotation = Quaternion.FromToRotation(Vector3.up, slopeHit.normal);
+            Vector3 adjustedVelocity = slopeRotation * velocity;
+            Debug.DrawRay(groundCheck.position, adjustedVelocity);
 
-        rb.velocity= velocity;
+            if(adjustedVelocity.y < 0)
+            {
+                return adjustedVelocity;
+            }
+        }
+        return velocity;
     }
 
     /// <summary>
