@@ -10,18 +10,36 @@ public class ConversationInteract : Interactable
     // when a conversation is available, screen should blink; eventually, screen & contact both blink
     private DisplayDialogueUI ui;
 
-    //private MeshRenderer flashRenderer;
-    //private Color original;
+    private MeshRenderer flashRenderer;
+    private Color original;
+    private ScaledTimer timer;
+    public float flashTime;
 
     private void Start()
     {
         ui = FindObjectOfType<DisplayDialogueUI>(true);
         calls = CallManager.instance;
-        //flashRenderer = gameObject.GetComponent<MeshRenderer>();
-        //original = flashRenderer.Color;
+        flashRenderer = gameObject.GetComponent<MeshRenderer>();
+        original = flashRenderer.material.color;
+        timer = new ScaledTimer(flashTime);
     }
 
-
+    public void Update()
+    {
+        if(calls.HasAvailable() && timer.TimerDone())
+        {
+            if(flashRenderer.material.color == Color.red)
+            {
+                flashRenderer.material.color = original;
+                timer.ResetTimer();
+            }
+            else
+            {
+                flashRenderer.material.color = Color.red;
+                timer.ResetTimer();
+            }
+        }
+    }
 
     public override void OnInteract(PlayerController player)
     {
