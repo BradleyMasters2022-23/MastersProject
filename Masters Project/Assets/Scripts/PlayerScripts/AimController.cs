@@ -69,6 +69,8 @@ public class AimController : MonoBehaviour
         controllerSensitivity = Settings.controllerSensitivity;
         controllerXInverted = Settings.controllerInvertX;
         controllerYInverted = Settings.controllerInvertY;
+
+        Debug.Log("Aim sensitivity set to : " + mouseSensitivity);
     }
 
     private void LateUpdate()

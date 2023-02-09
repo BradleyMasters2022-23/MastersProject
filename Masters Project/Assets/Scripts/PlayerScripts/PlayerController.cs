@@ -60,6 +60,12 @@ public class PlayerController : MonoBehaviour
         get { return centerMass;  }
     }
 
+    /// <summary>
+    /// The last used surface normal
+    /// </summary>
+    private Vector3 velocity;
+
+
     #endregion
 
     #region Inputs
@@ -95,21 +101,22 @@ public class PlayerController : MonoBehaviour
 
     [Tooltip("Maximum move speed for player")]
     [SerializeField] private UpgradableFloat maxMoveSpeed;
+    [Tooltip("Time it takes to reach full speed")]
+    [SerializeField] private float accelerationSpeed;
+    [Tooltip("Amount of drag player experiences when on the ground")]
+    [SerializeField] private float drag;
+
     [Tooltip("Speed modifier for player when sprinting")]
     [SerializeField] private UpgradableFloat sprintModifier;
     [Tooltip("Speed modifier for player when midair")]
     [SerializeField] private UpgradableFloat airModifier;
-    [Tooltip("Time it takes to reach full speed")]
-    [SerializeField][Range(0, 1)] private float accelerationTime;
-    [Tooltip("Minimum speed the player starts at when initially inputting a direction. % of Max Move Speed.")]
-    [SerializeField][Range(0, 1)] private float startingSpeedPercentage;
-    [Tooltip("Time it takes to fully stop")]
-    [SerializeField][Range(0, 1)] private float decelerationTime;
 
+    
+    
     /// <summary>
-    /// Direction the player is inputting
+    /// inputDirection the player is inputting
     /// </summary>
-    private Vector3 direction;
+    private Vector3 inputDirection;
     /// <summary>
     /// Current target max speed
     /// </summary>
@@ -118,16 +125,8 @@ public class PlayerController : MonoBehaviour
     /// Current speed of the player
     /// </summary>
     private float currSpeed;
-    /// <summary>
-    /// Tracker for acceleration lerping
-    /// </summary>
-    private float accelerateLerp;
-    /// <summary>
-    /// Tracker for decelerate lerping
-    /// </summary>
-    private float decelerateLerp;
 
-    [SerializeField] private bool sprintHeld;
+    private bool sprintHeld;
 
     #endregion
 
@@ -141,6 +140,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpForce;
     [Tooltip("Cooldown between jumps")]
     [SerializeField] private float jumpCooldown;
+    [Tooltip("How long while after falling off a ledge can the player jump")]
+    [SerializeField] private float kyoteTime;
     [Tooltip("Whether the player loses their first jump when falling off a ledge")]
     [SerializeField] private bool disableFirstJumpOnFall;
     [Tooltip("Whether the player can pivot movement when jumping")]
@@ -161,6 +162,15 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private ScaledTimer jumpTimer;
 
+    /// <summary>
+    /// Check how long its been since jumping
+    /// </summary>
+    private ScaledTimer midAirTimer;
+
+    private ScaledTimer kyoteTracker;
+
+    private bool kyoteTimeActive = false;
+
     [Header("---Gravity and Ground---")]
 
     [Tooltip("Strength of the gravity")]
@@ -169,22 +179,30 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [Tooltip("Transform at the bottom of this character object")]
     [SerializeField] private Transform groundCheck;
+    [Tooltip("Radius to check the ground for")]
+    [SerializeField] float groundCheckRadius = 0.3f;
+
+    [Header("---Slope---")]
+
+    [Tooltip("How far down to check for a slope ")]
+    [SerializeField] private float slopeHitDist;
+    [Tooltip("Maximum angle of a slope the player can climb")]
+    [SerializeField] private float maxAngle;
+    [Tooltip("Force pushed onto player on slopes to help stick to them")]
+    [SerializeField] private float slopeStickForce = 80f;
 
     /// <summary>
-    /// Radius of the ground check
+    /// The last time a slope was detected
     /// </summary>
-    private float groundCheckRadius = 0.25f;
-
+    private RaycastHit slopeHit;
     /// <summary>
-    /// Check how long its been since jumping
+    /// the last angle that was detected
     /// </summary>
-    private ScaledTimer midAirTimer;
-    /// <summary>
-    /// The last used surface normal
-    /// </summary>
-    private Vector3 lastSurfaceNormal;
+    private float lastSurfaceAngle;
 
     #endregion
+
+    //public bool grounded;
 
     #region Combat Stuff
 
@@ -210,17 +228,9 @@ public class PlayerController : MonoBehaviour
         // Initialize internal variables
         jumpTimer = new ScaledTimer(jumpCooldown, false);
         midAirTimer = new ScaledTimer(0.5f, false);
+        kyoteTracker = new ScaledTimer(kyoteTime, false);
         currentJumps = jumps.Current;
         targetMaxSpeed = maxMoveSpeed.Current;
-
-
-
-        // Initialize normal
-        RaycastHit normal;
-        if (Physics.Raycast(groundCheck.position, -groundCheck.up, out normal, Mathf.Infinity))
-        {
-            lastSurfaceNormal = normal.normal;
-        }
 
         source = GetComponent<AudioSource>();        
     }
@@ -260,14 +270,18 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
+    private void Update()
+    {
+        // Get current inputDirection based on player input
+        inputDirection = move.ReadValue<Vector2>();
+        inputDirection = transform.right * inputDirection.x + transform.forward * inputDirection.y;
+    }
+
     private void FixedUpdate()
     {
-        // Get current direction based on player input
-        direction = move.ReadValue<Vector2>();
-        direction = transform.right * direction.x + transform.forward * direction.y;
-
         // Perform state-based update functionality
         UpdateStateFunction();
+        MoveSpeedThrottle();
 
         //if(qAbilityHold && !qInput.IsInProgress())
         //{
@@ -284,20 +298,36 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void UpdateStateFunction()
     {
+        velocity = rb.velocity;
+
         switch (currentState)
         {
             case PlayerState.GROUNDED:
                 {
                     HorizontalMovement();
-                    //AdjustForSlope();
 
                     if(currentJumps != jumps.Current)
                         currentJumps = jumps.Current;
 
                     // If not on ground, set state to midair. Disable sprint
-                    if (!Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask))
+                    if (!Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask) && !kyoteTimeActive)
                     {
+                        //ChangeState(PlayerState.MIDAIR);
+                        Debug.Log("Kyote time started!");
+                        kyoteTimeActive = true;
+                        kyoteTracker.ResetTimer();
+                    }
+                    else if(!Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask) && kyoteTracker.TimerDone())
+                    {
+                        Debug.Log("Kyote time ended!");
+                        kyoteTimeActive = false;
+                        kyoteTracker.ResetTimer();
                         ChangeState(PlayerState.MIDAIR);
+                    }
+                    else if (kyoteTimeActive && Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask))
+                    {
+                        kyoteTimeActive = false;
+                        Debug.Log("Kyote time canceled!");
                     }
 
                     if (sprintHeld)
@@ -308,7 +338,6 @@ public class PlayerController : MonoBehaviour
             case PlayerState.SPRINTING:
                 {
                     HorizontalMovement();
-                    //AdjustForSlope();
 
                     // If not on ground, set state to midair. Disable sprint
                     if (!Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask))
@@ -325,13 +354,9 @@ public class PlayerController : MonoBehaviour
                 {
                     HorizontalMovement();
 
-                    // backup check just to make sure nothing breaks with slope
-                    if (!rb.useGravity)
-                        rb.useGravity = true;
-
                     // If player lands and is moving downward, move back to grounded state
                     if (Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask) 
-                        && rb.velocity.y <= 0)
+                        && rb.velocity.y <= 0 && jumpTimer.TimerDone())
                     {
                         ChangeState(PlayerState.GROUNDED);
                     }
@@ -355,14 +380,22 @@ public class PlayerController : MonoBehaviour
         {
             case PlayerState.GROUNDED:
                 {
+                    // Failsafe - set gravity on
+                    rb.useGravity = false;
+
                     // When entering grounded state, reset jumps
                     currentJumps = jumps.Current;
 
                     // When entering grounded state, reset target max speed
                     targetMaxSpeed = maxMoveSpeed.Current;
 
-                    if(currentState != PlayerState.SPRINTING && source != null && landSound != null)
+                    if(currentState == PlayerState.MIDAIR && source != null && landSound != null)
+                    {
                         source.PlayOneShot(landSound, 0.5f);
+                    }
+
+                    velocity.y = 0;
+                    rb.velocity = velocity;
 
                     break;
                 }
@@ -378,8 +411,7 @@ public class PlayerController : MonoBehaviour
                     // Failsafe - set gravity on
                     rb.useGravity = true;
 
-                    // Set the last slope to ground
-                    lastSurfaceNormal = Vector3.up;
+                    midAirTimer.ResetTimer();
 
                     // If the player went from grounded to midair, check if a jump should be removed
                     if (currentState == PlayerState.GROUNDED)
@@ -412,14 +444,179 @@ public class PlayerController : MonoBehaviour
         {
             sprintHeld = true;
 
-            //ChangeState(PlayerState.SPRINTING);
+            ChangeState(PlayerState.SPRINTING);
         }
         // If player is sprinting and canceled input, stop sprinting
         else if (ctx.canceled)
         {
             sprintHeld = false;
-            //ChangeState(PlayerState.GROUNDED);
+            ChangeState(PlayerState.GROUNDED);
         }
+    }
+
+    #endregion
+
+    #region Player Movement
+
+    /// <summary>
+    /// Manage the player's horizontal movement
+    /// </summary>
+    private void HorizontalMovement()
+    {
+        // On slope, project the velocity and make sure the player sticks to it while moving
+        if (OnSlope() && currentState != PlayerState.MIDAIR)
+        {
+            rb.AddForce(SlopedVector() * accelerationSpeed, ForceMode.Force);
+            //Debug.Log("Applying slopped force");
+
+            if (rb.velocity.y > 0)
+                rb.AddForce(Vector3.down * slopeStickForce, ForceMode.Force);
+        }
+
+        // if not midair or slopped, then just use normal grounded force
+        else if (currentState != PlayerState.MIDAIR)
+        {
+            rb.AddForce(inputDirection.normalized * accelerationSpeed, ForceMode.Force);
+            //Debug.Log("Applying ground force");
+        }
+           
+
+        // if midair, then add air modifier 
+        else if (currentState == PlayerState.MIDAIR)
+        {
+            //Debug.Log("Applying midair force");
+            rb.AddForce(inputDirection.normalized * accelerationSpeed * airModifier.Current, ForceMode.Force);
+        }
+            
+        // determine when drag should be applied 
+        if (currentState != PlayerState.MIDAIR)
+            rb.drag = drag;
+        else
+            rb.drag = 0;
+
+        // dont allow gravity on slopes 
+        rb.useGravity = !OnSlope();
+    }
+
+    /// <summary>
+    /// Limit the current move speed by the set maximum. Dynamic between slope and ground
+    /// </summary>
+    private void MoveSpeedThrottle()
+    {
+        if(OnSlope() && currentState != PlayerState.MIDAIR)
+        {
+            if(rb.velocity.magnitude > targetMaxSpeed)
+            {
+                rb.velocity = rb.velocity.normalized * targetMaxSpeed;
+            }
+        }
+        else
+        {
+            Vector3 horizontalVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+
+            if(horizontalVel.magnitude > targetMaxSpeed) 
+            {
+                Vector3 throttledSpeed = horizontalVel.normalized * targetMaxSpeed;
+                rb.velocity = new Vector3(throttledSpeed.x, rb.velocity.y, throttledSpeed.z);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Get the current input vector adjusted for slope
+    /// </summary>
+    /// <returns>Movement vector adjusted for slope</returns>
+    private Vector3 SlopedVector()
+    {
+        return Vector3.ProjectOnPlane(inputDirection, slopeHit.normal).normalized;
+    }
+
+    public float angleTheshold;
+
+    /// <summary>
+    /// Whether the player is currently on a slope
+    /// </summary>
+    /// <returns>Whether or not the player is on a slope</returns>
+    private bool OnSlope()
+    {
+        Vector3 origin = groundCheck.position;
+
+        // Determine where to check. Predictive on ground, standard mid air
+        //if (currentState != PlayerState.MIDAIR)
+        //    origin = groundCheck.position + rb.velocity * 0.1f;
+        //else
+        //    origin = groundCheck.position;
+
+        lastSurfaceAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
+
+        Debug.DrawLine(origin, origin + Vector3.down * slopeHitDist, Color.red);
+        if (Physics.Raycast(origin, Vector3.down, out slopeHit, slopeHitDist, groundMask))
+        {
+            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+
+            if (currentState != PlayerState.MIDAIR && 
+                Mathf.Abs(lastSurfaceAngle - angle) >= angleTheshold)
+            {
+                Debug.Log($"Major angle shift detected of {Mathf.Abs(lastSurfaceAngle - angle)}!");
+                RedirectVelocity();
+            }
+
+            return (angle != 0 && angle < maxAngle);
+        }
+
+        return false;
+    }
+
+    private void RedirectVelocity()
+    {
+        Vector3 velocity = rb.velocity;
+
+        velocity = Vector3.ProjectOnPlane(velocity, slopeHit.normal);
+        lastSurfaceAngle = Vector3.Angle(Vector3.up, slopeHit.normal);
+
+        rb.velocity= velocity;
+    }
+
+    /// <summary>
+    /// Launch the player upwards, if possible
+    /// </summary>
+    /// <param name="c">Input callback context [ignorable]</param>
+    private void Jump(InputAction.CallbackContext c)
+    {
+        if(currentJumps > 0 && jumpTimer.TimerDone())
+        {
+            ChangeState(PlayerState.MIDAIR);
+            rb.drag = 0;
+
+            midAirTimer.ResetTimer();
+
+            // Adjust jumps, and reset any jumping cooldown
+            jumpTimer.ResetTimer();
+            currentJumps--;
+
+            // Prepare new velocity
+            Vector3 newVelocity = rb.velocity;
+
+            // Redirect player velocity when jumping, if enabled
+            if (jumpPivot)
+            {
+                // Calculate inputDirection velocity, set vertical velocity to 0
+                Vector3 airDir = inputDirection * Mathf.Pow((targetMaxSpeed), 2) * Time.deltaTime;
+
+                // Set new velocity to inputDirection
+                newVelocity = Vector3.zero + airDir;
+            }
+
+            // Apply new horizontal velocity and reset vertical velocity
+            newVelocity.y = 0;
+            rb.velocity = newVelocity;
+
+            // Apply vertical velocity
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
+            source.PlayOneShot(jumpSound, 0.5f);
+        }
+
     }
 
     #endregion
@@ -428,7 +625,7 @@ public class PlayerController : MonoBehaviour
 
     private void ActivateQAbility(InputAction.CallbackContext ctx)
     {
-        if(ctx.performed && QAbility.IsReady())
+        if (ctx.performed && QAbility.IsReady())
         {
             QAbility.Activate();
         }
@@ -445,335 +642,6 @@ public class PlayerController : MonoBehaviour
             qAbilityHold = false;
         }
         */
-    }
-
-    #endregion
-
-    #region Player Movement
-
-    public float testMaxSpeed;
-    public float testAcceleration;
-    public float dr = 1;
-    
-
-
-    /// <summary>
-    /// Manage the player's horizontal movement
-    /// </summary>
-    private void HorizontalMovement()
-    {
-        
-
-        // TODO - work with acceleration and max speed on this
-        Vector3 vel = rb.velocity;
-        Vector2 horVel = new Vector2(vel.x, vel.z);
-        if(direction != Vector3.zero)
-        {
-            if(currentState == PlayerState.GROUNDED || currentState == PlayerState.SPRINTING)
-            {
-                rb.AddForce(direction * testAcceleration, ForceMode.Force);
-
-            }
-            else if(currentState == PlayerState.MIDAIR)
-            {
-                rb.AddForce(direction * testAcceleration * airModifier.Current, ForceMode.Force);
-            }
-            horVel.x = rb.velocity.x;
-            horVel.y = rb.velocity.z;
-
-            if(horVel.magnitude > testMaxSpeed)
-            {
-                Vector2 newVel = horVel.normalized * testMaxSpeed;
-                rb.velocity = new Vector3(newVel.x, rb.velocity.y, newVel.y);
-
-            }
-
-            //vel = rb.velocity;
-            //vel.y = 0;
-            //if(vel.magnitude > )
-        }
-        else if(vel.x != 0 || vel.z == 0)
-        {
-            vel.x /= dr;
-            vel.z /= dr;
-            rb.velocity = vel;
-        }
-
-        //Debug.DrawRay(transform.position, rb.velocity);
-        AdjustForSlope();
-        /*
-        // If not inputing, try decelerating
-        if (direction == Vector3.zero)
-        {
-            //Debug.Log("Decelerating called");
-            Decelerate();
-
-            // Reset lerp for acceleration
-            accelerateLerp = accelerationTime * startingSpeedPercentage;
-        }
-        // If inputting, try accelerating
-        else if (direction != Vector3.zero)
-        {
-            Accelerate();
-
-            // Reset lerp for deceleration
-            decelerateLerp = 0;
-        }
-
-
-        // Prepare new velocity
-        Vector3 newVelocity;
-
-        // Get initial normalized direction to move in, apply time bc why not
-        if (direction != Vector3.zero)
-        {
-            newVelocity = Time.deltaTime * direction;
-        }
-        // If no input, set new velocity to the direction the rb is already moving towards
-        else
-        {
-            newVelocity = Time.deltaTime * rb.velocity.normalized;
-        }
-
-
-        // If on ground, just set to current speed
-        if (currentState != PlayerState.MIDAIR)
-        {
-            newVelocity *= Mathf.Pow(currSpeed, 2);
-        }
-        // If in air, add speed to existing speed. Limit it.
-        else
-        {
-            // Get reference to what the max speed should be
-            Vector3 maxSpeed = newVelocity * Mathf.Pow((targetMaxSpeed), 2);
-
-            // If midair, add the modified input to the existing velocity, instead of overriding it
-            newVelocity *= Mathf.Pow((currSpeed * airModifier.Current), 2);
-            newVelocity += rb.velocity;
-
-            // Limit magnitude on the X/Z plane only
-            newVelocity.y = 0;
-            if (newVelocity.magnitude > maxSpeed.magnitude)
-            {
-                newVelocity = maxSpeed;
-            }
-        }
-
-        // Use the existing vertical velocity, as that is handled by gravity
-        newVelocity.y = rb.velocity.y;
-
-        // apply new velocity
-        rb.velocity = newVelocity;
-        */
-    }
-
-    private Vector3 SlopedVector(Vector3 direction)
-    {
-        Vector3 castPos = transform.position + Vector3.up * transform.localScale.y / 2;
-        Debug.DrawRay(castPos, -lastSurfaceNormal, Color.blue, 1f);
-
-        RaycastHit slopeCheck;
-        if (Physics.Raycast(castPos, -lastSurfaceNormal, out slopeCheck, 1f, groundMask))
-        {
-
-            // if on a slope, disable gravity to prevent sliding
-            if (slopeCheck.normal != Vector3.up && rb.useGravity)
-            {
-                rb.useGravity = false;
-            }
-            // Else, return to normal
-            else if (slopeCheck.normal == Vector3.up && !rb.useGravity)
-            {
-                rb.useGravity = true;
-            }
-
-            // project velocity onto plane player is standing on
-            Vector3 slopedVelocity = Vector3.ProjectOnPlane(direction, slopeCheck.normal);
-
-            return slopedVelocity;
-        }
-        else
-        {
-            return direction;
-        }
-    }
-
-    private void AdjustForSlope()
-    {
-        Vector3 castPos = transform.position + Vector3.up * transform.localScale.y / 2;
-        
-
-        if (rb.velocity == Vector3.zero || !midAirTimer.TimerDone())
-        {
-            //Debug.DrawLine(castPos, castPos + ((-lastSurfaceNormal).normalized * 1f), Color.red);
-            return;
-        }
-        //Debug.DrawLine(castPos, castPos + ((-lastSurfaceNormal).normalized * 1f), Color.green);
-        
-
-        Vector3 horVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-        
-        //Debug.DrawRay(castPos, -lastSurfaceNormal, Color.green);
-        // Modify velocity to be slope/friendly
-        RaycastHit slopeCheck;
-        if (Physics.Raycast(castPos, -lastSurfaceNormal, out slopeCheck, 1f, groundMask))
-        {
-
-            // project velocity onto plane player is standing on
-            Vector3 slopedVelocity = Vector3.ProjectOnPlane(rb.velocity, slopeCheck.normal);
-
-            // if on a slope, disable gravity to prevent sliding
-            if (slopeCheck.normal != Vector3.up && rb.useGravity)
-            {
-                rb.useGravity = false;
-            }
-            // Else, return to normal
-            else if (slopeCheck.normal == Vector3.up && !rb.useGravity)
-            {
-                rb.useGravity = true;
-            }
-
-            // If on flat ground and on same plane, keep the Y velocity
-            if (slopeCheck.normal == Vector3.up && lastSurfaceNormal == slopeCheck.normal)
-                slopedVelocity.y = rb.velocity.y;
-
-            // Check the difference between the normals. If significant, reduce the y velocity
-            float normalDifference = Vector3.Angle(lastSurfaceNormal, slopeCheck.normal);
-            if (normalDifference >= 10)
-            {
-                slopedVelocity += Vector3.down * 2 * Time.deltaTime;
-            }
-
-            // Update last surface normal
-            lastSurfaceNormal = slopeCheck.normal;
-
-
-            // apply force based on ground's normal
-            rb.velocity = slopedVelocity;
-
-            /*
-            // Predict where the player will be, check ray from there to help with lip issues
-            Vector3 horVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-            Vector3 castPos = transform.position + (horVel.normalized * 0.3f) + Vector3.up * transform.localScale.y/2;
-            //Debug.DrawRay(castPos, -lastSurfaceNormal, Color.blue, 10f);
-
-            // Modify velocity to be slope/friendly
-            RaycastHit slopeCheck;
-            if (Physics.Raycast(castPos, -lastSurfaceNormal, out slopeCheck, 1f, groundMask))
-            {
-
-                // project velocity onto plane player is standing on
-                Vector3 temp = Vector3.ProjectOnPlane(rb.velocity, slopeCheck.normal);
-
-                // if on a slope, disable gravity to prevent sliding
-                if (slopeCheck.normal != Vector3.up && rb.useGravity)
-                {
-                    rb.useGravity = false;
-                }
-                // Else, return to normal
-                else if (slopeCheck.normal == Vector3.up && !rb.useGravity)
-                {
-                    rb.useGravity = true;
-                }
-
-                // If on flat ground and on same plane, keep the Y velocity
-                if (slopeCheck.normal == Vector3.up && lastSurfaceNormal == slopeCheck.normal)
-                    temp.y = rb.velocity.y;
-
-                // Check the difference between the normals. If significant, reduce the y velocity
-                float normalDifference = Vector3.Angle(lastSurfaceNormal, slopeCheck.normal);
-                if (normalDifference >= 10)
-                {
-                    temp += Vector3.down * 2 * Time.deltaTime;
-                }
-
-                // Update last surface normal
-                lastSurfaceNormal = slopeCheck.normal;
-
-
-                // apply force based on ground's normal
-                rb.velocity = temp;
-            }
-            */
-        }
-    }
-
-
-    /// <summary>
-    /// Launch the player upwards, if possible
-    /// </summary>
-    /// <param name="c">Input callback context [ignorable]</param>
-    private void Jump(InputAction.CallbackContext c)
-    {
-        if(currentJumps > 0 && jumpTimer.TimerDone())
-        {
-            midAirTimer.ResetTimer();
-
-            // Adjust jumps, and reset any jumping cooldown
-            jumpTimer.ResetTimer();
-            currentJumps--;
-
-            // Prepare new velocity
-            Vector3 newVelocity = rb.velocity;
-
-            // Redirect player velocity when jumping, if enabled
-            if (jumpPivot)
-            {
-                // Calculate direction velocity, set vertical velocity to 0
-                Vector3 airDir = direction * Mathf.Pow((targetMaxSpeed), 2) * Time.deltaTime;
-
-                // Set new velocity to direction
-                newVelocity = Vector3.zero + airDir;
-            }
-
-            // Apply new horizontal velocity and reset vertical velocity
-            newVelocity.y = 0;
-            rb.velocity = newVelocity;
-
-            // Apply vertical velocity
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-
-            source.PlayOneShot(jumpSound, 0.5f);
-        }
-
-    }
-
-    /// <summary>
-    /// Lerp current speed to target speed
-    /// </summary>
-    private void Accelerate()
-    {
-        // Increment lerp
-        if(accelerateLerp < accelerationTime)
-        {
-            accelerateLerp += Time.deltaTime;
-            accelerateLerp = Mathf.Clamp(accelerateLerp, 0, accelerationTime);
-        }
-
-        // If current has not reached target, continue lerping
-        if (currSpeed != targetMaxSpeed)
-        {
-            currSpeed = Mathf.Lerp(0, targetMaxSpeed, accelerateLerp/accelerationTime);
-        }
-    }
-
-    /// <summary>
-    /// Lerp current speed to 0
-    /// </summary>
-    private void Decelerate()
-    {
-        // Increment lerp
-        if(decelerateLerp < decelerationTime)
-        {
-            decelerateLerp += Time.deltaTime;
-            decelerateLerp = Mathf.Clamp(decelerateLerp, 0, decelerationTime);
-        }
-
-        // If current has not reached 0, continue lerping
-        if (currSpeed > 0)
-        {
-            currSpeed = Mathf.Lerp(targetMaxSpeed, 0, decelerateLerp / decelerationTime);
-        }
     }
 
     #endregion
