@@ -22,7 +22,7 @@ public abstract class RangeAttack : Attack
     [Tooltip("Range of this ranged attack")]
     [SerializeField] protected float range;
     [SerializeField] protected bool shotByPlayer;
-    
+
     /// <summary>
     /// Base speed this attack moveds at
     /// </summary>
@@ -43,6 +43,11 @@ public abstract class RangeAttack : Attack
         shotByPlayer = _shotByPlayer;
         // Activate the projectile after being initialized
         Activate();
+    }
+
+    public void SetMaxRange(float newRange)
+    {
+        range = newRange;   
     }
 
     /// <summary>
