@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
+using static Cinemachine.DocumentationSortingAttribute;
+using UnityEngine.Rendering;
 
 public class ResourceBarUI : MonoBehaviour
 {
@@ -45,6 +47,12 @@ public class ResourceBarUI : MonoBehaviour
     [SerializeField] private Color decreaseColor;
     [SerializeField] private Color fullColor;
     [SerializeField] private Color emptyColor;
+
+    [Tooltip("Sound while bar is recharging")]
+    [SerializeField] private AudioClip BarRefill;
+    [Tooltip("Sound when bar is full")]
+    [SerializeField] private AudioClip BarFull;
+    private AudioSource source;
 
     private void Start()
     {
@@ -148,6 +156,11 @@ public class ResourceBarUI : MonoBehaviour
         {
             effectSource.ActivateImpulse(replenishColor);
         }
+
+        if (BarRefill != null)
+        {
+            source.PlayOneShot(BarRefill, 1f);
+        }
     }
 
     public void OnFull()
@@ -156,6 +169,10 @@ public class ResourceBarUI : MonoBehaviour
         if (effectSource != null && fullColor != null)
         {
             effectSource.ActivateImpulse(fullColor);
+        }
+        if (BarFull != null)
+        {
+            source.PlayOneShot(BarFull, 1f);
         }
     }
 
@@ -166,5 +183,10 @@ public class ResourceBarUI : MonoBehaviour
         {
             effectSource.ActivateImpulse(emptyColor);
         }
+    }
+
+    public void Awake()
+    {
+        source = gameObject.AddComponent<AudioSource>();
     }
 }

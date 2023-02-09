@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Cinemachine.DocumentationSortingAttribute;
+using UnityEngine.Rendering;
 
 public class Grenade : Throwable
 {
@@ -25,6 +27,13 @@ public class Grenade : Throwable
     [Range(0, 1)]
     [SerializeField] protected float velocityLossOnBounce;
 
+
+    [Tooltip("Sound for launching a grenade")]
+    [SerializeField] private AudioClip LaunchGrenade;
+    [Tooltip("Sound when grenade explodes")]
+    [SerializeField] private AudioClip ExplodeGrenade;
+    private AudioSource source;
+
     private void Start()
     {
         if (bounceToTimer <= 0)
@@ -34,6 +43,7 @@ public class Grenade : Throwable
         triggerCol.radius= triggerRadius;
         triggerCol.isTrigger= true;
         triggerCol.enabled= true;
+        AudioSource.PlayClipAtPoint(LaunchGrenade, transform.position, 0.2f);
     }
 
     private void Update()
@@ -58,6 +68,7 @@ public class Grenade : Throwable
     {
         Instantiate(explosive, transform.position, Quaternion.identity).GetComponent<Explosive>().Detonate();
         Destroy(gameObject);
+        AudioSource.PlayClipAtPoint(ExplodeGrenade, transform.position, 1f);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -96,6 +107,10 @@ public class Grenade : Throwable
         }
     }
 
+    private void Awake()
+    {
+        source = gameObject.AddComponent<AudioSource>();
+    }
     private void AdjustProjectileForTimestop()
     {
         if (TimeManager.WorldTimeScale == 1 && rb.isKinematic)
