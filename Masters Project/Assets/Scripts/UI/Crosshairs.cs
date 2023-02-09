@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Crosshairs : MonoBehaviour
 {
@@ -13,6 +14,10 @@ public class Crosshairs : MonoBehaviour
     private Vector3 scaleRef;
     [SerializeField] private RectTransform crosshair;
 
+    [Header("Crosshair distance indicators")]
+    [SerializeField] private Color inRangeColor;
+    [SerializeField] private Color outRangeColor;
+    [SerializeField] private Image[] crosshairImages;
 
     private void Start()
     {
@@ -46,6 +51,24 @@ public class Crosshairs : MonoBehaviour
         {
             scaleRef = Vector3.zero;
             crosshair.localScale = scaleRef;
+        }
+
+        if (crosshairImages.Length > 0)
+        {
+            if(gunRef.InRange() && crosshairImages[0].color != inRangeColor)
+            {
+                foreach(Image img in crosshairImages)
+                {
+                    img.color = inRangeColor;
+                }
+            }
+            else if(!gunRef.InRange() && crosshairImages[0].color != outRangeColor)
+            {
+                foreach (Image img in crosshairImages)
+                {
+                    img.color = outRangeColor;
+                }
+            }
         }
 
         

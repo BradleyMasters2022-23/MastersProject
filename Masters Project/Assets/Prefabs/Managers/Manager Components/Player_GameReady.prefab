@@ -198,7 +198,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 509043470614975084}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.15500005, y: 0.22599995, z: -0.11699969}
+  m_LocalPosition: {x: -0.15499994, y: 0.22599995, z: -0.117000036}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -269,6 +269,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   viewPlanesTolerance: 0.15
+  inMinRange: 0
 --- !u!114 &2668002640844037293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2523,10 +2524,10 @@ CapsuleCollider:
   m_Material: {fileID: 13400000, guid: 39ef85e4ae8e73649aaf6ac143a5c6ed, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.27237785
-  m_Height: 1.9645953
+  m_Radius: 0.51153547
+  m_Height: 2
   m_Direction: 1
-  m_Center: {x: -5.8248126e-17, y: 1.0177023, z: 0.06659883}
+  m_Center: {x: 8.7741094e-16, y: 1, z: 0.18825763}
 --- !u!54 &8810997313966297010
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2564,8 +2565,8 @@ MonoBehaviour:
   deathSound: {fileID: 0}
   dropList: []
   godCheatNotification: {fileID: 0}
-  cheatDamage: 25
-  cheatHeal: 25
+  cheatDamage: 0
+  cheatHeal: 0
 --- !u!114 &7777382438063799731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2648,15 +2649,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2056
   groundCheck: {fileID: 8810997314421572952}
-  groundCheckRadius: 0.3
-  grounded: 0
   QAbility: {fileID: 2702772752586940428}
   testMaxSpeed: 10
   testAcceleration: 1250
   dr: 1.2
-  slopeDownwardCompensation: 80
-  slopeHitDist: 0
-  maxAngle: 0
 --- !u!114 &8810997313966297015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2686,6 +2682,7 @@ MonoBehaviour:
   bulletsPerShot: 3
   muzzleflashVFX: {fileID: 6918287896248534240, guid: 9b90f1dedda807a429479e8afa54de2d, type: 3}
   minAimRange: 7.5
+  maxRange: 0
   gunshotSound:
   - {fileID: 8300000, guid: 22de26de13aa2d24dbca24d4a5c03410, type: 3}
   - {fileID: 8300000, guid: 25032b2c9aa20374e9a19a65a6ce3393, type: 3}
@@ -2755,7 +2752,7 @@ MonoBehaviour:
   performSpeedModifier: 1
   windupLength: 0
   recoveryLength: 0.4
-  cooldown: 1
+  cooldown: 8
   cooldownSpeedModifier: 1
   maxCharges: 3
   currentCharges: 0
@@ -2950,7 +2947,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8810997314421572953}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.033, z: 0.063}
+  m_LocalPosition: {x: 0, y: 0, z: 0.177}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children: []
