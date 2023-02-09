@@ -178,4 +178,22 @@ public abstract class Ability : MonoBehaviour
     }
 
     #endregion
+
+    #region UI Interface Stuff
+
+    public int CurrentCharges()
+    {
+        return currentCharges;
+    }
+    public int TotalCharges()
+    {
+        return maxCharges;
+    }
+
+    public float ChargeProgress()
+    {
+        return cooldownTimer.TimerProgress();
+    }
+
+    #endregion
 }
