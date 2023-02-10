@@ -591,14 +591,16 @@ public class PlayerController : MonoBehaviour
 
         if(grounded)
         {
-            Quaternion slopeRotation = Quaternion.FromToRotation(Vector3.up, slopeHit.normal);
-            Vector3 adjustedVelocity = slopeRotation * velocity;
-            Debug.DrawRay(groundCheck.position, adjustedVelocity);
+            //Quaternion slopeRotation = Quaternion.FromToRotation(Vector3.up, slopeHit.normal);
+            //Vector3 adjustedVelocity = slopeRotation * velocity;
+            //Debug.DrawRay(groundCheck.position, adjustedVelocity);
 
-            if(adjustedVelocity.y < 0)
-            {
-                return adjustedVelocity;
-            }
+            //if(adjustedVelocity.y < 0)
+            //{
+            //    return adjustedVelocity;
+            //}
+
+            return Vector3.ProjectOnPlane(velocity, slopeHit.normal);
         }
         return velocity;
     }
