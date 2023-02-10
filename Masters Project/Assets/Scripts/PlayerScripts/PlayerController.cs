@@ -468,7 +468,7 @@ public class PlayerController : MonoBehaviour
         if (OnSlope() && currentState != PlayerState.MIDAIR)
         {
             rb.AddForce(SlopedVector() * accelerationSpeed, ForceMode.Force);
-            Debug.Log("Applying slopped force");
+            //Debug.Log("Applying slopped force");
 
             if (rb.velocity.y > 0)
                 rb.AddForce(Vector3.down * slopeStickForce, ForceMode.Force);
@@ -478,14 +478,14 @@ public class PlayerController : MonoBehaviour
         else if (currentState != PlayerState.MIDAIR)
         {
             rb.AddForce(inputDirection.normalized * accelerationSpeed, ForceMode.Force);
-            Debug.Log("Applying ground force");
+            //Debug.Log("Applying ground force");
         }
            
 
         // if midair, then add air modifier 
         else if (currentState == PlayerState.MIDAIR)
         {
-            Debug.Log("Applying midair force");
+            //Debug.Log("Applying midair force");
             rb.AddForce(inputDirection.normalized * accelerationSpeed * airModifier.Current, ForceMode.Force);
         }
 
@@ -506,14 +506,14 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void MoveSpeedThrottle()
     {
-        if(OnSlope() && currentState != PlayerState.MIDAIR)
+        if (OnSlope() && currentState != PlayerState.MIDAIR)
         {
-            if(rb.velocity.magnitude > targetMaxSpeed)
+            if (rb.velocity.magnitude > targetMaxSpeed)
             {
                 rb.velocity = rb.velocity.normalized * targetMaxSpeed;
             }
         }
-        else
+        else if (jumpTimer.TimerDone())
         {
             Vector3 horizontalVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
 
@@ -591,7 +591,6 @@ public class PlayerController : MonoBehaviour
         {
             ChangeState(PlayerState.MIDAIR);
             rb.drag = 0;
-
 
             // Adjust jumps, and reset any jumping cooldown
             jumpTimer.ResetTimer();
