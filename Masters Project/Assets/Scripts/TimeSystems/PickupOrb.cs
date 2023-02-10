@@ -11,6 +11,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static Cinemachine.DocumentationSortingAttribute;
+using UnityEngine.Rendering;
 
 public abstract class PickupOrb : MonoBehaviour
 {
@@ -58,6 +60,11 @@ public abstract class PickupOrb : MonoBehaviour
     [Tooltip("The collider for the actual core collider")]
     [SerializeField] protected Collider realCollider;
 
+    [Tooltip("Sound when orb is collected")]
+    [SerializeField] private AudioClip OrbCollect;
+
+    private AudioSource source;
+
     [Header("=====Despawn=====")]
     [Tooltip("How long until the despawn sequence starts")]
     [SerializeField] protected float startDespawnTime;
@@ -67,6 +74,8 @@ public abstract class PickupOrb : MonoBehaviour
     [SerializeField] protected bool despawnTimeAffectedByTimestop;
     [Tooltip("Speed modifier for despawn indicator. Gets faster the closer to the despawn.")]
     [SerializeField] protected float despawnAnimationScaling;
+
+   
 
     private ScaledTimer startDespawnTracker;
     private ScaledTimer despawnTracker;
@@ -104,6 +113,8 @@ public abstract class PickupOrb : MonoBehaviour
         //ready = false;
 
         //StartCoroutine(SpawningOrb());
+
+        source = gameObject.AddComponent<AudioSource>();
     }
 
     //protected IEnumerator SpawningOrb()
@@ -221,6 +232,8 @@ public abstract class PickupOrb : MonoBehaviour
         if(other.CompareTag("Player"))
         {
             OnPickup();
+
+            AudioSource.PlayClipAtPoint(OrbCollect, transform.position, 0.2f);
         }
     }
 
