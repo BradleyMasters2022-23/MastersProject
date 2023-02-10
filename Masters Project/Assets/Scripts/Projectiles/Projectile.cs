@@ -160,7 +160,7 @@ public class Projectile : RangeAttack
 
         if (bulletShot.Length > 0)
         {
-            source.PlayOneShot(bulletShot[Random.Range(0, bulletShot.Length)], 0.3f);
+            source.PlayOneShot(bulletShot[Random.Range(0, bulletShot.Length)], 0.1f);
         }
     }
 

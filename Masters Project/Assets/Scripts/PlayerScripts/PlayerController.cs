@@ -206,8 +206,6 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
-    //public bool grounded;
-
     #region Combat Stuff
 
     [Tooltip("Ability to activate when pressing 'Q'")]
