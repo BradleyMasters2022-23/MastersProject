@@ -6,6 +6,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using System.Reflection;
 
 public class DisplayDialogueUI : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class DisplayDialogueUI : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI dialogueText;
+    [SerializeField] private Image background;
     [SerializeField] private Image pennySprite;
     [SerializeField] private Image npcSprite;
 

@@ -33,6 +33,8 @@ public class PlayerGunController : MonoBehaviour
     [Tooltip("Minimum range for aiming to take effect. " +
         "Prevents weird aiming when too close to a wall")]
     [SerializeField] private float minAimRange;
+    [Tooltip("The range of this weapon. Passed through to the bullet")]
+    [SerializeField] private float maxRange;
 
     [Tooltip("Sound that happens when gun go pew pew")]
     [SerializeField] private AudioClip[] gunshotSound;
@@ -153,7 +155,7 @@ public class PlayerGunController : MonoBehaviour
         // Tell the accuracy to recover over time while not firing
         if(!firing && currBloom != baseBloom && TimeManager.WorldTimeScale > enhancedShotThreshold)
         {
-            float newAccuracy = currBloom - bloomRecoveryRate * TimeManager.WorldDeltaTime;
+            float newAccuracy = currBloom - bloomRecoveryRate * Time.deltaTime;
             if(newAccuracy < baseBloom)
             {
                 newAccuracy = baseBloom;
@@ -215,10 +217,8 @@ public class PlayerGunController : MonoBehaviour
             {
                 newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current * enhancedSpeedMultiplier, true);
             }
-            
+            newShot.GetComponent<RangeAttack>().SetMaxRange(maxRange);
 
-            // Tell bullet to initialize
-            
         }
 
         if(gunshotSound.Length > 0)
@@ -239,6 +239,12 @@ public class PlayerGunController : MonoBehaviour
         rot.y += yMod;
 
         return rot;
+    }
+
+    public bool InRange()
+    {
+        float dist = Mathf.Abs(Vector3.Distance(shootPoint.position, shootCam.TargetPos));
+        return dist < maxRange || shootCam.inMinRange;
     }
 
     /// <summary>

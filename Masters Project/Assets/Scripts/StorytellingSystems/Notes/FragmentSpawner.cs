@@ -40,4 +40,6 @@ public class FragmentSpawner : MonoBehaviour
     public void SetSpawnPoint(Transform spawn) {
         fragSpawnPoint = spawn;
     }
+
+    
 }
