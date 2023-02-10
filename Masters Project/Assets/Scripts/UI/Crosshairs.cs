@@ -15,9 +15,15 @@ public class Crosshairs : MonoBehaviour
     [SerializeField] private RectTransform crosshair;
 
     [Header("Crosshair distance indicators")]
-    [SerializeField] private Color inRangeColor;
-    [SerializeField] private Color outRangeColor;
+    [SerializeField] private Color targetColor;
+    [SerializeField] private Color noTargetColor;
+
+    [SerializeField, Range(0, 1)] private float outRangeAlpha;
+    [SerializeField, Range(0, 1)] private float inRangeAlpha;
+
     [SerializeField] private Image[] crosshairImages;
+
+    private Color currColor;
 
     private void Start()
     {
@@ -32,11 +38,20 @@ public class Crosshairs : MonoBehaviour
         maxBloom = gunRef.MaxBloom;
         minBloom = gunRef.BaseBloom;
         enhancedThreshold = gunRef.EnhancedShotThreshold;
+
+        currColor = new Color(noTargetColor.r, noTargetColor.g, noTargetColor.b, outRangeAlpha);
     }
 
     private void LateUpdate()
     {
-        if(TimeManager.WorldTimeScale > enhancedThreshold)
+        CrosshairBloomAdjustments();
+
+        CrosshairDistanceAdjustments();
+    }
+
+    private void CrosshairBloomAdjustments()
+    {
+        if (TimeManager.WorldTimeScale > enhancedThreshold)
         {
             // Get current bloom, determine if this would be redundent to change
             float currBloom = gunRef.CurrBloom;
@@ -47,30 +62,42 @@ public class Crosshairs : MonoBehaviour
             scaleRef.z = currBloom;
             crosshair.localScale = scaleRef;
         }
-        else if(scaleRef != Vector3.zero)
+        else if (scaleRef != Vector3.zero)
         {
             scaleRef = Vector3.zero;
             crosshair.localScale = scaleRef;
         }
+    }
 
-        if (crosshairImages.Length > 0)
+    private void CrosshairDistanceAdjustments()
+    {
+        if (crosshairImages.Length <= 0)
+            return;
+
+        // adjust color based on target being in range 
+        if (gunRef.InRange() && gunRef.TargetInRange())
         {
-            if(gunRef.InRange() && crosshairImages[0].color != inRangeColor)
-            {
-                foreach(Image img in crosshairImages)
-                {
-                    img.color = inRangeColor;
-                }
-            }
-            else if(!gunRef.InRange() && crosshairImages[0].color != outRangeColor)
-            {
-                foreach (Image img in crosshairImages)
-                {
-                    img.color = outRangeColor;
-                }
-            }
+            currColor = targetColor;
+        }
+        else
+        {
+            currColor = noTargetColor;
         }
 
-        
+        // adjust alpha based on distance
+        if (gunRef.InRange())
+        {
+            currColor.a = inRangeAlpha;
+        }
+        else
+        {
+            currColor.a = outRangeAlpha;
+        }
+
+        // apply new color
+        foreach (Image img in crosshairImages)
+        {
+            img.color = currColor;
+        }
     }
 }

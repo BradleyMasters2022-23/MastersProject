@@ -47,6 +47,8 @@ public class CameraShoot : MonoBehaviour
 
     public bool inMinRange;
 
+    RaycastHit hitInfo;
+
     private void Awake()
     {
         planes = GeometryUtility.CalculateFrustumPlanes(Camera.main);
@@ -83,8 +85,6 @@ public class CameraShoot : MonoBehaviour
     /// </summary>
     private void Fire()
     {
-        // Prepare hitscan info
-        RaycastHit hitInfo;
 
         // Fire hitscan
         if (Physics.Raycast(transform.position, transform.forward, out hitInfo, Mathf.Infinity, ~layersToIgnore))
@@ -108,6 +108,30 @@ public class CameraShoot : MonoBehaviour
             inMinRange = false;
             targetPos = defaultTarget.position;
         }
+    }
+
+    /// <summary>
+    /// Whether or not a target was hit with the last raycast
+    /// </summary>
+    /// <returns></returns>
+    public bool TargetHit()
+    {
+        Transform parent = hitInfo.transform;
+        Target target;
+
+        // continually escelate up for a targetable reference
+        while (!parent.TryGetComponent<Target>(out target) && parent.parent != null)
+        {
+            parent = parent.parent;
+        }
+
+        // Check if the target can be damaged
+        if (target != null)
+        {
+            // Damage target, prevent multi damaging
+            return true;
+        }
+        return false;
     }
 
     /// <summary>

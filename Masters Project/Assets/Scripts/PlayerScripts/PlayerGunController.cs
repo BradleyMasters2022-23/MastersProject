@@ -247,6 +247,11 @@ public class PlayerGunController : MonoBehaviour
         return dist < maxRange || shootCam.inMinRange;
     }
 
+    public bool TargetInRange()
+    {
+        return (InRange() && shootCam.TargetHit());
+    }
+
     /// <summary>
     /// Replace the players shot projectile
     /// </summary>

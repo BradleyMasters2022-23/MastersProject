@@ -149,7 +149,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.2398, y: -32.7969}
+  m_AnchoredPosition: {x: 0.2398, y: -47.4}
   m_SizeDelta: {x: 64.5979, y: 6.9736}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3698655222645611244
@@ -215,6 +215,7 @@ GameObject:
   - component: {fileID: 3698655223003017251}
   - component: {fileID: 3698655223003017250}
   - component: {fileID: 3698655223003017248}
+  - component: {fileID: 8308119473246874229}
   m_Layer: 5
   m_Name: CombatCrosshairs
   m_TagString: Untagged
@@ -295,6 +296,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54c2cab34bba96242b72e11e407f3bef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8308119473246874229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3698655223003017276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97e8fefad20794742a0fc09dd2ba4bdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gunRef: {fileID: 0}
+  scaleOverBloom:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.1
+      inSlope: 1.1
+      outSlope: 1.1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1.2
+      inSlope: 1.1
+      outSlope: 1.1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  crosshair: {fileID: 3526705053082547878}
+  targetColor: {r: 1, g: 0.2867924, b: 0.2867924, a: 1}
+  noTargetColor: {r: 0.8113208, g: 0.8113208, b: 0.8113208, a: 1}
+  outRangeAlpha: 0.4
+  inRangeAlpha: 0.8
+  crosshairImages:
+  - {fileID: 1892421470882757287}
+  - {fileID: 5544947761323895266}
 --- !u!1 &3698655223296213803
 GameObject:
   m_ObjectHideFlags: 0
