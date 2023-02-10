@@ -164,12 +164,12 @@ public class PlayerController : MonoBehaviour
     private ScaledTimer jumpTimer;
 
     /// <summary>
-    /// Check how long its been since jumping
+    /// Tracker for if the player can jump mid air
     /// </summary>
-    private ScaledTimer midAirTimer;
-
     private ScaledTimer kyoteTracker;
-
+    /// <summary>
+    /// whether kyote time is active
+    /// </summary>
     private bool kyoteTimeActive = false;
 
     [Header("---Gravity and Ground---")]
@@ -231,7 +231,6 @@ public class PlayerController : MonoBehaviour
 
         // Initialize internal variables
         jumpTimer = new ScaledTimer(jumpCooldown, false);
-        midAirTimer = new ScaledTimer(0.5f, false);
         kyoteTracker = new ScaledTimer(kyoteTime, false);
         currentJumps = jumps.Current;
         targetMaxSpeed = maxMoveSpeed.Current;
@@ -316,25 +315,6 @@ public class PlayerController : MonoBehaviour
                         currentJumps = jumps.Current;
 
                     // If not on ground, set state to midair. Disable sprint
-                    //if (!IsGrounded() && !kyoteTimeActive)
-                    //{
-                    //    //ChangeState(PlayerState.MIDAIR);
-                    //    Debug.Log("Kyote time started!");
-                    //    kyoteTimeActive = true;
-                    //    kyoteTracker.ResetTimer();
-                    //}
-                    //else if(!IsGrounded() && kyoteTracker.TimerDone())
-                    //{
-                    //    Debug.Log("Kyote time ended!");
-                    //    kyoteTimeActive = false;
-                    //    kyoteTracker.ResetTimer();
-                    //    ChangeState(PlayerState.MIDAIR);
-                    //}
-                    //else if (kyoteTimeActive && IsGrounded())
-                    //{
-                    //    kyoteTimeActive = false;
-                    //    Debug.Log("Kyote time canceled!");
-                    //}
 
                     if (!grounded)
                         ChangeState(PlayerState.MIDAIR);
@@ -365,6 +345,12 @@ public class PlayerController : MonoBehaviour
                     if (grounded && rb.velocity.y <= 0 && jumpTimer.TimerDone())
                     {
                         ChangeState(PlayerState.GROUNDED);
+                    }
+
+                    // check if its time to remove the first jump after falling off a ledge and kyote time is done
+                    if(disableFirstJumpOnFall && currentJumps == jumps.Current && kyoteTracker.TimerDone())
+                    {
+                        currentJumps--;
                     }
 
                     break;
@@ -417,16 +403,8 @@ public class PlayerController : MonoBehaviour
                     // Failsafe - set gravity on
                     rb.useGravity = true;
 
-                    midAirTimer.ResetTimer();
+                    kyoteTracker.ResetTimer();
 
-                    // If the player went from grounded to midair, check if a jump should be removed
-                    if (currentState == PlayerState.GROUNDED)
-                    {
-                        if (disableFirstJumpOnFall && currentJumps == jumps.Current)
-                        {
-                            currentJumps--;
-                        }
-                    }
 
                     break;
                 }
@@ -616,7 +594,6 @@ public class PlayerController : MonoBehaviour
             ChangeState(PlayerState.MIDAIR);
             rb.drag = 0;
 
-            midAirTimer.ResetTimer();
 
             // Adjust jumps, and reset any jumping cooldown
             jumpTimer.ResetTimer();
