@@ -320,6 +320,7 @@ public class PlayerController : MonoBehaviour
                     if (sprintHeld)
                         ChangeState(PlayerState.SPRINTING);
 
+
                     break;
                 }
             case PlayerState.SPRINTING:
@@ -340,7 +341,7 @@ public class PlayerController : MonoBehaviour
                 {
                     HorizontalMovement();
                     // If player lands and is moving downward, move back to grounded state
-                    if (grounded && rb.velocity.y <= 0 && jumpTimer.TimerDone())
+                    if (grounded && jumpTimer.TimerDone())
                     {
                         ChangeState(PlayerState.GROUNDED);
                     }
@@ -371,7 +372,7 @@ public class PlayerController : MonoBehaviour
             case PlayerState.GROUNDED:
                 {
                     // Failsafe - set gravity on
-                    rb.useGravity = false;
+                    //rb.useGravity = false;
 
                     // When entering grounded state, reset jumps
                     currentJumps = jumps.Current;
@@ -393,6 +394,7 @@ public class PlayerController : MonoBehaviour
                 {
                     // When entering sprint state, increase target max move speed
                     targetMaxSpeed = maxMoveSpeed.Current * sprintModifier.Current;
+
 
                     break;
                 }
