@@ -198,7 +198,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 509043470614975084}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.15499969, y: 0.22599983, z: -0.11699969}
+  m_LocalPosition: {x: -0.15499969, y: 0.22600007, z: -0.11699969}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2638,7 +2638,7 @@ MonoBehaviour:
     upperLimit: 3
   jumpForce: 180
   jumpCooldown: 0.2
-  kyoteTime: 0
+  kyoteTime: 0.25
   disableFirstJumpOnFall: 1
   jumpPivot: 1
   jumpSound: {fileID: 8300000, guid: 2bb9e30607604ed4192c34c68ac28cc9, type: 3}
@@ -2654,7 +2654,7 @@ MonoBehaviour:
   slopeStickForce: 200
   grounded: 0
   QAbility: {fileID: 2702772752586940428}
-  angleTheshold: 10
+  angleTheshold: 35
 --- !u!114 &8810997313966297015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2695,6 +2695,7 @@ MonoBehaviour:
   bloomPerShot: 0.9
   maxBloom: 5.5
   bloomRecoveryRate: 5
+  bloomRecoveryDelay: 0.7
   maxShootDisplacement: 0.08
   shootPoint: {fileID: 8810997314044839442}
   defaultTarget: {fileID: 8810997314261937679}

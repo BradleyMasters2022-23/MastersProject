@@ -105,7 +105,9 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Time it takes to reach full speed")]
     [SerializeField] private float accelerationSpeed;
     [Tooltip("Amount of drag player experiences when on the ground")]
-    [SerializeField] private float drag;
+    [SerializeField] private float groundDrag;
+    [Tooltip("Amount of drag player experiences when in the air")]
+    [SerializeField] private float airDrag;
 
     [Tooltip("Speed modifier for player when sprinting")]
     [SerializeField] private UpgradableFloat sprintModifier;
@@ -400,9 +402,10 @@ public class PlayerController : MonoBehaviour
                 }
             case PlayerState.MIDAIR:
                 {
+                    rb.drag = airDrag;
                     // Failsafe - set gravity on
                     rb.useGravity = true;
-
+                   
                     kyoteTracker.ResetTimer();
 
 
@@ -495,9 +498,9 @@ public class PlayerController : MonoBehaviour
 
         // determine when drag should be applied 
         if (currentState != PlayerState.MIDAIR)
-            rb.drag = drag;
+            rb.drag = groundDrag;
         else
-            rb.drag = 0;
+            rb.drag = airDrag;
 
         // dont allow gravity on slopes 
         rb.useGravity = !OnSlope();
@@ -508,14 +511,14 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void MoveSpeedThrottle()
     {
-        if (OnSlope() && currentState != PlayerState.MIDAIR)
+        if (OnSlope() && grounded)
         {
             if (rb.velocity.magnitude > targetMaxSpeed)
             {
                 rb.velocity = rb.velocity.normalized * targetMaxSpeed;
             }
         }
-        else if (jumpTimer.TimerDone())
+        else
         {
             Vector3 horizontalVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
 
@@ -563,21 +566,15 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Adjust the current velocity to the current ground normal
+    /// </summary>
+    /// <param name="velocity">Velocity vector to adjust</param>
+    /// <returns>Adjusted velocity vector</returns>
     private Vector3 AdjustVelocityToSlope(Vector3 velocity)
     {
-        //return Vector3.ProjectOnPlane(velocity, slopeHit.normal);
-
         if(grounded)
         {
-            //Quaternion slopeRotation = Quaternion.FromToRotation(Vector3.up, slopeHit.normal);
-            //Vector3 adjustedVelocity = slopeRotation * velocity;
-            //Debug.DrawRay(groundCheck.position, adjustedVelocity);
-
-            //if(adjustedVelocity.y < 0)
-            //{
-            //    return adjustedVelocity;
-            //}
-
             return Vector3.ProjectOnPlane(velocity, slopeHit.normal);
         }
         return velocity;
@@ -592,8 +589,7 @@ public class PlayerController : MonoBehaviour
         if(currentJumps > 0 && jumpTimer.TimerDone())
         {
             ChangeState(PlayerState.MIDAIR);
-            rb.drag = 0;
-
+            
             // Adjust jumps, and reset any jumping cooldown
             jumpTimer.ResetTimer();
             currentJumps--;
@@ -605,10 +601,10 @@ public class PlayerController : MonoBehaviour
             if (jumpPivot)
             {
                 // Calculate inputDirection velocity, set vertical velocity to 0
-                Vector3 airDir = inputDirection * Mathf.Pow((targetMaxSpeed), 2) * Time.deltaTime;
+                Vector3 airDir = inputDirection.normalized * targetMaxSpeed;
 
                 // Set new velocity to inputDirection
-                newVelocity = Vector3.zero + airDir;
+                newVelocity = airDir;
             }
 
             // Apply new horizontal velocity and reset vertical velocity
@@ -617,6 +613,8 @@ public class PlayerController : MonoBehaviour
 
             // Apply vertical velocity
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
+            
 
             source.PlayOneShot(jumpSound, 0.5f);
         }
