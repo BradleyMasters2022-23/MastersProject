@@ -2,15 +2,25 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: CaveWall
   m_Shader: {fileID: 4800000, guid: 93093dd05eb82af448f81b848d35b28f, type: 3}
-  m_ShaderKeywords: _DETAIL_MULX2 _EMISSION _METALLICGLOSSMAP _NORMALMAP _TRIPLANARDETAILUSEINSTEAD_ON
-    _USEDETAIL_ON _USEGRADIENTMASKRIMLIGHT_ON _USEGRADIENTMASK_ON _USENOISE_ON _USESNOWNOISE_ON
+  m_ValidKeywords:
+  - _TRIPLANARDETAILUSEINSTEAD_ON
+  - _USEDETAIL_ON
+  - _USENOISE_ON
+  - _USESNOWNOISE_ON
+  m_InvalidKeywords:
+  - _DETAIL_MULX2
+  - _EMISSION
+  - _METALLICGLOSSMAP
+  - _NORMALMAP
+  - _USEGRADIENTMASKRIMLIGHT_ON
+  - _USEGRADIENTMASK_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -152,8 +162,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _AOscale: 1
+    - _AlphaCutoff: 0.5
     - _BaseCellOffset: -1.2
     - _BaseCellSharpness: 2.5
     - _Blendnormals: 0.1
@@ -180,7 +192,7 @@ Material:
     - _Grasssharpen: 0.6
     - _HighlightMultiplier: 1
     - _IndirectDiffuseContribution: 1
-    - _MainTiling: 1
+    - _MainTiling: 0.1
     - _Main_tiling: 1
     - _Mask_tiling: 20
     - _Metallic: 0
@@ -240,3 +252,4 @@ Material:
     - _Shadowcolor: {r: 0.11271807, g: 0.11271807, b: 0.16037738, a: 1}
     - _SpecColor: {r: 0.35294116, g: 0.35294116, b: 0.35294116, a: 1}
     - _TriplanarColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
