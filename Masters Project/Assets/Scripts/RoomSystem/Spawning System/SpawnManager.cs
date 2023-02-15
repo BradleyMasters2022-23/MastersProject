@@ -2,7 +2,7 @@
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 24th, 2022
- * Last Edited - October 24th, 2022 by Ben Schuster
+ * Last Edited - February 15th, 2023 by Ben Schuster
  * Description - Core manager for the spawner
  * ================================================================================================
  */
@@ -11,17 +11,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public enum RelativeDifficulty
+{
+    Easy, 
+    Normal, 
+    Hard
+}
+
 public class SpawnManager : MonoBehaviour
 {
+    #region Core Variables
+
     public static SpawnManager instance;
 
-    [Tooltip("How many seconds to wait before starting the encounter?")]
-    [SerializeField] private float startDelay;
-
-    /// <summary>
-    /// The encounter that was chosen
-    /// </summary>
-    private EncounterSO chosenEncounter;
     /// <summary>
     /// Current index of waves in the encounter
     /// </summary>
@@ -32,9 +34,6 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     private Queue<GameObject> spawnQueue;
 
-    [Tooltip("Maximum amount of enemies allowed to be spawned at once")]
-    [SerializeField, Range(1, 50)] private int maxEnemies = 10;
-
     /// <summary>
     /// Current number of enemies spawned
     /// </summary>
@@ -44,13 +43,42 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     private int waitingEnemies = 0;
 
-    [Tooltip("Delay between spawning each individual enemy. Randomly chosen between this range.")]
-    [SerializeField] private Vector2 spawnDelay = new Vector2(0, 1);
-
     /// <summary>
     /// Whether or not the spawner is currently spawning
     /// </summary>
     private bool spawning;
+
+    /// <summary>
+    /// The encounter that was chosen
+    /// </summary>
+    private EncounterSO chosenEncounter;
+
+    /// <summary>
+    /// References to every spawnpoint in the scene
+    /// </summary>
+    private SpawnPoint[] spawnPoints;
+
+    /// <summary>
+    /// Whether or not this spawner is complete
+    /// </summary>
+    private bool finished;
+
+    #endregion
+
+    #region Open Variables
+
+    [Tooltip("How many seconds to wait before starting the encounter?")]
+    [SerializeField] private float startDelay;
+
+    [Tooltip("Delay between spawning each individual enemy. Randomly chosen between this range.")]
+    [SerializeField] private Vector2 spawnDelay = new Vector2(0, 1);
+
+    [Tooltip("Maximum amount of enemies allowed to be spawned at once")]
+    [SerializeField, Range(1, 50)] private int maxEnemies = 10;
+
+    #endregion
+
+    #region Timer and Tracker Variables
 
     /// <summary>
     /// Timer for spawning
@@ -69,6 +97,8 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     private Coroutine backupCheckRoutine;
 
+    #endregion
+    
     /// <summary>
     /// audio source for spawner
     /// </summary>
@@ -77,19 +107,14 @@ public class SpawnManager : MonoBehaviour
     [Tooltip("Sound played when the encounter ends.")]
     [SerializeField] AudioClip sound;
 
-    /// <summary>
-    /// References to every spawnpoint in the scene
-    /// </summary>
-    private SpawnPoint[] spawnPoints;
-
-    /// <summary>
-    /// Whether or not this spawner is complete
-    /// </summary>
-    private bool finished;
-
+    #region Cheat Variables
 
     private GameControls controls;
     private InputAction endCheat;
+
+
+    #endregion
+
 
     /// <summary>
     /// Initialize singleton, internal trackers
