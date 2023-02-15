@@ -266,7 +266,8 @@ public class MapLoader : MonoBehaviour
             }
 
             // Make sure the last room is not the same
-            if(mapOrder.Count >= 2 && selectedObject == mapOrder[mapOrder.Count - 2])
+            if(mapOrder.Count >= 2 && selectedObject == mapOrder[mapOrder.Count - 2] 
+                && allRooms.Count > 1)
             {
                 availableRooms.Remove(selectedObject);
                 selectedObject = null;
@@ -275,7 +276,7 @@ public class MapLoader : MonoBehaviour
 
             // Backup failsafe check
             c++;
-            if (c >= 100000)
+            if (c >= 1000)
             {
                 Debug.LogError($"[Map Loader] Select room 2 is stuck in a loop! Breaking!");
                 Debug.DebugBreak();

@@ -41,6 +41,7 @@ public class PlayerGunController : MonoBehaviour
     private AudioSource source;
 
     [Header("=====Weapon Bloom [Accuracy]=====")]
+
     [Tooltip("What is the default/target bloom. 0 for perfect accuracy")]
     [SerializeField] private float baseBloom;
     [Tooltip("Amount of bloom (inaccuracy) gained per shot. Based on the shot, not bullets")]
@@ -49,6 +50,14 @@ public class PlayerGunController : MonoBehaviour
     [SerializeField] private float maxBloom;
     [Tooltip("Speed at which bloom decreases back to base bloom when not firing")]
     [SerializeField] private float bloomRecoveryRate;
+    [Tooltip("How long after firing to wait before beginning bloom recovery")]
+    [SerializeField] private float bloomRecoveryDelay;
+
+    /// <summary>
+    /// Current cooldown before recovering bloom
+    /// </summary>
+    private ScaledTimer bloomRecoveryCDTracker;
+
     /// <summary>
     /// Current amount of bloom currently active
     /// </summary>
@@ -122,6 +131,7 @@ public class PlayerGunController : MonoBehaviour
 
         // Initialize timers
         fireTimer = new ScaledTimer(fireDelay.Current, false);
+        bloomRecoveryCDTracker = new ScaledTimer(bloomRecoveryDelay, false);
 
         source = GetComponent<AudioSource>();
     }
@@ -153,7 +163,7 @@ public class PlayerGunController : MonoBehaviour
     private void FixedUpdate()
     {
         // Tell the accuracy to recover over time while not firing
-        if(!firing && currBloom != baseBloom && TimeManager.WorldTimeScale > enhancedShotThreshold)
+        if(!firing && currBloom != baseBloom && bloomRecoveryCDTracker.TimerDone() && TimeManager.WorldTimeScale > enhancedShotThreshold)
         {
             float newAccuracy = currBloom - bloomRecoveryRate * Time.deltaTime;
             if(newAccuracy < baseBloom)
@@ -173,6 +183,9 @@ public class PlayerGunController : MonoBehaviour
     private void ToggleTrigger(InputAction.CallbackContext ctx)
     {
         firing = ctx.started;
+
+        if (ctx.canceled)
+            bloomRecoveryCDTracker.ResetTimer();
     }
 
     /// <summary>
