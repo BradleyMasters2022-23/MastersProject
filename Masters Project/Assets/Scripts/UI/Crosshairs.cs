@@ -23,6 +23,8 @@ public class Crosshairs : MonoBehaviour
 
     [SerializeField] private Image[] crosshairImages;
 
+    [SerializeField] private Image[] lockOnImages;
+
     private Color currColor;
 
     private void Start()
@@ -78,10 +80,26 @@ public class Crosshairs : MonoBehaviour
         if (gunRef.InRange() && gunRef.TargetInRange())
         {
             currColor = targetColor;
+
+            if (lockOnImages.Length > 0 && !lockOnImages[0].enabled)
+            {
+                foreach(Image img in lockOnImages)
+                {
+                    img.enabled = true;
+                }
+            }
         }
         else
         {
             currColor = noTargetColor;
+
+            if (lockOnImages.Length > 0 && lockOnImages[0].enabled)
+            {
+                foreach (Image img in lockOnImages)
+                {
+                    img.enabled = false;
+                }
+            }
         }
 
         // adjust alpha based on distance

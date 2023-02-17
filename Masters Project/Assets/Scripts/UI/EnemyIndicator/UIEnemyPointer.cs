@@ -12,10 +12,18 @@ public class UIEnemyPointer : MonoBehaviour
     private Transform target;
     private Transform player;
     private bool initialized;
+    [SerializeField] private GameObject indicatorGraphic;
+    private RectTransform indicatorRect;
+    [SerializeField] private GameObject maxDistGraphic;
+    private RectTransform maxDistRect;
+    [SerializeField] private bool camViewDisable;
+    private float maxDistance;
+    private float radarRadius;
+    [SerializeField] private bool useDistance;
 
-    private GameObject indicatorGraphic; 
+    [SerializeField] private float radiusMod;
 
-
+    private Vector2 distRect;
 
     // Start is called before the first frame update
     void Awake()
@@ -41,31 +49,63 @@ public class UIEnemyPointer : MonoBehaviour
         CheckEnemyVisibility();
 
         // Dont bother with other functionality if the indicator isnt on
-        if (!indicatorGraphic.activeSelf)
-        {
-            return;
-        }
+        //if (!indicatorGraphic.activeSelf)
+        //{
+        //    return;
+        //}
 
         RotateToTargetFlat();
-        RotateToTargetPop();
+        CheckDistance();
+        //RotateToTargetPop();
+    }
+
+    private void CheckDistance()
+    {
+        if (!useDistance)
+            return;
+
+        float currDist = Mathf.Abs(Vector3.Distance(player.position, target.position));
+
+        float newPix =  Mathf.Clamp01((currDist / maxDistance)) * radarRadius;
+        distRect.y = newPix;
+
+        indicatorRect.anchoredPosition = distRect;
+        maxDistRect.anchoredPosition = distRect;
+
+
+        if (currDist >= maxDistance && !maxDistGraphic.activeSelf)
+        {
+            Debug.Log("Toggling to max range arrow");
+            maxDistGraphic.SetActive(true);
+            indicatorGraphic.SetActive(false);
+        }
+        else if (currDist < maxDistance && !indicatorGraphic.activeSelf)
+        {
+            Debug.Log("Toggling to normal dot");
+            indicatorGraphic.SetActive(true);
+            maxDistGraphic.SetActive(false);
+        }
     }
 
     private void CheckEnemyVisibility()
     {
-        if (cameraRef != null)
+        if(camViewDisable)
         {
-            if (cameraRef.InCamVision(target.position))
+            if (cameraRef != null)
             {
-                if (indicatorGraphic.activeSelf)
+                if (cameraRef.InCamVision(target.position))
                 {
-                    indicatorGraphic.SetActive(false);
+                    if (indicatorGraphic.activeSelf)
+                    {
+                        indicatorGraphic.SetActive(false);
+                    }
                 }
-            }
-            else
-            {
-                if (!indicatorGraphic.activeSelf)
+                else
                 {
-                    indicatorGraphic.SetActive(true);
+                    if (!indicatorGraphic.activeSelf)
+                    {
+                        indicatorGraphic.SetActive(true);
+                    }
                 }
             }
         }
@@ -82,6 +122,8 @@ public class UIEnemyPointer : MonoBehaviour
 
         Vector3 north = new Vector3(0, 0, player.eulerAngles.y);
         t.rotation = r * Quaternion.Euler(north);
+
+        //Debug.Log("rotate to target called");
     }
 
     private void RotateToTargetPop()
@@ -108,11 +150,22 @@ public class UIEnemyPointer : MonoBehaviour
     /// Set the target enemy
     /// </summary>
     /// <param name="target"></param>
-    public void SetTarget(GameObject _target)
+    public void SetTarget(GameObject _target, float rad = 0, float maxDist = 0)
     {
         target = _target.transform;
-        indicatorGraphic = transform.GetChild(0).gameObject;
+        //indicatorGraphic = transform.GetChild(0).gameObject;
         cameraRef = Camera.main.GetComponent<CameraShoot>();
+
+        radarRadius = rad - radiusMod;
+        maxDistance = maxDist;
+
+        if(indicatorGraphic!= null)
+            indicatorRect = indicatorGraphic.GetComponent<RectTransform>();
+        if(maxDistGraphic != null)
+            maxDistRect = maxDistGraphic.GetComponent<RectTransform>();
+
+        distRect = indicatorRect.anchoredPosition;
+
         initialized = true;
     }
 }

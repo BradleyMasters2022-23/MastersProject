@@ -11,6 +11,8 @@ public class UIThreatIndicator : MonoBehaviour
 
     public RectTransform indicatorDisplay;
 
+    public float maxDistance = Mathf.Infinity;
+
     private void Awake()
     {
         enemyList = new List<GameObject>();
@@ -38,7 +40,8 @@ public class UIThreatIndicator : MonoBehaviour
             {
                 enemyList.Add(enemy.gameObject);
                 GameObject a = Instantiate(arrow, indicatorDisplay);
-                a.GetComponent<UIEnemyPointer>().SetTarget(enemy.Center.gameObject);
+                a.GetComponent<UIEnemyPointer>().SetTarget(enemy.Center.gameObject, 
+                    indicatorDisplay.sizeDelta.y / 2, maxDistance);
             }
         }
     }
