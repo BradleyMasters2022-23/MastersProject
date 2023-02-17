@@ -119,6 +119,9 @@ public class CameraShoot : MonoBehaviour
         Transform parent = hitInfo.transform;
         Target target;
 
+        if (parent == null)
+            return false;
+
         // continually escelate up for a targetable reference
         while (!parent.TryGetComponent<Target>(out target) && parent.parent != null)
         {
