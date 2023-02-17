@@ -75,13 +75,13 @@ public class UIEnemyPointer : MonoBehaviour
 
         if (currDist >= maxDistance && !maxDistGraphic.activeSelf)
         {
-            Debug.Log("Toggling to max range arrow");
+            //Debug.Log("Toggling to max range arrow");
             maxDistGraphic.SetActive(true);
             indicatorGraphic.SetActive(false);
         }
         else if (currDist < maxDistance && !indicatorGraphic.activeSelf)
         {
-            Debug.Log("Toggling to normal dot");
+            //Debug.Log("Toggling to normal dot");
             indicatorGraphic.SetActive(true);
             maxDistGraphic.SetActive(false);
         }
