@@ -270,7 +270,7 @@ public class PlayerGunController : MonoBehaviour
 
     public bool InRange()
     {
-        float dist = Mathf.Abs(Vector3.Distance(shootPoint.position, shootCam.TargetPos));
+        float dist = Mathf.Abs(Vector3.Distance(shootPoint.position, shootCam.TargetPos)-0.5f);
         return dist < maxRange || shootCam.inMinRange;
     }
 

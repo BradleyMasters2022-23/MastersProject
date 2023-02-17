@@ -81,6 +81,12 @@ public class Projectile : RangeAttack
 
         float dist = targetVelocity.magnitude * TimeManager.WorldDeltaTime;
 
+        // adjust distance to account for end case
+        if(distanceCovered + dist >= range)
+        {
+            dist = range - distanceCovered;
+        }
+
         // Check if it passed target
         RaycastHit target;
         if (Physics.SphereCast(transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, dist, targetLayers))
