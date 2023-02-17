@@ -88,6 +88,7 @@ public class PlayerGunController : MonoBehaviour
 
 
     [Header("Enhanced Bullets")]
+    [SerializeField] private int enhancedBulletsPerShot;
     [SerializeField] private GameObject enhancedBulletPrefab;
     [SerializeField] private float enhancedSpeedMultiplier;
     [SerializeField, Range(0, 1f)] private float enhancedShotThreshold;
@@ -198,48 +199,61 @@ public class PlayerGunController : MonoBehaviour
             Instantiate(muzzleflashVFX, shootPoint.position, shootPoint.transform.rotation);
         }
 
-        for(int i = 0; i < bulletsPerShot; i++)
+
+        if(TimeManager.WorldTimeScale > enhancedShotThreshold)
         {
-            // Shoot projectile, aiming towards passed in target
-            GameObject newShot;
-
-            if(TimeManager.WorldTimeScale > enhancedShotThreshold)
+            for (int i = 0; i < bulletsPerShot; i++)
             {
-                newShot=Instantiate(shotPrefab, shootPoint.position, transform.rotation);
-            }
-            else
-            {
-                newShot=Instantiate(enhancedBulletPrefab, shootPoint.position, transform.rotation);
-            }
+                // Shoot projectile, aiming towards passed in target
+                GameObject newShot;
 
-            // Calculate & apply the new minor displacement
-            Vector3 displacement = new Vector3(
-                Random.Range(-maxShootDisplacement, maxShootDisplacement),
-                Random.Range(-maxShootDisplacement, maxShootDisplacement),
-                Random.Range(-maxShootDisplacement, maxShootDisplacement));
-            newShot.transform.position += displacement;
+                newShot = Instantiate(shotPrefab, shootPoint.position, transform.rotation);
 
-            // Aim to center screen, apply inaccuracy bonuses
-            newShot.transform.LookAt(shootCam.TargetPos);
-            if (TimeManager.WorldTimeScale > enhancedShotThreshold)
-            {
+                // Calculate & apply the new minor displacement
+                Vector3 displacement = new Vector3(
+                    Random.Range(-maxShootDisplacement, maxShootDisplacement),
+                    Random.Range(-maxShootDisplacement, maxShootDisplacement),
+                    Random.Range(-maxShootDisplacement, maxShootDisplacement));
+                newShot.transform.position += displacement;
+
+                // Aim to center screen, apply inaccuracy bonuses
+                newShot.transform.LookAt(shootCam.TargetPos);
                 newShot.transform.eulerAngles = ApplySpread(newShot.transform.eulerAngles);
-                newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current, true);
-            }
-            else
-            {
-                newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current * enhancedSpeedMultiplier, true);
-            }
-            newShot.GetComponent<RangeAttack>().SetMaxRange(maxRange);
 
+                newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current, true);
+                newShot.GetComponent<RangeAttack>().SetMaxRange(maxRange);
+                currBloom = Mathf.Clamp(currBloom + bloomPerShot, baseBloom, maxBloom);
+            }
         }
+        else
+        {
+            for (int i = 0; i < enhancedBulletsPerShot; i++)
+            {
+                // Shoot projectile, aiming towards passed in target
+                GameObject newShot;
+
+                newShot = Instantiate(enhancedBulletPrefab, shootPoint.position, transform.rotation);
+
+                // Calculate & apply the new minor displacement
+                Vector3 displacement = new Vector3(
+                    Random.Range(-maxShootDisplacement, maxShootDisplacement),
+                    Random.Range(-maxShootDisplacement, maxShootDisplacement),
+                    Random.Range(-maxShootDisplacement, maxShootDisplacement));
+                newShot.transform.position += displacement;
+
+                // Aim to center screen, apply inaccuracy bonuses
+                newShot.transform.LookAt(shootCam.TargetPos);
+                newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current * enhancedSpeedMultiplier, true);
+                newShot.GetComponent<RangeAttack>().SetMaxRange(maxRange);
+
+            }
+        }
+        
 
         if(gunshotSound.Length > 0)
             source.PlayOneShot(gunshotSound[Random.Range(0, gunshotSound.Length)],0.3f);
 
-        // Increase bloom after shot
-        if(TimeManager.WorldTimeScale > enhancedShotThreshold)
-            currBloom = Mathf.Clamp(currBloom + bloomPerShot, baseBloom, maxBloom);
+            
     }
 
     private Vector3 ApplySpread(Vector3 rot)
