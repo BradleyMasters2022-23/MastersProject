@@ -6,13 +6,11 @@ public class Destroy_Vfx : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public float time = 200f;
-    
+    public float time = 3f;
+
     void Start()
     {
-        Destroy(this.gameObject, time * Time.deltaTime); ;
-        
-
+        Destroy(this.gameObject, 8f);
     }
 
 }
