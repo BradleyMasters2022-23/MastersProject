@@ -23,6 +23,7 @@ public class Explosive : MonoBehaviour
     private float speedMod;
 
     public int damage;
+    public int playerDamage;
 
     private float lastTimeScale;
 
@@ -50,6 +51,7 @@ public class Explosive : MonoBehaviour
 
     public void Detonate()
     {
+        Debug.Log("NEW GRENADE DETONATING");
         Detonate(damage);
     }
     public void Detonate(float newDamage)
@@ -112,24 +114,28 @@ public class Explosive : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        GameObject rootTgt = other.transform.root.gameObject;
-        //Debug.Log("Checking object with of " + rootTgt.name);
-        // if target was already damaged or not marked for team, then
-        if (!damagableTags.Contains(rootTgt.tag))
-            return;
-
+        //Debug.Log("Checking collision with :" + other.name);
+        Transform parent = other.transform;
         Target target;
-        if(rootTgt.TryGetComponent<Target>(out target))
+
+        // continually escelate up for a targetable reference
+        while (!parent.TryGetComponent<Target>(out target) && parent.parent != null)
         {
-            if(damagedTargets.Contains(target))
-            {
-                //Debug.Log(rootTgt.name + " has already been damaged by this grenade");
-                return;
-            }
+            parent = parent.parent;
+        }
+        Debug.Log("parent landed on " + parent.name);
+
+        // if target was already damaged or not marked for team, then
+        if (target != null && damagableTags.Contains(target.tag) && !damagedTargets.Contains(target))
+        {
+            Debug.Log($"{target.name} not damaged, adding to list");
             damagedTargets.Add(target);
-            target.RegisterEffect(damage);
-            //target.ExplosiveKnockback(transform.position, transform.localScale.x,
-            //   horizontalForce, verticalForce, explosiveRadius, knockbackFalloff);
+
+            if (target.CompareTag("Player"))
+                target.RegisterEffect(playerDamage);
+            else
+                target.RegisterEffect(damage);
+
         }
     }
 }

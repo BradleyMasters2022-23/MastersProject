@@ -83,7 +83,7 @@ public class Grenade : Throwable
             
 
         GameObject rootTgt = collision.transform.root.gameObject;
-        if (instantDetonateTags.Contains(rootTgt.tag))
+        if (instantDetonateTags.Contains(rootTgt.tag) && !triggered)
         {
             Activate();
         }

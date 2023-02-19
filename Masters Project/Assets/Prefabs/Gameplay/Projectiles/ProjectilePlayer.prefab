@@ -128,7 +128,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83837c8b4b5a4d344afd789cbfd3cc3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 14
+  damage: 7
   knockback: 0
   addativeKnockback: 0
   speed: 120
@@ -150,7 +150,7 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 1
+      value: 0.84212875
       inSlope: -0.16827713
       outSlope: -0.16827713
       tangentMode: 0
@@ -158,8 +158,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0.40809596
     - serializedVersion: 3
-      time: 0.59610885
-      value: 0.6079321
+      time: 0.517343
+      value: 0.32755184
       inSlope: -1.3442761
       outSlope: -1.3442761
       tangentMode: 0
@@ -169,11 +169,11 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: -0.8812344
-      outSlope: -0.8812344
+      inSlope: -0.5748874
+      outSlope: -0.5748874
       tangentMode: 0
       weightedMode: 1
-      inWeight: 0.47172135
+      inWeight: 0.5276139
       outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -216,15 +216,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4395791516843954194, guid: e38b66fa2b3ff35449b8383cab7d76ea, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.18
       objectReference: {fileID: 0}
     - target: {fileID: 4395791516843954194, guid: e38b66fa2b3ff35449b8383cab7d76ea, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.18
       objectReference: {fileID: 0}
     - target: {fileID: 4395791516843954194, guid: e38b66fa2b3ff35449b8383cab7d76ea, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.18
       objectReference: {fileID: 0}
     - target: {fileID: 4395791516843954194, guid: e38b66fa2b3ff35449b8383cab7d76ea, type: 3}
       propertyPath: m_LocalPosition.x
@@ -275,8 +275,12 @@ PrefabInstance:
       value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4395791517354666465, guid: e38b66fa2b3ff35449b8383cab7d76ea, type: 3}
+      propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].time
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4395791517354666465, guid: e38b66fa2b3ff35449b8383cab7d76ea, type: 3}
       propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].value
-      value: 0.79894257
+      value: 0.5223465
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e38b66fa2b3ff35449b8383cab7d76ea, type: 3}
