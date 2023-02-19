@@ -283,7 +283,7 @@ public class MapLoader : MonoBehaviour
                 return null;
             }
 
-        } while (selectedObject == null || selectedObject.segmentType != MapSegmentSO.MapSegmentType.Room) ;
+        } while (selectedObject == null || (selectedObject.segmentType != MapSegmentSO.MapSegmentType.Room));
 
         // Remove from current pool
         availableRooms.Remove(selectedObject);

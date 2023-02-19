@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5424943573854562724
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5424943573854562730}
+  - component: {fileID: 5424943573854562731}
+  m_Layer: 0
+  m_Name: LinearSpawnManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5424943573854562730
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5424943573854562724}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -13.017401, y: 3.466744, z: -32.221706}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5424943573854562731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5424943573854562724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b90a8a399848aef4ba0f20571515beb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  easyNormalBatchRange: {x: 1, y: 1}
+  easyEliteBatchRange: {x: 0, y: 0}
+  scaleEasyEliteSize: 0
+  mediumNormalBatchRange: {x: 2, y: 2}
+  mediumEliteBatchRange: {x: 0, y: 1}
+  hardNormalBatchRange: {x: 3, y: 3}
+  hardEliteBatchRange: {x: 1, y: 1}
+  normalBatches:
+  - {fileID: 11400000, guid: f3fd22919d940544ab1168b812d32589, type: 2}
+  - {fileID: 11400000, guid: a76d34e43ce10394c85e33176a5f63f8, type: 2}
+  - {fileID: 11400000, guid: 9989f7536f131994f88eb68224b5a952, type: 2}
+  - {fileID: 11400000, guid: d9597f5f92dd5ed4183a38bf26ce8152, type: 2}
+  - {fileID: 11400000, guid: e2c4e15f0cfeeef4ebd39d9b084df173, type: 2}
+  - {fileID: 11400000, guid: 9f6a4c0ee198ea64481fd137efbfc1eb, type: 2}
+  eliteBatches:
+  - {fileID: 11400000, guid: 90fbcbe9fa9cef44a8a55463b9c053ae, type: 2}
+  - {fileID: 11400000, guid: f0346fda59827764e989141272ea6650, type: 2}
+  combatRoomCount: 0
+  normalBatchIncrementRate: 2
+  eliteBatchIncrementRate: 3

@@ -29,6 +29,7 @@ public class LinearSpawnManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            combatRoomCount = 0;
         }
         else
         {
@@ -37,11 +38,16 @@ public class LinearSpawnManager : MonoBehaviour
         }
     }
 
-    public int enemyCount;
-    public int roomNumber;
+
+    [SerializeField] private int combatRoomCount = 0;
 
     public int normalBatchIncrementRate;
     public int eliteBatchIncrementRate;
+
+    public void IncrementDifficulty()
+    {
+        combatRoomCount++;
+    }
 
     public Dictionary<EnemySO, int>[] RequestBatch(RelativeDifficulty[] waves, float mod)
     {
@@ -55,14 +61,14 @@ public class LinearSpawnManager : MonoBehaviour
         }
 
         // DEBUG - Print out the data to check the info
-        for (int i = 0; i < allWaves.Length; i++)
-        {
-            Debug.Log($"Wave {i} difficulty {waves[i]} is:");
-            foreach (var data in allWaves[i])
-            {
-                Debug.Log(data);
-            }
-        }
+        //for (int i = 0; i < allWaves.Length; i++)
+        //{
+        //    Debug.Log($"Wave {i} difficulty {waves[i]} is:");
+        //    foreach (var data in allWaves[i])
+        //    {
+        //        Debug.Log(data);
+        //    }
+        //}
 
         // Return all wave data to requester
         return allWaves;
@@ -103,9 +109,9 @@ public class LinearSpawnManager : MonoBehaviour
         }
 
         // Adjust for room depth, scaling down
-        normNum += Mathf.FloorToInt(roomNumber / normalBatchIncrementRate);
+        normNum += Mathf.FloorToInt(combatRoomCount / normalBatchIncrementRate);
         if(scaleEasyEliteSize)
-            eliteNum += Mathf.FloorToInt(roomNumber / eliteBatchIncrementRate);
+            eliteNum += Mathf.FloorToInt(combatRoomCount / eliteBatchIncrementRate);
 
         // Adjust for room size, scaling up
         normNum = Mathf.CeilToInt(normNum * sizeMod);

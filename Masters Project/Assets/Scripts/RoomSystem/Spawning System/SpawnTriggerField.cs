@@ -51,9 +51,26 @@ public class SpawnTriggerField : MonoBehaviour
     [Tooltip("The delay between spawning each individiaul enemy. Randomly chosen between these bounds")]
     [SerializeField] private Vector2 spawningDelayRange;
     
+    /// <summary>
+    /// Collection of all spawned enemies
+    /// </summary>
     private List<GameObject> spawnedEnemies;
+    /// <summary>
+    /// The current spawn routine
+    /// </summary>
     private Coroutine spawnRoutine;
+    /// <summary>
+    /// Current queue of enemies being spawned
+    /// </summary>
     private Queue<EnemySO> spawnQueue;
+    /// <summary>
+    /// Whether or not this spawn trigger is still active and spawning
+    /// </summary>
+    private bool finished;
+    public bool Finished
+    {
+        get { return finished; }
+    }
     #endregion
 
     #region Setup Functions
@@ -78,6 +95,8 @@ public class SpawnTriggerField : MonoBehaviour
     /// </summary>
     public void Init()
     {
+        finished = false;
+
         // Get collider date, make sure its set to trigger
         foreach (Collider col in triggerCol)
         {
@@ -93,9 +112,10 @@ public class SpawnTriggerField : MonoBehaviour
     /// <summary>
     /// Disable this spawn trigger
     /// </summary>
-    public void Deactivate()
+    /// /// <param name="encounterFinished">Whether this field should be considered finished</param>
+    public void Deactivate(bool encounterFinished)
     {
-        active = false;
+        finished = encounterFinished;
 
         if (triggerCol != null)
         {
@@ -115,17 +135,17 @@ public class SpawnTriggerField : MonoBehaviour
         if (active && other.CompareTag("Player"))
         {
             // Deactivate this field and any conflicting fields
-            Deactivate();
+            Deactivate(false);
             foreach (SpawnTriggerField otherTrigger in conflictingTriggers)
             {
-                otherTrigger.Deactivate();
+                otherTrigger.Deactivate(true);
             }
             StartCoroutine(StartEncounter());
         }
         else if (!active)
         {
             // If not active and triggered, try disabling triggers again
-            Deactivate();
+            Deactivate(false);
         }
     }
 
@@ -141,6 +161,8 @@ public class SpawnTriggerField : MonoBehaviour
     /// </summary>
     public IEnumerator StartEncounter()
     {
+        finished = false;
+
         yield return new WaitForSeconds(activationDelay);
 
         SetWallStatus(true);
@@ -176,11 +198,6 @@ public class SpawnTriggerField : MonoBehaviour
                 yield return null;
             }
 
-            // Wait a few seconds to let currently spawning enemies spawn and populate tracking queue
-            // Use scale timer so freezing time doesn't interfere
-            //ScaledTimer scaledDelay = new ScaledTimer(3f);
-            //while (!scaledDelay.TimerDone())
-            //    yield return null;
 
             // Check end loop - Repetedly check if all enemies are killed
             while(spawnedEnemies.Count > 0)
@@ -204,10 +221,14 @@ public class SpawnTriggerField : MonoBehaviour
         yield return null;
     }
 
+    /// <summary>
+    /// End the current encounter
+    /// </summary>
     public void EndEncounter()
     {
-        Debug.Log("Encounter finished!");
+        //Debug.Log("Encounter finished!");
         SetWallStatus(false);
+        finished = true;
     }
 
     public void EnqueueEnemy(GameObject enemyInstance)

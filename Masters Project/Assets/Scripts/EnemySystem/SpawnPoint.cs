@@ -288,7 +288,7 @@ public class SpawnPoint : MonoBehaviour
         while (!spawnDelayTimer.TimerDone())
             yield return null;
 
-        // Spawn enemy, make look at player
+        // Enable enemy, make look at player
         lastSpawnedEnemy.SetActive(true);
         lastSpawnedEnemy.transform.LookAt(player.transform.position);
 
