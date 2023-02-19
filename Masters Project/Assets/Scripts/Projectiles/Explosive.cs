@@ -51,7 +51,7 @@ public class Explosive : MonoBehaviour
 
     public void Detonate()
     {
-        Debug.Log("NEW GRENADE DETONATING");
+        //Debug.Log("NEW GRENADE DETONATING");
         Detonate(damage);
     }
     public void Detonate(float newDamage)
@@ -123,12 +123,12 @@ public class Explosive : MonoBehaviour
         {
             parent = parent.parent;
         }
-        Debug.Log("parent landed on " + parent.name);
+        //Debug.Log("parent landed on " + parent.name);
 
         // if target was already damaged or not marked for team, then
         if (target != null && damagableTags.Contains(target.tag) && !damagedTargets.Contains(target))
         {
-            Debug.Log($"{target.name} not damaged, adding to list");
+            //Debug.Log($"{target.name} not damaged, adding to list");
             damagedTargets.Add(target);
 
             if (target.CompareTag("Player"))

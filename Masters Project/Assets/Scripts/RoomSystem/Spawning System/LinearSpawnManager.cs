@@ -9,6 +9,8 @@ public class LinearSpawnManager : MonoBehaviour
     [Header("===Default Easy Relative Size===")]
     [SerializeField] public Vector2Int easyNormalBatchRange;
     [SerializeField] public Vector2Int easyEliteBatchRange;
+    [SerializeField] public bool scaleEasyEliteSize;
+
 
     [Header("===Default Medium Relative Size===")]
     [SerializeField] public Vector2Int mediumNormalBatchRange;
@@ -18,12 +20,9 @@ public class LinearSpawnManager : MonoBehaviour
     [SerializeField] public Vector2Int hardNormalBatchRange;
     [SerializeField] public Vector2Int hardEliteBatchRange;
 
-
     [Header("Core Batch Data")]
     [SerializeField] private BatchSO[] normalBatches;
     [SerializeField] private BatchSO[] eliteBatches;
-
-
 
     private void Start()
     {
@@ -44,26 +43,29 @@ public class LinearSpawnManager : MonoBehaviour
     public int normalBatchIncrementRate;
     public int eliteBatchIncrementRate;
 
-    public void RequestBatch(RelativeDifficulty[] waves, SpawnPoint[] spawnPoints, float mod)
+    public Dictionary<EnemySO, int>[] RequestBatch(RelativeDifficulty[] waves, float mod)
     {
-        StartCoroutine(SpawnField(waves, spawnPoints, mod));
-    }
+        // create new dictionary array that will store all enemy data
+        Dictionary<EnemySO, int>[] allWaves = new Dictionary<EnemySO, int>[waves.Length];
 
-    private IEnumerator SpawnField(RelativeDifficulty[] waves, SpawnPoint[] spawnPoints, float mod)
-    {
-        Dictionary<EnemySO, int> spawnPool;
-
-        // Determine difficulty, create batches
-        spawnPool = CreateWave(waves[0], mod);
-
-        Debug.Log("The created batch for the first wave is...");
-        foreach(var data in spawnPool)
+        // populate each wave with the given data
+        for (int i = 0; i < allWaves.Length; i++)
         {
-            Debug.Log(data);
+            allWaves[i] = CreateWave(waves[i], mod);
         }
 
+        // DEBUG - Print out the data to check the info
+        for (int i = 0; i < allWaves.Length; i++)
+        {
+            Debug.Log($"Wave {i} difficulty {waves[i]} is:");
+            foreach (var data in allWaves[i])
+            {
+                Debug.Log(data);
+            }
+        }
 
-        yield return null;
+        // Return all wave data to requester
+        return allWaves;
     }
 
     private Dictionary<EnemySO, int> CreateWave(RelativeDifficulty difficulty, float sizeMod)
@@ -102,7 +104,8 @@ public class LinearSpawnManager : MonoBehaviour
 
         // Adjust for room depth, scaling down
         normNum += Mathf.FloorToInt(roomNumber / normalBatchIncrementRate);
-        eliteNum += Mathf.FloorToInt(roomNumber / eliteBatchIncrementRate);
+        if(scaleEasyEliteSize)
+            eliteNum += Mathf.FloorToInt(roomNumber / eliteBatchIncrementRate);
 
         // Adjust for room size, scaling up
         normNum = Mathf.CeilToInt(normNum * sizeMod);
@@ -111,36 +114,11 @@ public class LinearSpawnManager : MonoBehaviour
         // create spawn dict and a temporary buffer
         Dictionary<EnemySO, int> waveData = new Dictionary<EnemySO, int>();
 
-        Dictionary<EnemySO, int> dataBuffer;
+        // Load normal batch data 
+        waveData = LoadInBatches(waveData, normalBatches, normNum);
 
-        // Load normal batch data into buffer, move over to wave data
-        dataBuffer = LoadInBatches(normalBatches, normNum);
-        foreach(KeyValuePair<EnemySO, int> data in dataBuffer)
-        {
-            if(waveData.ContainsKey(data.Key))
-            {
-                waveData[data.Key] += data.Value;
-            }
-            else
-            {
-                waveData.Add(data.Key, data.Value);
-            }
-        }
-
-        // load elite batch data into buffer, move over to wave data
-        dataBuffer = LoadInBatches(eliteBatches, eliteNum);
-        foreach (KeyValuePair<EnemySO, int> data in dataBuffer)
-        {
-            if (waveData.ContainsKey(data.Key))
-            {
-                waveData[data.Key] += data.Value;
-            }
-            else
-            {
-                waveData.Add(data.Key, data.Value);
-            }
-        }
-        
+        // load elite batch data 
+        waveData = LoadInBatches(waveData, eliteBatches, eliteNum);
         
         return waveData;
     }
@@ -150,33 +128,32 @@ public class LinearSpawnManager : MonoBehaviour
     /// </summary>
     /// <param name="batchPool">Pool of batches to choose from</param>
     /// <param name="batchNum">Number of batches to load into it</param>
-    /// <param name="waveData">The dictionary to output the data to</param>
-    private Dictionary<EnemySO, int> LoadInBatches(BatchSO[] batchPool, float batchNum)
+    /// <param name="waveDict">The dictionary to output the data to</param>
+    private Dictionary<EnemySO, int> LoadInBatches(Dictionary<EnemySO, int> waveDict, BatchSO[] batchPool, float batchNum)
     {
-        Dictionary<EnemySO, int> newDict = new Dictionary<EnemySO, int>();
-
+        // Populate the dictionary with all requested batches
         for (int i = 0; i < batchNum; i++)
         {
             // Choose a batch to load from
             BatchSO selected = batchPool[Random.Range(0, batchPool.Length)];
-            Debug.Log($"Loading batch named : {selected.name}");
+            
             // Load over every enemy data from the selected batch, add to dictionary
             foreach (EnemySpawnData enemy in selected.batchData)
             {
                 // Randomly choose quantity to add, store in dictionary
                 int ranQuantity = Random.Range(enemy.spawnCountRange.x, enemy.spawnCountRange.y + 1);
 
-                if (newDict.ContainsKey(enemy.enemy))
+                if (waveDict.ContainsKey(enemy.enemy))
                 {
-                    newDict[enemy.enemy] += ranQuantity;
+                    waveDict[enemy.enemy] += ranQuantity;
                 }
                 else
                 {
-                    newDict.Add(enemy.enemy, ranQuantity);
+                    waveDict.Add(enemy.enemy, ranQuantity);
                 }
             }
         }
 
-        return newDict;
+        return waveDict;
     }
 }

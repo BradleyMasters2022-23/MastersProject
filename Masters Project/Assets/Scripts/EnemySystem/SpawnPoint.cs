@@ -79,9 +79,12 @@ public class SpawnPoint : MonoBehaviour
     [Tooltip("What enemies are allowed to spawn on this spawnpoint. Drag enemy prefabs here.")]
     [SerializeField] private GameObject[] enemyWhitelist;
 
+    [SerializeField] private List<EnemySO> enemyBlacklist;
+
     private GameControls controls;
     private InputAction endCheat;
 
+    private GameObject lastSpawnedEnemy;
 
     /// <summary>
     /// Initialize settings
@@ -199,13 +202,13 @@ public class SpawnPoint : MonoBehaviour
 
     private void Update()
     {
-        if (!spawning && IsLoaded() && spawnOverrideTimer.TimerDone())
+        if (!spawning && IsLoaded() && spawnOverrideTimer.TimerDone() && spawnManager!=null)
         {
             spawnManager.ReturnEnemy(enemyStorage);
             enemyStorage = null;
         }
 
-        overlapped = Physics.CheckCapsule(transform.position, transform.position + Vector3.up * 1, 0.5f, overlapMask);
+        overlapped = Overlapped();
 
         // TODO - change to normal camera grab once 'perspective cheats' are gone
 
@@ -217,16 +220,62 @@ public class SpawnPoint : MonoBehaviour
             if (!spawning && enemyStorage != null)
             {
                 spawning = true;
-                spawnRoutine = StartCoroutine(SpawnEnemy());
+                spawnRoutine = StartCoroutine(SpawnEnemy(enemyStorage));
             }
         }
     }
 
     /// <summary>
+    /// Check if the enemy can spawn in a linear aspect.
+    /// Currently, only check overlap and blacklist status
+    /// </summary>
+    /// <param name="enemyData">Type of enemy to spawn</param>
+    /// <returns>Whether this enemy can currently be spawned</returns>
+    public bool CanSpawnLinear(EnemySO enemyData)
+    {
+        return (!InBlacklist(enemyData) && !Overlapped() && !spawning);
+    }
+
+    /// <summary>
+    /// Check if the passed in enemy is in the blacklist
+    /// </summary>
+    /// <param name="enemy">enemy data to check</param>
+    /// <returns>Whether the enemy is in the blacklist</returns>
+    private bool InBlacklist(EnemySO enemy)
+    {
+        return enemyBlacklist.Contains(enemy);
+    }
+    /// <summary>
+    /// Whether this spawnpoint is overlapped by an enemy or player
+    /// </summary>
+    /// <returns>Whether this spawnpoint is overlapped</returns>
+    private bool Overlapped()
+    {
+        return Physics.CheckCapsule(transform.position, transform.position + Vector3.up * 1, 0.5f, overlapMask);
+    }
+
+    /// <summary>
+    /// Spawn an enemy now in the linear style
+    /// </summary>
+    /// <param name="enemyData">Enemy data to spawn</param>
+    /// <param name="associatedField">The field to send the spawned enemy to</param>
+    public void SpawnNow(EnemySO enemyData, SpawnTriggerField associatedField)
+    {
+        spawning = true;
+        spawnRoutine = StartCoroutine(SpawnEnemy(enemyData.enemyPrefab, associatedField));
+    }
+
+    /// <summary>
     /// Spawn an enemy. Handle spawning and visuals here
     /// </summary>
-    private IEnumerator SpawnEnemy()
+    private IEnumerator SpawnEnemy(GameObject enemyPrefab, SpawnTriggerField sendTo = null)
     {
+        // immediately spawn the enemy, but disable it temporarily
+        lastSpawnedEnemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
+        if (sendTo != null)
+            sendTo.EnqueueEnemy(lastSpawnedEnemy);
+        lastSpawnedEnemy.SetActive(false);
+
         // Prepare indicators
         if (spawnSound != null)
             s.Play();
@@ -239,8 +288,11 @@ public class SpawnPoint : MonoBehaviour
         while (!spawnDelayTimer.TimerDone())
             yield return null;
 
-        // Spawn enemy
-        Instantiate(enemyStorage, transform.position, Quaternion.identity);
+        // Spawn enemy, make look at player
+        lastSpawnedEnemy.SetActive(true);
+        lastSpawnedEnemy.transform.LookAt(player.transform.position);
+
+        
 
         // Reset the spawnpoint, disable indicators
         enemyStorage = null;
@@ -251,7 +303,9 @@ public class SpawnPoint : MonoBehaviour
         if (spawnSound != null)
             s.Stop();
         spawning = false;
-        spawnManager.SpawnedEnemy();
+        
+        if(spawnManager != null)
+            spawnManager.SpawnedEnemy();
     }
 
     /// <summary>
@@ -279,6 +333,8 @@ public class SpawnPoint : MonoBehaviour
         if (spawnSound != null)
             s.Stop();
         spawning = false;
-        spawnManager.SpawnedEnemy();
+
+        if(spawnManager != null)
+            spawnManager.SpawnedEnemy();
     }
 }
