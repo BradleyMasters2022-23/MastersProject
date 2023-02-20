@@ -191,5 +191,7 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
     /// </summary>
     protected abstract void UniqueDeactivate();
 
+    public abstract void StartSegment();
+
     #endregion
 }

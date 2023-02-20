@@ -27,5 +27,9 @@ public class FinalRoomLoader : SegmentLoader
         
     }
 
-    
+    public override void StartSegment()
+    {
+        // dont do anything, internal triggers activate this
+        return;
+    }
 }

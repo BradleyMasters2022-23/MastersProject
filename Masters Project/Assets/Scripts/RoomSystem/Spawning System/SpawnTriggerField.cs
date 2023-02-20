@@ -212,7 +212,7 @@ public class SpawnTriggerField : MonoBehaviour
                 yield return null;
             }
 
-            
+            Debug.Log("Wave Finished, moving to next");
         }
 
         // End encounter once done with all waves

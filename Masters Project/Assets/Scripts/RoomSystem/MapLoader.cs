@@ -394,13 +394,18 @@ public class MapLoader : MonoBehaviour
         //Debug.Log($"Pew Bang! Encounter started for room at index {roomIndex +1}!");
 
         //loadedMap[roomIndex].GetComponent<SpawnManager>().BeginEncounter();
-        SpawnManager.instance.BeginEncounter();
+        loadedMap[roomIndex+1].StartSegment();
     }
 
     public void EndRoomEncounter()
     {
         //Debug.Log($"Phew! You won it all good jorb {roomIndex+1}!");
         loadedMap[roomIndex+1].GetComponent<DoorManager>().UnlockExit();
+
+        if (mapOrder[roomIndex+1].segmentType == MapSegmentSO.MapSegmentType.Room
+            && LinearSpawnManager.instance != null)
+            LinearSpawnManager.instance.IncrementDifficulty();
+
     }
 
     /// <summary>

@@ -38,7 +38,7 @@ public class LinearLoader : SegmentLoader
 
     protected override void UniqueDeactivate()
     {
-        LinearSpawnManager.instance.IncrementDifficulty();
+        //LinearSpawnManager.instance.IncrementDifficulty();
         return;
     }
 
@@ -64,5 +64,11 @@ public class LinearLoader : SegmentLoader
             }
                 
         }
+    }
+
+    public override void StartSegment()
+    {
+        // dont do anything, internal triggers activate this
+        return;
     }
 }

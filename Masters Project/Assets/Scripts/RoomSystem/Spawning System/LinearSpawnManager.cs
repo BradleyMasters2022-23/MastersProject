@@ -61,14 +61,14 @@ public class LinearSpawnManager : MonoBehaviour
         }
 
         // DEBUG - Print out the data to check the info
-        //for (int i = 0; i < allWaves.Length; i++)
-        //{
-        //    Debug.Log($"Wave {i} difficulty {waves[i]} is:");
-        //    foreach (var data in allWaves[i])
-        //    {
-        //        Debug.Log(data);
-        //    }
-        //}
+        for (int i = 0; i < allWaves.Length; i++)
+        {
+            Debug.Log($"Wave {i} difficulty {waves[i]} is:");
+            foreach (var data in allWaves[i])
+            {
+                Debug.Log(data);
+            }
+        }
 
         // Return all wave data to requester
         return allWaves;
@@ -116,6 +116,9 @@ public class LinearSpawnManager : MonoBehaviour
         // Adjust for room size, scaling up
         normNum = Mathf.CeilToInt(normNum * sizeMod);
         eliteNum = Mathf.CeilToInt(eliteNum * sizeMod);
+
+        Debug.Log($"Number of norm batches requested: {normNum}");
+        Debug.Log($"Number of norm batches requested: {eliteNum}");
 
         // create spawn dict and a temporary buffer
         Dictionary<EnemySO, int> waveData = new Dictionary<EnemySO, int>();

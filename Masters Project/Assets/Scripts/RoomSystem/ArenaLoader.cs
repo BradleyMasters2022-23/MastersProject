@@ -49,7 +49,12 @@ public class ArenaLoader : SegmentLoader
     protected override void UniqueDeactivate()
     {
         chosenEncounter = null;
-        LinearSpawnManager.instance.IncrementDifficulty();
+        //LinearSpawnManager.instance.IncrementDifficulty();
     }
 
+    public override void StartSegment()
+    {
+        SpawnManager.instance.BeginEncounter();
+        return;
+    }
 }
