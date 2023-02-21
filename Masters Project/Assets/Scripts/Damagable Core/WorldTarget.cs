@@ -13,5 +13,14 @@ using UnityEngine;
 
 public class WorldTarget : Target
 {
-    
+    [SerializeField] private Trigger onDamageTrigger;
+
+
+    public override void RegisterEffect(float dmg)
+    {
+        if (onDamageTrigger != null)
+            onDamageTrigger.Activate();
+
+        base.RegisterEffect(dmg);
+    }
 }
