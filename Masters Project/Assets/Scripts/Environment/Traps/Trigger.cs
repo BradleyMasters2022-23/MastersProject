@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Trigger : MonoBehaviour
 {
-    private List<ITriggerable> subscribers;
+    protected List<ITriggerable> subscribers;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         subscribers= new List<ITriggerable>();
     }

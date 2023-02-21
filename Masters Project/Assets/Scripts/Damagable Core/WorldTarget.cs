@@ -13,8 +13,16 @@ using UnityEngine;
 
 public class WorldTarget : Target
 {
-    [SerializeField] private Trigger onDamageTrigger;
+    /// <summary>
+    /// Trigger called when this target takes damage
+    /// </summary>
+    private Trigger onDamageTrigger;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        onDamageTrigger= GetComponent<Trigger>();
+    }
 
     public override void RegisterEffect(float dmg)
     {
