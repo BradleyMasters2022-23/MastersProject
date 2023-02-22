@@ -1855,6 +1855,7 @@ GameObject:
   m_Component:
   - component: {fileID: 730742332}
   - component: {fileID: 730742333}
+  - component: {fileID: 730742334}
   m_Layer: 3
   m_Name: FloorTrap 1
   m_TagString: Untagged
@@ -1892,11 +1893,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   activationTriggers:
-  - {fileID: 216543325}
-  - {fileID: 2059298869}
-  - {fileID: 4454231469469979052}
-  activationDelay: 0.8
-  activationTime: 1
+  - {fileID: 730742334}
+  activationDelay: 0.45
+  activationTime: 3
   activationCooldown: 0
   damageCollider: {fileID: 131775531}
   idleIndicators: []
@@ -1905,6 +1904,20 @@ MonoBehaviour:
   - {fileID: 1870555498}
   activationIndicators:
   - {fileID: 1033215478}
+--- !u!114 &730742334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 730742331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfb8149f73b45314bb31957f15067600, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  activationDelay: 1
+  timerDuration: 8
 --- !u!1 &782279838
 GameObject:
   m_ObjectHideFlags: 0
