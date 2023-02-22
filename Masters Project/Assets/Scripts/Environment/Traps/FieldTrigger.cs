@@ -1,3 +1,11 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - February 17th, 2022
+ * Last Edited - February 17th, 2022 by Ben Schuster
+ * Description - Concrete trigger integrated with a collider trigger
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

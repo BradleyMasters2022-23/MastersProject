@@ -1,3 +1,11 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - February 17th, 2022
+ * Last Edited - February 17th, 2022 by Ben Schuster
+ * Description - Core base for flexible trigger system
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
