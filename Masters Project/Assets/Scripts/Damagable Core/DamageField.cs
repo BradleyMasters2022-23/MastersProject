@@ -5,13 +5,18 @@ using System.Linq;
 
 public class DamageField : MonoBehaviour
 {
-    public float initialDamage;
-    public float tickDamage;
+    [Tooltip("Initial damage dealt to enemies when first entering trap")]
+    [SerializeField] private float initialDamage;
+    [Tooltip("Continuous damage dealt to enemies on each tick")]
+    [SerializeField] private float tickDamage;
 
-    public float playerInitialDamage;
-    public float playerTickDamage;
+    [Tooltip("Initial damage dealt to player when first entering the trap")]
+    [SerializeField] private float playerInitialDamage;
+    [Tooltip("Continuous damage dealt to player on each tick")]
+    [SerializeField] private float playerTickDamage;
 
-    public float tickRate;
+    [Tooltip("Time between each tick")]
+    [SerializeField] private float tickRate;
 
     private Dictionary<Target, ScaledTimer> targetEntities;
     private Collider coll;
@@ -20,6 +25,15 @@ public class DamageField : MonoBehaviour
     {
         targetEntities = new Dictionary<Target, ScaledTimer>();
         coll = GetComponent<Collider>();
+    }
+
+    public void InitValues(float initDmg, float tkDmg, float pInitDmg, float pTkDmg, float tkR)
+    {
+        initialDamage= initDmg;
+        tickDamage= tkDmg;
+        playerInitialDamage= pTkDmg;
+        tickRate= pTkDmg;
+        tickRate= tkR;
     }
 
     private void LateUpdate()

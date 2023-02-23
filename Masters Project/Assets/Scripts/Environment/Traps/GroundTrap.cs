@@ -1,10 +1,18 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - February 22th, 2022
+ * Last Edited - February 22th, 2022 by Ben Schuster
+ * Description - Concrete damage trap that sticks onto the floor
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GroundTrap : Trap
 {
-    [Header("=== Gameplay ===")]
+    [Header("=== Activation ===")]
 
     [Tooltip("When triggered, time it takes to begin damaging state")]
     [SerializeField] private float activationDelay;
@@ -12,8 +20,7 @@ public class GroundTrap : Trap
     [SerializeField] private float activationTime;
     [Tooltip("How long to remain on cooldown after activation")]
     [SerializeField] private float activationCooldown;
-    [Tooltip("The collider used for dealing damage")]
-    [SerializeField] Collider damageCollider;
+    
 
     private bool triggerable;
 
@@ -27,7 +34,24 @@ public class GroundTrap : Trap
     [SerializeField] private IIndicator[] onTriggerIndicators;
     [Tooltip("Any indicators that play during the actual activation of the trap")]
     [SerializeField] private IIndicator[] activationIndicators;
-    
+
+    [Header("=== Damage ===")]
+
+    [Tooltip("The collider used for dealing damage")]
+    [SerializeField] Collider damageCollider;
+
+    [Tooltip("Initial damage dealt to enemies when first entering trap")]
+    [SerializeField] private float initialDamage;
+    [Tooltip("Continuous damage dealt to enemies on each tick")]
+    [SerializeField] private float tickDamage;
+
+    [Tooltip("Initial damage dealt to player when first entering the trap")]
+    [SerializeField] private float playerInitialDamage;
+    [Tooltip("Continuous damage dealt to player on each tick")]
+    [SerializeField] private float playerTickDamage;
+
+    [Tooltip("Time between each tick")]
+    [SerializeField] private float tickRate;
 
     /// <summary>
     /// Get any references for trap and make sure core items are enabled
@@ -40,6 +64,17 @@ public class GroundTrap : Trap
             damageCollider.isTrigger= true;
             triggerable = true;
             Indicators.SetIndicators(idleIndicators, true);
+
+            // Try to sync damage field values
+            DamageField damageField = damageCollider.GetComponent<DamageField>();
+            if(damageField != null )
+            {
+                damageField.InitValues(
+                    initialDamage, tickDamage,
+                    playerInitialDamage, playerTickDamage, 
+                    tickRate);
+            }
+
         }
         else
         {
