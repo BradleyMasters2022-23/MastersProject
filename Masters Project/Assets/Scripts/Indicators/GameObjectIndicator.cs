@@ -16,16 +16,19 @@ public class GameObjectIndicator : IIndicator
 
     private void Awake()
     {
-        indicator.SetActive(false);
+        if(indicator != null)
+            indicator.SetActive(false);
     }
 
     public override void Activate()
     {
-        indicator.SetActive(true);
+        if (indicator != null)
+            indicator.SetActive(true);
     }
 
     public override void Deactivate()
     {
-        indicator.SetActive(false);
+        if (indicator != null)
+            indicator.SetActive(false);
     }
 }

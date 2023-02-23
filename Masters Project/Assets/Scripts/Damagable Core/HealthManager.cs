@@ -96,7 +96,7 @@ public class HealthManager : MonoBehaviour
 
         if(invulnerabilityTracker == null) 
         {
-            invulnerabilityTracker = new ScaledTimer(duration);
+            invulnerabilityTracker = new ScaledTimer(duration, false);
         }
         else
         {

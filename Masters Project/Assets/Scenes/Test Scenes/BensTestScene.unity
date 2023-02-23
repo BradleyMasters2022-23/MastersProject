@@ -166,6 +166,7 @@ GameObject:
   - component: {fileID: 131775533}
   - component: {fileID: 131775532}
   - component: {fileID: 131775531}
+  - component: {fileID: 131775535}
   m_Layer: 17
   m_Name: Damage Trigger
   m_TagString: Untagged
@@ -251,6 +252,23 @@ Transform:
   m_Father: {fileID: 217017010}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &131775535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 131775530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4ee4e2343443fc42ab9d4ce292655f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialDamage: 50
+  tickDamage: 15
+  playerInitialDamage: 15
+  playerTickDamage: 5
+  tickRate: 0.5
 --- !u!43 &152967923
 Mesh:
   m_ObjectHideFlags: 0
