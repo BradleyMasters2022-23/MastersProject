@@ -1,3 +1,11 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - February 22th, 2022
+ * Last Edited - February 22th, 2022 by Ben Schuster
+ * Description - Damage field that deals damage over time
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

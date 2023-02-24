@@ -9,6 +9,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+
+public enum TrapPlacementType
+{
+    Wall, 
+    Floor
+}
 
 public abstract class Trap : MonoBehaviour, ITriggerable
 {
@@ -16,6 +23,11 @@ public abstract class Trap : MonoBehaviour, ITriggerable
 
     [Tooltip("Any triggers that activate this trap")]
     [SerializeField] private Trigger[] activationTriggers;
+
+    [Header("=== Placement ===")]
+
+    [Tooltip("What type of placements can this trap use")]
+    [SerializeField] private TrapPlacementType[] usableTypes;
 
     /// <summary>
     /// Register this trap to any set triggers.
@@ -51,5 +63,10 @@ public abstract class Trap : MonoBehaviour, ITriggerable
     public void Trigger()
     {
         Activate();
+    }
+
+    public List<TrapPlacementType> PlacementType()
+    {
+        return usableTypes.ToList();
     }
 }
