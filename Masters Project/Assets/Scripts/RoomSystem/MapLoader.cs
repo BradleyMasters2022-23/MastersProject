@@ -77,7 +77,7 @@ public class MapLoader : MonoBehaviour
     /// <summary>
     /// Current index for looking through rooms
     /// </summary>
-    private int roomIndex;
+    [SerializeField] private int roomIndex;
 
     #endregion
 
@@ -186,8 +186,10 @@ public class MapLoader : MonoBehaviour
 
         // === Set later rooms inactive === //
 
+        roomIndex = -1;
+
         // Activate first room and hallway, deactivate rest
-        for(int i = 0; i < 2; i++)
+        for (int i = 0; i < 2; i++)
         {
             loadedMap[i].ActivateSegment();
         }
@@ -197,7 +199,7 @@ public class MapLoader : MonoBehaviour
         }
         Debug.Log("[MapLoader] Initial inactive set!");
 
-        roomIndex = -1;
+        
 
         yield return StartCoroutine(PrepareNavmesh());
 
@@ -427,6 +429,12 @@ public class MapLoader : MonoBehaviour
 
 
     #endregion
+
+
+    public int RoomDepth()
+    {
+        return (roomIndex+1)/2;
+    }
 
     #region Utility - Debug
 
