@@ -1592,6 +1592,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arrow: {fileID: 7737661628805945766, guid: 18fa7085d23e22a4785c4db147c45d43, type: 3}
   indicatorDisplay: {fileID: 0}
+  maxDistance: Infinity
 --- !u!1 &6065832765740259175
 GameObject:
   m_ObjectHideFlags: 0
@@ -2623,7 +2624,8 @@ MonoBehaviour:
     lowerLimit: 5
     upperLimit: 15
   accelerationSpeed: 1250
-  drag: 8
+  groundDrag: 0
+  airDrag: 0
   sprintModifier:
     startingValue: 1.25
     lowerLimit: 0
@@ -2701,7 +2703,8 @@ MonoBehaviour:
   defaultTarget: {fileID: 8810997314261937679}
   layersToIgnore:
     serializedVersion: 2
-    m_Bits: 5828
+    m_Bits: 136900
+  enhancedBulletsPerShot: 0
   enhancedBulletPrefab: {fileID: 8727397786430278917, guid: 28050c439aeee544782969d47740fbc7, type: 3}
   enhancedSpeedMultiplier: 10
   enhancedShotThreshold: 0.1

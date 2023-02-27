@@ -71,11 +71,11 @@ public abstract class Target : MonoBehaviour
     /// </summary>
     protected AudioSource audioSource;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         _healthManager = GetComponent<HealthManager>();
         // If initialization of health manager fails, destroy itself
-        if(_healthManager == null || !_healthManager.Init())
+        if (_healthManager == null || !_healthManager.Init())
         {
             KillTarget();
         }
