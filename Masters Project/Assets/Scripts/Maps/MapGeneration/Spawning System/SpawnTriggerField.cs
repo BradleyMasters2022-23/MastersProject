@@ -87,7 +87,7 @@ public class SpawnTriggerField : MonoBehaviour
         }
         active = false;
 
-        Init();
+        //Init();
     }
 
     /// <summary>
