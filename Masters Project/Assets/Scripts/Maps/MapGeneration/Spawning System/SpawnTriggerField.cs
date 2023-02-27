@@ -106,7 +106,20 @@ public class SpawnTriggerField : MonoBehaviour
 
         // dont bother activating if theres no combat or triggers attached to this obj
         if (relativeDifficulty.Length > 0 && triggerCol.Length > 0)
+        {
             active = true;
+        }
+
+        
+    }
+
+    /// <summary>
+    /// Load in the waves in a way to reduce activation later 
+    /// </summary>
+    public void LoadWaves()
+    {
+        // Request waves with current difficulty
+        waves = LinearSpawnManager.instance.RequestBatch(relativeDifficulty, sizeModifier);
     }
 
     /// <summary>
@@ -151,8 +164,6 @@ public class SpawnTriggerField : MonoBehaviour
 
     #endregion
 
-    
-
     #region Spawning Functions
 
     /// <summary>
@@ -161,14 +172,19 @@ public class SpawnTriggerField : MonoBehaviour
     /// </summary>
     public IEnumerator StartEncounter()
     {
+        // if no waves, exit
+        if(waves.Length <= 0)
+        {
+            finished = true;
+            EndEncounter();
+            yield break;
+        }
+
         finished = false;
 
         yield return new WaitForSeconds(activationDelay);
 
         SetWallStatus(true);
-
-        // Request waves with current difficulty
-        waves = LinearSpawnManager.instance.RequestBatch(relativeDifficulty, sizeModifier);
 
         // Handle spawning for each wave
         for(int i = 0; i < waves.Length; i++)
@@ -263,9 +279,5 @@ public class SpawnTriggerField : MonoBehaviour
                 Destroy(spawnedEnemies[i]);
             }
         }
-        
     }
-
-
-
 }

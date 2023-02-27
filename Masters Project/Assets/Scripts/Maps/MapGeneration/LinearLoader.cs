@@ -18,7 +18,6 @@ public class LinearLoader : SegmentLoader
 
     protected override IEnumerator UniquePoolInitialization()
     {
-
         // Leave this stuff alone and as the last item
         initialized = true;
         yield return null;
@@ -68,7 +67,11 @@ public class LinearLoader : SegmentLoader
 
     public override void StartSegment()
     {
-        // dont do anything, internal triggers activate this
+        // init all fields
+        foreach (var field in combatFields)
+        {
+            field.LoadWaves();
+        }
         return;
     }
 }
