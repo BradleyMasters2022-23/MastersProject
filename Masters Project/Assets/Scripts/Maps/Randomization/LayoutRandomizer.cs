@@ -22,7 +22,7 @@ public struct Layout
     public int maxRoomDepth;
 
     [Tooltip("Weight of this chance compared to others. Default is 1.")]
-    [Range(1, 10)] public int weight;
+    [Range(1, 10)] public int probabilityWeight;
     [Tooltip("Amount weight is adjusted by, for every room past its minimum depth requirement")]
     [Range(-10, 10)] public int weightDepthMod;
 
@@ -33,7 +33,7 @@ public struct Layout
     /// <returns>Layout weight adjusted for depth</returns>
     public int ModdedWeight(int depth)
     {
-        return Mathf.Clamp(weight + (weightDepthMod * (depth - minRoomDepth)), 1, 10);
+        return Mathf.Clamp(probabilityWeight + (weightDepthMod * (depth - minRoomDepth)), 1, 10);
     }
 }
 
