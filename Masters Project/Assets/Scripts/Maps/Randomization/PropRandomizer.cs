@@ -1,8 +1,16 @@
+/* 
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - February 24th, 2022
+ * Last Edited - February 27th, 2022 by Ben Schuster
+ * Description - Concrete loading implementation for combat area segments.
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomPropRandomizer : MonoBehaviour
+public class PropRandomizer : MonoBehaviour, IRandomizer
 {
     [SerializeField] private int minimumRoomNum;
     [SerializeField] private int maximumRoomNum;
@@ -13,6 +21,9 @@ public class RoomPropRandomizer : MonoBehaviour
         "EX: If set to -10, then each room past minimum room number will decrease base chance by 10%")]
     [SerializeField, Range(-100, 100)] private float depthChanceModifier;
 
+    /// <summary>
+    /// Randomize whether or not this prop becomes active
+    /// </summary>
     public void Randomize()
     {
         // Get depth of current run

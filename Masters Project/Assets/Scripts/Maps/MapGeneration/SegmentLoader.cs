@@ -67,7 +67,7 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
     public bool Initialized { get { return initialized; } }
     bool MapInitialize.initialized => initialized;
 
-    protected RoomPropRandomizer[] randomizedObjs;
+    protected IRandomizer[] randomizedObjs;
 
     public IEnumerator InitializeComponent()
     {
@@ -75,7 +75,7 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
         root = transform;
         syncPoints = new List<Transform>();
         doorManager = GetComponent<DoorManager>();
-        randomizedObjs = GetComponentsInChildren<RoomPropRandomizer>(true);
+        randomizedObjs = GetComponentsInChildren<IRandomizer>(true);
 
         // Initialize sync buffer automatically
         syncBuffer = new GameObject("SyncBuffer").transform;
@@ -140,7 +140,7 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
         gameObject.SetActive(true);
 
         // Tell randomized objects to initiate randomization
-        foreach (RoomPropRandomizer obj in randomizedObjs)
+        foreach (IRandomizer obj in randomizedObjs)
         {
             obj.Randomize();
         }
