@@ -26,6 +26,8 @@ public class SpawnTriggerField : MonoBehaviour
     [Tooltip("Any walls that activate while this encounter starts and disabled when finished.")]
     [SerializeField] private GameObject[] blockerWalls;
 
+    [SerializeField] private bool testing;
+
     /// <summary>
     /// All colliders used for this trigger
     /// </summary>
@@ -36,7 +38,7 @@ public class SpawnTriggerField : MonoBehaviour
     [Header("===Difficulty===")]
 
     [Tooltip("All waves of relative difficulties to use for this encounter.")]
-    [SerializeField] private RelativeDifficulty[] relativeDifficulty;
+    [SerializeField] private EncounterDifficulty[] relativeDifficulty;
     [Tooltip("Modifier to the encounter size, intended based on size of the room the encouter is in. Multiplied to the batch list.")]
     [SerializeField] private float sizeModifier = 1;
 
@@ -87,7 +89,8 @@ public class SpawnTriggerField : MonoBehaviour
         }
         active = false;
 
-        //Init();
+        if(testing)
+            Init();
     }
 
     /// <summary>
@@ -109,8 +112,12 @@ public class SpawnTriggerField : MonoBehaviour
         {
             active = true;
         }
+    }
 
-        
+    private void Start()
+    {
+        if (testing)
+            LoadWaves();
     }
 
     /// <summary>
@@ -119,13 +126,13 @@ public class SpawnTriggerField : MonoBehaviour
     public void LoadWaves()
     {
         // Request waves with current difficulty
-        waves = LinearSpawnManager.instance.RequestBatch(relativeDifficulty, sizeModifier);
+        waves = LinearSpawnManager.instance.RequestBatch(relativeDifficulty);
     }
 
     /// <summary>
     /// Disable this spawn trigger
     /// </summary>
-    /// /// <param name="encounterFinished">Whether this field should be considered finished</param>
+    /// <param name="encounterFinished">Whether this field should be considered finished</param>
     public void Deactivate(bool encounterFinished)
     {
         finished = encounterFinished;
@@ -173,7 +180,7 @@ public class SpawnTriggerField : MonoBehaviour
     public IEnumerator StartEncounter()
     {
         // if no waves, exit
-        if(waves.Length <= 0)
+        if(waves == null || waves.Length <= 0)
         {
             finished = true;
             EndEncounter();

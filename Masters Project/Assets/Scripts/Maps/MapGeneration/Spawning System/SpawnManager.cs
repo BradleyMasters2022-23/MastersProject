@@ -10,13 +10,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Linq;
 
-public enum RelativeDifficulty
-{
-    Easy, 
-    Normal, 
-    Hard
-}
 
 public class SpawnManager : MonoBehaviour
 {
@@ -51,7 +46,7 @@ public class SpawnManager : MonoBehaviour
     /// <summary>
     /// The encounter that was chosen
     /// </summary>
-    private EncounterSO chosenEncounter;
+    private Dictionary<EnemySO, int>[] chosenEncounter;
 
     /// <summary>
     /// References to every spawnpoint in the scene
@@ -153,9 +148,9 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     /// <param name="encounterData">the encounter data with enemies to spawn</param>
     /// <param name="spawnData">the spawnpoints to be used</param>
-    public void PrepareEncounter(EncounterSO encounterData, SpawnPoint[] spawnData)
+    public void PrepareEncounter(EncounterDifficulty[] encounterData, SpawnPoint[] spawnData)
     {
-        chosenEncounter = encounterData;
+        chosenEncounter = LinearSpawnManager.instance.RequestBatch(encounterData);
         spawnPoints = spawnData;
     }
 
@@ -210,7 +205,6 @@ public class SpawnManager : MonoBehaviour
         SpawnPoint _spawnPoint;
         while (spawnQueue.Count > 0 || waitingEnemies > 0 || !SpawnpointsEmpty())
         {
-
             // Only spawn if not past max
             if ((enemyCount + waitingEnemies) < maxEnemies)
             {
@@ -242,36 +236,42 @@ public class SpawnManager : MonoBehaviour
         backupCheckRoutine = StartCoroutine(CheckCount());
     }
 
+
+
     /// <summary>
     /// Prepare the wave queue by populating the spawn queue
     /// </summary>
     private void PrepareWaveQueue()
     {
-        // load in numbers needed
-        List<int> enemyCounts = new List<int>();
-        int total = 0;
-        foreach (EnemyGroup enemyGroup in chosenEncounter.waves[waveIndex].enemyGroups)
-        {
-            enemyCounts.Add(enemyGroup.amount);
-            total += enemyGroup.amount;
-        }
-
         // Load the specified number of each at random
-        for (int i = 0; i < total; i++)
+        spawnQueue = new Queue<GameObject>();
+        Dictionary<EnemySO, int> currWaveData = chosenEncounter[waveIndex];
+        List<EnemySO> enemyOptions = currWaveData.Keys.ToList();
+
+        int backup = 0;
+        while(enemyOptions.Count > 0)
         {
-            // Choose a random type, not allowing ones whos quantity has already been filled
-            int typeIndex;
-            do
+            // Randomly select an enemy based on index
+            int ranIndex = Random.Range(0, currWaveData.Count);
+            EnemySO selectedEnemy = enemyOptions[ranIndex];
+
+            // Enqueue into spawn queue, subtract from temp dictionary
+            spawnQueue.Enqueue(selectedEnemy.enemyPrefab);
+            currWaveData[selectedEnemy]--;
+
+            // If dictionary value is below zero, remove from options
+            if (currWaveData[selectedEnemy] <= 0)
             {
-                typeIndex = Random.Range(0, enemyCounts.Count);
-            } while (enemyCounts[typeIndex] <= 0);
+                enemyOptions.RemoveAt(ranIndex);
+                enemyOptions.TrimExcess();
+            }
 
-            // Decrement that type's count
-            enemyCounts[typeIndex]--;
-
-            // Add to spawn queue
-            GameObject enemyToSpawn = chosenEncounter.waves[waveIndex].enemyGroups[typeIndex].enemy;
-            spawnQueue.Enqueue(enemyToSpawn);
+            backup++;
+            if(backup > 1000)
+            {
+                Debug.LogError("SpawnManager's 'PrepareWaveQueue' is stuck in an infinite loop!");
+                break;
+            }
         }
     }
 
@@ -301,7 +301,7 @@ public class SpawnManager : MonoBehaviour
         waveIndex++;
         startDelayTimer.ResetTimer();
 
-        if (waveIndex >= chosenEncounter.waves.Length)
+        if (waveIndex >= chosenEncounter.Length)
         {
             CompleteEncounter();
             spawnQueue.Clear();
