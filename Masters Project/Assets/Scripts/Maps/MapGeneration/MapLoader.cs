@@ -261,9 +261,10 @@ public class MapLoader : MonoBehaviour
             }
 
             // If out of difficulty or recently used, remove from pool and send to used 
-            if (!selectedObject.WithinDifficulty(roomIndex/2))
-            {;
+            if (!selectedObject.WithinDifficulty(mapOrder.Count / 2))
+            {
                 availableRooms.Remove(selectedObject);
+                selectedObject= null;
                 continue;
             }
 

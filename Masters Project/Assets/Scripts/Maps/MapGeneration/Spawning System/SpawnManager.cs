@@ -252,7 +252,7 @@ public class SpawnManager : MonoBehaviour
         while(enemyOptions.Count > 0)
         {
             // Randomly select an enemy based on index
-            int ranIndex = Random.Range(0, currWaveData.Count);
+            int ranIndex = Random.Range(0, enemyOptions.Count);
             EnemySO selectedEnemy = enemyOptions[ranIndex];
 
             // Enqueue into spawn queue, subtract from temp dictionary

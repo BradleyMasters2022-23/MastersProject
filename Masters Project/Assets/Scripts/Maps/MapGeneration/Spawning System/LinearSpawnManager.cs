@@ -32,15 +32,22 @@ public struct EncounterDifficulty
     /// </summary>
     /// <param name="depth">current depth of player runs</param>
     /// <returns>randomized budget</returns>
-    public int GetBudget(int depth)
+    public int GetBudget(int depth, float globalMod = 0)
     {
-        return (int)( baseBudget + Mathf.FloorToInt(budgetDepthMod * depth) * (1 + Random.Range(-randomizePercentageThreshold, randomizePercentageThreshold)) );
+        return (int)
+            ( baseBudget + Mathf.CeilToInt((budgetDepthMod + budgetDepthMod*globalMod) * depth)
+            * (1 + Random.Range(-randomizePercentageThreshold, randomizePercentageThreshold)));
     }
 }
 
 public class LinearSpawnManager : MonoBehaviour
 {
     public static LinearSpawnManager instance;
+
+    [Tooltip("A scaling modifier based on depth that is applied to all encounters." +
+        "Use this to quickly buff or nerf enemy scaling intensity." +
+        "Will be a percentage multiplied to all other scaling.")]
+    [SerializeField] private float globalDepthScalingRate;
 
     [Tooltip("Current number of combat encounters completed")]
     private int combatRoomCount = 0;
@@ -83,7 +90,7 @@ public class LinearSpawnManager : MonoBehaviour
         // DEBUG - Print out the data to check the info
         for (int i = 0; i < allWaves.Length; i++)
         {
-            Debug.Log($"Wave {i} difficulty {waves[i]} is:");
+            // Debug.Log($"Wave {i} difficulty {waves[i]} is:");
             foreach (var data in allWaves[i])
             {
                 Debug.Log(data);
@@ -99,8 +106,8 @@ public class LinearSpawnManager : MonoBehaviour
         Dictionary<EnemySO, int> waveData = new Dictionary<EnemySO, int>();
 
         // Get the budget on the wave based on combat room count
-        int budget = difficulty.GetBudget(combatRoomCount);
-        Debug.Log($"Budget for wave is : {budget}");
+        int budget = difficulty.GetBudget(combatRoomCount, globalDepthScalingRate);
+        // Debug.Log($"Budget for wave is : {budget}");
 
         // Create buffer lists, useful to reduce iterations later
         List<EnemySO> usableEnemies = spawnableEnemies.ToList();
@@ -158,7 +165,7 @@ public class LinearSpawnManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"The remainder budget is : {budget}");
+        // Debug.Log($"The remainder budget is : {budget}");
 
         return waveData;
     }
