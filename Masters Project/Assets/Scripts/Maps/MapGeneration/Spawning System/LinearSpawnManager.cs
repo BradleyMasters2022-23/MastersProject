@@ -14,9 +14,6 @@ using System.Linq;
 [System.Serializable]
 public struct EncounterDifficulty
 {
-    [Tooltip("Name of the wave. Top level and debug only.")]
-    public string name;
-
     [Header("Difficulty")]
     [Tooltip("Starting budget for this encounter.")]
     public int baseBudget;
