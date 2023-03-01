@@ -12,7 +12,7 @@ using UnityEngine;
 
 public class AudioIndicator : IIndicator
 {
-    [SerializeField] SoundOverride soundEffect;
+    [SerializeField] AudioClipSO soundEffect;
     [SerializeField] Transform playSourceOverride;
 
     public override void Activate()
