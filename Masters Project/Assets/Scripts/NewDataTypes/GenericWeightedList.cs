@@ -28,7 +28,7 @@ public class GenericWeightedList<T>
 {
     [ListDrawerSettings(Expanded = true, ShowItemCount = true)]
     [OnInspectorGUI("EstimateProbability")]
-    [TableList(AlwaysExpanded = true, CellPadding = 7, HideToolbar = true)] 
+    [TableList(AlwaysExpanded = true, CellPadding = 7, HideToolbar = false)] 
     public List<WeightedChoice<T>> weightedList;
 
     private float[] odds;
