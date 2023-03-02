@@ -79,6 +79,8 @@ public class MapLoader : MonoBehaviour
     /// </summary>
     [SerializeField] private int roomIndex;
 
+    [SerializeField] private bool testShowAll;
+
     #endregion
 
     #region Initialization
@@ -193,13 +195,15 @@ public class MapLoader : MonoBehaviour
         {
             loadedMap[i].ActivateSegment();
         }
-        for(int i = 2; i < loadedMap.Count; i++)
+        if (!testShowAll)
         {
-            loadedMap[i].DeactivateSegment();
+            for (int i = 2; i < loadedMap.Count; i++)
+            {
+                loadedMap[i].DeactivateSegment();
+            }
         }
-        Debug.Log("[MapLoader] Initial inactive set!");
-
         
+        Debug.Log("[MapLoader] Initial inactive set!");
 
         yield return StartCoroutine(PrepareNavmesh());
 
