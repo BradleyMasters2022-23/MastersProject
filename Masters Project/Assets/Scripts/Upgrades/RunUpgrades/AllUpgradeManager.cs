@@ -13,6 +13,7 @@ public class AllUpgradeManager : MonoBehaviour {
     public static AllUpgradeManager instance;
     [SerializeField] private List<UpgradeObject> allUpgrades;
     private List<UpgradeObject> upgradeOptions;
+    [SerializeField] private bool allowDupes;
 
     /// <summary>
     /// ensures only one instance and initializes upgradeOptions
@@ -102,6 +103,7 @@ public class AllUpgradeManager : MonoBehaviour {
             // select options, validate no dupes
             UpgradeObject chosen;
             bool alreadySelected;
+            int c = 0;
             do
             {
                 alreadySelected = false;
@@ -109,13 +111,19 @@ public class AllUpgradeManager : MonoBehaviour {
 
                 for(int j = 0; j < i; j++)
                 {
-                    if(selected[j] != null && selected[j] == chosen)
+                    if(selected[j] != null && (selected[j] == chosen) && allowDupes && upgradeOptions.Count >= goal)
                     {
                         alreadySelected = true;
                         continue;
                     }
                 }
 
+                c++;
+                if(c >= 1000)
+                {
+                    Debug.LogError("AllUpgradeManager's 'GetRandomOptions' stuck in infinite loop!");
+                    break;
+                }
 
             } while (alreadySelected);
 
