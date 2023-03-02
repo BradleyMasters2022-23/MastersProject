@@ -15,7 +15,7 @@ public class ArenaLoader : SegmentLoader
     /// <summary>
     /// Chosen wave to use this encounter
     /// </summary>
-    private EncounterSO chosenEncounter;
+    [SerializeField] private EncounterDifficulty[] encounterData;
 
     /// <summary>
     /// All spawnpoints to use
@@ -29,26 +29,25 @@ public class ArenaLoader : SegmentLoader
         // Get reference to all spawnpoints
         allSpawnpoints = GetComponentsInChildren<SpawnPoint>(true);
 
-
-        //Debug.Log("Arena segment finished initialization");
         initialized = true;
         yield return null;
     }
 
     protected override void UniqueActivate()
     {
-        // Get a random encounter from the segment info
-        chosenEncounter = segmentInfo.potentialEncounters[Random.Range(0, segmentInfo.potentialEncounters.Length)];
-        Debug.Log("Loading in encounter named: " + chosenEncounter.name);
-        
-
         // Send necessary data to spawner [spawnpoints, encounters]
-        SpawnManager.instance.PrepareEncounter(chosenEncounter, allSpawnpoints);
+        SpawnManager.instance.PrepareEncounter(encounterData, allSpawnpoints);
     }
 
     protected override void UniqueDeactivate()
     {
-        chosenEncounter = null;
+        //chosenEncounter = null;
+        //LinearSpawnManager.instance.IncrementDifficulty();
     }
 
+    public override void StartSegment()
+    {
+        SpawnManager.instance.BeginEncounter();
+        return;
+    }
 }

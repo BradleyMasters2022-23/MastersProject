@@ -79,6 +79,8 @@ public class MapLoader : MonoBehaviour
     /// </summary>
     [SerializeField] private int roomIndex;
 
+    [SerializeField] private bool testShowAll;
+
     #endregion
 
     #region Initialization
@@ -193,13 +195,15 @@ public class MapLoader : MonoBehaviour
         {
             loadedMap[i].ActivateSegment();
         }
-        for(int i = 2; i < loadedMap.Count; i++)
+        if (!testShowAll)
         {
-            loadedMap[i].DeactivateSegment();
+            for (int i = 2; i < loadedMap.Count; i++)
+            {
+                loadedMap[i].DeactivateSegment();
+            }
         }
-        Debug.Log("[MapLoader] Initial inactive set!");
-
         
+        Debug.Log("[MapLoader] Initial inactive set!");
 
         yield return StartCoroutine(PrepareNavmesh());
 
@@ -261,9 +265,10 @@ public class MapLoader : MonoBehaviour
             }
 
             // If out of difficulty or recently used, remove from pool and send to used 
-            if (!selectedObject.WithinDifficulty(roomIndex/2))
-            {;
+            if (!selectedObject.WithinDifficulty(mapOrder.Count / 2))
+            {
                 availableRooms.Remove(selectedObject);
+                selectedObject= null;
                 continue;
             }
 
@@ -285,7 +290,7 @@ public class MapLoader : MonoBehaviour
                 return null;
             }
 
-        } while (selectedObject == null || selectedObject.segmentType != MapSegmentSO.MapSegmentType.Room) ;
+        } while (selectedObject == null || (selectedObject.segmentType != MapSegmentSO.MapSegmentType.Room));
 
         // Remove from current pool
         availableRooms.Remove(selectedObject);
@@ -396,13 +401,18 @@ public class MapLoader : MonoBehaviour
         //Debug.Log($"Pew Bang! Encounter started for room at index {roomIndex +1}!");
 
         //loadedMap[roomIndex].GetComponent<SpawnManager>().BeginEncounter();
-        SpawnManager.instance.BeginEncounter();
+        loadedMap[roomIndex+1].StartSegment();
     }
 
     public void EndRoomEncounter()
     {
         //Debug.Log($"Phew! You won it all good jorb {roomIndex+1}!");
         loadedMap[roomIndex+1].GetComponent<DoorManager>().UnlockExit();
+
+        if (mapOrder[roomIndex+1].segmentType == MapSegmentSO.MapSegmentType.Room
+            && LinearSpawnManager.instance != null)
+            LinearSpawnManager.instance.IncrementDifficulty();
+
     }
 
     /// <summary>

@@ -11,7 +11,7 @@ public class Grenade : Throwable
     [SerializeField] private float detonateTimer;
     
     [SerializeField] private bool affectedByTimestop;
-
+    
     [SerializeField] private float triggerDelay;
     [SerializeField] private float triggerRadius;
     [SerializeField] private SphereCollider triggerCol;
@@ -113,12 +113,12 @@ public class Grenade : Throwable
     }
     private void AdjustProjectileForTimestop()
     {
-        if (TimeManager.WorldTimeScale == 1 && rb.isKinematic)
+        if (TimeManager.WorldTimeScale > timestopFreezeThreshold && rb.isKinematic)
         {
             rb.isKinematic = false;
             rb.velocity = savedDir * savedMag;
         }
-        else if(TimeManager.WorldTimeScale != 1 && !rb.isKinematic)
+        else if(TimeManager.WorldTimeScale <= timestopFreezeThreshold & !rb.isKinematic)
         {
             savedDir = rb.velocity.normalized;
             savedMag = rb.velocity.magnitude;
