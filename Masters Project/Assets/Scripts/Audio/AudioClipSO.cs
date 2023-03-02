@@ -10,14 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
-
-public enum VolumeBus
-{
-    Effect, 
-    UI, 
-    Music
-}
-
+using UnityEngine.Audio;
 
 [CreateAssetMenu(fileName = "New Audioclip Data", menuName = "Core/Audioclip Data")]
 public class AudioClipSO : ScriptableObject
@@ -27,36 +20,38 @@ public class AudioClipSO : ScriptableObject
         "The higher the weight of a clip, the more likely it will be selected.")]
   
     [SerializeField] private GenericWeightedList<AudioClip> clips;
-    
-    [Tooltip("Base volume of this audio clip.")]
-    public float baseVolume = 1;
-    [Tooltip("For each repeat of this clip, how much the volume get reduced by.")]
-    public float diminishingReturnRate = 0.05f;
-    [Tooltip("Minimum volume for this clip when applied with diminishing returns.")]
-    public float diminishedCap = 0.2f;
 
+    [Tooltip("Which volume bus to play this audio within.")]
+    public AudioMixerGroup volumeType;
+
+    [Header("=== Volume ===")]
+
+    [Tooltip("Base volume of this audio clip.")]
+    public float volume = 1;
+    [Tooltip("Possible pitches to play audio at.")]
+    [MinMaxSlider(minValue:0.1f, maxValue:3, ShowFields = true)] 
+    public Vector2 pitch;
     [Tooltip("Whether or not this audio clip should play looped.")]
     public bool loop = false;
 
-    [EnumToggleButtons] public VolumeBus volumeType;
+    [Header("=== Distance ===")]
+    [Tooltip("How 3D is this audio. 1 is full 3D.")]
+    [Range(0, 1)] public float spatialBlend = 1;
+    [Tooltip("How the distance scales, if being used. Linear recommended.")]
+    public AudioRolloffMode distanceMode = AudioRolloffMode.Linear;
+    [Tooltip("Minimum distance required to hear the audio at max volume.")]
+    public float minDistance = 0;
+    [Tooltip("Maximum distance required to hear the audio at all.")]
+    public float maxDistance = 75;
+    [Tooltip("Intensity of doppler. Determines pitch based on distance.")]
+    [Range(0, 5)] public float doppler;
     
-    public void PlayAudio(Transform parent)
+    public AudioClip GetClip()
     {
-        PlayAudio(parent.position);
+        return clips.Pull();
     }
-
-    public void PlayAudio(Vector3 position)
+    public float GetPitch()
     {
-        AudioSource.PlayClipAtPoint(clips.Pull(), position, baseVolume);
-    }
-
-    /// <summary>
-    /// Get the volume diminished based on count of this playing
-    /// </summary>
-    /// <param name="count">The current count of this audio effect</param>
-    /// <returns>The adjusted volume float</returns>
-    public float DiminishedVolume(int count)
-    {
-        return Mathf.Clamp(baseVolume - (Mathf.Abs(diminishingReturnRate) * count), diminishedCap, 10);
+        return Random.Range(pitch.x, pitch.y);
     }
 }

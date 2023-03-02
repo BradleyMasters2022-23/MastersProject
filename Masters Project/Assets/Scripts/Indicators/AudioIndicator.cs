@@ -13,14 +13,10 @@ using UnityEngine;
 public class AudioIndicator : IIndicator
 {
     [SerializeField] AudioClipSO soundEffect;
-    [SerializeField] Transform playSourceOverride;
-
     public override void Activate()
     {
-        if (playSourceOverride == null)
-            soundEffect.PlayAudio(transform);
-        else
-            soundEffect.PlayAudio(playSourceOverride);
+        if (soundEffect != null)
+            transform.PlayClip(soundEffect);
     }
 
     public override void Deactivate()

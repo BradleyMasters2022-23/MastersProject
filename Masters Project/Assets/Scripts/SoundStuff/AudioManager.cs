@@ -14,11 +14,13 @@ public class AudioManager : MonoBehaviour
 {
     [Tooltip("Channel to check for settings change")]
     [SerializeField] private ChannelVoid onSettingsChangedChannel;
-
     private float masterVolume;
+
+    public GameObject tempAudioContainer;
 
     private void Awake()
     {
+        
         // load in settings
         UpdateSettings();
     }
