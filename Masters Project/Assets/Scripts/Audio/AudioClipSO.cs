@@ -31,6 +31,11 @@ public class AudioClipSO : ScriptableObject
     [Tooltip("Possible pitches to play audio at.")]
     [MinMaxSlider(minValue:0.1f, maxValue:3, ShowFields = true)] 
     public Vector2 pitch;
+
+
+    [SerializeField] private GenericWeightedList<float> pitches;
+
+
     [Tooltip("Whether or not this audio clip should play looped.")]
     public bool loop = false;
 
