@@ -22,7 +22,7 @@ public interface SegmentInterface
 
     void Sync(Transform syncPoint);
 
-    void ActivateSegment();
+    IEnumerator ActivateSegment();
 
     void DeactivateSegment();
 

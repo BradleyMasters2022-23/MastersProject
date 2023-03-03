@@ -193,7 +193,7 @@ public class MapLoader : MonoBehaviour
         // Activate first room and hallway, deactivate rest
         for (int i = 0; i < 2; i++)
         {
-            loadedMap[i].ActivateSegment();
+            yield return StartCoroutine(loadedMap[i].ActivateSegment());
         }
         if (!testShowAll)
         {
@@ -353,10 +353,15 @@ public class MapLoader : MonoBehaviour
 
     #region Room Incremenation
 
+    public void UpdateLoadedSegments()
+    {
+        StartCoroutine(LoadSegments());
+    }
+
     /// <summary>
     /// Deactivate passed sections and prepare the new ones
     /// </summary>
-    public void UpdateLoadedSegments()
+    public IEnumerator LoadSegments()
     {
         // Increment room index. Do by 2 because its accounting for room and hallway
         roomIndex += 2;
@@ -383,17 +388,24 @@ public class MapLoader : MonoBehaviour
 
         // Activate the next two sections, if possible
         if (roomIndex+1 < loadedMap.Count)
-            loadedMap[roomIndex + 1].ActivateSegment();
+        {
+            yield return (loadedMap[roomIndex + 1].ActivateSegment());
+        }
         if (roomIndex + 2 < loadedMap.Count)
-            loadedMap[roomIndex + 2].ActivateSegment();
+        {
+            yield return StartCoroutine(loadedMap[roomIndex + 2].ActivateSegment());
+        }
+            
 
-        StartCoroutine(PrepareNavmesh());
+        yield return StartCoroutine(PrepareNavmesh());
+
+        yield return null;
     }
 
     private IEnumerator PrepareNavmesh()
     {
-        yield return new WaitForSecondsRealtime(1f);
         navMesh.BuildNavMesh();
+        yield return null;
     }
 
     public void StartRoomEncounter()
