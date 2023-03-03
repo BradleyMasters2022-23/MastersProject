@@ -27,5 +27,9 @@ public class FinalRoomLoader : SegmentLoader
         
     }
 
-    
+    public override void StartSegment()
+    {
+        MapLoader.instance.EndRoomEncounter();
+        return;
+    }
 }

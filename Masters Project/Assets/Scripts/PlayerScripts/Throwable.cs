@@ -7,9 +7,9 @@ public class Throwable : MonoBehaviour
     protected Rigidbody rb;
     protected float savedMag;
     protected Vector3 savedDir;
+    [SerializeField] protected float timestopFreezeThreshold;
 
 
-    
 
     public void ApplyStartingForce(Vector3 force, bool isGhost = false)
     {
@@ -22,7 +22,7 @@ public class Throwable : MonoBehaviour
 
     protected IEnumerator WaitForFlight(Vector3 force)
     {
-        while(TimeManager.WorldTimeScale != 1)
+        while(TimeManager.WorldTimeScale <= timestopFreezeThreshold)
         {
             yield return null;
         }

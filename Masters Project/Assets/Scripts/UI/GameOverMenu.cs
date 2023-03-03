@@ -10,11 +10,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameOverMenu : MonoBehaviour
 {
     [Tooltip("The game over screen game object")]
     [SerializeField] private GameObject gameOverScreen;
+
+    [SerializeField] private TextMeshProUGUI roomDepthCounter;
+
     [Tooltip("Channel that triggers game manager state changes")]
     [SerializeField] private ChannelGMStates onStateChangeChannel;
 
@@ -42,6 +46,11 @@ public class GameOverMenu : MonoBehaviour
         if(_newState == GameManager.States.GAMEOVER)
         {
             gameOverScreen.SetActive(true);
+
+            if(roomDepthCounter != null && MapLoader.instance != null)
+            {
+                roomDepthCounter.text = "Room Number : " + (MapLoader.instance.RoomDepth()+1);
+            }
         }
     }
 
