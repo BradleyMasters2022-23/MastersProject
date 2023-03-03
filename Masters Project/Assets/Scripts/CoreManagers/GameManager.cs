@@ -514,7 +514,7 @@ public class GameManager : MonoBehaviour
         // Close the top menu and remove from stack
         UIMenu menu = menuStack.Pop();
         menu.Close();
-        Debug.Log($"Closing menu named {menu.name}");
+        //Debug.Log($"Closing menu named {menu.name}");
 
         // Tell the stack below it to load its select
         if (menuStack.Count > 0)

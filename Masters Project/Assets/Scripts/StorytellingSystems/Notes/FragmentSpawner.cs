@@ -15,7 +15,7 @@ public class FragmentSpawner : MonoBehaviour
         if(FragShouldSpawn()) {
             GameObject obj = CreateFrag();
             obj.GetComponent<Collider>().enabled = true;
-            Debug.Log(obj.GetComponent<FragmentInteract>().GetFragment().GetFragmentID());
+            // Debug.Log(obj.GetComponent<FragmentInteract>().GetFragment().GetFragmentID());
         } 
     }
 

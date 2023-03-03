@@ -392,7 +392,7 @@ public class MapLoader : MonoBehaviour
 
     private IEnumerator PrepareNavmesh()
     {
-        yield return new WaitForSecondsRealtime(0.1f);
+        yield return new WaitForSecondsRealtime(1f);
         navMesh.BuildNavMesh();
     }
 

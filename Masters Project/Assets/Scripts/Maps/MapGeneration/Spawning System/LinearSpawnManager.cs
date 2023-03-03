@@ -88,14 +88,14 @@ public class LinearSpawnManager : MonoBehaviour
         }
 
         // DEBUG - Print out the data to check the info
-        for (int i = 0; i < allWaves.Length; i++)
-        {
-            // Debug.Log($"Wave {i} difficulty {waves[i]} is:");
-            foreach (var data in allWaves[i])
-            {
-                Debug.Log(data);
-            }
-        }
+        //for (int i = 0; i < allWaves.Length; i++)
+        //{
+        //    // Debug.Log($"Wave {i} difficulty {waves[i]} is:");
+        //    foreach (var data in allWaves[i])
+        //    {
+        //        Debug.Log(data);
+        //    }
+        //}
 
         // Return all wave data to requester
         return allWaves;
