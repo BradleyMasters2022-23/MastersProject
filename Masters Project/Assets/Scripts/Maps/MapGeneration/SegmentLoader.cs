@@ -88,10 +88,6 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
             yield return null;
         syncPoints = doorManager.GetSyncpoints();
 
-        // Set doors to hallway if this is a hallway
-        if (segmentInfo.segmentType == MapSegmentSO.MapSegmentType.Hallway)
-            doorManager.SetHallway();
-
         // Do any unique initialization
         StartCoroutine(UniquePoolInitialization());
         
@@ -141,7 +137,7 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
     /// </summary>
     public IEnumerator ActivateSegment()
     {
-        yield return StartCoroutine(LoadRoom());
+        yield return StartCoroutine(LoadRoom(true));
 
         // Tell randomized objects to initiate randomization
         foreach (IRandomizer obj in randomizedObjs)
@@ -153,11 +149,11 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
         UniqueActivate();
     }
 
-    private IEnumerator LoadRoom()
+    private IEnumerator LoadRoom(bool enabled)
     {
         for(int i = 0; i < transform.childCount; i++)
         {
-            transform.GetChild(i).gameObject.SetActive(true);
+            transform.GetChild(i).gameObject.SetActive(enabled);
             yield return new WaitForEndOfFrame();
         }
 
@@ -168,12 +164,18 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
     /// <summary>
     /// Reset this segment to the pool, hiding it and preparing it for the next use
     /// </summary>
-    public void DeactivateSegment()
+    public IEnumerator DeactivateSegment(bool instant)
     {
-        //gameObject.SetActive(false);
-        for (int i = 0; i < transform.childCount; i++)
+        if(instant)
         {
-            transform.GetChild(i).gameObject.SetActive(false);
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                transform.GetChild(i).gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            yield return StartCoroutine(LoadRoom(false));
         }
 
         UniqueDeactivate();

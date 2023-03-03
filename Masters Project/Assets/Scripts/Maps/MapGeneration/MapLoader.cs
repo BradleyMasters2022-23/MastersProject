@@ -16,6 +16,12 @@ using UnityEngine.AI;
 using UnityEngine.Events;
 using Unity.VisualScripting;
 
+public enum LoadState
+{
+    Loading,
+    Done
+}
+
 public class MapLoader : MonoBehaviour
 {
     public enum States
@@ -36,6 +42,13 @@ public class MapLoader : MonoBehaviour
     /// Current state of the loader
     /// </summary>
     private States currState;
+
+    private LoadState loadState;
+
+    public LoadState LoadState
+    {
+        get { return loadState; }
+    }
 
     /// <summary>
     /// Navmesh for overall map
@@ -116,6 +129,8 @@ public class MapLoader : MonoBehaviour
     /// <returns></returns>
     private IEnumerator PrepareMapSegments()
     {
+        loadState = LoadState.Loading;
+
         // === Choose what rooms to use === //
         int c = 0;
         while(c < maxFloorLength)
@@ -199,15 +214,16 @@ public class MapLoader : MonoBehaviour
         {
             for (int i = 2; i < loadedMap.Count; i++)
             {
-                loadedMap[i].DeactivateSegment();
+                yield return StartCoroutine(loadedMap[i].DeactivateSegment(true));
             }
         }
         
         Debug.Log("[MapLoader] Initial inactive set!");
 
-        yield return StartCoroutine(PrepareNavmesh());
+        PrepareNavmesh();
 
         currState = States.Start;
+        loadState = LoadState.Done;
 
         yield return null;
     }
@@ -355,6 +371,8 @@ public class MapLoader : MonoBehaviour
 
     public void UpdateLoadedSegments()
     {
+        loadState = LoadState.Loading;
+
         StartCoroutine(LoadSegments());
     }
 
@@ -380,39 +398,39 @@ public class MapLoader : MonoBehaviour
         }
 
         // Deactivate the last 2 sections, if possible
-        loadedMap[roomIndex - 1].DeactivateSegment();
+
+        yield return StartCoroutine(loadedMap[roomIndex - 1].DeactivateSegment(false));
+
         if (roomIndex - 2 >= 0)
-            loadedMap[roomIndex - 2].DeactivateSegment();
+        {
+            yield return StartCoroutine(loadedMap[roomIndex - 2].DeactivateSegment(false));
+        }
         else
             startingRoom.SetActive(false);
 
         // Activate the next two sections, if possible
         if (roomIndex+1 < loadedMap.Count)
         {
-            yield return (loadedMap[roomIndex + 1].ActivateSegment());
+            yield return StartCoroutine((loadedMap[roomIndex + 1].ActivateSegment()));
         }
         if (roomIndex + 2 < loadedMap.Count)
         {
             yield return StartCoroutine(loadedMap[roomIndex + 2].ActivateSegment());
         }
-            
 
-        yield return StartCoroutine(PrepareNavmesh());
+        PrepareNavmesh();
 
+        loadState = LoadState.Done;
         yield return null;
     }
 
-    private IEnumerator PrepareNavmesh()
+    private void PrepareNavmesh()
     {
         navMesh.BuildNavMesh();
-        yield return null;
     }
 
     public void StartRoomEncounter()
     {
-        //Debug.Log($"Pew Bang! Encounter started for room at index {roomIndex +1}!");
-
-        //loadedMap[roomIndex].GetComponent<SpawnManager>().BeginEncounter();
         loadedMap[roomIndex+1].StartSegment();
     }
 

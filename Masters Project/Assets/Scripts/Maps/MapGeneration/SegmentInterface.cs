@@ -24,7 +24,7 @@ public interface SegmentInterface
 
     IEnumerator ActivateSegment();
 
-    void DeactivateSegment();
+    IEnumerator DeactivateSegment(bool instant);
 
     Transform GetExit();
 }
