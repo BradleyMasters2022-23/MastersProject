@@ -88,6 +88,9 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
             yield return null;
         syncPoints = doorManager.GetSyncpoints();
 
+        if (segmentInfo.segmentType == MapSegmentSO.MapSegmentType.Hallway)
+            doorManager.SetHallway();
+
         // Do any unique initialization
         StartCoroutine(UniquePoolInitialization());
         
