@@ -133,12 +133,21 @@ public class MapLoader : MonoBehaviour
 
         // === Choose what rooms to use === //
         int c = 0;
+        int backup = 0;
         while(c < maxFloorLength)
         {
             // Add new segment, check if a room was added. If so, add
             mapOrder.Add(ChooseNextSegment());
             if (mapOrder[mapOrder.Count - 1].segmentType == MapSegmentSO.MapSegmentType.Room)
                 c++;
+
+            backup++;
+            if(backup > 1000)
+            {
+                Debug.LogError("MapLoader loop to build the room list is in an infinite loop!");
+                Debug.Break();
+                break;
+            }
         }
 
         // Load in the final room, if there is one. Add hallway buffer
@@ -169,7 +178,7 @@ public class MapLoader : MonoBehaviour
             }
         }
 
-        // Make sure last item is initialized before continuing
+        // Make sure last item is finished initialized before continuing
         MapInitialize[] lastItemRef = loadedMap[loadedMap.Count - 1].GetComponents<MapInitialize>();
         bool doneInitializing;
         do
@@ -255,44 +264,53 @@ public class MapLoader : MonoBehaviour
     /// <returns>Selected room prefab</returns>
     private MapSegmentSO SelectRoom()
     {
+        // If out of rooms, repopulate the pool
+        if (availableRooms.Count <= 0)
+        {
+            availableRooms = new List<MapSegmentSO>(allRooms);
+        }
+
+        // populate all potential rooms allowed to be used here
+        List<MapSegmentSO> allUsableRooms = new List<MapSegmentSO>();
+        foreach (MapSegmentSO option in availableRooms)
+        {
+            if(option.WithinDifficulty(mapOrder.Count / 2))
+            {
+                allUsableRooms.Add(option);
+            }
+        }
+        // if no usable rooms available after first attempt, allow all rooms ignoring difficulty
+        if (allUsableRooms.Count <= 0)
+        {
+            foreach (MapSegmentSO option in availableRooms)
+            {
+                allUsableRooms.Add(option);
+            }
+        }
+        // if still empty, just stop the play session because something broke or no rooms passed in
+        if(allUsableRooms.Count <= 0)
+        {
+            Debug.LogError("[MapLoader] LOADING ERROR! Cannot find any rooms to build with!");
+            Debug.Break();
+            return null;
+        }
+
         MapSegmentSO selectedObject;
 
+        // loop through trying to select a new room that ideally isnt the last room
         int c = 0;
-
         do
         {
-            // If out of rooms, repopulate the pool
-            if (availableRooms.Count <= 0)
-            {
-                availableRooms = new List<MapSegmentSO>(allRooms);
-            }
-
             // select a new room
-            selectedObject = availableRooms[Random.Range(0, availableRooms.Count)];
-
-            // Verify it is a room, otherwise remove from list and try again
-            if (selectedObject.segmentType != MapSegmentSO.MapSegmentType.Room)
-            {
-                Debug.LogError($"[Map Loader] A non-room named {selectedObject.name} " +
-                    $"was placed into room! Please remove from room list!");
-
-                // Remove from pool permenately 
-                allRooms.Remove(selectedObject);
-            }
-
-            // If out of difficulty or recently used, remove from pool and send to used 
-            if (!selectedObject.WithinDifficulty(mapOrder.Count / 2))
-            {
-                availableRooms.Remove(selectedObject);
-                selectedObject= null;
-                continue;
-            }
+            selectedObject = allUsableRooms[Random.Range(0, allUsableRooms.Count)];
 
             // Make sure the last room is not the same
-            if(mapOrder.Count >= 2 && selectedObject == mapOrder[mapOrder.Count - 2] 
-                && allRooms.Count > 1)
+            // c variable can prevent this incase something breaks
+            if(allUsableRooms.Count > 1 && 
+                (mapOrder.Count >= 2 && selectedObject == mapOrder[mapOrder.Count - 2])
+                && c < 100)
             {
-                availableRooms.Remove(selectedObject);
+                allUsableRooms.Remove(selectedObject);
                 selectedObject = null;
                 continue;
             }
@@ -306,7 +324,7 @@ public class MapLoader : MonoBehaviour
                 return null;
             }
 
-        } while (selectedObject == null || (selectedObject.segmentType != MapSegmentSO.MapSegmentType.Room));
+        } while (selectedObject == null);
 
         // Remove from current pool
         availableRooms.Remove(selectedObject);
@@ -321,30 +339,38 @@ public class MapLoader : MonoBehaviour
     /// <returns>Selected hallway prefab</returns>
     private MapSegmentSO SelectHallway()
     {
+        // If out of rooms, repopulate the pool
+        if (availableHalls.Count <= 0)
+        {
+            availableHalls = new List<MapSegmentSO>(allHallways);
+        }
+
+        List<MapSegmentSO> allUsableHallway = new List<MapSegmentSO>(availableHalls);
+        if(allUsableHallway.Count <= 0)
+        {
+            Debug.LogError("[MapLoader] LOADING ERROR! Cannot find any hallways to build with!");
+            Debug.Break();
+            return null;
+        }
+
+
         // Select a random hallway, ensure its valid
         MapSegmentSO selectedObject;
 
         int c = 0;
-
         do
         {
-            // If out of rooms, repopulate the pool
-            if (availableHalls.Count <= 0)
+            // select a new hallway
+            selectedObject = allUsableHallway[Random.Range(0, allUsableHallway.Count)];
+
+            // Try to prevent dupes if there more than one option available
+            if (allUsableHallway.Count > 1 &&
+                (mapOrder.Count >= 2 && selectedObject == mapOrder[mapOrder.Count - 2])
+                && c < 100)
             {
-                availableHalls = new List<MapSegmentSO>(allHallways);
-            }
-
-            // select a new room
-            selectedObject = availableHalls[Random.Range(0, availableHalls.Count)];
-
-            // Verify it is a hallway, otherwise remove from list and try again
-            if (selectedObject.segmentType != MapSegmentSO.MapSegmentType.Hallway)
-            {
-                Debug.LogError($"[Map Loader] A non-hallway named {selectedObject.name} " +
-                    $"was placed into hallway! Please remove from hallway list!");
-
-
-                allHallways.Remove(selectedObject);
+                allUsableHallway.Remove(selectedObject);
+                selectedObject = null;
+                continue;
             }
 
             // Backup failsafe check
@@ -356,7 +382,7 @@ public class MapLoader : MonoBehaviour
                 return null;
             }
 
-        } while (selectedObject.segmentType != MapSegmentSO.MapSegmentType.Hallway);
+        } while (selectedObject == null);
 
         // Remove from pool to ensure it doesnt appear again
         availableHalls.Remove(selectedObject);
