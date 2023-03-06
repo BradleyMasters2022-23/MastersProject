@@ -1,4 +1,4 @@
-/*
+ /*
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 21th, 2022
@@ -187,8 +187,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("---Slope---")]
 
-    [Tooltip("How far down to check for a slope ")]
-    [SerializeField] private float slopeHitDist;
     [Tooltip("Maximum angle of a slope the player can climb")]
     [SerializeField] private float maxAngle;
     [Tooltip("Force pushed onto player on slopes to help stick to them")]
@@ -198,13 +196,11 @@ public class PlayerController : MonoBehaviour
     /// The last time a slope was detected
     /// </summary>
     private RaycastHit slopeHit;
-    private RaycastHit lastSlopeHit;
-    [SerializeField] private bool grounded;
-
     /// <summary>
-    /// the last angle that was detected
+    /// Whether or not the player is on the ground
     /// </summary>
-    private float lastSurfaceAngle;
+    private bool grounded;
+
 
     #endregion
 
@@ -287,12 +283,6 @@ public class PlayerController : MonoBehaviour
 
         UpdateStateFunction();
         MoveSpeedThrottle();
-
-        //if(qAbilityHold && !qInput.IsInProgress())
-        //{
-        //    QAbility.Cancel();
-        //    qAbilityHold = false;
-        //}
     }
 
 
@@ -309,19 +299,25 @@ public class PlayerController : MonoBehaviour
         {
             case PlayerState.GROUNDED:
                 {
-                    HorizontalMovement();
-
-                    if(currentJumps != jumps.Current)
-                        currentJumps = jumps.Current;
-
-                    // If not on ground, set state to midair. Disable sprint
-
+                    // If not on ground, set state to midair
                     if (!grounded)
+                    {
                         ChangeState(PlayerState.MIDAIR);
+                        return;
+                    }
 
                     if (sprintHeld)
+                    {
                         ChangeState(PlayerState.SPRINTING);
+                        return;
+                    }
 
+                    HorizontalMovement();
+
+                    if (currentJumps != jumps.Current && OnJumpableGround())
+                    {
+                        currentJumps = jumps.Current;
+                    }
 
                     break;
                 }
@@ -373,12 +369,6 @@ public class PlayerController : MonoBehaviour
         {
             case PlayerState.GROUNDED:
                 {
-                    // Failsafe - set gravity on
-                    //rb.useGravity = false;
-
-                    // When entering grounded state, reset jumps
-                    currentJumps = jumps.Current;
-
                     // When entering grounded state, reset target max speed
                     targetMaxSpeed = maxMoveSpeed.Current;
 
@@ -454,7 +444,6 @@ public class PlayerController : MonoBehaviour
         Debug.DrawLine(groundCheck.position, groundCheck.position + Vector3.down * groundCheckRadius, Color.red);
         if (Physics.Raycast(groundCheck.position, Vector3.down, out slopeHit, groundCheckRadius, groundMask))
         {
-            lastSlopeHit = temp;
             grounded = true;
         }
         else
@@ -541,29 +530,32 @@ public class PlayerController : MonoBehaviour
         return temp;
     }
 
-    public float angleTheshold;
-
     /// <summary>
     /// Whether the player is currently on a slope
     /// </summary>
     /// <returns>Whether or not the player is on a slope</returns>
     private bool OnSlope()
     {
-        Vector3 origin = groundCheck.position;
-
-        //Determine where to check. Predictive on ground, standard mid air
-        //if (currentState != PlayerState.MIDAIR)
-        //    origin = groundCheck.position + rb.velocity * 0.1f;
-        //else
-        //    origin = groundCheck.position;
-        
         if (grounded)
         {
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            return (angle != 0 && angle < maxAngle && currentState != PlayerState.MIDAIR);
+            return (angle != 0 && angle <= maxAngle);
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Whether the player is on jumpable ground. Similar to OnSlope but allows for flat ground as well
+    /// </summary>
+    /// <returns>Whether the player is on jumpable ground</returns>
+    private bool OnJumpableGround()
+    {
+        if (!grounded)
+            return false;
+
+        float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+        return OnSlope() || angle == 0;
     }
 
     /// <summary>

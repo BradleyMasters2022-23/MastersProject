@@ -44,4 +44,10 @@ public class HallwayLoader : SegmentLoader
     {
         doorManager.UnlockExit();
     }
+
+    public override void StartSegment()
+    {
+        // dont do anything, internal triggers activate this
+        return;
+    }
 }

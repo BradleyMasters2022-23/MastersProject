@@ -2,7 +2,7 @@
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 24th, 2022
- * Last Edited - October 24th, 2022 by Ben Schuster
+ * Last Edited - February 15th, 2023 by Ben Schuster
  * Description - Core manager for the spawner
  * ================================================================================================
  */
@@ -10,18 +10,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Linq;
+
 
 public class SpawnManager : MonoBehaviour
 {
+    #region Core Variables
+
     public static SpawnManager instance;
 
-    [Tooltip("How many seconds to wait before starting the encounter?")]
-    [SerializeField] private float startDelay;
-
-    /// <summary>
-    /// The encounter that was chosen
-    /// </summary>
-    private EncounterSO chosenEncounter;
     /// <summary>
     /// Current index of waves in the encounter
     /// </summary>
@@ -32,9 +29,6 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     private Queue<GameObject> spawnQueue;
 
-    [Tooltip("Maximum amount of enemies allowed to be spawned at once")]
-    [SerializeField, Range(1, 50)] private int maxEnemies = 10;
-
     /// <summary>
     /// Current number of enemies spawned
     /// </summary>
@@ -44,13 +38,42 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     private int waitingEnemies = 0;
 
-    [Tooltip("Delay between spawning each individual enemy. Randomly chosen between this range.")]
-    [SerializeField] private Vector2 spawnDelay = new Vector2(0, 1);
-
     /// <summary>
     /// Whether or not the spawner is currently spawning
     /// </summary>
     private bool spawning;
+
+    /// <summary>
+    /// The encounter that was chosen
+    /// </summary>
+    private Dictionary<EnemySO, int>[] chosenEncounter;
+
+    /// <summary>
+    /// References to every spawnpoint in the scene
+    /// </summary>
+    private SpawnPoint[] spawnPoints;
+
+    /// <summary>
+    /// Whether or not this spawner is complete
+    /// </summary>
+    private bool finished;
+
+    #endregion
+
+    #region Open Variables
+
+    [Tooltip("How many seconds to wait before starting the encounter?")]
+    [SerializeField] private float startDelay;
+
+    [Tooltip("Delay between spawning each individual enemy. Randomly chosen between this range.")]
+    [SerializeField] private Vector2 spawnDelay = new Vector2(0, 1);
+
+    [Tooltip("Maximum amount of enemies allowed to be spawned at once")]
+    [SerializeField, Range(1, 50)] private int maxEnemies = 10;
+
+    #endregion
+
+    #region Timer and Tracker Variables
 
     /// <summary>
     /// Timer for spawning
@@ -69,6 +92,8 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     private Coroutine backupCheckRoutine;
 
+    #endregion
+    
     /// <summary>
     /// audio source for spawner
     /// </summary>
@@ -77,19 +102,14 @@ public class SpawnManager : MonoBehaviour
     [Tooltip("Sound played when the encounter ends.")]
     [SerializeField] AudioClip sound;
 
-    /// <summary>
-    /// References to every spawnpoint in the scene
-    /// </summary>
-    private SpawnPoint[] spawnPoints;
-
-    /// <summary>
-    /// Whether or not this spawner is complete
-    /// </summary>
-    private bool finished;
-
+    #region Cheat Variables
 
     private GameControls controls;
     private InputAction endCheat;
+
+
+    #endregion
+
 
     /// <summary>
     /// Initialize singleton, internal trackers
@@ -128,9 +148,9 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     /// <param name="encounterData">the encounter data with enemies to spawn</param>
     /// <param name="spawnData">the spawnpoints to be used</param>
-    public void PrepareEncounter(EncounterSO encounterData, SpawnPoint[] spawnData)
+    public void PrepareEncounter(EncounterDifficulty[] encounterData, SpawnPoint[] spawnData)
     {
-        chosenEncounter = encounterData;
+        chosenEncounter = LinearSpawnManager.instance.RequestBatch(encounterData);
         spawnPoints = spawnData;
     }
 
@@ -185,7 +205,6 @@ public class SpawnManager : MonoBehaviour
         SpawnPoint _spawnPoint;
         while (spawnQueue.Count > 0 || waitingEnemies > 0 || !SpawnpointsEmpty())
         {
-
             // Only spawn if not past max
             if ((enemyCount + waitingEnemies) < maxEnemies)
             {
@@ -217,36 +236,42 @@ public class SpawnManager : MonoBehaviour
         backupCheckRoutine = StartCoroutine(CheckCount());
     }
 
+
+
     /// <summary>
     /// Prepare the wave queue by populating the spawn queue
     /// </summary>
     private void PrepareWaveQueue()
     {
-        // load in numbers needed
-        List<int> enemyCounts = new List<int>();
-        int total = 0;
-        foreach (EnemyGroup enemyGroup in chosenEncounter.waves[waveIndex].enemyGroups)
-        {
-            enemyCounts.Add(enemyGroup.amount);
-            total += enemyGroup.amount;
-        }
-
         // Load the specified number of each at random
-        for (int i = 0; i < total; i++)
+        spawnQueue = new Queue<GameObject>();
+        Dictionary<EnemySO, int> currWaveData = chosenEncounter[waveIndex];
+        List<EnemySO> enemyOptions = currWaveData.Keys.ToList();
+
+        int backup = 0;
+        while(enemyOptions.Count > 0)
         {
-            // Choose a random type, not allowing ones whos quantity has already been filled
-            int typeIndex;
-            do
+            // Randomly select an enemy based on index
+            int ranIndex = Random.Range(0, enemyOptions.Count);
+            EnemySO selectedEnemy = enemyOptions[ranIndex];
+
+            // Enqueue into spawn queue, subtract from temp dictionary
+            spawnQueue.Enqueue(selectedEnemy.enemyPrefab);
+            currWaveData[selectedEnemy]--;
+
+            // If dictionary value is below zero, remove from options
+            if (currWaveData[selectedEnemy] <= 0)
             {
-                typeIndex = Random.Range(0, enemyCounts.Count);
-            } while (enemyCounts[typeIndex] <= 0);
+                enemyOptions.RemoveAt(ranIndex);
+                enemyOptions.TrimExcess();
+            }
 
-            // Decrement that type's count
-            enemyCounts[typeIndex]--;
-
-            // Add to spawn queue
-            GameObject enemyToSpawn = chosenEncounter.waves[waveIndex].enemyGroups[typeIndex].enemy;
-            spawnQueue.Enqueue(enemyToSpawn);
+            backup++;
+            if(backup > 1000)
+            {
+                Debug.LogError("SpawnManager's 'PrepareWaveQueue' is stuck in an infinite loop!");
+                break;
+            }
         }
     }
 
@@ -276,7 +301,7 @@ public class SpawnManager : MonoBehaviour
         waveIndex++;
         startDelayTimer.ResetTimer();
 
-        if (waveIndex >= chosenEncounter.waves.Length)
+        if (waveIndex >= chosenEncounter.Length)
         {
             CompleteEncounter();
             spawnQueue.Clear();

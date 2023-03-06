@@ -88,7 +88,6 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
             yield return null;
         syncPoints = doorManager.GetSyncpoints();
 
-        // Set doors to hallway if this is a hallway
         if (segmentInfo.segmentType == MapSegmentSO.MapSegmentType.Hallway)
             doorManager.SetHallway();
 
@@ -121,6 +120,7 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
         syncBuffer.SetPositionAndRotation(startPoint.position, startPoint.rotation);
 
         // set parent to help sync
+        Transform syncBufferParent = syncBuffer.parent;
         syncBuffer.parent = null;
         root.transform.SetParent(syncBuffer, true);
 
@@ -128,16 +128,19 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
         syncBuffer.position = syncPoint.position;
         syncBuffer.rotation = syncPoint.rotation;
 
-        // DBUG
+        // Revert parents post sync
+        root.transform.parent = null;
+        syncBuffer.transform.parent = syncBufferParent;
+
         //doorManager.UnlockExit();
     }
 
     /// <summary>
     /// Activate this component of the object. Do anything needed here
     /// </summary>
-    public void ActivateSegment()
+    public IEnumerator ActivateSegment()
     {
-        gameObject.SetActive(true);
+        yield return StartCoroutine(LoadRoom(true));
 
         // Tell randomized objects to initiate randomization
         foreach (IRandomizer obj in randomizedObjs)
@@ -149,12 +152,34 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
         UniqueActivate();
     }
 
+    private IEnumerator LoadRoom(bool enabled)
+    {
+        for(int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(enabled);
+            yield return new WaitForEndOfFrame();
+        }
+
+        yield return null;
+    }
+
+
     /// <summary>
     /// Reset this segment to the pool, hiding it and preparing it for the next use
     /// </summary>
-    public void DeactivateSegment()
+    public IEnumerator DeactivateSegment(bool instant)
     {
-        gameObject.SetActive(false);
+        if(instant)
+        {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                transform.GetChild(i).gameObject.SetActive(false);
+            }
+        }
+        else
+        {
+            yield return StartCoroutine(LoadRoom(false));
+        }
 
         UniqueDeactivate();
     }
@@ -200,6 +225,8 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
     /// Perform any unique cleanup when returning to pull
     /// </summary>
     protected abstract void UniqueDeactivate();
+
+    public abstract void StartSegment();
 
     #endregion
 }

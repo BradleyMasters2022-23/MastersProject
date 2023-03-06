@@ -33,7 +33,7 @@ public abstract class Trap : MonoBehaviour, ITriggerable
     /// Register this trap to any set triggers.
     /// Do in start so other triggers have time to enable themselves in Awake
     /// </summary>
-    private void Start()
+    private void OnEnable()
     {
         foreach(Trigger trigger in activationTriggers)
         {
