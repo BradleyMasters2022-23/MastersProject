@@ -10,20 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d3bbab82f3e2f434ea813347226e237a, type: 3}
-  m_Name: PlayerJump
+  m_Name: MasterTestClip
   m_EditorClassIdentifier: 
   clips:
-    weightedList: []
-  volumeBus: {fileID: 0}
-  priority: 128
+    weightedList:
+    - option: {fileID: 8300000, guid: 11550c49442ec024484d8a88c83b5201, type: 3}
+      weight: 1
+      estimateProbability: 100
+  volumeBus: {fileID: -1529307116575778154, guid: 21a1d81449a921d4592d01cfae9acdc3, type: 2}
+  priority: 0
   volume: 1
   pitchType: 0
   pitch: {x: 1, y: 1}
   pitches:
-    weightedList: []
+    weightedList:
+    - option: 1
+      weight: 1
+      estimateProbability: 100
   loop: 0
-  spatialBlend: 0.8
+  spatialBlend: 0
   distanceMode: 1
   minDistance: 3
-  maxDistance: 75
-  doppler: 1
+  maxDistance: 15
+  doppler: 0
