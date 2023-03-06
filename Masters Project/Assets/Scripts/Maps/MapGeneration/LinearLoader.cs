@@ -59,7 +59,10 @@ public class LinearLoader : SegmentLoader
             if (finished)
             {
                 MapLoader.instance.EndRoomEncounter();
-                unlocked= true;
+                if (BackgroundMusicManager.instance != null)
+                    BackgroundMusicManager.instance.SetMusic(Music.NonCombat, 2f);
+
+                unlocked = true;
             }
                 
         }

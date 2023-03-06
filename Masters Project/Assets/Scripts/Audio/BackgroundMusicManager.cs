@@ -1,3 +1,11 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - March 6th, 2022
+ * Last Edited - March 6th, 2022 by Ben Schuster
+ * Description - Manager for background music
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +14,7 @@ using Sirenix.OdinInspector;
 public enum Music
 {
     None, 
-    Hub, 
+    Menu, 
     NonCombat, 
     Combat
 }
@@ -15,21 +23,24 @@ public class BackgroundMusicManager : MonoBehaviour
 {
     public static BackgroundMusicManager instance;
 
-    [SerializeField] private AudioClipSO hubMusic;
+    [SerializeField] private AudioClipSO menuMusic;
     [SerializeField] private AudioClipSO nonCombatMusic;
     [SerializeField] private AudioClipSO combatMusic;
 
     [SerializeField, Required] private AudioSource mainMusicSource;
     [SerializeField, Required] private AudioSource secondaryMusicSource;
 
-    private bool transitioning;
-    private Coroutine transitionRoutine;
+    private Music currentlyLoaded;
 
+    /// <summary>
+    /// Initialize instance
+    /// </summary>
     private void Awake()
     {
         if(instance == null)
         {
             instance= this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -38,22 +49,10 @@ public class BackgroundMusicManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    public void StopMusic()
     {
-        SetMusic(Music.NonCombat, 0f);
-        Invoke("TestMusic", 5f);
-        Invoke("TestMusic2", 10f);
-    }
-
-    private void TestMusic()
-    {
-        Debug.Log("Testing music");
-        SetMusic(Music.Combat);
-    }
-    private void TestMusic2()
-    {
-        Debug.Log("Testing music");
-        SetMusic(Music.NonCombat);
+        mainMusicSource.Stop();
+        secondaryMusicSource.Stop();
     }
 
     /// <summary>
@@ -63,13 +62,19 @@ public class BackgroundMusicManager : MonoBehaviour
     /// <param name="transitionTime">How fast the transition should be</param>
     public void SetMusic(Music type, float transitionTime = 1f)
     {
+        // dont transition if its already playing, otherwise record the new type
+        if (currentlyLoaded == type)
+            return;
+        else
+            currentlyLoaded = type;
+
         // Select music
         AudioClipSO chosenMusic;
         switch (type)
         {
-            case Music.Hub:
+            case Music.Menu:
                 {
-                    chosenMusic = hubMusic;
+                    chosenMusic = menuMusic;
                     break;
                 }
             case Music.NonCombat:
@@ -89,7 +94,10 @@ public class BackgroundMusicManager : MonoBehaviour
                 }
         }
         if (chosenMusic == null)
+        {
+            StopMusic();
             return;
+        }
 
         // Determine which music player to transition out of and into
         AudioSource oldSource, newSource;
@@ -104,6 +112,7 @@ public class BackgroundMusicManager : MonoBehaviour
             newSource = mainMusicSource;
         }
 
+        // check for error
         if(oldSource == null || newSource == null)
         {
             Debug.LogError("[BackgroundMusicManager] Error playing music! Either main or secondary sources not set!");
@@ -112,6 +121,7 @@ public class BackgroundMusicManager : MonoBehaviour
         // Prepare new music into the buffer
         transform.PlayClip(chosenMusic, newSource);
 
+        // transition from old source to new source
         StartCoroutine(Transition(transitionTime, oldSource, newSource));
     }
 
@@ -124,20 +134,25 @@ public class BackgroundMusicManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator Transition(float transitionTime, AudioSource oldSource, AudioSource newSource)
     {
+        // get timer for smooth scaling using its timer progress func
         ScaledTimer timer = new ScaledTimer(transitionTime, false);
+
+        // get original volume settings to scale
+        float oldOriginalVol = oldSource.volume;
+        float newOriginalVol = newSource.volume;
 
         newSource.volume = 0;
         newSource.Play();
 
         while(!timer.TimerDone())
         {
-            oldSource.volume = 1 - timer.TimerProgress();
-            newSource.volume = timer.TimerProgress();
+            oldSource.volume = (1 - timer.TimerProgress()) * oldOriginalVol;
+            newSource.volume = (timer.TimerProgress()) * newOriginalVol;
 
             yield return null;
         }
 
-        newSource.volume = 1;
+        newSource.volume = newOriginalVol;
         oldSource.volume = 0;
         oldSource.Stop();
 

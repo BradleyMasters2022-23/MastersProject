@@ -176,6 +176,9 @@ public class SpawnManager : MonoBehaviour
             return;
         }
 
+        if (BackgroundMusicManager.instance != null)
+            BackgroundMusicManager.instance.SetMusic(Music.Combat, 1f);
+
         waveIndex = 0;
         enemyCount = 0;
         waitingEnemies = 0;
@@ -326,6 +329,8 @@ public class SpawnManager : MonoBehaviour
 
         // Tell room manager to end encounter
         MapLoader.instance.EndRoomEncounter();
+        if (BackgroundMusicManager.instance != null)
+            BackgroundMusicManager.instance.SetMusic(Music.NonCombat, 2f);
 
         ClearManager();
     }
