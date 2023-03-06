@@ -13,10 +13,12 @@ using UnityEngine;
 public class AudioIndicator : IIndicator
 {
     [SerializeField] AudioClipSO soundEffect;
+    [SerializeField] private AudioSource source;
+    [SerializeField] private bool overlap; 
     public override void Activate()
     {
         if (soundEffect != null)
-            transform.PlayClip(soundEffect);
+            transform.PlayClip(soundEffect, source, overlap);
     }
 
     public override void Deactivate()

@@ -1,3 +1,11 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - March 2nd, 2022
+ * Last Edited - March 2nd, 2022 by Ben Schuster
+ * Description - Core static functions for volume and audio contol
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,33 +13,51 @@ using UnityEngine.Audio;
 
 public static class CoreAudio
 {
-    public static void PlayClip(this Transform origin, AudioClipSO data)
+    /// <summary>
+    /// Play an audio clip given audio data
+    /// </summary>
+    /// <param name="origin">The origin of this audio clip</param>
+    /// <param name="data">The audio data to use</param>
+    /// <param name="destination">The source to play the audio from. If empty, it will create a temporary container</param>
+    /// <param name="overlap">Whether to play by itself or overwrite the previous sound effect</param>
+    public static void PlayClip(this Transform origin, AudioClipSO data, AudioSource destination = null, bool overlap = false)
     {
-        // Create container and move to original position
-        GameObject container = new GameObject("CoreAudio Oneshot");
-        container.transform.position = origin.transform.position;
-        AudioSource source = container.AddComponent<AudioSource>();
-        source.Stop();
-
-        // Load the source with the data from the audio SO
-        source.clip = data.GetClip();
-        source.playOnAwake = false;
-        source.volume = data.volume;
-        source.outputAudioMixerGroup = data.volumeType;
-        source.pitch = data.GetPitch();
-        source.loop = data.loop;
-        source.spatialBlend = data.spatialBlend;
-        source.minDistance= data.minDistance;
-        source.maxDistance= data.maxDistance;
-        source.rolloffMode = data.distanceMode;
-        source.dopplerLevel = data.doppler;
-
-        source.Play();
-
-        // Play the clip, determine self destruct time if not looping
-        if (!source.loop)
+        // If no destination, create a temporary container
+        if (destination == null)
         {
-            GameObject.Destroy(container, source.clip.length);
+            // Create container and move to original position
+            GameObject container = new GameObject($"CoreAudio Oneshot : {data.name}");
+            container.transform.position = origin.transform.position;
+            destination = container.AddComponent<AudioSource>();
+            destination.Stop();
+
+            if(!data.loop)
+                GameObject.Destroy(container, data.GetClip().length);
+        }
+
+        // Load the destination with the data from the audio SO
+        destination.clip = data.GetClip();
+        destination.priority = data.priority;
+        destination.playOnAwake = false;
+        destination.volume = data.volume;
+        destination.outputAudioMixerGroup = data.volumeBus;
+        destination.pitch = data.GetPitch();
+        destination.loop = data.loop;
+        destination.spatialBlend = data.spatialBlend;
+        destination.minDistance = data.minDistance;
+        destination.maxDistance = data.maxDistance;
+        destination.rolloffMode = data.distanceMode;
+        destination.dopplerLevel = data.doppler;
+
+        // Play audio based on independence setting
+        if(overlap && !destination.loop)
+        {
+            destination.PlayOneShot(destination.clip, destination.volume);
+            
+        }
+        else
+        {
+            destination.Play();
         }
     }
 }

@@ -37,8 +37,8 @@ public class PlayerGunController : MonoBehaviour
     [SerializeField] private float maxRange;
 
     [Tooltip("Sound that happens when gun go pew pew")]
-    [SerializeField] private AudioClip[] gunshotSound;
-    private AudioSource source;
+    [SerializeField] private AudioClipSO gunshotSound;
+    [SerializeField] private AudioSource gunshotSource;
 
     [Header("=====Weapon Bloom [Accuracy]=====")]
 
@@ -133,8 +133,6 @@ public class PlayerGunController : MonoBehaviour
         // Initialize timers
         fireTimer = new ScaledTimer(fireDelay.Current, false);
         bloomRecoveryCDTracker = new ScaledTimer(bloomRecoveryDelay, false);
-
-        source = GetComponent<AudioSource>();
     }
 
     private IEnumerator InitializeControls()
@@ -249,11 +247,11 @@ public class PlayerGunController : MonoBehaviour
             }
         }
         
-
-        if(gunshotSound.Length > 0)
-            source.PlayOneShot(gunshotSound[Random.Range(0, gunshotSound.Length)],0.3f);
-
-            
+        // play sound effect
+        if(gunshotSound!= null)
+        {
+            shootPoint.PlayClip(gunshotSound, gunshotSource, true);
+        } 
     }
 
     private Vector3 ApplySpread(Vector3 rot)

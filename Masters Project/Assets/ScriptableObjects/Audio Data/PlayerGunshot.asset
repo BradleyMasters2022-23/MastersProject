@@ -10,26 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d3bbab82f3e2f434ea813347226e237a, type: 3}
-  m_Name: TestClip
+  m_Name: PlayerGunshot
   m_EditorClassIdentifier: 
   clips:
     weightedList:
-    - option: {fileID: 8300000, guid: 72fbba5545da571468f50733eecb6397, type: 3}
-      weight: 491
+    - option: {fileID: 8300000, guid: 22de26de13aa2d24dbca24d4a5c03410, type: 3}
+      weight: 1
       estimateProbability: 100
   volumeBus: {fileID: 1370828180924214768, guid: 21a1d81449a921d4592d01cfae9acdc3, type: 2}
-  priority: 0
-  volume: 1
-  pitchType: 0
-  pitch: {x: 1, y: 1}
+  priority: 122
+  volume: 0.5
+  pitchType: 1
+  pitch: {x: 0.91017604, y: 1.2991676}
   pitches:
     weightedList:
     - option: 1
+      weight: 8
+      estimateProbability: 80
+    - option: 0.75
       weight: 1
-      estimateProbability: 100
+      estimateProbability: 10
+    - option: 1.25
+      weight: 1
+      estimateProbability: 10
   loop: 0
-  spatialBlend: 0.9
+  spatialBlend: 1
   distanceMode: 1
-  minDistance: 3
-  maxDistance: 15
+  minDistance: 0
+  maxDistance: 5
   doppler: 0
