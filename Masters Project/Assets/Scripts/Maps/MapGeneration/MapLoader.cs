@@ -16,6 +16,12 @@ using UnityEngine.AI;
 using UnityEngine.Events;
 using Unity.VisualScripting;
 
+public enum LoadState
+{
+    Loading,
+    Done
+}
+
 public class MapLoader : MonoBehaviour
 {
     public enum States
@@ -36,6 +42,13 @@ public class MapLoader : MonoBehaviour
     /// Current state of the loader
     /// </summary>
     private States currState;
+
+    private LoadState loadState;
+
+    public LoadState LoadState
+    {
+        get { return loadState; }
+    }
 
     /// <summary>
     /// Navmesh for overall map
@@ -116,14 +129,25 @@ public class MapLoader : MonoBehaviour
     /// <returns></returns>
     private IEnumerator PrepareMapSegments()
     {
+        loadState = LoadState.Loading;
+
         // === Choose what rooms to use === //
         int c = 0;
+        int backup = 0;
         while(c < maxFloorLength)
         {
             // Add new segment, check if a room was added. If so, add
             mapOrder.Add(ChooseNextSegment());
             if (mapOrder[mapOrder.Count - 1].segmentType == MapSegmentSO.MapSegmentType.Room)
                 c++;
+
+            backup++;
+            if(backup > 1000)
+            {
+                Debug.LogError("MapLoader loop to build the room list is in an infinite loop!");
+                Debug.Break();
+                break;
+            }
         }
 
         // Load in the final room, if there is one. Add hallway buffer
@@ -154,7 +178,7 @@ public class MapLoader : MonoBehaviour
             }
         }
 
-        // Make sure last item is initialized before continuing
+        // Make sure last item is finished initialized before continuing
         MapInitialize[] lastItemRef = loadedMap[loadedMap.Count - 1].GetComponents<MapInitialize>();
         bool doneInitializing;
         do
@@ -193,21 +217,22 @@ public class MapLoader : MonoBehaviour
         // Activate first room and hallway, deactivate rest
         for (int i = 0; i < 2; i++)
         {
-            loadedMap[i].ActivateSegment();
+            yield return StartCoroutine(loadedMap[i].ActivateSegment());
         }
         if (!testShowAll)
         {
             for (int i = 2; i < loadedMap.Count; i++)
             {
-                loadedMap[i].DeactivateSegment();
+                yield return StartCoroutine(loadedMap[i].DeactivateSegment(true));
             }
         }
         
         Debug.Log("[MapLoader] Initial inactive set!");
 
-        yield return StartCoroutine(PrepareNavmesh());
+        PrepareNavmesh();
 
         currState = States.Start;
+        loadState = LoadState.Done;
 
         yield return null;
     }
@@ -239,44 +264,53 @@ public class MapLoader : MonoBehaviour
     /// <returns>Selected room prefab</returns>
     private MapSegmentSO SelectRoom()
     {
+        // If out of rooms, repopulate the pool
+        if (availableRooms.Count <= 0)
+        {
+            availableRooms = new List<MapSegmentSO>(allRooms);
+        }
+
+        // populate all potential rooms allowed to be used here
+        List<MapSegmentSO> allUsableRooms = new List<MapSegmentSO>();
+        foreach (MapSegmentSO option in availableRooms)
+        {
+            if(option.WithinDifficulty(mapOrder.Count / 2))
+            {
+                allUsableRooms.Add(option);
+            }
+        }
+        // if no usable rooms available after first attempt, allow all rooms ignoring difficulty
+        if (allUsableRooms.Count <= 0)
+        {
+            foreach (MapSegmentSO option in availableRooms)
+            {
+                allUsableRooms.Add(option);
+            }
+        }
+        // if still empty, just stop the play session because something broke or no rooms passed in
+        if(allUsableRooms.Count <= 0)
+        {
+            Debug.LogError("[MapLoader] LOADING ERROR! Cannot find any rooms to build with!");
+            Debug.Break();
+            return null;
+        }
+
         MapSegmentSO selectedObject;
 
+        // loop through trying to select a new room that ideally isnt the last room
         int c = 0;
-
         do
         {
-            // If out of rooms, repopulate the pool
-            if (availableRooms.Count <= 0)
-            {
-                availableRooms = new List<MapSegmentSO>(allRooms);
-            }
-
             // select a new room
-            selectedObject = availableRooms[Random.Range(0, availableRooms.Count)];
-
-            // Verify it is a room, otherwise remove from list and try again
-            if (selectedObject.segmentType != MapSegmentSO.MapSegmentType.Room)
-            {
-                Debug.LogError($"[Map Loader] A non-room named {selectedObject.name} " +
-                    $"was placed into room! Please remove from room list!");
-
-                // Remove from pool permenately 
-                allRooms.Remove(selectedObject);
-            }
-
-            // If out of difficulty or recently used, remove from pool and send to used 
-            if (!selectedObject.WithinDifficulty(mapOrder.Count / 2))
-            {
-                availableRooms.Remove(selectedObject);
-                selectedObject= null;
-                continue;
-            }
+            selectedObject = allUsableRooms[Random.Range(0, allUsableRooms.Count)];
 
             // Make sure the last room is not the same
-            if(mapOrder.Count >= 2 && selectedObject == mapOrder[mapOrder.Count - 2] 
-                && allRooms.Count > 1)
+            // c variable can prevent this incase something breaks
+            if(allUsableRooms.Count > 1 && 
+                (mapOrder.Count >= 2 && selectedObject == mapOrder[mapOrder.Count - 2])
+                && c < 100)
             {
-                availableRooms.Remove(selectedObject);
+                allUsableRooms.Remove(selectedObject);
                 selectedObject = null;
                 continue;
             }
@@ -290,7 +324,7 @@ public class MapLoader : MonoBehaviour
                 return null;
             }
 
-        } while (selectedObject == null || (selectedObject.segmentType != MapSegmentSO.MapSegmentType.Room));
+        } while (selectedObject == null);
 
         // Remove from current pool
         availableRooms.Remove(selectedObject);
@@ -305,30 +339,38 @@ public class MapLoader : MonoBehaviour
     /// <returns>Selected hallway prefab</returns>
     private MapSegmentSO SelectHallway()
     {
+        // If out of rooms, repopulate the pool
+        if (availableHalls.Count <= 0)
+        {
+            availableHalls = new List<MapSegmentSO>(allHallways);
+        }
+
+        List<MapSegmentSO> allUsableHallway = new List<MapSegmentSO>(availableHalls);
+        if(allUsableHallway.Count <= 0)
+        {
+            Debug.LogError("[MapLoader] LOADING ERROR! Cannot find any hallways to build with!");
+            Debug.Break();
+            return null;
+        }
+
+
         // Select a random hallway, ensure its valid
         MapSegmentSO selectedObject;
 
         int c = 0;
-
         do
         {
-            // If out of rooms, repopulate the pool
-            if (availableHalls.Count <= 0)
+            // select a new hallway
+            selectedObject = allUsableHallway[Random.Range(0, allUsableHallway.Count)];
+
+            // Try to prevent dupes if there more than one option available
+            if (allUsableHallway.Count > 1 &&
+                (mapOrder.Count >= 2 && selectedObject == mapOrder[mapOrder.Count - 2])
+                && c < 100)
             {
-                availableHalls = new List<MapSegmentSO>(allHallways);
-            }
-
-            // select a new room
-            selectedObject = availableHalls[Random.Range(0, availableHalls.Count)];
-
-            // Verify it is a hallway, otherwise remove from list and try again
-            if (selectedObject.segmentType != MapSegmentSO.MapSegmentType.Hallway)
-            {
-                Debug.LogError($"[Map Loader] A non-hallway named {selectedObject.name} " +
-                    $"was placed into hallway! Please remove from hallway list!");
-
-
-                allHallways.Remove(selectedObject);
+                allUsableHallway.Remove(selectedObject);
+                selectedObject = null;
+                continue;
             }
 
             // Backup failsafe check
@@ -340,7 +382,7 @@ public class MapLoader : MonoBehaviour
                 return null;
             }
 
-        } while (selectedObject.segmentType != MapSegmentSO.MapSegmentType.Hallway);
+        } while (selectedObject == null);
 
         // Remove from pool to ensure it doesnt appear again
         availableHalls.Remove(selectedObject);
@@ -353,10 +395,17 @@ public class MapLoader : MonoBehaviour
 
     #region Room Incremenation
 
+    public void UpdateLoadedSegments()
+    {
+        loadState = LoadState.Loading;
+
+        StartCoroutine(LoadSegments());
+    }
+
     /// <summary>
     /// Deactivate passed sections and prepare the new ones
     /// </summary>
-    public void UpdateLoadedSegments()
+    public IEnumerator LoadSegments()
     {
         // Increment room index. Do by 2 because its accounting for room and hallway
         roomIndex += 2;
@@ -375,32 +424,39 @@ public class MapLoader : MonoBehaviour
         }
 
         // Deactivate the last 2 sections, if possible
-        loadedMap[roomIndex - 1].DeactivateSegment();
+
+        yield return StartCoroutine(loadedMap[roomIndex - 1].DeactivateSegment(false));
+
         if (roomIndex - 2 >= 0)
-            loadedMap[roomIndex - 2].DeactivateSegment();
+        {
+            yield return StartCoroutine(loadedMap[roomIndex - 2].DeactivateSegment(false));
+        }
         else
             startingRoom.SetActive(false);
 
         // Activate the next two sections, if possible
         if (roomIndex+1 < loadedMap.Count)
-            loadedMap[roomIndex + 1].ActivateSegment();
+        {
+            yield return StartCoroutine((loadedMap[roomIndex + 1].ActivateSegment()));
+        }
         if (roomIndex + 2 < loadedMap.Count)
-            loadedMap[roomIndex + 2].ActivateSegment();
+        {
+            yield return StartCoroutine(loadedMap[roomIndex + 2].ActivateSegment());
+        }
 
-        StartCoroutine(PrepareNavmesh());
+        PrepareNavmesh();
+
+        loadState = LoadState.Done;
+        yield return null;
     }
 
-    private IEnumerator PrepareNavmesh()
+    private void PrepareNavmesh()
     {
-        yield return new WaitForSecondsRealtime(1f);
         navMesh.BuildNavMesh();
     }
 
     public void StartRoomEncounter()
     {
-        //Debug.Log($"Pew Bang! Encounter started for room at index {roomIndex +1}!");
-
-        //loadedMap[roomIndex].GetComponent<SpawnManager>().BeginEncounter();
         loadedMap[roomIndex+1].StartSegment();
     }
 

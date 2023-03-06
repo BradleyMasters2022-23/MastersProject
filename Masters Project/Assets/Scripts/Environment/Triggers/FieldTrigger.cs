@@ -30,18 +30,19 @@ public class FieldTrigger : Trigger
     /// <summary>
     /// Refernece to this triggers collider
     /// </summary>
-    private Collider col;
+    private Collider[] col;
 
     protected override void Awake()
     {
         base.Awake();
 
-        // Get references
-        col = GetComponent<Collider>();
-        col.isTrigger = true;
+        // Get colliders and set to trigger
+        col = GetComponents<Collider>();
+        foreach(Collider c in col)
+            c.isTrigger = true;
 
         // if not single use and there is a cooldown, create its timer
-        if(!singleUse && activationCooldown > 0)
+        if (!singleUse && activationCooldown > 0)
         {
             cooldown = new ScaledTimer(activationCooldown, true);
         }
@@ -79,7 +80,8 @@ public class FieldTrigger : Trigger
             // if single use, turn off collider
             if (singleUse)
             {
-                col.enabled = false;
+                foreach (Collider c in col)
+                    c.enabled = false;
             }
             // otherwise if theres a cooldown, reset it
             else if(cooldown != null)
