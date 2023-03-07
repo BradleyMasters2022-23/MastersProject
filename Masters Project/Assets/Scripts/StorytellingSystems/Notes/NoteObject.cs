@@ -9,7 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Gameplay/Note Data")]
+[CreateAssetMenu(menuName = "Storytelling/Note Data")]
 public class NoteObject : ScriptableObject
 {
     [Tooltip("ID of this note.")]
