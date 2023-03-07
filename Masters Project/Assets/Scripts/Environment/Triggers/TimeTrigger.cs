@@ -8,11 +8,10 @@ public class TimeTrigger : Trigger
     [SerializeField] private float timerDuration;
     private ScaledTimer timer;
 
+
     protected override void Awake()
     {
         base.Awake();
-
-        StartCoroutine(DelayedStart());
     }
 
     private void LateUpdate()
@@ -22,6 +21,16 @@ public class TimeTrigger : Trigger
             Activate();
             timer.ResetTimer();
         }
+    }
+
+    private void OnEnable()
+    {
+        StartTimer();
+    }
+
+    private void StartTimer()
+    {
+        StartCoroutine(DelayedStart());
     }
 
     /// <summary>
