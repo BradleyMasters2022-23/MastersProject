@@ -8,11 +8,11 @@ using Sirenix.OdinInspector;
 public class VolumeSlider : MonoBehaviour
 {
     [InfoBox("Volume Range: [-80 , 0]")]
-    [SerializeField] private float defaultVolume;
-    [SerializeField] private AudioMixerGroup targetBus;
-    [SerializeField] private AudioClipSO testClip;
-    [SerializeField] private string keyName;
-    [SerializeField] private Slider slider;
+    [SerializeField, Range(-80f, 0)] private float defaultVolume;
+    [SerializeField, Required] private AudioMixerGroup targetBus;
+    [SerializeField, Required] private AudioClipSO testClip;
+    [SerializeField, Required] private string keyName;
+    [SerializeField, Required] private Slider slider;
 
     private float volume = upperVolumeLimit;
 
@@ -20,18 +20,11 @@ public class VolumeSlider : MonoBehaviour
     private const float upperVolumeLimit = 0f;
 
     /// <summary>
-    /// Get the volume key and update the slider
-    /// </summary>
-    private void Awake()
-    {
-        SetVolume(PlayerPrefs.GetFloat(keyName, defaultVolume));
-    }
-    /// <summary>
     /// Update the volume bus. In start becaues it doesn't work in Awake
     /// </summary>
     private void Start()
     {
-        targetBus.audioMixer.SetFloat(keyName, volume);
+        SetVolume(PlayerPrefs.GetFloat(keyName, defaultVolume));
     }
 
     /// <summary>
@@ -45,9 +38,12 @@ public class VolumeSlider : MonoBehaviour
         PlayerPrefs.SetFloat(keyName, volume);
 
         // Update slider visuals
-        slider.minValue = lowerVolumeLimit;
-        slider.maxValue = upperVolumeLimit;
-        slider.value = volume;
+        if (slider != null)
+        {
+            slider.minValue = lowerVolumeLimit;
+            slider.maxValue = upperVolumeLimit;
+            slider.value = volume;
+        }
 
         // Update the actual volume bus
         targetBus.audioMixer.SetFloat(keyName, volume);
