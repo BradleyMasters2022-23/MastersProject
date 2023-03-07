@@ -85,7 +85,6 @@ public class CameraShoot : MonoBehaviour
     /// </summary>
     private void Fire()
     {
-
         // Fire hitscan
         if (Physics.Raycast(transform.position, transform.forward, out hitInfo, Mathf.Infinity, ~layersToIgnore))
         {

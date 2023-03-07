@@ -197,7 +197,6 @@ public class PlayerGunController : MonoBehaviour
             Instantiate(muzzleflashVFX, shootPoint.position, shootPoint.transform.rotation);
         }
 
-
         if(TimeManager.WorldTimeScale > enhancedShotThreshold)
         {
             for (int i = 0; i < bulletsPerShot; i++)
@@ -316,5 +315,10 @@ public class PlayerGunController : MonoBehaviour
     public float GetBaseDamage()
     {
         return shotPrefab.GetComponent<Projectile>().GetDamage();
+    }
+
+    public float GetMaxRange()
+    {
+        return maxRange;
     }
 }
