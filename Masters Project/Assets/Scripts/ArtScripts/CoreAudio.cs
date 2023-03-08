@@ -25,7 +25,8 @@ public static class CoreAudio
         if(data == null)
         {
             // Comment this out when not actively looking for false calls
-            Debug.LogError($"Error! {origin.name} requested audio but did not pass in any audio!");
+            if(origin != null)
+                Debug.LogError($"Error! {origin.name} requested audio but did not pass in any audio!");
             return;
         }
 

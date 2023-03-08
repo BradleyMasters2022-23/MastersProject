@@ -74,7 +74,7 @@ public class SpawnPoint : MonoBehaviour
     /// </summary>
     private AudioSource s;
     [Tooltip("Sound that plays while spawning enemy")]
-    [SerializeField] private AudioClip spawnSound;
+    [SerializeField] private AudioClipSO spawnSound;
 
     [Tooltip("What enemies are allowed to spawn on this spawnpoint. Drag enemy prefabs here.")]
     [SerializeField] private GameObject[] enemyWhitelist;
@@ -95,7 +95,6 @@ public class SpawnPoint : MonoBehaviour
         spawnLight = GetComponentInChildren<Light>();
         spawnParticles = GetComponentInChildren<ParticleSystem>();
         s = gameObject.AddComponent<AudioSource>();
-        s.spatialBlend = 1;
 
         // Initialize timers
         spawnDelayTimer = new ScaledTimer(spawnDelay);
@@ -104,10 +103,6 @@ public class SpawnPoint : MonoBehaviour
 
         s.playOnAwake = false;
         // Prepare sound
-        if (spawnSound != null)
-            s.clip = spawnSound;
-
-        s.volume = 0.5f;
         
     }
 
@@ -277,8 +272,8 @@ public class SpawnPoint : MonoBehaviour
         lastSpawnedEnemy.SetActive(false);
 
         // Prepare indicators
-        if (spawnSound != null)
-            s.Play();
+        spawnSound.PlayClip(s);
+
         spawnLight.enabled = true;
         if(spawnParticles != null)
             spawnParticles.Play();
@@ -300,8 +295,10 @@ public class SpawnPoint : MonoBehaviour
         spawnLight.enabled = false;
         if(spawnParticles != null)
             spawnParticles.Stop();
-        if (spawnSound != null)
-            s.Stop();
+
+        
+        s.Stop();
+
         spawning = false;
         
         if(spawnManager != null)
@@ -330,8 +327,9 @@ public class SpawnPoint : MonoBehaviour
         spawnLight.enabled = false;
         if (spawnParticles != null)
             spawnParticles.Stop();
-        if (spawnSound != null)
-            s.Stop();
+
+        s.Stop();
+
         spawning = false;
 
         if(spawnManager != null)
