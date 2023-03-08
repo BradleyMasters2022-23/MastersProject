@@ -20,7 +20,7 @@ public static class CoreAudio
     /// <param name="data">The audio data to use</param>
     /// <param name="destination">The source to play the audio from. If empty, it will create a temporary container</param>
     /// <param name="overlap">Whether to play by itself or overwrite the previous sound effect</param>
-    public static void PlayClip(this Transform origin, AudioClipSO data, AudioSource destination = null, bool overlap = false)
+    public static void PlayClip(this AudioClipSO data, Transform origin, AudioSource destination = null, bool overlap = false)
     {
         if(data == null)
         {
@@ -33,7 +33,8 @@ public static class CoreAudio
         {
             // Create container and move to original position
             GameObject container = new GameObject($"CoreAudio Oneshot : {data.name}");
-            container.transform.position = origin.transform.position;
+            if(origin != null)
+                container.transform.position = origin.transform.position;
             destination = container.AddComponent<AudioSource>();
             destination.Stop();
 
@@ -65,5 +66,15 @@ public static class CoreAudio
         {
             destination.Play();
         }
+    }
+
+    public static void PlayClip(this AudioClipSO data, AudioSource destination = null, bool overlap = false)
+    {
+        data.PlayClip(null, destination, overlap);
+    }
+
+    public static void PlayClip(this AudioClipSO data, bool overlap = false)
+    {
+        data.PlayClip(null, null, overlap);
     }
 }

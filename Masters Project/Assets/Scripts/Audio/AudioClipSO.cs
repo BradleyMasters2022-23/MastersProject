@@ -42,7 +42,7 @@ public class AudioClipSO : ScriptableObject
     [Header("=== Volume ===")]
 
     [Tooltip("Base volume of this audio clip.")]
-    public float volume = 1;
+    [Range(0, 2)] public float volume = 1;
 
     [Tooltip("How pitch should be determined"), EnumToggleButtons]
     public PitchType pitchType;
