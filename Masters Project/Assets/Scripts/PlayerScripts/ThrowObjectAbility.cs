@@ -22,6 +22,8 @@ public class ThrowObjectAbility : Ability
     [Tooltip("Whether the player's velocity is added to the thrown projectile")]
     [SerializeField] protected bool includePlayerVelocity;
 
+    [SerializeField] protected AudioClipSO throwAbilitySound;
+
     /*
     [Header("Arc Trajectory")]
     [SerializeField] protected LineRenderer trajectoryArc;
@@ -92,7 +94,8 @@ public class ThrowObjectAbility : Ability
                     projRB.GetComponent<Throwable>().ApplyStartingForce(upwardsForce + spawnPoint.transform.forward * force);
                     //projRB.AddForce(upwardsForce + newProj.transform.forward * force, ForceMode.Impulse);
                 }
-                
+
+                throwAbilitySound.PlayClip(transform);
             }
             else
             {

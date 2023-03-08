@@ -60,9 +60,9 @@ public class TimeManager : MonoBehaviour
     [Tooltip("Time it takes to switch between the two time states")]
     [SerializeField, Range(0.01f, 1)] private float slowTransitionTime;
     [Tooltip("Sound if player stops time")]
-    [SerializeField] private AudioClip stopTime;
+    [SerializeField] private AudioClipSO stopTime;
     [Tooltip("Sound if player starts time")]
-    [SerializeField] private AudioClip startTime;
+    [SerializeField] private AudioClipSO startTime;
     private AudioSource source;
 
     /// <summary>
@@ -212,19 +212,16 @@ public class TimeManager : MonoBehaviour
                 case TimeGaugeState.IDLE:
                     {
                         ChangeState(TimeGaugeState.SLOWING);
-                        //source.PlayOneShot(stopTime, 0.5f);
                         break;
                     }
                 case TimeGaugeState.RECHARGING:
                     {
                         ChangeState(TimeGaugeState.SLOWING);
-                        //source.PlayOneShot(stopTime, 0.5f);
                         break;
                     }
                 case TimeGaugeState.FROZEN:
                     {
                         ChangeState(TimeGaugeState.SLOWING);
-                        //source.PlayOneShot(stopTime, 0.5f);
                         break;
                     }
             }
@@ -312,7 +309,7 @@ public class TimeManager : MonoBehaviour
             case TimeGaugeState.SLOWING:
                 {
                     source.Stop();
-                    source.PlayOneShot(stopTime, 0.5f);
+                    stopTime.PlayClip(source);
 
                     break;
                 }
@@ -326,7 +323,7 @@ public class TimeManager : MonoBehaviour
                     replenishDelayTimer.ResetTimer();
 
                     source.Stop();
-                    source.PlayOneShot(startTime, 0.5f);
+                    startTime.PlayClip(source);
 
                     break;
                 }
@@ -336,7 +333,7 @@ public class TimeManager : MonoBehaviour
                     emptiedDelayTimer.ResetTimer();
 
                     source.Stop();
-                    source.PlayOneShot(startTime, 0.5f);
+                    startTime.PlayClip(source);
 
                     break;
                 }

@@ -20,29 +20,40 @@ public static class CoreAudio
     /// <param name="data">The audio data to use</param>
     /// <param name="destination">The source to play the audio from. If empty, it will create a temporary container</param>
     /// <param name="overlap">Whether to play by itself or overwrite the previous sound effect</param>
-    public static void PlayClip(this Transform origin, AudioClipSO data, AudioSource destination = null, bool overlap = false)
+    public static void PlayClip(this AudioClipSO data, Transform origin, AudioSource destination = null, bool overlap = false)
     {
         if(data == null)
         {
-            Debug.LogError($"Error! {origin.name} requested audio but did not pass in any audio!");
+            // Comment this out when not actively looking for false calls
             return;
         }
+
+        AudioClip chosenClip = data.GetClip();
 
         // If no destination, create a temporary container
         if (destination == null)
         {
             // Create container and move to original position
             GameObject container = new GameObject($"CoreAudio Oneshot : {data.name}");
-            container.transform.position = origin.transform.position;
+            if(origin != null)
+                container.transform.position = origin.transform.position;
             destination = container.AddComponent<AudioSource>();
             destination.Stop();
 
             if(!data.loop)
-                GameObject.Destroy(container, data.GetClip().length);
+            {
+                GameObject.Destroy(container, chosenClip.length);
+            }
+                
+        }
+        else 
+        {
+            if(!overlap)
+                destination.Stop();
         }
 
         // Load the destination with the data from the audio SO
-        destination.clip = data.GetClip();
+        destination.clip = chosenClip;
         destination.priority = data.priority;
         destination.playOnAwake = false;
         destination.volume = data.volume;
@@ -65,5 +76,16 @@ public static class CoreAudio
         {
             destination.Play();
         }
+    }
+
+    /// <summary>
+    /// Play an audio clip given audio data
+    /// </summary>
+    /// <param name="data">audio data to play</param>
+    /// <param name="destination">source player. Leave null to create one</param>
+    /// <param name="overlap">whether to overlap other audio if in a source</param>
+    public static void PlayClip(this AudioClipSO data, AudioSource destination = null, bool overlap = false)
+    {
+        data.PlayClip(null, destination, overlap);
     }
 }
