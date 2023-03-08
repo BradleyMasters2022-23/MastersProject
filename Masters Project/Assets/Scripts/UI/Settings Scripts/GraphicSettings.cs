@@ -272,7 +272,6 @@ public class GraphicSettings : MonoBehaviour
                     break;
                 }
         }
-        Debug.Log($"Convert mode input {fsMode} | output {mode}");
 
         return mode;
     }
@@ -293,6 +292,7 @@ public class GraphicSettings : MonoBehaviour
     public void ConfirmResolution()
     {
         StopCoroutine(resetRoutine);
+        resetRoutine = null;
         confirmResolutionBox.SetActive(false);
         GameManager.instance.TempLockUIFlow(false);
 
@@ -361,11 +361,13 @@ public class GraphicSettings : MonoBehaviour
         currentRefreshRate = new RefreshOption(defaultRefresh);
         windowModeDropdown.value = 0;
 
+        Screen.SetResolution(currentResolution.width, currentResolution.height, FullScreenMode.ExclusiveFullScreen, currentRefreshRate.refreshRate);
+
         // delete old saved
         PlayerPrefs.DeleteKey("RefreshRate");
 
         PopulateDropdown();
-        //Screen.SetResolution(currentResolution.width, currentResolution.height, FullScreenMode.ExclusiveFullScreen, currentRefreshRate.refreshRate);
+        
         
     }
 
