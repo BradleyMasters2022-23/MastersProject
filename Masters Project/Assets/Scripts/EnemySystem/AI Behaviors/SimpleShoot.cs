@@ -214,7 +214,7 @@ public class SimpleShoot : AttackTarget
             return;
         }
 
-        indicatorSFX.PlayClip(transform, source);
+        indicatorSFX.PlayClip(transform);
             
         // Tell each one to start
         foreach (GameObject indicator in indicators)
