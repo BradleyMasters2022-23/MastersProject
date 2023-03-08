@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3553049559610357100}
   - component: {fileID: 2084103834189661254}
   - component: {fileID: 7048832751109517513}
-  m_Layer: 18
+  m_Layer: 0
   m_Name: Explosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 7197688024548056736}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 9190282065216066552}
@@ -55,21 +55,18 @@ VisualEffect:
         m_Overridden: 1
       - m_Value: 20
         m_Name: Spark Amount
-        m_Overridden: 0
-      - m_Value: 0.25
+        m_Overridden: 1
+      - m_Value: 0.1
         m_Name: Spark Size
-        m_Overridden: 0
-      - m_Value: 10
+        m_Overridden: 1
+      - m_Value: 3
         m_Name: Spark Length
-        m_Overridden: 0
-      - m_Value: 8
+        m_Overridden: 1
+      - m_Value: 5
         m_Name: Cloud Amount
         m_Overridden: 1
       - m_Value: 4
         m_Name: Cloud Size
-        m_Overridden: 1
-      - m_Value: 6
-        m_Name: Flash Size
         m_Overridden: 1
     m_Vector2f:
       m_Array: []
@@ -77,16 +74,16 @@ VisualEffect:
       m_Array: []
     m_Vector4f:
       m_Array:
-      - m_Value: {x: 1, y: 0.02934311, z: 0, w: 0}
+      - m_Value: {x: 0, y: 0.027543306, z: 1, w: 0}
         m_Name: Cloud Color
         m_Overridden: 1
-      - m_Value: {x: 1, y: 0.33272403, z: 0, w: 0}
+      - m_Value: {x: 0, y: 1, z: 0.6021943, w: 0}
         m_Name: Cloud Emmisive
         m_Overridden: 1
-      - m_Value: {x: 3.9999995, y: 0, z: 0, w: 0}
+      - m_Value: {x: 0, y: 3.9999995, z: 1.0394934, w: 0}
         m_Name: Flash Color
         m_Overridden: 1
-      - m_Value: {x: 12.10394, y: 9.752798, z: 0, w: 0}
+      - m_Value: {x: 0, y: 12.103939, z: 4.949549, w: 0}
         m_Name: Spark Color
         m_Overridden: 1
       - m_Value: {x: 0.011764706, y: 0.011764706, z: 0.011764706, w: 0}
@@ -159,8 +156,8 @@ GameObject:
   - component: {fileID: 9190282065216066554}
   - component: {fileID: 9190282065216066555}
   - component: {fileID: 9190282065216066548}
-  m_Layer: 18
-  m_Name: Mine_Detonate_Explosion
+  m_Layer: 7
+  m_Name: Player_Grenade_Explosive
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -242,9 +239,9 @@ SphereCollider:
   m_GameObject: {fileID: 9190282065216066553}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 8
+  m_Radius: 10
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &9190282065216066548
 MonoBehaviour:
@@ -260,17 +257,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damagableTags:
   - Enemy
-  - Player
+  - Interactable
   damagedTargets: []
-  explosiveRadius: 8
-  damageDuration: 0.3
+  explosiveRadius: 10
+  damageDuration: 0.1
   VFXDuration: 1.3
   affectedByTimestop: 1
   solidInTimetop: 0
   VFX: {fileID: 5061420957772411600}
   newVFX: {fileID: 2084103834189661254}
-  damage: 80
-  playerDamage: 15
+  damage: 140
+  playerDamage: 0
   horizontalForce: 250
   verticalForce: 50
   knockbackFalloff:
@@ -297,7 +294,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  instantDetoante: 1
+  instantDetoante: 0
 --- !u!1001 &9190282064905111930
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -375,7 +372,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8273445605695135385, guid: 3c02a13cc5fc9994f8787e38cd6a77ea, type: 3}
       propertyPath: m_Layer
-      value: 18
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8273445605695135385, guid: 3c02a13cc5fc9994f8787e38cd6a77ea, type: 3}
       propertyPath: m_IsActive

@@ -13,11 +13,9 @@ using UnityEngine.EventSystems;
 
 public class ButtonAudioManager : MonoBehaviour
 {
-    [SerializeField] private AudioClip onHoverSound;
-    [SerializeField] float hoverVolume = 0.5f;
+    [SerializeField] private AudioClipSO onHoverSound;
 
-    [SerializeField] private AudioClip onPressSound;
-    [SerializeField] private float pressVolume = 0.5f;
+    [SerializeField] private AudioClipSO onPressSound;
 
     private AudioSource source;
 
@@ -28,23 +26,11 @@ public class ButtonAudioManager : MonoBehaviour
 
     public void PlayHoverSound()
     {
-        if(onHoverSound != null)
-        {
-            source.Stop();
-            source.volume= hoverVolume;
-            source.clip = onHoverSound;
-            source.Play();
-        }
+        onHoverSound.PlayClip(source);
     }
 
     public void PlayClickSound()
     {
-        if (onPressSound != null)
-        {
-            source.Stop();
-            source.volume = pressVolume;
-            source.clip = onPressSound;
-            source.Play();
-        }
+        onPressSound.PlayClip(source);
     }
 }

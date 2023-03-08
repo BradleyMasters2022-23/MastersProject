@@ -24,6 +24,7 @@ public static class CoreAudio
     {
         if(data == null)
         {
+            // Comment this out when not actively looking for false calls
             Debug.LogError($"Error! {origin.name} requested audio but did not pass in any audio!");
             return;
         }
@@ -68,13 +69,14 @@ public static class CoreAudio
         }
     }
 
+    /// <summary>
+    /// Play an audio clip given audio data
+    /// </summary>
+    /// <param name="data">audio data to play</param>
+    /// <param name="destination">source player. Leave null to create one</param>
+    /// <param name="overlap">whether to overlap other audio if in a source</param>
     public static void PlayClip(this AudioClipSO data, AudioSource destination = null, bool overlap = false)
     {
         data.PlayClip(null, destination, overlap);
-    }
-
-    public static void PlayClip(this AudioClipSO data, bool overlap = false)
-    {
-        data.PlayClip(null, null, overlap);
     }
 }
