@@ -310,7 +310,8 @@ public class SpawnPoint : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        endCheat.performed -= CheatClear;
+        if(endCheat != null)
+            endCheat.performed -= CheatClear;
         if (spawnRoutine != null)
             StopCoroutine(spawnRoutine);
     }
