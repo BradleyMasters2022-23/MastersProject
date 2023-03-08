@@ -27,8 +27,15 @@ public class HallwayLoader : SegmentLoader
 
     protected override void UniqueActivate()
     {
-        fragSpawner.GetComponent<FragmentSpawner>().SetSpawnPoint(fragSpawnPoint);
-        fragSpawner.GetComponent<FragmentSpawner>().SpawnFragment();
+        // quick null check
+        FragmentSpawner fragSpawnerComp = fragSpawner.GetComponent<FragmentSpawner>();
+
+        if(fragSpawnerComp!= null )
+        {
+            fragSpawnerComp.SetSpawnPoint(fragSpawnPoint);
+            fragSpawnerComp.SpawnFragment();
+        }
+
         return;
     }
 

@@ -35,6 +35,8 @@ public class CallManager : MonoBehaviour
         }
 
         conversations[0].Unlock();
+        if(conversations.Count >= 4)
+            conversations[3].Unlock();
         UpdateCalls();
     }
 
