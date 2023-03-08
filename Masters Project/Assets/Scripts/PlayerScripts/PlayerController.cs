@@ -372,12 +372,9 @@ public class PlayerController : MonoBehaviour
                     // When entering grounded state, reset target max speed
                     targetMaxSpeed = maxMoveSpeed.Current;
 
-                    if(currentState == PlayerState.MIDAIR && source != null)
+                    if(currentState == PlayerState.MIDAIR)
                     {
-                        if(landSound != null)
-                        {
-                            transform.PlayClip(landSound, source, true);
-                        }
+                        transform.PlayClip(landSound, source, true);
                     }
 
                     velocity.y = 0;
@@ -612,7 +609,7 @@ public class PlayerController : MonoBehaviour
             
             if(jumpSound != null)
             {
-                transform.PlayClip(jumpSound, source, true);
+                transform.PlayClip(jumpSound, source, false);
             }
         }
 
