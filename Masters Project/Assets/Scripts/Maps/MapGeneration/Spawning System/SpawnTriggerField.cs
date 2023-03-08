@@ -187,6 +187,9 @@ public class SpawnTriggerField : MonoBehaviour
             yield break;
         }
 
+        if (BackgroundMusicManager.instance != null)
+            BackgroundMusicManager.instance.SetMusic(Music.Combat, 1f);
+
         finished = false;
 
         yield return new WaitForSeconds(activationDelay);
