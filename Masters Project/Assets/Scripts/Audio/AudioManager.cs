@@ -27,29 +27,16 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioBusLoad[] buses;
 
 
-    private void Awake()
+    private void Start()
     {
-        // load in settings
-        //UpdateSettings();
-    }
-
-    private void Update()
-    {
-        //if(masterVolume != AudioListener.volume)
-        //    UpdateSettings();
+        UpdateSettings();
     }
 
     private void UpdateSettings()
     {
-        //masterVolume = Settings.masterVolume;
-        //AudioListener.volume = masterVolume;
-
         // update each pair's volume
         foreach(var busKey in buses)
         {
-            // Clamp audio between bounds, save
-            PlayerPrefs.SetFloat(busKey.key, 0);
-
             // Update the actual volume bus
             busKey.target.audioMixer.SetFloat(busKey.key, PlayerPrefs.GetFloat(busKey.key, 0));
         }

@@ -31,7 +31,7 @@ public class AmbianceManager : MonoBehaviour
     {
         if (TimeManager.WorldTimeScale == 1 && source.clip != normalAmbiance.GetClip())
         {
-            Debug.Log("Starting normal ambaince");
+            //Debug.Log("Starting normal ambaince");
 
             normalAmbiance.PlayClip(null, source);
 
@@ -40,7 +40,7 @@ public class AmbianceManager : MonoBehaviour
         }
         else if (TimeManager.WorldTimeScale <= 0.2 && source.clip != timeStopAmbiance.GetClip())
         {
-            Debug.Log("Starting timestop ambiance");
+            //Debug.Log("Starting timestop ambiance");
 
             timeStopAmbiance.PlayClip(null, source);
 
@@ -49,7 +49,7 @@ public class AmbianceManager : MonoBehaviour
         }
         else if (TimeManager.WorldTimeScale > 0.2f && TimeManager.WorldTimeScale != 1 && source.clip != null)
         {
-            Debug.Log("Cleaing ambiance");
+            //Debug.Log("Cleaing ambiance");
 
             source.Stop();
             source.clip = null;

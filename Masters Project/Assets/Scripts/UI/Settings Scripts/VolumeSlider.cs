@@ -22,7 +22,7 @@ public class VolumeSlider : MonoBehaviour
     /// <summary>
     /// Update the volume bus. In start becaues it doesn't work in Awake
     /// </summary>
-    private void Start()
+    private void OnEnable()
     {
         SetVolume(PlayerPrefs.GetFloat(keyName, defaultVolume));
     }
@@ -66,9 +66,8 @@ public class VolumeSlider : MonoBehaviour
     {
         if (testClip != null)
         {
-            Debug.Log("Audio Played");
             testClip.volumeBus = targetBus;
-            transform.PlayClip(testClip);
+            testClip.PlayClip();
         }
     }
 
