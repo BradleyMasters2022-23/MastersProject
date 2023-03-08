@@ -28,10 +28,11 @@ public class Grenade : Throwable
     [SerializeField] protected float velocityLossOnBounce;
 
 
-    [Tooltip("Sound for launching a grenade")]
-    [SerializeField] private AudioClip LaunchGrenade;
-    [Tooltip("Sound when grenade explodes")]
-    [SerializeField] private AudioClip ExplodeGrenade;
+    [Tooltip("Sound of grenade flying through the air")]
+    [SerializeField] private AudioClipSO flyGrenade;
+    [Tooltip("Sound when grenade is triggered and about to explode")]
+    [SerializeField] private AudioClipSO triggerGrenade;
+
     private AudioSource source;
 
     private void Start()
@@ -43,7 +44,8 @@ public class Grenade : Throwable
         triggerCol.radius= triggerRadius;
         triggerCol.isTrigger= true;
         triggerCol.enabled= true;
-        AudioSource.PlayClipAtPoint(LaunchGrenade, transform.position, 0.2f);
+
+        flyGrenade.PlayClip(source);
     }
 
     private void Update()
@@ -68,7 +70,7 @@ public class Grenade : Throwable
     {
         Instantiate(explosive, transform.position, Quaternion.identity).GetComponent<Explosive>().Detonate();
         Destroy(gameObject);
-        AudioSource.PlayClipAtPoint(ExplodeGrenade, transform.position, 1f);
+        
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -103,6 +105,7 @@ public class Grenade : Throwable
         if (instantDetonateTags.Contains(rootTgt.tag) && !triggered)
         {
             triggered = true;
+            triggerGrenade.PlayClip(transform);
             StartTimer(triggerDelay);
         }
     }

@@ -49,9 +49,13 @@ public class ResourceBarUI : MonoBehaviour
     [SerializeField] private Color emptyColor;
 
     [Tooltip("Sound while bar is recharging")]
-    [SerializeField] private AudioClip BarRefill;
+    [SerializeField] private AudioClipSO barRefill;
     [Tooltip("Sound when bar is full")]
-    [SerializeField] private AudioClip BarFull;
+    [SerializeField] private AudioClipSO barFull;
+    [Tooltip("Sound while bar is reduced")]
+    [SerializeField] private AudioClipSO barReduce;
+    [Tooltip("Sound when bar is emptied")]
+    [SerializeField] private AudioClipSO barEmpty;
     private AudioSource source;
 
     private void Start()
@@ -146,6 +150,8 @@ public class ResourceBarUI : MonoBehaviour
         {
             effectSource.ActivateImpulse(decreaseColor);
         }
+
+        barReduce.PlayClip(source);
     }
 
     public void OnIncrease()
@@ -157,10 +163,7 @@ public class ResourceBarUI : MonoBehaviour
             effectSource.ActivateImpulse(replenishColor);
         }
 
-        if (BarRefill != null)
-        {
-            source.PlayOneShot(BarRefill, 1f);
-        }
+        barRefill.PlayClip(source);
     }
 
     public void OnFull()
@@ -170,10 +173,8 @@ public class ResourceBarUI : MonoBehaviour
         {
             effectSource.ActivateImpulse(fullColor);
         }
-        if (BarFull != null)
-        {
-            source.PlayOneShot(BarFull, 1f);
-        }
+        
+        barFull.PlayClip(source);
     }
 
     public void OnDeplete()
@@ -183,6 +184,8 @@ public class ResourceBarUI : MonoBehaviour
         {
             effectSource.ActivateImpulse(emptyColor);
         }
+
+        barEmpty.PlayClip(source);
     }
 
     public void Awake()

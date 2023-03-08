@@ -145,13 +145,13 @@ GameObject:
   m_Component:
   - component: {fileID: 4752964113774221621}
   - component: {fileID: 8173301574253805080}
-  - component: {fileID: 2436408674829205882}
-  - component: {fileID: 7828654090889309656}
+  - component: {fileID: 2604198889145906420}
   - component: {fileID: 3687178574511882670}
+  - component: {fileID: 7828654090889309656}
   - component: {fileID: 1072667897749323436}
   - component: {fileID: 7491881307764720699}
+  - component: {fileID: 2436408674829205882}
   - component: {fileID: 666993584228686331}
-  - component: {fileID: 2604198889145906420}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -167,7 +167,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1515301501499233283}
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.13599968, y: 1.8109999, z: -0.01099968}
+  m_LocalPosition: {x: 0.1360016, y: 1.8109999, z: -0.010999665}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -217,15 +217,7 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &2436408674829205882
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1515301501499233283}
-  m_Enabled: 1
---- !u!114 &7828654090889309656
+--- !u!114 &2604198889145906420
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -234,11 +226,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 1515301501499233283}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f3992c986a129845a91ea52a5d825e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewPlanesTolerance: 0.15
-  inMinRange: 0
+  m_ShowDebugText: 0
+  m_ShowCameraFrustum: 1
+  m_IgnoreTimeScale: 0
+  m_WorldUpOverride: {fileID: 0}
+  m_UpdateMethod: 0
+  m_BlendUpdateMethod: 0
+  m_DefaultBlend:
+    m_Style: 1
+    m_Time: 2
+    m_CustomCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  m_CustomBlends: {fileID: 0}
+  m_CameraCutEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_CameraActivatedEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &3687178574511882670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,6 +284,20 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &7828654090889309656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515301501499233283}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f3992c986a129845a91ea52a5d825e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewPlanesTolerance: 0.15
+  inMinRange: 0
 --- !u!114 &1072667897749323436
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,15 +311,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onSettingsChangedChannel: {fileID: 11400000, guid: 0c8d55cade4ec7748a24f8fe270230cc, type: 2}
-  buses:
-  - target: {fileID: 24300002, guid: 21a1d81449a921d4592d01cfae9acdc3, type: 2}
-    key: MasterVolume
-  - target: {fileID: 1370828180924214768, guid: 21a1d81449a921d4592d01cfae9acdc3, type: 2}
-    key: EffectVolume
-  - target: {fileID: -1529307116575778154, guid: 21a1d81449a921d4592d01cfae9acdc3, type: 2}
-    key: UIVolume
-  - target: {fileID: 1182261633527941605, guid: 21a1d81449a921d4592d01cfae9acdc3, type: 2}
-    key: MusicVolume
+  tempAudioContainer: {fileID: 0}
 --- !u!114 &7491881307764720699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -306,10 +324,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71ab1110fc36c63419a24bd371a6d4b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalAmbiance: {fileID: 8300000, guid: c31e8783ca9d94a449afa9ea37419995, type: 3}
-  ambianceVolume: 0.1
-  timeStopAmbiance: {fileID: 8300000, guid: af57865ffd4cda44e89419a3bdfdd442, type: 3}
-  timeStopAmbianceVolume: 1
+  normalAmbiance: {fileID: 11400000, guid: 79f26bb1ef034944daa65ad97c794e78, type: 2}
+  timeStopAmbiance: {fileID: 11400000, guid: f6bd4aa848e951a41bf4f9cb58935664, type: 2}
+--- !u!81 &2436408674829205882
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515301501499233283}
+  m_Enabled: 1
 --- !u!82 &666993584228686331
 AudioSource:
   m_ObjectHideFlags: 0
@@ -406,40 +430,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &2604198889145906420
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1515301501499233283}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ShowDebugText: 0
-  m_ShowCameraFrustum: 1
-  m_IgnoreTimeScale: 0
-  m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 0
-  m_BlendUpdateMethod: 0
-  m_DefaultBlend:
-    m_Style: 1
-    m_Time: 2
-    m_CustomCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-  m_CustomBlends: {fileID: 0}
-  m_CameraCutEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_CameraActivatedEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &5427887033822340039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1026,21 +1016,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 5427887033822340041}
     m_Modifications:
     - target: {fileID: 1701509412264814789, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.0109996805
+      objectReference: {fileID: 0}
+    - target: {fileID: 1701509412264814789, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.1359997
+      value: -0.13600162
       objectReference: {fileID: 0}
     - target: {fileID: 6435311145722770108, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
       propertyPath: godCheatNotification
       value: 
       objectReference: {fileID: 349481562489745876}
-    - target: {fileID: 8810997313966297015, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
-      propertyPath: gunshotSound
-      value: 
-      objectReference: {fileID: 11400000, guid: 16b9d56c6e1ae8f45b227b3de79589dd, type: 2}
-    - target: {fileID: 8810997313966297015, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
-      propertyPath: gunshotSource
-      value: 
-      objectReference: {fileID: 6800189646538237002}
     - target: {fileID: 8810997313966297016, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1135,11 +1121,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df5a001e63515124d9fff01548e22564, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!82 &6800189646538237002 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 2718933415222955262, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
-  m_PrefabInstance: {fileID: 8927462659708594356}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &6802294174150428856 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2702772752586940428, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}

@@ -374,7 +374,7 @@ public class PlayerController : MonoBehaviour
 
                     if(currentState == PlayerState.MIDAIR)
                     {
-                        transform.PlayClip(landSound, source, true);
+                        landSound.PlayClip(transform, source, true);
                     }
 
                     velocity.y = 0;
@@ -606,11 +606,8 @@ public class PlayerController : MonoBehaviour
             // Apply vertical velocity
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
-            
-            if(jumpSound != null)
-            {
-                transform.PlayClip(jumpSound, source, false);
-            }
+
+            jumpSound.PlayClip(transform, source, false);
         }
 
     }
