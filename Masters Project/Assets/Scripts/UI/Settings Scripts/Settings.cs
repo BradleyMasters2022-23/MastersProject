@@ -18,20 +18,20 @@ public class Settings : MonoBehaviour
 
     #region SoundSettings
 
-    [Header("===== Audio =====")]
+    //[Header("===== Audio =====")]
 
-    [Header("--- Default Values ---")]
-    [Tooltip("Default value for master volume"), Range(0, 1)]
-    [SerializeField] private float defaultMasterVolume;
+    //[Header("--- Default Values ---")]
+    //[Tooltip("Default value for master volume"), Range(0, 1)]
+    //[SerializeField] private float defaultMasterVolume;
 
-    /// <summary>
-    /// sensitivity of the mouse
-    /// </summary>
-    public static float masterVolume;
+    ///// <summary>
+    ///// sensitivity of the mouse
+    ///// </summary>
+    //public static float masterVolume;
 
-    [Header("--- Setup ---")]
-    [Tooltip("Slider element for master volume")]
-    [SerializeField] private Slider masterVolumeSlider;
+    //[Header("--- Setup ---")]
+    //[Tooltip("Slider element for master volume")]
+    //[SerializeField] private Slider masterVolumeSlider;
 
     #endregion
 
@@ -111,7 +111,7 @@ public class Settings : MonoBehaviour
     private void Awake()
     {
         // Get player prefs data
-        masterVolume = PlayerPrefs.GetFloat("MasterVolume", defaultMasterVolume);
+        //masterVolume = PlayerPrefs.GetFloat("MasterVolume", defaultMasterVolume);
 
         mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", defaultMouseSensitivity);
         mouseInvertX = IntToBool(PlayerPrefs.GetInt("MouseInvertX", BoolToInt(defaultMouseInvertX)));
@@ -129,7 +129,7 @@ public class Settings : MonoBehaviour
     /// </summary>
     private void UpdateUI()
     {
-        masterVolumeSlider.value = masterVolume;
+        //masterVolumeSlider.value = masterVolume;
 
         mouseSensitivitySlider.value = mouseSensitivity;
         mouseInvertXToggle.isOn = mouseInvertX;
@@ -144,12 +144,12 @@ public class Settings : MonoBehaviour
 
     #region ChangeFunctions
 
-    public void ChangeMasterVolume()
-    {
-        masterVolume = masterVolumeSlider.value;
-        PlayerPrefs.SetFloat("MasterVolume", masterVolume);
-        SettingsConfirmed();
-    }
+    //public void ChangeMasterVolume()
+    //{
+    //    masterVolume = masterVolumeSlider.value;
+    //    PlayerPrefs.SetFloat("MasterVolume", masterVolume);
+    //    SettingsConfirmed();
+    //}
 
     /// <summary>
     /// changing mouse sensitivity
@@ -214,7 +214,7 @@ public class Settings : MonoBehaviour
     public void RevertToDefault()
     {
         // Reset to default values
-        masterVolume = defaultMasterVolume;
+        //masterVolume = defaultMasterVolume;
         mouseSensitivity = defaultMouseSensitivity;
         mouseInvertY = defaultMouseInvertY;
         mouseInvertX = defaultMouseInvertX;
@@ -223,7 +223,7 @@ public class Settings : MonoBehaviour
         controllerInvertY = defaultControllerInvertY;
 
         // Save playerprefs
-        PlayerPrefs.SetFloat("MasterVolume", masterVolume);
+        //PlayerPrefs.SetFloat("MasterVolume", masterVolume);
 
         PlayerPrefs.SetFloat("MouseSensitivity", mouseSensitivity);
         PlayerPrefs.SetInt("MouseInvertX", BoolToInt(mouseInvertX));

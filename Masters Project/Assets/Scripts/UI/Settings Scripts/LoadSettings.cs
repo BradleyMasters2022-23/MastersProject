@@ -35,7 +35,7 @@ public class LoadSettings : MonoBehaviour
     private void Awake()
     {
         // Load Camera Option's settings
-        Settings.masterVolume = PlayerPrefs.GetFloat("MasterVolume", defaultMasterVolume);
+        //Settings.masterVolume = PlayerPrefs.GetFloat("MasterVolume", defaultMasterVolume);
 
         Settings.mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", defaultMouseSensitivity);
         Settings.mouseInvertX = IntToBool(PlayerPrefs.GetInt("MouseInvertX", BoolToInt(defaultMouseInvertX)));
