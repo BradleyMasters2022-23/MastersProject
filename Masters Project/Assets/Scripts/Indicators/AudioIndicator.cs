@@ -17,8 +17,7 @@ public class AudioIndicator : IIndicator
     [SerializeField] private bool overlap; 
     public override void Activate()
     {
-        if (soundEffect != null)
-            transform.PlayClip(soundEffect, source, overlap);
+        soundEffect.PlayClip(transform, source, overlap);
     }
 
     public override void Deactivate()
