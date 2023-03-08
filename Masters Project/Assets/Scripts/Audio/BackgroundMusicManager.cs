@@ -119,7 +119,7 @@ public class BackgroundMusicManager : MonoBehaviour
         }
 
         // Prepare new music into the buffer
-        transform.PlayClip(chosenMusic, newSource);
+        chosenMusic.PlayClip(newSource);
 
         // transition from old source to new source
         StartCoroutine(Transition(transitionTime, oldSource, newSource));

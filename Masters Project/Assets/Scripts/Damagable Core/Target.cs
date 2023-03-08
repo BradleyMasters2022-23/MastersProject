@@ -59,9 +59,9 @@ public abstract class Target : MonoBehaviour
     [SerializeField, AssetsOnly] private GameObject _deathVFX;
 
     [Tooltip("Damage made when this target is damaged")]
-    [SerializeField] protected AudioClip damagedSound;
+    [SerializeField] protected AudioClipSO damagedSound;
     [Tooltip("Damage made when this target is killed")]
-    [SerializeField] protected AudioClip deathSound;
+    [SerializeField] protected AudioClipSO deathSound;
 
     [Header("Drop Stuff")]
     [SerializeField] private List<DroppableQuantity> dropList;
@@ -90,8 +90,7 @@ public abstract class Target : MonoBehaviour
     {
         if(_killed) return;
 
-        if (damagedSound != null)
-            AudioSource.PlayClipAtPoint(damagedSound, _center.position);
+        damagedSound.PlayClip(_center, audioSource);
 
         if (!_killed && _healthManager.Damage(dmg))
         {
@@ -109,8 +108,7 @@ public abstract class Target : MonoBehaviour
     /// </summary>
     protected virtual void KillTarget()
     {
-        if (deathSound != null)
-            AudioSource.PlayClipAtPoint(deathSound, _center.position);
+        deathSound.PlayClip(_center);
 
         if (_deathVFX != null)
             Instantiate(_deathVFX, _center.position, Quaternion.identity);

@@ -61,7 +61,7 @@ public abstract class PickupOrb : MonoBehaviour
     [SerializeField] protected Collider realCollider;
 
     [Tooltip("Sound when orb is collected")]
-    [SerializeField] private AudioClip OrbCollect;
+    [SerializeField] private AudioClipSO OrbCollect;
 
     private AudioSource source;
 
@@ -233,7 +233,7 @@ public abstract class PickupOrb : MonoBehaviour
         {
             OnPickup();
 
-            AudioSource.PlayClipAtPoint(OrbCollect, transform.position, 0.2f);
+            OrbCollect.PlayClip(transform);
         }
     }
 
