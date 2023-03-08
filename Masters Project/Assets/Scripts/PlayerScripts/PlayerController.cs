@@ -151,9 +151,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool jumpPivot;
 
     [Tooltip("Sound when the player jumps")]
-    [SerializeField] private AudioClip jumpSound;
+    [SerializeField] private AudioClipSO jumpSound;
     [Tooltip("Sound when the player lands")]
-    [SerializeField] private AudioClip landSound;
+    [SerializeField] private AudioClipSO landSound;
     private AudioSource source;
 
     /// <summary>
@@ -372,9 +372,9 @@ public class PlayerController : MonoBehaviour
                     // When entering grounded state, reset target max speed
                     targetMaxSpeed = maxMoveSpeed.Current;
 
-                    if(currentState == PlayerState.MIDAIR && source != null && landSound != null)
+                    if(currentState == PlayerState.MIDAIR)
                     {
-                        source.PlayOneShot(landSound, 0.5f);
+                        transform.PlayClip(landSound, source, true);
                     }
 
                     velocity.y = 0;
@@ -607,8 +607,10 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
             
-
-            source.PlayOneShot(jumpSound, 0.5f);
+            if(jumpSound != null)
+            {
+                transform.PlayClip(jumpSound, source, false);
+            }
         }
 
     }

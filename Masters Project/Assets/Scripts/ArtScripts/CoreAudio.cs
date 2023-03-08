@@ -22,6 +22,12 @@ public static class CoreAudio
     /// <param name="overlap">Whether to play by itself or overwrite the previous sound effect</param>
     public static void PlayClip(this Transform origin, AudioClipSO data, AudioSource destination = null, bool overlap = false)
     {
+        if(data == null)
+        {
+            Debug.LogError($"Error! {origin.name} requested audio but did not pass in any audio!");
+            return;
+        }
+
         // If no destination, create a temporary container
         if (destination == null)
         {
