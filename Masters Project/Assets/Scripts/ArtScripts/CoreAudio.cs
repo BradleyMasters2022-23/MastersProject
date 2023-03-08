@@ -42,6 +42,10 @@ public static class CoreAudio
             if(!data.loop)
                 GameObject.Destroy(container, data.GetClip().length);
         }
+        else
+        {
+            destination.Stop();
+        }
 
         // Load the destination with the data from the audio SO
         destination.clip = data.GetClip();
