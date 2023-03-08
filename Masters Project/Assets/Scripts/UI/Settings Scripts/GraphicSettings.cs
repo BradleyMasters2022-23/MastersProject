@@ -91,6 +91,9 @@ public class GraphicSettings : MonoBehaviour
 
     private IEnumerator Start()
     {
+        PlayerPrefs.DeleteKey("DefaultResolution");
+        PlayerPrefs.DeleteKey("DefaultRefreshRate");
+
         resolutions = new List<ResOption>();
         refreshOptions = new List<RefreshOption>();
 
@@ -112,6 +115,19 @@ public class GraphicSettings : MonoBehaviour
         currentResolution = new ResOption(currRes.width, currRes.height);
         Debug.Log("Current resolution grabbed is : " + currentResolution.ToString());
         currentRefreshRate = new RefreshOption(currRes.refreshRate);
+
+        // Save DEFAULTS on the first time
+        if(!PlayerPrefs.HasKey("DefaultResolution"))
+        {
+            PlayerPrefs.SetString("DefaultResolution", currentResolution.ToString());
+        }
+        if (!PlayerPrefs.HasKey("DefaultRefreshRate"))
+        {
+            Debug.Log("Saved refresh rate: " + currRes.refreshRate);
+            PlayerPrefs.SetInt("DefaultRefreshRate", currRes.refreshRate);
+        }
+
+        currentWindowMode = ConvertMode(Screen.fullScreenMode);
 
         // Get all potential resolutions and refresh rates
         // Divide these two options so they can be in their own dropdowns
@@ -178,9 +194,7 @@ public class GraphicSettings : MonoBehaviour
 
 
         // Update dropdown for fullscreen
-        currentWindowMode = ConvertMode(Screen.fullScreenMode);
         windowModeDropdown.SetValueWithoutNotify((int)currentWindowMode);
-
     }
 
     public void ApplyResolution()
@@ -197,6 +211,7 @@ public class GraphicSettings : MonoBehaviour
         // Do this conversion as the normal fullscreen mode includes
         // MAC only options, which we do not support
         currentWindowMode = (WindowedMode) windowModeDropdown.value;
+
 
         // apply
         Screen.SetResolution(currentResolution.width, currentResolution.height, GetWindowMode(), currentRefreshRate.refreshRate);
@@ -232,7 +247,8 @@ public class GraphicSettings : MonoBehaviour
     }
     private WindowedMode ConvertMode(FullScreenMode fsMode)
     {
-        WindowedMode mode = WindowedMode.Fullscreen;
+        WindowedMode mode;
+
         switch (fsMode)
         {
             case FullScreenMode.ExclusiveFullScreen:
@@ -252,18 +268,24 @@ public class GraphicSettings : MonoBehaviour
                 }
             default:
                 {
-                    mode = WindowedMode.BorderlessWindow;
+                    mode = WindowedMode.Fullscreen;
                     break;
                 }
         }
+        Debug.Log($"Convert mode input {fsMode} | output {mode}");
+
         return mode;
     }
     private IEnumerator WaitToRevert()
     {
         confirmResolutionBox.SetActive(true);
 
+        GameManager.instance.TempLockUIFlow(true);
+
         // Wait a few seconds. This can be broken from outside this
         yield return new WaitForSecondsRealtime(10f);
+
+        GameManager.instance.TempLockUIFlow(false);
 
         RevertResolution();
     }
@@ -272,6 +294,8 @@ public class GraphicSettings : MonoBehaviour
     {
         StopCoroutine(resetRoutine);
         confirmResolutionBox.SetActive(false);
+        GameManager.instance.TempLockUIFlow(false);
+
         // No need to save, Unity handles that automatically
     }
 
@@ -325,6 +349,24 @@ public class GraphicSettings : MonoBehaviour
         {
             RevertResolution();
         }
+    }
+
+    public void RevertToDefault()
+    {
+        // Load in defaults
+        ResOption defaultResolution = new ResOption(PlayerPrefs.GetString("DefaultResolution"));
+        int defaultRefresh = PlayerPrefs.GetInt("DefaultRefreshRate");
+
+        currentResolution = defaultResolution;
+        currentRefreshRate = new RefreshOption(defaultRefresh);
+        windowModeDropdown.value = 0;
+
+        // delete old saved
+        PlayerPrefs.DeleteKey("RefreshRate");
+
+        PopulateDropdown();
+        //Screen.SetResolution(currentResolution.width, currentResolution.height, FullScreenMode.ExclusiveFullScreen, currentRefreshRate.refreshRate);
+        
     }
 
     #endregion

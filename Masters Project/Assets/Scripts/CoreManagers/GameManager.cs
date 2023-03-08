@@ -633,5 +633,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void TempLockUIFlow(bool lockUI)
+    {
+        if(lockUI)
+        {
+            backMenu.Disable();
+        }
+        else
+        {
+            backMenu.Enable();
+        }
+
+    }
+
     #endregion
 }
