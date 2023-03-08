@@ -31,6 +31,6 @@ public class ButtonAudioManager : MonoBehaviour
 
     public void PlayClickSound()
     {
-        onPressSound.PlayClip(source);
+        onPressSound.PlayClip();
     }
 }

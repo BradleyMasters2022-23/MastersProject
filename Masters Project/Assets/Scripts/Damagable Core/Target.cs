@@ -108,7 +108,7 @@ public abstract class Target : MonoBehaviour
     /// </summary>
     protected virtual void KillTarget()
     {
-        damagedSound.PlayClip(_center);
+        deathSound.PlayClip(_center);
 
         if (_deathVFX != null)
             Instantiate(_deathVFX, _center.position, Quaternion.identity);

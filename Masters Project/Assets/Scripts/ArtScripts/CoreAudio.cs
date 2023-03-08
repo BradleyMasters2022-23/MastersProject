@@ -25,10 +25,10 @@ public static class CoreAudio
         if(data == null)
         {
             // Comment this out when not actively looking for false calls
-            if(origin != null)
-                Debug.LogError($"Error! {origin.name} requested audio but did not pass in any audio!");
             return;
         }
+
+        AudioClip chosenClip = data.GetClip();
 
         // If no destination, create a temporary container
         if (destination == null)
@@ -41,15 +41,19 @@ public static class CoreAudio
             destination.Stop();
 
             if(!data.loop)
-                GameObject.Destroy(container, data.GetClip().length);
+            {
+                GameObject.Destroy(container, chosenClip.length);
+            }
+                
         }
-        else
+        else 
         {
-            destination.Stop();
+            if(!overlap)
+                destination.Stop();
         }
 
         // Load the destination with the data from the audio SO
-        destination.clip = data.GetClip();
+        destination.clip = chosenClip;
         destination.priority = data.priority;
         destination.playOnAwake = false;
         destination.volume = data.volume;
