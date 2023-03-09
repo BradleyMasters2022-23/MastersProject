@@ -61,7 +61,7 @@ public class AllNotesManager : MonoBehaviour
     {
         int ran = Random.Range(0, notes.Count);
         Debug.Log($"Lost notes size {lostNotes.Count} | num selected {ran}");
-        if (ran < lostNotes.Count)
+        if (lostNotes != null && lostNotes.Count > 0 && ran < lostNotes.Count)
             return lostNotes[ran];
         else
         {
