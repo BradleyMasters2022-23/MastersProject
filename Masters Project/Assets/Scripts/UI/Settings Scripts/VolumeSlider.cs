@@ -8,23 +8,25 @@ using Sirenix.OdinInspector;
 public class VolumeSlider : MonoBehaviour
 {
     [InfoBox("Volume Range: [-80 , 0]")]
-    [SerializeField, Range(-80f, 0)] private float defaultVolume;
+    [SerializeField, Range(0.0001f, 1)] private float defaultVolume;
     [SerializeField, Required] private AudioMixerGroup targetBus;
     [SerializeField, Required] private AudioClipSO testClip;
     [SerializeField, Required] private string keyName;
     [SerializeField, Required] private Slider slider;
 
-    private float volume = upperVolumeLimit;
+    private float volume;
 
-    private const float lowerVolumeLimit = -80f;
-    private const float upperVolumeLimit = 0f;
+    private const float lowerVolumeLimit = 0.0001f;
+    private const float upperVolumeLimit = 1f;
 
     /// <summary>
     /// Update the volume bus. In start becaues it doesn't work in Awake
     /// </summary>
     private void OnEnable()
     {
-        SetVolume(PlayerPrefs.GetFloat(keyName, defaultVolume));
+        float retrievedVal = PlayerPrefs.GetFloat(keyName, defaultVolume);
+        Debug.Log("retrieved value : " + retrievedVal);
+        SetVolume(retrievedVal);
     }
 
     /// <summary>
@@ -33,20 +35,17 @@ public class VolumeSlider : MonoBehaviour
     /// <param name="vol">new volume to set it to</param>
     private void SetVolume(float vol)
     {
-        // Clamp audio between bounds, save
-        volume = Mathf.Clamp(vol, lowerVolumeLimit, upperVolumeLimit);
-        PlayerPrefs.SetFloat(keyName, volume);
-
         // Update slider visuals
         if (slider != null)
         {
             slider.minValue = lowerVolumeLimit;
             slider.maxValue = upperVolumeLimit;
-            slider.value = volume;
+            slider.value = vol;
+            Debug.Log($"Slider value updated from {vol} to {slider.value}");
         }
 
-        // Update the actual volume bus
-        targetBus.audioMixer.SetFloat(keyName, volume);
+        // call slider func that sets saving and bus
+        SliderUpdate();
     }
 
     /// <summary>
@@ -54,8 +53,10 @@ public class VolumeSlider : MonoBehaviour
     /// </summary>
     public void SliderUpdate()
     {
-        volume = slider.value;
-        PlayerPrefs.SetFloat(keyName, volume);
+        PlayerPrefs.SetFloat(keyName, slider.value);
+
+        // adjust the slider value to the converted value
+        volume = Mathf.Log10(slider.value) * 20;
         targetBus.audioMixer.SetFloat(keyName, volume);
     }
 
@@ -76,6 +77,7 @@ public class VolumeSlider : MonoBehaviour
     /// </summary>
     public void RevertToDefault()
     {
+        PlayerPrefs.DeleteKey(keyName);
         SetVolume(defaultVolume);
     }
 }

@@ -21,9 +21,6 @@ struct AudioBusLoad
 
 public class AudioManager : MonoBehaviour
 {
-    [Tooltip("Channel to check for settings change")]
-    [SerializeField] private ChannelVoid onSettingsChangedChannel;
-
     [SerializeField] private AudioBusLoad[] buses;
 
 
@@ -37,19 +34,9 @@ public class AudioManager : MonoBehaviour
         // update each pair's volume
         foreach(var busKey in buses)
         {
-            // Update the actual volume bus
-            busKey.target.audioMixer.SetFloat(busKey.key, PlayerPrefs.GetFloat(busKey.key, 0));
+            float updatedVol = Mathf.Log10(PlayerPrefs.GetFloat(busKey.key, 0.5f)) * 20;
+            // Update the actual volume bus]
+            busKey.target.audioMixer.SetFloat(busKey.key, updatedVol);
         }
-    }
-
-    private void OnEnable()
-    {
-        if(onSettingsChangedChannel!= null) 
-            onSettingsChangedChannel.OnEventRaised += UpdateSettings;
-    }
-    private void OnDisable()
-    {
-        if (onSettingsChangedChannel != null)
-            onSettingsChangedChannel.OnEventRaised -= UpdateSettings;
     }
 }
