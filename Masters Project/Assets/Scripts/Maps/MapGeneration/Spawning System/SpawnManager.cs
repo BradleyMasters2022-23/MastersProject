@@ -325,7 +325,7 @@ public class SpawnManager : MonoBehaviour
         Debug.Log("Encounter Finished");
 
         // Play completion sound, if possible
-        sound.PlayClip();
+        //sound.PlayClip();
 
         // Tell room manager to end encounter
         MapLoader.instance.EndRoomEncounter();
