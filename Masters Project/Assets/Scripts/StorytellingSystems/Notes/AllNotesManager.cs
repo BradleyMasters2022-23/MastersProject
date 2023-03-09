@@ -46,6 +46,11 @@ public class AllNotesManager : MonoBehaviour
         // adds all NoteObjects in notes to lostNotes on first load
         foreach (NoteObject note in notes)
         {
+            foreach(Fragment fragment in note.fragments)
+            {
+                fragment.found = false;
+            }
+
             if (!note.AllFragmentsFound() && !lostNotes.Contains(note))
             {
                 lostNotes.Add(note);
