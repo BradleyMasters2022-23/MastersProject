@@ -307,7 +307,7 @@ public class SimpleShoot : AttackTarget
             shot.GetComponent<RangeAttack>().Activate();
         }
 
-        shootSFX.PlayClip(transform, source, true);
+        shootSFX.PlayClip(transform);
 
     }
 
