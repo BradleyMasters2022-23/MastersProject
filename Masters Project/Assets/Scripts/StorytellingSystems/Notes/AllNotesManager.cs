@@ -58,7 +58,10 @@ public class AllNotesManager : MonoBehaviour
     /// </summary>
     public NoteObject GetRandomLostNote()
     {
-        return lostNotes[Random.Range(0, notes.Count)];
+        if (lostNotes.Count >= 0)
+            return lostNotes[Random.Range(0, notes.Count)];
+        else
+            return null;
     }
 
     /// <summary>
