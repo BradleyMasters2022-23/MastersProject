@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Crystal : IUpgrade
+public class Crystal : Monobehaviour
 {
     public List<GameObject> stats = new List<GameObject>();
     public List<int> mods = new List<int>();
@@ -54,11 +54,6 @@ public class Crystal : IUpgrade
                 cost += mods[index];
                 break;
         }
-
-    }
-
-    public override void LoadUpgrade(PlayerController player)
-    {
 
     }
 }

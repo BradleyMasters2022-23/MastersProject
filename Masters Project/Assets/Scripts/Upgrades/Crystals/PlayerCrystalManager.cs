@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,9 +11,19 @@ public class PlayerCrystalManager : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public Crystal GenerateCrystal(int p)
     {
-        
+        Crystal newCrystal = new Crystal(p);
+
+        for (int i = 0; i < 3; i++)
+        {
+            if (newCrystal.cost != newCrystal.par)
+            {
+                newCrystal.AddStat(stats[Random.Range(0, stats.Length)]);
+                newCrystal.CalculateStatCost(i);
+            }
+        }
+
+        return newCrystal;
     }
 }
