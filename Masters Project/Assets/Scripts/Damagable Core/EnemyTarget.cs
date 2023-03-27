@@ -14,6 +14,59 @@ using UnityEngine.InputSystem;
 
 public class EnemyTarget : Target
 {
+    #region Pooling
+    /// <summary>
+    /// Core data used by enemy
+    /// </summary>
+    private EnemySO enemyData;
+
+    /// <summary>
+    /// Return this object to its pool
+    /// </summary>
+    public void ReturnToPool()
+    {
+        gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Retrieve from pool
+    /// </summary>
+    public void PullFromPool(EnemySO data)
+    {
+        if (enemyData == null)
+            enemyData = data;
+
+        _killed = false;
+        _healthManager.ResetHealth();
+        gameObject.SetActive(true);
+        // TODO - get data from difficulty scaler
+    }
+    #endregion
+
+    /// <summary>
+    /// Kill the current target, modified to work with enemies
+    /// </summary>
+    protected override void KillTarget()
+    {
+        // remove cheat to prevent bugs
+        endEncounter.performed -= DebugKill;
+
+        // Try telling spawn manager to destroy self, if needed
+        if (SpawnManager.instance != null)
+            SpawnManager.instance.DestroyEnemy();
+
+        base.KillTarget();
+    }
+
+    /// <summary>
+    /// Return enemy to pool instead of destroying it
+    /// </summary>
+    protected override void DestroyObject()
+    {
+        EnemyPooler.instance.Return(enemyData, gameObject);
+    }
+
+    #region Cheats
     /// <summary>
     /// Input stuff for debug kill command
     /// </summary>
@@ -32,21 +85,6 @@ public class EnemyTarget : Target
     }
 
     /// <summary>
-    /// Kill the current target, modified to work with enemies
-    /// </summary>
-    protected override void KillTarget()
-    {
-        // remove cheat to prevent bugs
-        endEncounter.performed -= DebugKill;
-
-        // Try telling spawn manager to destroy self, if needed
-        if (SpawnManager.instance != null)
-            SpawnManager.instance.DestroyEnemy();
-
-        base.KillTarget();
-    }
-
-    /// <summary>
     /// Cheat kill command
     /// </summary>
     /// <param name="c"></param>
@@ -60,4 +98,5 @@ public class EnemyTarget : Target
 
         KillTarget();
     }
+    #endregion
 }

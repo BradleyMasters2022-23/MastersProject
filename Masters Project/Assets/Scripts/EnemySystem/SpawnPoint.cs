@@ -34,7 +34,7 @@ public class SpawnPoint : MonoBehaviour
     /// <summary>
     /// Enemy for this spawn point to spawn
     /// </summary>
-    private GameObject enemyStorage;
+    private EnemySO enemyStorage;
     /// <summary>
     /// Whether or not the spawn point is overlapped by a living enemy
     /// </summary>
@@ -134,7 +134,7 @@ public class SpawnPoint : MonoBehaviour
     /// </summary>
     /// <param name="enemy">Enemy to load into spawnpoint</param>
     /// <returns>Whether or not an enemy could be loaded into spawnpoint</returns>
-    public void LoadSpawn(GameObject enemy)
+    public void LoadSpawn(EnemySO enemy)
     {
         if (enemyStorage == null)
         {
@@ -152,7 +152,7 @@ public class SpawnPoint : MonoBehaviour
     /// </summary>
     /// <param name="proposedEnemy">Enemy being offered to spawnpoint</param>
     /// <returns>Whether the spawnpoint took the enemy</returns>
-    public bool Open(GameObject proposedEnemy)
+    public bool Open(EnemySO proposedEnemy)
     {
         if (enemyStorage != null)
             return false;
@@ -257,18 +257,18 @@ public class SpawnPoint : MonoBehaviour
     public void SpawnNow(EnemySO enemyData, SpawnTriggerField associatedField)
     {
         spawning = true;
-        spawnRoutine = StartCoroutine(SpawnEnemy(enemyData.enemyPrefab, associatedField));
+        spawnRoutine = StartCoroutine(SpawnEnemy(enemyData, associatedField));
     }
 
     /// <summary>
     /// Spawn an enemy. Handle spawning and visuals here
     /// </summary>
-    private IEnumerator SpawnEnemy(GameObject enemyPrefab, SpawnTriggerField sendTo = null)
+    private IEnumerator SpawnEnemy(EnemySO enemy, SpawnTriggerField sendTo = null)
     {
         // immediately spawn the enemy, but disable it temporarily
-        lastSpawnedEnemy = Instantiate(enemyPrefab, transform.position, Quaternion.identity);
-        if (sendTo != null)
-            sendTo.EnqueueEnemy(lastSpawnedEnemy);
+        lastSpawnedEnemy = EnemyPooler.instance.RequestEnemy(enemy);
+        lastSpawnedEnemy.transform.position = transform.position;
+        
         lastSpawnedEnemy.SetActive(false);
 
         // Prepare indicators
@@ -287,7 +287,9 @@ public class SpawnPoint : MonoBehaviour
         lastSpawnedEnemy.SetActive(true);
         lastSpawnedEnemy.transform.LookAt(player.transform.position);
 
-        
+        if (sendTo != null)
+            sendTo.EnqueueEnemy(lastSpawnedEnemy);
+
 
         // Reset the spawnpoint, disable indicators
         enemyStorage = null;
@@ -322,7 +324,7 @@ public class SpawnPoint : MonoBehaviour
 
         if(spawnRoutine != null)
             StopCoroutine(spawnRoutine);
-
+        
         enemyStorage = null;
         spawnRoutine = null;
         spawnLight.enabled = false;

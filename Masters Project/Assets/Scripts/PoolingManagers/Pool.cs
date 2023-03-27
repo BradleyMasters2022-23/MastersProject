@@ -149,13 +149,6 @@ public class Pool
             currentPool= new Queue<GameObject>();
         }
 
-        // Verify the correct key and pool
-        if(objectRef != key)
-        {
-            Debug.Log($"[POOL] Pool {key} was given {objectRef} and does not match!");
-            return;
-        }
-
         // add object back to queue
         objectRef.transform.localPosition= Vector3.zero;
         objectRef.SetActive(false);

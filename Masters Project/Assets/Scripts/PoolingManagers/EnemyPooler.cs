@@ -24,6 +24,20 @@ public class EnemyPooler : MonoBehaviour
     /// </summary>
     private Dictionary<EnemySO, Pool> pool;
 
+    private void Awake()
+    {
+        if(instance == null)
+        {
+            instance = this;
+            Init();
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+
     private void Start()
     {
         Init();
@@ -46,6 +60,7 @@ public class EnemyPooler : MonoBehaviour
         if (pool.ContainsKey(enemyRequest))
         {
             GameObject enemy = pool[enemyRequest].Pull();
+            enemy.GetComponent<EnemyTarget>().PullFromPool(enemyRequest);
             // TODO - any unique enemy functionality here like stat scaling
             return enemy;
         }
@@ -61,6 +76,7 @@ public class EnemyPooler : MonoBehaviour
         if(pool.ContainsKey(type))
         {
             // do other funcs when being returned
+            enemyReturn.GetComponent<EnemyTarget>().ReturnToPool();
             pool[type].Return(enemyReturn);
         }
         else
