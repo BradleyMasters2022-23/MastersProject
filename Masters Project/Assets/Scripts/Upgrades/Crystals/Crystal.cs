@@ -1,9 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Crystal : Monobehaviour
+public class Crystal : MonoBehaviour
 {
     public List<GameObject> stats = new List<GameObject>();
     public List<int> mods = new List<int>();

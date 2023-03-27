@@ -1,15 +1,11 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerCrystalManager : MonoBehaviour
+public class CrystalManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public List<Crystal> playerCrystals = new List<Crystal>();
+    public List<GameObject> stats = new List<GameObject>();
 
     public Crystal GenerateCrystal(int p)
     {
@@ -19,7 +15,7 @@ public class PlayerCrystalManager : MonoBehaviour
         {
             if (newCrystal.cost != newCrystal.par)
             {
-                newCrystal.AddStat(stats[Random.Range(0, stats.Length)]);
+                newCrystal.AddStat(stats[Random.Range(0, stats.Count)]);
                 newCrystal.CalculateStatCost(i);
             }
         }
