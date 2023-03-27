@@ -18,8 +18,7 @@ public class Explosive : MonoBehaviour
     private ScaledTimer damageLifeTracker;
 
     private SphereCollider col;
-    [SerializeField] private ParticleSystem VFX;
-    [SerializeField] private VisualEffect newVFX;
+    [SerializeField] private VisualEffect VFX;
     private float speedMod;
 
     public int damage;
@@ -34,13 +33,15 @@ public class Explosive : MonoBehaviour
 
     [SerializeField] private bool instantDetoante = false;
 
+    [SerializeField] private AudioClipSO explosionSound;
+
     private void Awake()
     {
         // Prepare references and values
         damagedTargets = new List<Target>();
         damageLifeTracker = new ScaledTimer(damageDuration, affectedByTimestop);
         VFXLifeTracker = new ScaledTimer(VFXDuration, affectedByTimestop);
-        newVFX.Stop();
+        VFX.Stop();
         col = GetComponent<SphereCollider>();
         lastTimeScale = TimeManager.WorldTimeScale;
 
@@ -56,11 +57,12 @@ public class Explosive : MonoBehaviour
     }
     public void Detonate(float newDamage)
     {
+        explosionSound.PlayClip(transform);
+
         col.radius = explosiveRadius;
         col.enabled = true;
 
-        //VFX.Play();
-        newVFX.Play();
+        VFX.Play();
     }
 
     private void Update()
@@ -71,10 +73,8 @@ public class Explosive : MonoBehaviour
         }
         else if(VFXLifeTracker.TimerDone() && VFX.gameObject.activeInHierarchy)
         {
-            newVFX.Stop();
-            newVFX.gameObject.SetActive(false);
-            //VFX.Stop();
-            //VFX.gameObject.SetActive(false);
+            VFX.Stop();
+            VFX.gameObject.SetActive(false);
         }
         else if(damageLifeTracker.TimerDone() && col.enabled)
         {
@@ -96,7 +96,7 @@ public class Explosive : MonoBehaviour
         {
             //ParticleSystem.MainModule main = VFX.main;
             //main.simulationSpeed = 1 * speedMod * TimeManager.WorldTimeScale;
-            newVFX.playRate = 1 * TimeManager.WorldTimeScale;
+            VFX.playRate = 1 * TimeManager.WorldTimeScale;
         }
     }
 

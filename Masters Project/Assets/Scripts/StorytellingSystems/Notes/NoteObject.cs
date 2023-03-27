@@ -9,7 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Gameplay/Note Data")]
+[CreateAssetMenu(menuName = "Storytelling/Note Data")]
 public class NoteObject : ScriptableObject
 {
     [Tooltip("ID of this note.")]
@@ -84,7 +84,7 @@ public class NoteObject : ScriptableObject
     /// </summary>
     public Fragment GetRandomLostFragment()
     {
-      return lostFragments[Random.Range(0, lostFragments.Count)];
+      return lostFragments[Random.Range(0, lostFragments.Count-1)];
     }
 
     /// <summary>

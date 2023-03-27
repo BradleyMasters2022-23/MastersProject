@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-[CreateAssetMenu(menuName = "Gameplay/Fragment Data")]
+[CreateAssetMenu(menuName = "Storytelling/Fragment Data")]
 public class Fragment : ScriptableObject
 {
     [Tooltip("ID of this fragment within its note.")]

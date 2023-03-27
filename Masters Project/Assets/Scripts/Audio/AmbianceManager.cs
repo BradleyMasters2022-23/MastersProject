@@ -5,11 +5,9 @@ using UnityEngine;
 public class AmbianceManager : MonoBehaviour
 {
 
-    [SerializeField] private AudioClip normalAmbiance;
-    [SerializeField] private float ambianceVolume;
+    [SerializeField] private AudioClipSO normalAmbiance;
 
-    [SerializeField] private AudioClip timeStopAmbiance;
-    [SerializeField] private float timeStopAmbianceVolume;
+    [SerializeField] private AudioClipSO timeStopAmbiance;
 
     private AudioSource source;
 
@@ -31,22 +29,20 @@ public class AmbianceManager : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        if (normalAmbiance != null && TimeManager.WorldTimeScale == 1 && source.clip != normalAmbiance)
+        if (TimeManager.WorldTimeScale == 1 && source.clip != normalAmbiance.GetClip())
         {
             //Debug.Log("Starting normal ambaince");
 
-            source.clip = normalAmbiance;
-            source.volume = ambianceVolume;
+            normalAmbiance.PlayClip(null, source);
 
             source.loop = true;
             source.Play();
         }
-        else if (timeStopAmbiance != null && TimeManager.WorldTimeScale <= 0.2 && source.clip != timeStopAmbiance)
+        else if (TimeManager.WorldTimeScale <= 0.2 && source.clip != timeStopAmbiance.GetClip())
         {
             //Debug.Log("Starting timestop ambiance");
 
-            source.clip = timeStopAmbiance;
-            source.volume = timeStopAmbianceVolume;
+            timeStopAmbiance.PlayClip(null, source);
 
             source.loop = true;
             source.Play();

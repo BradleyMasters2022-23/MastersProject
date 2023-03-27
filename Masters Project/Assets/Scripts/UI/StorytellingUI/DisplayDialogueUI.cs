@@ -17,8 +17,12 @@ public class DisplayDialogueUI : MonoBehaviour
 
     private Conversation conversation;
 
+    [SerializeField] private Sprite pennyBackground;
+    [SerializeField] private Sprite npcBackground;
     [SerializeField] private TextMeshProUGUI nameText;
+    [SerializeField] private TextMeshProUGUI npcNameText;
     [SerializeField] private TextMeshProUGUI dialogueText;
+    [SerializeField] private TextMeshProUGUI npcDialogueText;
     [SerializeField] private Image background;
     [SerializeField] private Image pennySprite;
     [SerializeField] private Image npcSprite;
@@ -54,17 +58,32 @@ public class DisplayDialogueUI : MonoBehaviour
     {
         if (activeLineIndex < conversation.lines.Length)
         {
-            nameText.text = conversation.lines[activeLineIndex].character.characterName;
+            
             dialogueText.text = conversation.lines[activeLineIndex].text;
             if (conversation.lines[activeLineIndex].character.characterName == "Penny")
             {
+                nameText.text = conversation.lines[activeLineIndex].character.characterName;
+                nameText.enabled = true;
+                npcNameText.enabled = false;
+                dialogueText.text = conversation.lines[activeLineIndex].text;
+                dialogueText.enabled = true;
+                npcDialogueText.enabled = false;
+                background.sprite = pennyBackground;
                 pennySprite.sprite = conversation.lines[activeLineIndex].character.sprites[conversation.lines[activeLineIndex].pennySpriteID];
                 npcSprite.sprite = conversation.nonPennyCharacter.sprites[conversation.lines[activeLineIndex].npcSpriteID];
+                pennySprite.enabled = true;
             }
             else
             {
+                npcNameText.text = conversation.lines[activeLineIndex].character.characterName;
+                npcNameText.enabled = true;
+                nameText.enabled = false;
+                npcDialogueText.text = conversation.lines[activeLineIndex].text;
+                npcDialogueText.enabled = true;
+                dialogueText.enabled = false;
+                background.sprite = npcBackground;
                 npcSprite.sprite = conversation.lines[activeLineIndex].character.sprites[conversation.lines[activeLineIndex].npcSpriteID];
-                pennySprite.sprite = conversation.penny.sprites[conversation.lines[activeLineIndex].pennySpriteID];
+                pennySprite.enabled = false;
             }
             
         }

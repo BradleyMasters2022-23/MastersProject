@@ -245,12 +245,9 @@ public class PlayerGunController : MonoBehaviour
 
             }
         }
-        
+
         // play sound effect
-        if(gunshotSound!= null)
-        {
-            shootPoint.PlayClip(gunshotSound, gunshotSource, true);
-        } 
+        gunshotSound.PlayClip(shootPoint, gunshotSource, true);
     }
 
     private Vector3 ApplySpread(Vector3 rot)

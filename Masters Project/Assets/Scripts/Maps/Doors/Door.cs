@@ -19,9 +19,9 @@ public class Door : MonoBehaviour
 {
 
     [Tooltip("Sound when door opens")]
-    [SerializeField] private AudioClip openDoor;
+    [SerializeField] private AudioClipSO openDoor;
     [Tooltip("Sound when door closes")]
-    [SerializeField] private AudioClip closeDoor;
+    [SerializeField] private AudioClipSO closeDoor;
 
     private AudioSource source;
 
@@ -163,15 +163,13 @@ public class Door : MonoBehaviour
         {
             door.SetActive(false);
 
-            if(openDoor != null)
-                source.PlayOneShot(openDoor, 0.5f);
+            openDoor.PlayClip(transform, source);
         }
         else
         {
             door.SetActive(true);
 
-            if(closeDoor!= null)
-                source.PlayOneShot(closeDoor, 0.5f);
+            closeDoor.PlayClip(transform, source);
         }
     }
 

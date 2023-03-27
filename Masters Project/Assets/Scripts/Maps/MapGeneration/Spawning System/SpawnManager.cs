@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Linq;
+using Unity.VisualScripting;
 
 
 public class SpawnManager : MonoBehaviour
@@ -100,7 +101,7 @@ public class SpawnManager : MonoBehaviour
     private AudioSource s;
 
     [Tooltip("Sound played when the encounter ends.")]
-    [SerializeField] AudioClip sound;
+    [SerializeField] AudioClipSO sound;
 
     #region Cheat Variables
 
@@ -324,8 +325,7 @@ public class SpawnManager : MonoBehaviour
         Debug.Log("Encounter Finished");
 
         // Play completion sound, if possible
-        if (sound != null)
-            s.PlayOneShot(sound);
+        //sound.PlayClip();
 
         // Tell room manager to end encounter
         MapLoader.instance.EndRoomEncounter();

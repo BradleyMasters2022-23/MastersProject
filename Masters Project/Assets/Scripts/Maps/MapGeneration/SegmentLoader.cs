@@ -75,7 +75,7 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
         root = transform;
         syncPoints = new List<Transform>();
         doorManager = GetComponent<DoorManager>();
-        randomizedObjs = GetComponentsInChildren<IRandomizer>(true);
+        randomizedObjs = GetComponentsInChildren<IRandomizer>(false);
 
         // Initialize sync buffer automatically
         syncBuffer = new GameObject("SyncBuffer").transform;
@@ -91,10 +91,10 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
         if (segmentInfo.segmentType == MapSegmentSO.MapSegmentType.Hallway)
             doorManager.SetHallway();
 
+        yield return StartCoroutine(LoadRoom(false));
+
         // Do any unique initialization
         StartCoroutine(UniquePoolInitialization());
-        
-        
 
         yield return null;
     }

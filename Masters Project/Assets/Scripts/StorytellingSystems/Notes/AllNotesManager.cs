@@ -46,11 +46,17 @@ public class AllNotesManager : MonoBehaviour
         // adds all NoteObjects in notes to lostNotes on first load
         foreach (NoteObject note in notes)
         {
+            foreach(Fragment fragment in note.fragments)
+            {
+                fragment.found = false;
+            }
+
             if (!note.AllFragmentsFound() && !lostNotes.Contains(note))
             {
                 lostNotes.Add(note);
             }
         }
+        Debug.Log($"Lost notes size {lostNotes.Count}");
     }
 
     /// <summary>
@@ -58,7 +64,16 @@ public class AllNotesManager : MonoBehaviour
     /// </summary>
     public NoteObject GetRandomLostNote()
     {
-        return lostNotes[Random.Range(0, notes.Count)];
+        int ran = Random.Range(0, notes.Count);
+        Debug.Log($"Lost notes size {lostNotes.Count} | num selected {ran}");
+        if (lostNotes != null && lostNotes.Count > 0 && ran < lostNotes.Count)
+            return lostNotes[ran];
+        else
+        {
+            Debug.Log("Potential break detected in AllNoteManager, but prevented!");
+            return null;
+        }
+            
     }
 
     /// <summary>
@@ -76,6 +91,7 @@ public class AllNotesManager : MonoBehaviour
 
     public bool NoteFindable()
     {
+        
         if (lostNotes.Count == 0)
         {
             return false;

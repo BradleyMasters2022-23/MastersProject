@@ -14,15 +14,28 @@ public class FragmentSpawner : MonoBehaviour
     {
         if(FragShouldSpawn()) {
             GameObject obj = CreateFrag();
-            obj.GetComponent<Collider>().enabled = true;
+            if(obj != null ) 
+                obj.GetComponent<Collider>().enabled = true;
             // Debug.Log(obj.GetComponent<FragmentInteract>().GetFragment().GetFragmentID());
         } 
     }
 
     private GameObject CreateFrag() {
-        Fragment temp = AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment();
+        
+        if(AllNotesManager.instance == null)
+        {
+            return null;
+        }
+        NoteObject temp = AllNotesManager.instance.GetRandomLostNote();
+        Fragment tempNote;
+
+        if (temp != null)
+            tempNote = temp.GetRandomLostFragment();
+        else
+            return null;
+
         GameObject obj = Instantiate(fragInteractable, fragSpawnPoint.transform.position, fragSpawnPoint.rotation);
-        obj.GetComponent<FragmentInteract>().SetUp(temp);
+        obj.GetComponent<FragmentInteract>().SetUp(tempNote);
 
         return obj;
     }
