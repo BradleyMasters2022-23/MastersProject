@@ -701,6 +701,67 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -3556048277962809075, guid: 048440f67408649459ed6eb5845fd91c, type: 3}
+--- !u!1 &332090533
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 332090535}
+  - component: {fileID: 332090534}
+  m_Layer: 0
+  m_Name: EnemyPooler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &332090534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 332090533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f5185757d7f8384395a6d7793a3916a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyPools:
+  - enemy: {fileID: 11400000, guid: 7501d287cb25259479b8aad3173e9020, type: 2}
+    poolSize: 10
+    maxSize: 50
+    incrementRate: 10
+  - enemy: {fileID: 11400000, guid: 128b49ed2a7f087478021efbeeba3da4, type: 2}
+    poolSize: 10
+    maxSize: 40
+    incrementRate: 10
+  - enemy: {fileID: 11400000, guid: 4af683f0caa8270488bc1af1905cce31, type: 2}
+    poolSize: 5
+    maxSize: 20
+    incrementRate: 5
+  - enemy: {fileID: 11400000, guid: 86f24dd8e589cff469b8dcdb11cc7215, type: 2}
+    poolSize: 4
+    maxSize: 12
+    incrementRate: 4
+--- !u!4 &332090535
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 332090533}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.4029274, y: -9.29512, z: -12.2036}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &386455624
 GameObject:
   m_ObjectHideFlags: 0
@@ -3044,6 +3105,10 @@ PrefabInstance:
       value: 0.1359997
       objectReference: {fileID: 0}
     - target: {fileID: 4752964113774221621, guid: fc9bc51ab3d98a54ba18dd8c960f6f9a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.811
+      objectReference: {fileID: 0}
+    - target: {fileID: 4752964113774221621, guid: fc9bc51ab3d98a54ba18dd8c960f6f9a, type: 3}
       propertyPath: m_LocalPosition.z
       value: -0.01099968
       objectReference: {fileID: 0}
@@ -3134,6 +3199,10 @@ PrefabInstance:
     - target: {fileID: 7816083150986641521, guid: fc9bc51ab3d98a54ba18dd8c960f6f9a, type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.811
+      objectReference: {fileID: 0}
+    - target: {fileID: 7816083150986641521, guid: fc9bc51ab3d98a54ba18dd8c960f6f9a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.13599971
       objectReference: {fileID: 0}
     - target: {fileID: 8173301574253805080, guid: fc9bc51ab3d98a54ba18dd8c960f6f9a, type: 3}
       propertyPath: m_BackGroundColor.b
