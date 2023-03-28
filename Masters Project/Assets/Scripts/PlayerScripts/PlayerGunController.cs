@@ -86,6 +86,7 @@ public class PlayerGunController : MonoBehaviour
     [Tooltip("Layers for raycast to ignore")]
     [SerializeField] LayerMask hitLayers;
 
+    [SerializeField] private Animator animator;
 
     [Header("Enhanced Bullets")]
     [SerializeField] private int enhancedBulletsPerShot;
@@ -191,6 +192,11 @@ public class PlayerGunController : MonoBehaviour
         if(muzzleflashVFX != null)
         {
             Instantiate(muzzleflashVFX, shootPoint.position, shootPoint.rotation);
+        }
+
+        if(animator != null)
+        {
+            animator.SetTrigger("Fire");
         }
 
         // If time is not stopped, fire normal bullets

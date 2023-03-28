@@ -34,6 +34,10 @@ public class FragmentSpawner : MonoBehaviour
         else
             return null;
 
+        // error check
+        if (temp == null)
+            return null;
+
         GameObject obj = Instantiate(fragInteractable, fragSpawnPoint.transform.position, fragSpawnPoint.rotation);
         obj.GetComponent<FragmentInteract>().SetUp(tempNote);
 

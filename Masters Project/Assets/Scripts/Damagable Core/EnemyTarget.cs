@@ -78,17 +78,22 @@ public class EnemyTarget : Target
         if(controls == null)
         {
             controls = GameManager.controls;
+        }
+        if(endEncounter == null && controls != null)
+        {
             endEncounter = controls.PlayerGameplay.ClearEncounter;
+            endEncounter.performed += DebugKill;
+            endEncounter.Enable();
         }
         
-        endEncounter.performed += DebugKill;
-        endEncounter.Enable();
+        
     }
 
     private void OnDisable()
     {
         // remove cheat to prevent bugs
-        endEncounter.performed -= DebugKill;
+        if(endEncounter != null)
+            endEncounter.performed -= DebugKill;
     }
 
     /// <summary>

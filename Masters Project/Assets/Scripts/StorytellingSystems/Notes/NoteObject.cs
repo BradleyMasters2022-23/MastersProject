@@ -84,7 +84,14 @@ public class NoteObject : ScriptableObject
     /// </summary>
     public Fragment GetRandomLostFragment()
     {
-      return lostFragments[Random.Range(0, lostFragments.Count-1)];
+        lostFragments.TrimExcess();
+
+        int randNum = Random.Range(0, lostFragments.Count - 1);
+
+        if (randNum >= lostFragments.Count)
+            return null;
+        else
+            return lostFragments[randNum];
     }
 
     /// <summary>
