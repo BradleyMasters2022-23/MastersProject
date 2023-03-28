@@ -55,6 +55,7 @@ public class EnemyPooler : MonoBehaviour
         if (pool.ContainsKey(enemyRequest))
         {
             GameObject enemy = pool[enemyRequest].Pull();
+            enemy.transform.parent = null;
             enemy.GetComponent<EnemyTarget>().PullFromPool(enemyRequest);
             // TODO - any unique enemy functionality here like stat scaling
             return enemy;
@@ -73,6 +74,7 @@ public class EnemyPooler : MonoBehaviour
             // do other funcs when being returned
             enemyReturn.GetComponent<EnemyTarget>().ReturnToPool();
             pool[type].Return(enemyReturn);
+            enemyReturn.transform.parent = transform;
         }
         else
         {
