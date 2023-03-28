@@ -29,7 +29,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8810997312557230426}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3275549730010603225
 GameObject:
@@ -56,7 +56,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3275549730010603225}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.010999695, y: 1.8109999, z: -0.1359997}
+  m_LocalPosition: {x: -0.010999695, y: 1.8110001, z: -0.1359997}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -234,8 +234,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4144220760584907843}
+  - {fileID: 8810997314044839442}
   m_Father: {fileID: 8810997312557230426}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8810997312557230427
 GameObject:
@@ -265,7 +266,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8810997314044839442}
   - {fileID: 2165327839989519422}
   - {fileID: 8810997314261937679}
   - {fileID: 5462805238772800524}
@@ -484,7 +484,7 @@ MonoBehaviour:
     lowerLimit: 0
     upperLimit: 0
   shotPrefab: {fileID: 8727397786430278917, guid: 2d7acdce40227f14f958278db894727c, type: 3}
-  bulletsPerShot: 3
+  bulletsPerShot: 1
   muzzleflashVFX: {fileID: 6918287896248534240, guid: 9b90f1dedda807a429479e8afa54de2d, type: 3}
   minAimRange: 7.5
   maxRange: 30
@@ -498,13 +498,12 @@ MonoBehaviour:
   maxShootDisplacement: 0.08
   shootPoint: {fileID: 8810997314044839442}
   defaultTarget: {fileID: 8810997314261937679}
-  layersToIgnore:
+  hitLayers:
     serializedVersion: 2
-    m_Bits: 136900
+    m_Bits: 297225
   enhancedBulletsPerShot: 1
   enhancedBulletPrefab: {fileID: 8727397786430278917, guid: 28050c439aeee544782969d47740fbc7, type: 3}
   enhancedSpeedMultiplier: 20
-  enhancedShotThreshold: 0.1
 --- !u!114 &8665962098944256790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -687,13 +686,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8810997314044839443}
-  m_LocalRotation: {x: -0.028251186, y: -0.015661534, z: 0.0004426994, w: 0.99947804}
-  m_LocalPosition: {x: 0.135, y: -0.009, z: 0.859}
-  m_LocalScale: {x: 1.1819953, y: 1, z: 1}
+  m_LocalRotation: {x: -0.028251186, y: -0.015661506, z: 0.0004427004, w: 0.9994781}
+  m_LocalPosition: {x: 0.13499996, y: -0.009000063, z: 0.85900027}
+  m_LocalScale: {x: 1.1819954, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8810997312557230426}
-  m_RootOrder: 0
+  m_Father: {fileID: 5462805238772800524}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: -90.3, z: 0}
 --- !u!82 &2810231602275043531
 AudioSource:
@@ -820,7 +819,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8810997312557230426}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8810997314421572953
 GameObject:

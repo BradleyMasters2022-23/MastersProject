@@ -20,7 +20,7 @@ public class CameraShoot : MonoBehaviour
     /// <summary>
     /// Layers should the hitscan ignore
     /// </summary>
-    private LayerMask layersToIgnore;
+    private LayerMask hitLayers;
 
     /// <summary>
     /// The minimum range for thie hitscan to work
@@ -63,7 +63,7 @@ public class CameraShoot : MonoBehaviour
     public void Initialize(Transform _defaultTarget, LayerMask _layersToIgnore, float _minRange)
     {
         defaultTarget = _defaultTarget;
-        layersToIgnore = _layersToIgnore;
+        hitLayers = _layersToIgnore;
         minRange = _minRange;
 
         targetPos = _defaultTarget.position;
@@ -87,7 +87,7 @@ public class CameraShoot : MonoBehaviour
     {
 
         // Fire hitscan
-        if (Physics.Raycast(transform.position, transform.forward, out hitInfo, Mathf.Infinity, ~layersToIgnore))
+        if (Physics.Raycast(transform.position, transform.forward, out hitInfo, Mathf.Infinity, hitLayers))
         {
             // If distance is below minimum range, fire at default target instead
             if(hitInfo.distance < minRange)

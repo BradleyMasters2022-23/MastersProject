@@ -51,8 +51,11 @@ public class Projectile : RangeAttack
     [SerializeField] private Transform bulletVisual;
     [Tooltip("How does the scale of the bullet change over distance")]
     [SerializeField] private AnimationCurve scaleOverDistance;
+    
     [Tooltip("The VFX that plays when this bullet despawns due to distance limit")]
     [SerializeField] private GameObject fadeVFX;
+
+    private float originalVisualScale;
 
     /// <summary>
     /// Distance covered to calculate when to despawn
@@ -127,7 +130,7 @@ public class Projectile : RangeAttack
         }
         else if(scaleOverDistance != null && bulletVisual != null)
         {
-            float newScale = scaleOverDistance.Evaluate(distanceCovered / range);
+            float newScale = scaleOverDistance.Evaluate(distanceCovered / range) * originalVisualScale;
 
             bulletVisual.localScale = new Vector3(newScale, newScale, newScale);
         }
@@ -159,6 +162,10 @@ public class Projectile : RangeAttack
     public override void Activate()
     {
         rb = GetComponent<Rigidbody>();
+
+        if (bulletVisual != null)
+            bulletVisual.localScale = new Vector3(originalVisualScale, originalVisualScale, originalVisualScale);
+
         targetVelocity = transform.forward * speed;
         active = true;
 
@@ -188,6 +195,9 @@ public class Projectile : RangeAttack
     protected override void Awake()
     {
         lastPos = transform.position;
+
+        if(bulletVisual != null)
+            originalVisualScale = bulletVisual.localScale.x;
 
         source = gameObject.AddComponent<AudioSource>();
     }
