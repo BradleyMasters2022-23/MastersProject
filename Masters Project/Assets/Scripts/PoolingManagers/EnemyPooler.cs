@@ -19,8 +19,8 @@ public class EnemyPooler : MonoBehaviour
 
     /// <summary>
     /// Dictionary for enemies : 
-    /// Key : Core prefab reference object
-    /// Value : List of spawned enemy prefabs
+    /// Key : Enemy data SO
+    /// Value : Pool of instanced enemies
     /// </summary>
     private Dictionary<EnemySO, Pool> pool;
 
@@ -36,11 +36,6 @@ public class EnemyPooler : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-    }
-
-    private void Start()
-    {
-        Init();
     }
 
     protected void Init()

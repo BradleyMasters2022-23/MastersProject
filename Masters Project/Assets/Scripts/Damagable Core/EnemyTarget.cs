@@ -48,9 +48,6 @@ public class EnemyTarget : Target
     /// </summary>
     protected override void KillTarget()
     {
-        // remove cheat to prevent bugs
-        endEncounter.performed -= DebugKill;
-
         // Try telling spawn manager to destroy self, if needed
         if (SpawnManager.instance != null)
             SpawnManager.instance.DestroyEnemy();
@@ -76,12 +73,22 @@ public class EnemyTarget : Target
     /// <summary>
     /// Get reference to the debug kill cheat
     /// </summary>
-    private void Start()
+    private void OnEnable()
     {
-        controls = GameManager.controls;
-        endEncounter = controls.PlayerGameplay.ClearEncounter;
+        if(controls == null)
+        {
+            controls = GameManager.controls;
+            endEncounter = controls.PlayerGameplay.ClearEncounter;
+        }
+        
         endEncounter.performed += DebugKill;
         endEncounter.Enable();
+    }
+
+    private void OnDisable()
+    {
+        // remove cheat to prevent bugs
+        endEncounter.performed -= DebugKill;
     }
 
     /// <summary>
