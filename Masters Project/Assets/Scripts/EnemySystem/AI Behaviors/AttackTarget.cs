@@ -68,6 +68,8 @@ public abstract class AttackTarget : MonoBehaviour
     [Tooltip("Width of the line of sight inorder to attack")]
     [SerializeField] private float lineOfSightWidth = 0;
 
+    private Coroutine attackRoutine;
+
     [Header("=== Testing and Debug ===")]
 
     [Tooltip("Whether the enemy will automatically loop its attacks. Use this to test new attacks without the manager.")]
@@ -101,6 +103,16 @@ public abstract class AttackTarget : MonoBehaviour
             lineOfSightOrigin = transform;
 
         currentAttackState = AttackState.Ready;
+    }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+        currentAttackState = AttackState.Ready;
+        HideIndicator();
+        HideAttackDone();
+
+        target = null;
     }
 
     public void SetTarget(Transform t)
@@ -179,7 +191,7 @@ public abstract class AttackTarget : MonoBehaviour
         if(currentAttackState == AttackState.Ready)
         {
             target = t;
-            StartCoroutine(AttackAction());
+            attackRoutine = StartCoroutine(AttackAction());
         }
     }
 
@@ -202,6 +214,8 @@ public abstract class AttackTarget : MonoBehaviour
 
         attackTracker.ResetTimer();
         currentAttackState = AttackState.Cooldown;
+
+        attackRoutine = null;
 
         yield return null;
     }

@@ -186,6 +186,14 @@ public class HealthManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Reset the health of this manager
+    /// </summary>
+    public void ResetHealth()
+    {
+        Heal(999);
+    }
+
+    /// <summary>
     /// Perform any indicator work regarding the UI
     /// </summary>
     public void UpdateIndicator()

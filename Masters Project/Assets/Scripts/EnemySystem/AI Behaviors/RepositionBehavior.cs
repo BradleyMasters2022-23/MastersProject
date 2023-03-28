@@ -172,6 +172,15 @@ public class RepositionBehavior : BaseEnemyMovement
         return complete;
     }
 
+    private void OnDisable()
+    {
+        complete = true;
+
+
+        manager.SetMoveProfile(0);
+        state = MoveState.Standby;
+    }
+
     private void FinishStrafe()
     {
         float dur = Random.Range(repositionCooldown.x, repositionCooldown.y);

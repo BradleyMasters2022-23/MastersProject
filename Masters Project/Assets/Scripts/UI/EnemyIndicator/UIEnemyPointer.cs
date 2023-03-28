@@ -39,7 +39,7 @@ public class UIEnemyPointer : MonoBehaviour
         if (!initialized)
             return;
 
-        if(target == null)
+        if(target == null || !target.gameObject.activeInHierarchy)
         {
             Destroy(gameObject);
             return;
