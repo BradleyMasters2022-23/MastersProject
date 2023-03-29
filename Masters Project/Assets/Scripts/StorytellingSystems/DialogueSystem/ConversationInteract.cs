@@ -10,7 +10,7 @@ public class ConversationInteract : Interactable
     // when a conversation is available, screen should blink; eventually, screen & contact both blink
     private DisplayDialogueUI ui;
 
-    private MeshRenderer flashRenderer;
+    [SerializeField] private MeshRenderer flashRenderer;
     private Color original;
     private ScaledTimer timer;
     public float flashTime;
@@ -24,13 +24,17 @@ public class ConversationInteract : Interactable
     {
         ui = FindObjectOfType<DisplayDialogueUI>(true);
         calls = CallManager.instance;
-        flashRenderer = gameObject.GetComponent<MeshRenderer>();
+        if(flashRenderer != null)
+            flashRenderer = gameObject.GetComponent<MeshRenderer>();
         original = flashRenderer.material.color;
         timer = new ScaledTimer(flashTime);
     }
 
     public void Update()
     {
+        if (flashRenderer == null)
+            return;
+
         if(calls.HasAvailable() && timer.TimerDone())
         {
             if(flashRenderer.material.color == Color.red)
