@@ -1,14 +1,22 @@
+/* 
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - March 29th, 2023
+ * Last Edited - March 29th, 2023 by Ben Schuster
+ * Description - Base class for a tooltip holder that will send a tooltip request to the manager
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 
-public class TooltipHolder : MonoBehaviour
+public abstract class TooltipHolder : MonoBehaviour
 {
     public TooltipSO tooltip;
-    private TooltipManager manager;
+    protected TooltipManager manager;
 
-    private void Start()
+    protected virtual void Start()
     {
         if (tooltip == null)
         {
@@ -18,25 +26,13 @@ public class TooltipHolder : MonoBehaviour
         manager = TooltipManager.instance;
     }
 
-    public void SubmitTooltip()
+    protected virtual void SubmitTooltip()
     {
         manager?.RequestTooltip(tooltip);
     }
 
-    public void RetractTooltip()
+    protected virtual void RetractTooltip()
     {
         manager?.UnloadTooltip(tooltip);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.CompareTag("Player"))
-            SubmitTooltip();
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if(other.CompareTag("Player"))
-            RetractTooltip();
     }
 }

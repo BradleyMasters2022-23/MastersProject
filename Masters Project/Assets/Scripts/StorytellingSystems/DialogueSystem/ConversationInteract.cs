@@ -15,6 +15,11 @@ public class ConversationInteract : Interactable
     private ScaledTimer timer;
     public float flashTime;
 
+    // Delegate for any special functions to use
+    // used by tooltip system to close tooltip when its used
+    public delegate void OnInteraction();
+    public OnInteraction onStartCall;
+
     private void Start()
     {
         ui = FindObjectOfType<DisplayDialogueUI>(true);
@@ -63,6 +68,7 @@ public class ConversationInteract : Interactable
             ui.OpenScreen(calls.GetDefault());
         }
 
-        
+        // call any subscribed functions to the caller
+        onStartCall?.Invoke();
     }
 }

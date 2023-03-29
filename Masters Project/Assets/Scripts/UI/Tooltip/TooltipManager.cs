@@ -73,7 +73,7 @@ public class TooltipManager : MonoBehaviour
             return;
         }
 
-        // Verify it can be displayed
+        // Verify it has not exceeded its display count max
         if(tooltipHistory.ContainsKey(data) && tooltipHistory[data] >= data.timesToDisplay)
         {
             return;
@@ -83,6 +83,7 @@ public class TooltipManager : MonoBehaviour
         if (tooltipHistory.ContainsKey(data)) tooltipHistory[data] += 1;
         else tooltipHistory.Add(data, 1);
 
+        // for now, load the data
         LoadTooltip(data);
     }
 
