@@ -39,8 +39,8 @@ public class DamageField : MonoBehaviour
     {
         initialDamage= initDmg;
         tickDamage= tkDmg;
-        playerInitialDamage= pTkDmg;
-        tickRate= pTkDmg;
+        playerInitialDamage= pInitDmg;
+        playerTickDamage = pTkDmg;
         tickRate= tkR;
     }
 
