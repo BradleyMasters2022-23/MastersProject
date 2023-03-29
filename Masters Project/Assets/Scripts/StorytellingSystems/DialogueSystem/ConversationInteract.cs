@@ -24,9 +24,13 @@ public class ConversationInteract : Interactable
     {
         ui = FindObjectOfType<DisplayDialogueUI>(true);
         calls = CallManager.instance;
-        if(flashRenderer != null)
+        if(flashRenderer == null)
+        {
             flashRenderer = gameObject.GetComponent<MeshRenderer>();
-        original = flashRenderer.material.color;
+        }
+        if(flashRenderer != null)
+            original = flashRenderer.material.color;
+
         timer = new ScaledTimer(flashTime);
     }
 
