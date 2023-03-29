@@ -316,6 +316,24 @@ public class ResourceBar : MonoBehaviour
     }
 
     /// <summary>
+    /// Decrement the maximum of this resource bar
+    /// </summary>
+    /// <param name="decrement">Amount to incremenent health by</param>
+    /// <param name="decreaseCurrent">Whether to increase the current by the same amount</param>
+    public void DecreaseMax(float decrement, bool decreaseCurrent)
+    {
+        _maxAmount -= decrement;
+        _currAmount -= decrement;
+
+        if (decreaseCurrent)
+        {
+            _currAmount -= decrement;
+        }
+
+        NonRegenStateCheck();
+    }
+
+    /// <summary>
     /// Set the maximum of this resource bar
     /// </summary>
     /// <param name="max">New max to set the resource bar to</param>

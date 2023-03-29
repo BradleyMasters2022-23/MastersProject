@@ -217,4 +217,9 @@ public class LinearSpawnManager : MonoBehaviour
 
         return waveDict;
     }
+
+    public int GetCombatRoomCount()
+    {
+        return combatRoomCount;
+    }
 }
