@@ -237,14 +237,8 @@ public class HealthManager : MonoBehaviour
 
     public void DecreaseMaxHealth(float decrement, int healthbarIndex = 0)
     {
-        if (_healthbars[healthbarIndex].IsFull())
-        {
-            _healthbars[healthbarIndex].DecreaseMax(decrement, true);
-        } else
-        {
-            _healthbars[healthbarIndex].DecreaseMax(decrement, false);
-        }
-        
+        _healthbars[healthbarIndex].DecreaseMax(decrement);
+
     }
 
     #endregion
