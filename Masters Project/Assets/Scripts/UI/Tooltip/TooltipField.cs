@@ -18,6 +18,11 @@ public class TooltipField : TooltipHolder
             SubmitTooltip();
     }
 
+    private void OnDisable()
+    {
+        RetractTooltip();
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
