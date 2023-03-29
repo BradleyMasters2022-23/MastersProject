@@ -28,7 +28,7 @@ public class SpawnManager : MonoBehaviour
     /// <summary>
     /// The queue of enemies waiting to be spawned
     /// </summary>
-    private Queue<GameObject> spawnQueue;
+    private Queue<EnemySO> spawnQueue;
 
     /// <summary>
     /// Current number of enemies spawned
@@ -130,7 +130,7 @@ public class SpawnManager : MonoBehaviour
         finished = true;
         
         s = gameObject.AddComponent<AudioSource>();
-        spawnQueue = new Queue<GameObject>();
+        spawnQueue = new Queue<EnemySO>();
 
         spawnDelayTimer = new ScaledTimer(spawnDelay.x);
         startDelayTimer = new ScaledTimer(startDelay);
@@ -248,7 +248,7 @@ public class SpawnManager : MonoBehaviour
     private void PrepareWaveQueue()
     {
         // Load the specified number of each at random
-        spawnQueue = new Queue<GameObject>();
+        spawnQueue = new Queue<EnemySO>();
         Dictionary<EnemySO, int> currWaveData = chosenEncounter[waveIndex];
         List<EnemySO> enemyOptions = currWaveData.Keys.ToList();
 
@@ -260,7 +260,7 @@ public class SpawnManager : MonoBehaviour
             EnemySO selectedEnemy = enemyOptions[ranIndex];
 
             // Enqueue into spawn queue, subtract from temp dictionary
-            spawnQueue.Enqueue(selectedEnemy.enemyPrefab);
+            spawnQueue.Enqueue(selectedEnemy);
             currWaveData[selectedEnemy]--;
 
             // If dictionary value is below zero, remove from options
@@ -285,7 +285,7 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     /// <param name="enemyPrefab">enemy to spawn</param>
     /// <param name="spawnPoint">spawnpoint to use</param>
-    private void SpawnEnemy(GameObject enemyPrefab, SpawnPoint spawnPoint)
+    private void SpawnEnemy(EnemySO enemyPrefab, SpawnPoint spawnPoint)
     {
         spawnPoint.LoadSpawn(enemyPrefab);
         waitingEnemies++;
@@ -401,7 +401,7 @@ public class SpawnManager : MonoBehaviour
     /// Return an enemy to the spawn queue
     /// </summary>
     /// <param name="enemy">enemy prefab to return</param>
-    public void ReturnEnemy(GameObject enemy)
+    public void ReturnEnemy(EnemySO enemy)
     {
         spawnQueue.Enqueue(enemy);
         waitingEnemies--;

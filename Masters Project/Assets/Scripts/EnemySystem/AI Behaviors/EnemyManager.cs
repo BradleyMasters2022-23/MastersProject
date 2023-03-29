@@ -149,6 +149,14 @@ public class EnemyManager : MonoBehaviour
             return;
         }
 
+        
+    }
+
+    /// <summary>
+    /// When spawned, start activate delay
+    /// </summary>
+    private void OnEnable()
+    {
         activateTracker = new ScaledTimer(activateDelay);
 
         lineOfSightTracker = new ScaledTimer(noLineOfSightDelay);
@@ -156,38 +164,34 @@ public class EnemyManager : MonoBehaviour
         stateChangeCDTracker = new ScaledTimer(postChaseCD);
 
         player = FindObjectOfType<PlayerController>();
-        
+
         audioSource = GetComponent<AudioSource>();
-        
+
 
         // disable move behaviors
-        if(chaseBehavior != null)
+        if (chaseBehavior != null)
         {
             chaseBehavior.state = BaseEnemyMovement.MoveState.Standby;
         }
-        if(strafeBehavior != null)
+        if (strafeBehavior != null)
         {
             strafeBehavior.state = BaseEnemyMovement.MoveState.Standby;
         }
-        if(lookBehavior != null)
+        if (lookBehavior != null)
         {
             lookBehavior.SetTarget(player.transform);
             lookBehavior.state = BaseEnemyMovement.MoveState.Standby;
         }
 
         mainAttack.SetTarget(player.transform);
-    }
 
-    /// <summary>
-    /// When spawned, start activate delay
-    /// </summary>
-    private void Start()
-    {
         StartCoroutine(MainAIController());
     }
 
-    
-
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+    }
 
     /// <summary>
     /// Manage the core logic of the AI. 
@@ -250,8 +254,6 @@ public class EnemyManager : MonoBehaviour
             }
             else if ( (strafeBehavior != null && strafeBehavior.CanStrafe()) || (mainAttack != null && mainAttack.CanDoAttack()))
             {
-                //Debug.Log("Calling attack!");
-
                 if (strafeBehavior == null)
                 {
                     yield return StartCoroutine(HandleAttack());
@@ -395,8 +397,6 @@ public class EnemyManager : MonoBehaviour
 
         lookBehavior.state = BaseEnemyMovement.MoveState.Standby;
         strafeBehavior.state = BaseEnemyMovement.MoveState.Moving;
-
-        // && (strafingAttack != null && !(strafingAttack.currentAttackState == AttackState.Cooldown || strafingAttack.currentAttackState == AttackState.Ready))
 
         bool attackReq = strafingAttack != null && (strafingAttack.currentAttackState == AttackState.Cooldown || strafingAttack.currentAttackState == AttackState.Ready);
         
