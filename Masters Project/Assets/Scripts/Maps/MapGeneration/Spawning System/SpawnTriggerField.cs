@@ -214,6 +214,9 @@ public class SpawnTriggerField : MonoBehaviour
                 // choose spawnpoint
                 SpawnPoint point = spawnPoints[Random.Range(0, spawnPoints.Length)];
 
+                if (point != null && !point.isActiveAndEnabled)
+                    continue;
+
                 // If spawnpoint can spawn, spawn the enemy
                 if(point != null && point.CanSpawnLinear(spawnQueue.Peek()))
                 {
