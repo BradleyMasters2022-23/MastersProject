@@ -82,6 +82,9 @@ public class EnemyTarget : Target
         if(endEncounter == null && controls != null)
         {
             endEncounter = controls.PlayerGameplay.ClearEncounter;
+        }
+        if(endEncounter!= null)
+        {
             endEncounter.performed += DebugKill;
             endEncounter.Enable();
         }
