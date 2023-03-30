@@ -9,6 +9,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 public class ArenaLoader : SegmentLoader
 {
@@ -20,14 +21,15 @@ public class ArenaLoader : SegmentLoader
     /// <summary>
     /// All spawnpoints to use
     /// </summary>
-    private SpawnPoint[] allSpawnpoints;
+    [ShowInInspector, ReadOnly] private SpawnPoint[] allSpawnpoints;
 
 
 
     protected override IEnumerator UniquePoolInitialization()
     {
+        Debug.Log($"Pool init for {gameObject.name}");
         // Get reference to all spawnpoints
-        allSpawnpoints = GetComponentsInChildren<SpawnPoint>(true);
+        allSpawnpoints = GetComponentsInChildren<SpawnPoint>(false);
 
         initialized = true;
         yield return null;

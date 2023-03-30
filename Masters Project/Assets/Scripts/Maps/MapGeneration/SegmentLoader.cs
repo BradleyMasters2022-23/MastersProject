@@ -91,10 +91,10 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
         if (segmentInfo.segmentType == MapSegmentSO.MapSegmentType.Hallway)
             doorManager.SetHallway();
 
-        yield return StartCoroutine(LoadRoom(false));
-
         // Do any unique initialization
         StartCoroutine(UniquePoolInitialization());
+
+        yield return StartCoroutine(LoadRoom(false));
 
         yield return null;
     }
