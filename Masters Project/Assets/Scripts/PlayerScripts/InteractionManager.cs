@@ -38,8 +38,6 @@ public class InteractionManager : MonoBehaviour
             {
                 hit.transform.GetComponent<Interactable>().OnInteract(player);
             }
-        } else {
-            Debug.Log("Nothing to interact with.");
-        }
+        } 
     }
 }
