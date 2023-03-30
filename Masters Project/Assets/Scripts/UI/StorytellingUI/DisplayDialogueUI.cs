@@ -34,6 +34,18 @@ public class DisplayDialogueUI : MonoBehaviour
         click.performed += DisplayDialogue;
     }
 
+    private void OnDisable()
+    {
+        if (click != null)
+            click.performed -= DisplayDialogue;
+    }
+
+    private void OnEnable()
+    {
+        if(click!=null)
+            click.performed += DisplayDialogue;
+    }
+
     public void OpenScreen(Conversation c)
     {
         if (eventSystem == null)

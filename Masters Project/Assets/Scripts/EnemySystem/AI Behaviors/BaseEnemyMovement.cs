@@ -29,7 +29,7 @@ public abstract class BaseEnemyMovement : MonoBehaviour
     protected Transform target;
 
     /// <summary>
-    /// weee im in the base script unity
+    /// last position of target
     /// </summary>
     protected Vector3 lastTargetPos;
 
@@ -148,12 +148,6 @@ public abstract class BaseEnemyMovement : MonoBehaviour
         }
 
         agent.SetDestination(target);
-
-        //if (target != lastTargetPos)
-        //{
-        //    lastTargetPos = target;
-        //    agent.SetDestination(target);
-        //}
 
     }
 
@@ -362,4 +356,10 @@ public abstract class BaseEnemyMovement : MonoBehaviour
             return false;
         }
     }
+
+    //private void OnDisable()
+    //{
+    //    state = MoveState.Standby;
+    //    lastTargetPos = Vector3.zero;
+    //}
 }

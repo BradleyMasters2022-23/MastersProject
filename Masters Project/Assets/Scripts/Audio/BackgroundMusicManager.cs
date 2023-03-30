@@ -14,6 +14,7 @@ using Sirenix.OdinInspector;
 public enum Music
 {
     None, 
+    Hub, 
     Menu, 
     NonCombat, 
     Combat
@@ -26,6 +27,7 @@ public class BackgroundMusicManager : MonoBehaviour
     [SerializeField] private AudioClipSO menuMusic;
     [SerializeField] private AudioClipSO nonCombatMusic;
     [SerializeField] private AudioClipSO combatMusic;
+    [SerializeField] private AudioClipSO hubMusic;
 
     [SerializeField, Required] private AudioSource mainMusicSource;
     [SerializeField, Required] private AudioSource secondaryMusicSource;
@@ -85,6 +87,11 @@ public class BackgroundMusicManager : MonoBehaviour
             case Music.Combat:
                 {
                     chosenMusic = combatMusic;
+                    break;
+                }
+            case Music.Hub:
+                {
+                    chosenMusic = hubMusic;
                     break;
                 }
             default:

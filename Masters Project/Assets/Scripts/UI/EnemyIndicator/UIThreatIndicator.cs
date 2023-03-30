@@ -1,3 +1,11 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - February 8th, 2022
+ * Last Edited - February 8th, 2022 by Ben Schuster
+ * Description - Threat indicator for UI, used for the Radar
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,10 +28,10 @@ public class UIThreatIndicator : MonoBehaviour
 
     private void Update()
     {
-        // Check for null references (killed enemies), remove them
+        // Check for null references or deactivated (killed enemies), remove them
         for (int i = enemyList.Count - 1; i >= 0; i--)
         {
-            if (enemyList[i] == null)
+            if (enemyList[i] == null || !enemyList[i].gameObject.activeInHierarchy)
             {
                 enemyList.RemoveAt(i);
             }
@@ -36,7 +44,8 @@ public class UIThreatIndicator : MonoBehaviour
         // Check list for new enemies. Add new pointers for each new enemy
         foreach (EnemyTarget enemy in enemies)
         {
-            if (!enemyList.Contains(enemy.gameObject))
+            if (!enemyList.Contains(enemy.gameObject)
+                && enemy.gameObject.activeInHierarchy)
             {
                 enemyList.Add(enemy.gameObject);
                 GameObject a = Instantiate(arrow, indicatorDisplay);
