@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CrystalContainer : MonoBehaviour
+public class CrystalInteract : Interactable
 {
     private Crystal crystal;
     private int par;
@@ -11,5 +11,10 @@ public class CrystalContainer : MonoBehaviour
     {
         par = LinearSpawnManager.instance.GetCombatRoomCount();
         crystal = CrystalManager.instance.GenerateCrystal(par);
+    }
+
+    public override void OnInteract(PlayerController player)
+    {
+
     }
 }

@@ -1,7 +1,7 @@
 /* ================================================================================================
  * Author - Soma Hannon
  * Date Created - March 16 2023
- * Last Edited - March 29 2023
+ * Last Edited - March 30 2023
  * Description - defines a crystal
  * ================================================================================================
  */
@@ -12,22 +12,34 @@ using UnityEngine;
 
 public class Crystal : MonoBehaviour
 {
-    public enum CrystalGroup
-    {
-        HEALTH,
-        GUN,
-        GRENADE,
-        MOVEMENT,
-        TIMESTOP,
-        SHIELD
-    }
+    /// <summary>
+    /// Name of crystal. Populated as stats are added.
+    /// </summary>
     public string crystalName;
-    public CrystalGroup group;
 
+    /// <summary>
+    /// List of stats the crystal has.
+    /// </summary>
     public List<IStat> stats = new List<IStat>();
+
+    /// <summary>
+    /// List of the modifiers for the stats in stats.
+    /// </summary>
     public List<int> mods = new List<int>();
+
+    /// <summary>
+    /// current stat to be added. doubles as total # of stats after initialization
+    /// </summary>
     public int statIndex = 0;
+
+    /// <summary>
+    /// current cost of all stats added. should come out equal to par ater initialization.
+    /// </summary>
     public int cost = 0;
+
+    /// <summary>
+    /// number from which to generate stats. the "level" of the crystal
+    /// </summary>
     public int par;
 
     public Crystal(int p)
