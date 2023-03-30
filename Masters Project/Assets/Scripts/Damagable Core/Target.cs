@@ -56,15 +56,20 @@ public abstract class Target : MonoBehaviour
 
     [Header("Core Visual Info")]
 
-    [SerializeField, AssetsOnly] private GameObject _deathVFX;
+    [SerializeField, AssetsOnly] protected GameObject _deathVFX;
 
     [Tooltip("Damage made when this target is damaged")]
     [SerializeField] protected AudioClipSO damagedSound;
     [Tooltip("Damage made when this target is killed")]
     [SerializeField] protected AudioClipSO deathSound;
 
+    [Tooltip("Cooldown between ability for damaged sound effect play")]
+    [SerializeField] private float damagedSoundCooldown = 0.5f;
+
+    private ScaledTimer damagedSoundCooldownTracker;
+
     [Header("Drop Stuff")]
-    [SerializeField] private List<DroppableQuantity> dropList;
+    [SerializeField] protected List<DroppableQuantity> dropList;
 
     /// <summary>
     /// Audiosource for this target
@@ -74,6 +79,7 @@ public abstract class Target : MonoBehaviour
     protected virtual void Awake()
     {
         _healthManager = GetComponent<HealthManager>();
+        damagedSoundCooldownTracker = new ScaledTimer(damagedSoundCooldown, false);
         // If initialization of health manager fails, destroy itself
         if (_healthManager == null || !_healthManager.Init())
         {
@@ -90,7 +96,12 @@ public abstract class Target : MonoBehaviour
     {
         if(_killed) return;
 
-        damagedSound.PlayClip(_center, audioSource);
+        if(damagedSoundCooldownTracker != null && damagedSoundCooldownTracker.TimerDone())
+        {
+            damagedSound.PlayClip(_center, audioSource);
+            damagedSoundCooldownTracker.ResetTimer();
+        }
+        
 
         if (!_killed && _healthManager.Damage(dmg))
         {
@@ -108,18 +119,33 @@ public abstract class Target : MonoBehaviour
     /// </summary>
     protected virtual void KillTarget()
     {
-        deathSound.PlayClip(_center);
+        DeathEffects();
 
-        if (_deathVFX != null)
-            Instantiate(_deathVFX, _center.position, Quaternion.identity);
+        DropAllObjs();
 
+        // Debug.Log($"Entity {gameObject.name} has been killed but does not have its own kill function, destroying self.");
+        DestroyObject();
+    }
+
+    protected virtual void DestroyObject()
+    {
+        Destroy(gameObject);
+    }
+
+    protected void DropAllObjs()
+    {
         foreach (DroppableQuantity obj in dropList)
         {
             SpawnDrops(obj.spawnObject, obj.dropChance, obj.quantityRange);
         }
+    }
 
-        // Debug.Log($"Entity {gameObject.name} has been killed but does not have its own kill function, destroying self.");
-        Destroy(gameObject);
+    protected void DeathEffects()
+    {
+        deathSound.PlayClip(_center);
+
+        if (_deathVFX != null)
+            Instantiate(_deathVFX, _center.position, Quaternion.identity);
     }
 
     /// <summary>

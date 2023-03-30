@@ -224,13 +224,15 @@ public class SpawnTriggerField : MonoBehaviour
                 yield return null;
             }
 
+            // wait for all enemies to be given a chance to fully spawn
+            yield return new WaitForSeconds(3f);
 
             // Check end loop - Repetedly check if all enemies are killed
             while(spawnedEnemies.Count > 0)
             {
                 for(int j = spawnedEnemies.Count-1; j >= 0; j--)
                 {
-                    if (spawnedEnemies[j] == null)
+                    if (spawnedEnemies[j] == null || !spawnedEnemies[j].activeInHierarchy)
                         spawnedEnemies.RemoveAt(j);
                 }
 
