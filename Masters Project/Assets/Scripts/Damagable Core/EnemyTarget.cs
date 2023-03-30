@@ -38,7 +38,7 @@ public class EnemyTarget : Target
 
         _killed = false;
         _healthManager.ResetHealth();
-        gameObject.SetActive(true);
+        // gameObject.SetActive(true);
         // TODO - get data from difficulty scaler
     }
     #endregion

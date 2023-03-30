@@ -180,8 +180,8 @@ public class SpawnPoint : MonoBehaviour
     /// </summary>
     private void ResetSpawnPoint()
     {
-        spawnDelayTimer.ResetTimer();
-        spawnOverrideTimer.ResetTimer();
+        spawnDelayTimer?.ResetTimer();
+        spawnOverrideTimer?.ResetTimer();
     }
 
     /// <summary>
