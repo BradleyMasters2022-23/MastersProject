@@ -7703,6 +7703,66 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 725035562875201168, guid: c0e44efdd34075443878938c7e894f9e, type: 3}
   m_PrefabInstance: {fileID: 1242856037}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1399257810
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1399257811}
+  - component: {fileID: 1399257813}
+  - component: {fileID: 1399257812}
+  m_Layer: 12
+  m_Name: TooltipField
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1399257811
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399257810}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3016041561778178599}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &1399257812
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399257810}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 4.681975
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1399257813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399257810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 330488e9f58e0fc409fb26f919a84707, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltip: {fileID: 11400000, guid: 69f45cc6a25ee88458c3cf9c1d96f2b3, type: 2}
+  interact: {fileID: 7112942112689743606}
 --- !u!1001 &1434302113
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12080,6 +12140,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dialogue Tooltip
       objectReference: {fileID: 0}
+    - target: {fileID: 1369931989463785019, guid: b021fa41c5c08db4e841662402059d5f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1369931990001946895, guid: b021fa41c5c08db4e841662402059d5f, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -15215,6 +15279,7 @@ Transform:
   - {fileID: 998496904088938194}
   - {fileID: 7112942112689743605}
   - {fileID: 5596826649801671258}
+  - {fileID: 1399257811}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 43.925, z: 0}

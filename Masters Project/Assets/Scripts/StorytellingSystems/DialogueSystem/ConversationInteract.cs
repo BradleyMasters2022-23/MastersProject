@@ -10,22 +10,35 @@ public class ConversationInteract : Interactable
     // when a conversation is available, screen should blink; eventually, screen & contact both blink
     private DisplayDialogueUI ui;
 
-    private MeshRenderer flashRenderer;
+    [SerializeField] private MeshRenderer flashRenderer;
     private Color original;
     private ScaledTimer timer;
     public float flashTime;
+
+    // Delegate for any special functions to use
+    // used by tooltip system to close tooltip when its used
+    public delegate void OnInteraction();
+    public OnInteraction onStartCall;
 
     private void Start()
     {
         ui = FindObjectOfType<DisplayDialogueUI>(true);
         calls = CallManager.instance;
-        flashRenderer = gameObject.GetComponent<MeshRenderer>();
-        original = flashRenderer.material.color;
+        if(flashRenderer == null)
+        {
+            flashRenderer = gameObject.GetComponent<MeshRenderer>();
+        }
+        if(flashRenderer != null)
+            original = flashRenderer.material.color;
+
         timer = new ScaledTimer(flashTime);
     }
 
     public void Update()
     {
+        if (flashRenderer == null)
+            return;
+
         if(calls.HasAvailable() && timer.TimerDone())
         {
             if(flashRenderer.material.color == Color.red)
@@ -63,6 +76,7 @@ public class ConversationInteract : Interactable
             ui.OpenScreen(calls.GetDefault());
         }
 
-        
+        // call any subscribed functions to the caller
+        onStartCall?.Invoke();
     }
 }
