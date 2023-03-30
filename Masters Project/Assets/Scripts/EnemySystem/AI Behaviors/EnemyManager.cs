@@ -167,6 +167,8 @@ public class EnemyManager : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>();
 
+        if (agent != null)
+            agent.enabled = true;
 
         // disable move behaviors
         if (chaseBehavior != null)
