@@ -7,9 +7,10 @@
  * ================================================================================================
  */
 using UnityEngine;
+using System.Collections.Generic;
 using UnityEngine.InputSystem;
-using static Cinemachine.DocumentationSortingAttribute;
 using UnityEngine.Rendering;
+using UnityEngine.Events;
 
 /// <summary>
 /// Manages player-controlled time abilities
@@ -126,8 +127,6 @@ public class TimeManager : MonoBehaviour
     [Tooltip("When gauge is fully depleted, how long before player can use this gauge again?")]
     [SerializeField, Space(3)] private UpgradableFloat emptiedDelay;
 
-    
-
     /// <summary>
     /// Current amount of slow gauge
     /// </summary>
@@ -162,17 +161,41 @@ public class TimeManager : MonoBehaviour
 
     #endregion
 
+    #region Time System Observer
+
+    private List<TimeObserver> timeChangeObservers;
+
+    private bool stoppedLastFrame;
+
+    #endregion
+
+    public static TimeManager instance;
+
     /// <summary>
     /// Initialize controls and starting values
     /// </summary>
     private void Awake()
     {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+            return;
+        }
+
+
         // Initialize controls
         controller = new GameControls();
         slowInput = controller.PlayerGameplay.SlowTime;
         slowInput.started += ToggleSlow;
         slowInput.canceled += ToggleSlow;
         slowInput.Enable();
+
+        timeChangeObservers = new List<TimeObserver>();
+        stoppedLastFrame = false;
 
         // Initialize variables
         worldTimeScale = NormalTime;
@@ -208,6 +231,17 @@ public class TimeManager : MonoBehaviour
     private void FixedUpdate()
     {
         StateFunctionCall();
+
+        if(stoppedLastFrame && !TimeStopped)
+        {
+            OnTimeResume();
+        }
+        else if(!stoppedLastFrame && TimeStopped)
+        {
+            OnTimeStop();
+        }
+
+        stoppedLastFrame = TimeStopped;
     }
 
     #region State Management
@@ -428,6 +462,63 @@ public class TimeManager : MonoBehaviour
             currSlowGauge += replenishAmount;
         }
     }
+
+
+    #region Observer Stuff
+
+    private void OnTimeStop()
+    {
+        TimeObserver[] observers = timeChangeObservers.ToArray();
+
+        for (int i = 0; i < observers.Length; i++)
+        {
+            // Make sure observer still exists. If not, remove it
+            if (observers[i] != null)
+            {
+                observers[i].OnStop();
+            }
+            else
+            {
+                timeChangeObservers.RemoveAt(i);
+            }
+        }
+    }
+    private void OnTimeResume()
+    {
+        TimeObserver[] observers = timeChangeObservers.ToArray();
+
+        for (int i = 0; i < observers.Length; i++)
+        {
+            // Make sure observer still exists. If not, remove it
+            if (observers[i] != null)
+            {
+                observers[i].OnResume();
+            }
+            else
+            {
+                timeChangeObservers.RemoveAt(i);
+            }
+        }
+    }
+
+    public void Subscribe(TimeObserver newSub)
+    {
+        if (!timeChangeObservers.Contains(newSub))
+            timeChangeObservers.Add(newSub);
+    }
+
+    public void UnSubscribe(TimeObserver newSub)
+    {
+        if (timeChangeObservers.Contains(newSub))
+            timeChangeObservers.Remove(newSub);
+    }
+
+    #endregion
+
+
+
+
+
     public void ChipRefillGauge()
     {
         RefillGauge();
@@ -489,6 +580,8 @@ public class TimeManager : MonoBehaviour
         replenishDelay.ChangeVal(Mathf.Ceil(temp));
         replenishDelayTimer.ResetTimer(replenishDelay.Current);
     }
+
+    
 
     /// <summary>
     /// Toggle inputs if game pauses
