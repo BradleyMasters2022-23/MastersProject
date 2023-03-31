@@ -9,7 +9,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 
 public class Projectile : RangeAttack
 {
@@ -18,17 +17,13 @@ public class Projectile : RangeAttack
     /// <summary>
     /// Rigidbody of this object
     /// </summary>
-    private Rigidbody rb;
+    protected Rigidbody rb;
 
     /// <summary>
     /// Target velocity for this object
     /// </summary>
-    private Vector3 targetVelocity;
+    protected Vector3 targetVelocity;
 
-    /// <summary>
-    /// The position of this object last frame
-    /// </summary>
-    private Vector3 lastPos;
 
     [Tooltip("What spawns when this his something")]
     [SerializeField] public GameObject onHitEffect;
@@ -55,6 +50,11 @@ public class Projectile : RangeAttack
     [Tooltip("The VFX that plays when this bullet despawns due to distance limit")]
     [SerializeField] private GameObject fadeVFX;
 
+
+    [SerializeField] protected int maxHits = 1;
+
+    [SerializeField] protected bool affectedByTimestop;
+
     private float originalVisualScale;
 
     /// <summary>
@@ -72,8 +72,25 @@ public class Projectile : RangeAttack
     /// </summary>
     private Vector3 hitRotatation;
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        if (bulletVisual != null)
+            originalVisualScale = bulletVisual.localScale.x;
+
+        rb = GetComponent<Rigidbody>();
+        source = gameObject.AddComponent<AudioSource>();
+    }
+
     // Update is called once per frame
-    void FixedUpdate()
+    protected virtual void FixedUpdate()
+    {
+        Fly();
+        CheckLife();
+    }
+
+    protected virtual void Fly()
     {
         if (!active)
             return;
@@ -81,54 +98,39 @@ public class Projectile : RangeAttack
         //Debug.DrawLine(lastPos, transform.position, Color.red, 1f);
         //Debug.Log(Vector3.Distance(transform.position, lastPos));
 
-        Vector3 futurePos = transform.position + Vector3.forward * rb.velocity.magnitude * TimeManager.WorldDeltaTime;
-
         float dist = targetVelocity.magnitude * TimeManager.WorldDeltaTime;
 
         // adjust distance to account for end case
-        if(distanceCovered + dist >= range)
+        if (distanceCovered + dist >= range)
         {
             dist = range - distanceCovered;
         }
 
-        // Check if it passed target
+        // Check for hitting a wall or target
         RaycastHit target;
         if (Physics.SphereCast(transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, dist, targetLayers))
         {
-            hitPoint = target.point;
-
             hitRotatation = target.normal;
 
-            TriggerTarget(target.collider);
+            Hit(target.point);
+            RegisterAttackHit(target.collider.transform);
+        }
+        else if(Physics.Raycast(transform.position, transform.forward, out target, dist, groundLayer))
+        {
+            hitRotatation = target.normal;
+
+            Hit(target.point);
+            End();
         }
         else
         {
-            // Check if it directly hit a wall
-            if (Physics.Raycast(transform.position, transform.forward, out target, dist, groundLayer))
-            {
-                hitPoint = target.point;
-                hitRotatation = target.normal;
-                TriggerTarget(target.collider);
-            }
-            else
-            {
-                hitPoint = transform.position;
-                hitRotatation = -transform.forward;
-            }
+            hitPoint = transform.position;
+            hitRotatation = -transform.forward;
         }
-        
-        // Check if projectile reached its max range
-        distanceCovered += targetVelocity.magnitude * TimeManager.WorldDeltaTime;
-        if(distanceCovered >= range)
-        {
-            if(fadeVFX != null)
-            {
-                Instantiate(fadeVFX, transform.position, transform.rotation);
-            }
 
-            End();
-        }
-        else if(scaleOverDistance != null && bulletVisual != null)
+
+        // Update visuals for flying
+        if (scaleOverDistance != null && bulletVisual != null)
         {
             float newScale = scaleOverDistance.Evaluate(distanceCovered / range) * originalVisualScale;
 
@@ -136,24 +138,50 @@ public class Projectile : RangeAttack
         }
 
         // Update velocity with world timescale
-        rb.velocity = targetVelocity * TimeManager.WorldTimeScale;
-
-        lastPos = transform.position;
+        if (affectedByTimestop)
+            rb.velocity = targetVelocity * TimeManager.WorldTimeScale;
+        else
+            rb.velocity = targetVelocity;
     }
 
-    protected override void Hit()
+    protected virtual void CheckLife()
+    {
+        distanceCovered += targetVelocity.magnitude * TimeManager.WorldDeltaTime;
+
+        if (distanceCovered >= range)
+        {
+            if (fadeVFX != null)
+            {
+                Instantiate(fadeVFX, transform.position, transform.rotation);
+            }
+
+            End();
+        }
+    }
+
+    protected override void Hit(Vector3 impactPoint)
     {
         // Spawn in whatever its told to, if able
         if(onHitEffect != null)
         {
-            GameObject t = Instantiate(onHitEffect, hitPoint, Quaternion.identity);
+            GameObject t = Instantiate(onHitEffect, impactPoint, Quaternion.identity);
             t.transform.LookAt(t.transform.position + hitRotatation);
         }
 
         bulletHit.PlayClip(transform);
+    }
 
-        // End this projectile attack
-        End();
+    /// <summary>
+    /// Register an attack hit, perform any checks based on dealing damage
+    /// </summary>
+    /// <param name="target"></param>
+    protected void RegisterAttackHit(Transform target)
+    {
+        bool dealtDamage = DealDamage(target);
+
+        // if damage was dealt and max targets reached, end projectile
+        if (dealtDamage && hitTargets.Count >= maxHits)
+            End();
     }
 
     /// <summary>
@@ -161,10 +189,14 @@ public class Projectile : RangeAttack
     /// </summary>
     public override void Activate()
     {
-        rb = GetComponent<Rigidbody>();
-
         if (bulletVisual != null)
             bulletVisual.localScale = new Vector3(originalVisualScale, originalVisualScale, originalVisualScale);
+
+        // clear hit list on activate
+        if(hitTargets != null)
+            hitTargets.Clear();
+        else
+            hitTargets = new List<Transform>();
 
         targetVelocity = transform.forward * speed;
         active = true;
@@ -191,15 +223,4 @@ public class Projectile : RangeAttack
     {
         return shotByPlayer;
     }
-
-    protected override void Awake()
-    {
-        lastPos = transform.position;
-
-        if(bulletVisual != null)
-            originalVisualScale = bulletVisual.localScale.x;
-
-        source = gameObject.AddComponent<AudioSource>();
-    }
-
 }

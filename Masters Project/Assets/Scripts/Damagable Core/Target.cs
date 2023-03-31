@@ -148,6 +148,11 @@ public abstract class Target : MonoBehaviour
             Instantiate(_deathVFX, _center.position, Quaternion.identity);
     }
 
+    public bool Killed()
+    {
+        return _killed;
+    }
+
     /// <summary>
     /// Determine if drops should drop, and spawn them
     /// </summary>

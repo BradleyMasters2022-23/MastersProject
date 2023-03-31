@@ -129,7 +129,6 @@ GameObject:
   - component: {fileID: 6670382296444136332}
   - component: {fileID: 1342889785973055828}
   - component: {fileID: 7441908486783889822}
-  - component: {fileID: -1564569588119282049}
   - component: {fileID: 1918687821214868923}
   m_Layer: 9
   m_Name: Projectile_Enemy_Accelerate
@@ -233,22 +232,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &-1564569588119282049
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4730330725648419445}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60dd6caaed07a0346a0b83239dafed18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startSpeed: 150
-  affectedByTimestop: 1
-  acceleratingRate: 0.2
-  targetEndVelocity: 0
 --- !u!114 &1918687821214868923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -264,7 +247,7 @@ MonoBehaviour:
   damage: 8
   knockback: 0
   addativeKnockback: 0
-  speed: 0
+  speed: 20
   range: 300
   shotByPlayer: 0
   onHitEffect: {fileID: 293939513845853792, guid: e5a26414f710b8f4b870ba95ee78b7d5, type: 3}
@@ -274,9 +257,17 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 2057
-  enemyShoot: []
-  enemyHit: []
-  startSpeed: 10
+  bulletShot: {fileID: 0}
+  bulletHit: {fileID: 0}
+  bulletVisual: {fileID: 0}
+  scaleOverDistance:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  fadeVFX: {fileID: 0}
+  maxHits: 1
   affectedByTimestop: 1
   acceleratingRate: 15
   targetEndVelocity: 250

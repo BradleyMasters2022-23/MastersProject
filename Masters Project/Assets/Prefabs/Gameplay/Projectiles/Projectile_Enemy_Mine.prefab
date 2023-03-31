@@ -339,9 +339,17 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 2185
-  enemyShoot: []
-  enemyHit: []
-  startSpeed: 15
+  bulletShot: {fileID: 0}
+  bulletHit: {fileID: 0}
+  bulletVisual: {fileID: 0}
+  scaleOverDistance:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  fadeVFX: {fileID: 0}
+  maxHits: 1
   affectedByTimestop: 1
   acceleratingRate: 0.4
   targetEndVelocity: 0
@@ -383,6 +391,7 @@ MonoBehaviour:
   _deathVFX: {fileID: 0}
   damagedSound: {fileID: 0}
   deathSound: {fileID: 0}
+  damagedSoundCooldown: 0.5
   dropList:
   - spawnObject: {fileID: 9190282065216066553, guid: 9ce42a2ac67043d44bca09b82a8ef5fd, type: 3}
     quantityRange: {x: 1, y: 1}
