@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2a8b2eab9080d4f4fb7464aa74b3423d, type: 2}
+  - {fileID: 2100000, guid: fbdc6de35e95f1242b622c35ba947536, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -171,7 +171,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2a8b2eab9080d4f4fb7464aa74b3423d, type: 2}
+  - {fileID: 2100000, guid: cb1ba3a6ce303154ea238941d3ef0a6a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -206,12 +206,12 @@ GameObject:
   - component: {fileID: 6670382296444136332}
   - component: {fileID: 1342889785973055828}
   - component: {fileID: 7441908486783889822}
-  - component: {fileID: 1918687821214868923}
   - component: {fileID: 2294109497907925019}
   - component: {fileID: 6433262106479852011}
+  - component: {fileID: 3056943052655479381}
   m_Layer: 9
   m_Name: Projectile_Enemy_Mine
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -225,7 +225,7 @@ Transform:
   m_GameObject: {fileID: 4730330725648419445}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -26.255268, y: 1.07, z: 0.82831264}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8530316222556463482}
@@ -314,46 +314,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &1918687821214868923
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4730330725648419445}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1ef9a8a007c9c93488ebdb35b7868fbf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 15
-  knockback: 0
-  addativeKnockback: 0
-  speed: 75
-  range: 300
-  shotByPlayer: 0
-  onHitEffect: {fileID: 8310898044211945277, guid: 011a9baa743b55648b354e6aaf58a345, type: 3}
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 32960
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 2185
-  bulletShot: {fileID: 0}
-  bulletHit: {fileID: 0}
-  bulletVisual: {fileID: 0}
-  scaleOverDistance:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  fadeVFX: {fileID: 0}
-  maxHits: 1
-  affectedByTimestop: 1
-  acceleratingRate: 0.4
-  targetEndVelocity: 0
-  projectileLifetime: 15
 --- !u!114 &2294109497907925019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -396,6 +356,65 @@ MonoBehaviour:
   - spawnObject: {fileID: 9190282065216066553, guid: 9ce42a2ac67043d44bca09b82a8ef5fd, type: 3}
     quantityRange: {x: 1, y: 1}
     dropChance: 100
+--- !u!114 &3056943052655479381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4730330725648419445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49cb75506c243e34cb24c89d4a678e93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 0
+  knockback: 0
+  addativeKnockback: 0
+  speed: 40
+  range: 30
+  shotByPlayer: 0
+  onHitEffect: {fileID: 0}
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 32960
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 2185
+  bulletShot: {fileID: 0}
+  bulletHit: {fileID: 0}
+  bulletVisual: {fileID: 3194122223138261050}
+  scaleOverDistance:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 5
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  fadeVFX: {fileID: 0}
+  maxHits: 1
+  affectedByTimestop: 1
+  acceleratingRate: 0.1
+  targetEndVelocity: 0.05
+  projectileLifetime: 10
+  targetManager: {fileID: 6433262106479852011}
 --- !u!1 &5105302778671605131
 GameObject:
   m_ObjectHideFlags: 0
@@ -457,7 +476,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2a8b2eab9080d4f4fb7464aa74b3423d, type: 2}
+  - {fileID: 2100000, guid: cb1ba3a6ce303154ea238941d3ef0a6a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -540,7 +559,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2a8b2eab9080d4f4fb7464aa74b3423d, type: 2}
+  - {fileID: 2100000, guid: cb1ba3a6ce303154ea238941d3ef0a6a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

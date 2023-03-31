@@ -63,7 +63,6 @@ public class ProjectileAccelerate : Projectile
             else
                 flyTime += Time.deltaTime;
 
-
             targetVelocity = transform.forward * speed * Mathf.Pow(acceleratingRate, flyTime);
         }
         else if (targetVelocity.magnitude != targetEndVelocity)

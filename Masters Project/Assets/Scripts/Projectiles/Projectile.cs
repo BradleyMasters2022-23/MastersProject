@@ -175,7 +175,7 @@ public class Projectile : RangeAttack
     /// Register an attack hit, perform any checks based on dealing damage
     /// </summary>
     /// <param name="target"></param>
-    protected void RegisterAttackHit(Transform target)
+    protected virtual void RegisterAttackHit(Transform target)
     {
         bool dealtDamage = DealDamage(target);
 
