@@ -50,6 +50,11 @@ public class FragmentInteract : Interactable
         if(fragment.found)
         {
             fragment = AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment();
+            if(fragment == null)
+            {
+                DestroyFrag();
+                return;
+            }
         }
 
         ui.OpenScreen();

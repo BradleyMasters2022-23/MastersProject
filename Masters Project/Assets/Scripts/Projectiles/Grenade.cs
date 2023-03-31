@@ -1,8 +1,14 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - January 30th, 2023
+ * Last Edited - January 30th, 2023 by Ben Schuster
+ * Description - Manages an exploding greande
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Cinemachine.DocumentationSortingAttribute;
-using UnityEngine.Rendering;
 
 public class Grenade : Throwable
 {
@@ -116,12 +122,12 @@ public class Grenade : Throwable
     }
     private void AdjustProjectileForTimestop()
     {
-        if (TimeManager.WorldTimeScale > timestopFreezeThreshold && rb.isKinematic)
+        if (!TimeManager.TimeStopped && rb.isKinematic)
         {
             rb.isKinematic = false;
             rb.velocity = savedDir * savedMag;
         }
-        else if(TimeManager.WorldTimeScale <= timestopFreezeThreshold & !rb.isKinematic)
+        else if(TimeManager.TimeStopped && !rb.isKinematic)
         {
             savedDir = rb.velocity.normalized;
             savedMag = rb.velocity.magnitude;

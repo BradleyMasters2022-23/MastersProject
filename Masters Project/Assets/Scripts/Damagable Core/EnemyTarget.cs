@@ -38,7 +38,7 @@ public class EnemyTarget : Target
 
         _killed = false;
         _healthManager.ResetHealth();
-        gameObject.SetActive(true);
+        // gameObject.SetActive(true);
         // TODO - get data from difficulty scaler
     }
     #endregion
@@ -78,17 +78,25 @@ public class EnemyTarget : Target
         if(controls == null)
         {
             controls = GameManager.controls;
+        }
+        if(endEncounter == null && controls != null)
+        {
             endEncounter = controls.PlayerGameplay.ClearEncounter;
         }
+        if(endEncounter!= null)
+        {
+            endEncounter.performed += DebugKill;
+            endEncounter.Enable();
+        }
         
-        endEncounter.performed += DebugKill;
-        endEncounter.Enable();
+        
     }
 
     private void OnDisable()
     {
         // remove cheat to prevent bugs
-        endEncounter.performed -= DebugKill;
+        if(endEncounter != null)
+            endEncounter.performed -= DebugKill;
     }
 
     /// <summary>

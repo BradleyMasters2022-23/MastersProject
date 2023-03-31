@@ -59,6 +59,8 @@ public class TimeManager : MonoBehaviour
     [SerializeField, Range(0, 1)] private float slowestTime;
     [Tooltip("Time it takes to switch between the two time states")]
     [SerializeField, Range(0.01f, 1)] private float slowTransitionTime;
+    [Tooltip("Time it takes to switch between the two time states")]
+    [SerializeField, Range(0f, 0.99f)] private float timeStoppedThreshold;
     [Tooltip("Sound if player stops time")]
     [SerializeField] private AudioClipSO stopTime;
     [Tooltip("Sound if player starts time")]
@@ -76,6 +78,11 @@ public class TimeManager : MonoBehaviour
     private static float worldTimeScale;
 
     /// <summary>
+    /// Threshold for timescale to be considered stopped time. Used for objects that otherwise struggle to adapt for other scales. 
+    /// </summary>
+    private static float stoppedThreshold = 0.1f;
+
+    /// <summary>
     /// Current time scale the player controls
     /// </summary>
     public static float WorldTimeScale
@@ -89,6 +96,11 @@ public class TimeManager : MonoBehaviour
     public static float WorldDeltaTime
     {
         get { return worldTimeScale * Time.deltaTime; }
+    }
+
+    public static bool TimeStopped
+    {
+        get { return worldTimeScale <= stoppedThreshold;  }
     }
 
     /// <summary>
@@ -113,6 +125,8 @@ public class TimeManager : MonoBehaviour
 
     [Tooltip("When gauge is fully depleted, how long before player can use this gauge again?")]
     [SerializeField, Space(3)] private UpgradableFloat emptiedDelay;
+
+    
 
     /// <summary>
     /// Current amount of slow gauge
@@ -162,6 +176,7 @@ public class TimeManager : MonoBehaviour
 
         // Initialize variables
         worldTimeScale = NormalTime;
+        stoppedThreshold = timeStoppedThreshold;
 
         slowDuration.Initialize();
         replenishTime.Initialize();
