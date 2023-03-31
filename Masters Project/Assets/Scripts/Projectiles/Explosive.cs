@@ -137,21 +137,21 @@ public class Explosive : MonoBehaviour
             damagedTargets.Add(target);
 
 
-            // Test for LOS first
-            if(requireLoS)
-            {
-                Ray testRay = new Ray(transform.position, target.transform.position - transform.position);
+            //// Test for LOS first
+            //if(requireLoS)
+            //{
+            //    Ray testRay = new Ray(transform.position, target.transform.position - transform.position);
                 
-                RaycastHit col;
-                if(Physics.Raycast(testRay, out col, Mathf.Infinity, lineOfSightLayers))
-                {
-                    Debug.DrawLine(transform.position, transform.position + testRay.direction * col.distance, Color.red, 1f);
+            //    RaycastHit col;
+            //    if(Physics.Raycast(testRay, out col, Mathf.Infinity, lineOfSightLayers))
+            //    {
+            //        Debug.DrawLine(transform.position, transform.position + testRay.direction * col.distance, Color.red, 1f);
 
-                    Target hitTar = col.rigidbody.GetComponent<Target>();
-                    if (hitTar == null || hitTar != target)
-                        return;
-                }
-            }
+            //        Target hitTar = col.rigidbody.GetComponent<Target>();
+            //        if (hitTar == null || hitTar != target)
+            //            return;
+            //    }
+            //}
 
             if (target.CompareTag("Player"))
                 target.RegisterEffect(playerDamage);

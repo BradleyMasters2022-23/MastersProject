@@ -62,7 +62,7 @@ public abstract class Attack : MonoBehaviour
 
 
         // Check if the target can be damaged
-        if (target != null && !hitTargets.Contains(target.transform.root) && !target.Killed())
+        if (target != null && !hitTargets.Contains(target.transform) && !target.Killed())
         {
             // Damage target, prevent multi damaging
             target.RegisterEffect(damage);

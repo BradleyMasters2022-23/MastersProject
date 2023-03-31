@@ -46,6 +46,9 @@ public abstract class Target : MonoBehaviour
     /// </summary>
     protected HealthManager _healthManager;
 
+    [Tooltip("If enabled, this target can not take damage until the shield is destroyed")]
+    [SerializeField] private HealthManager invincibilityShield;
+
     // The manger controlling buffs and debuffs for this target
     //private EffectManager _effectManager;
 
@@ -95,6 +98,10 @@ public abstract class Target : MonoBehaviour
     public virtual void RegisterEffect(float dmg)
     {
         if(_killed) return;
+
+        // if a shield is enabled, dont take damage
+        if (invincibilityShield != null)
+            return;
 
         if(damagedSoundCooldownTracker != null && damagedSoundCooldownTracker.TimerDone())
         {

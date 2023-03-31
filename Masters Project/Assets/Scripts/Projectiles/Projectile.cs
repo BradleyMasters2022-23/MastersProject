@@ -179,6 +179,8 @@ public class Projectile : RangeAttack
     {
         bool dealtDamage = DealDamage(target);
 
+        Debug.Log($"Attempted to register attack against {target} | Succeeded : {dealtDamage}");
+
         // if damage was dealt and max targets reached, end projectile
         if (dealtDamage && hitTargets.Count >= maxHits)
             End();
