@@ -63,6 +63,11 @@ public abstract class Target : MonoBehaviour
     [Tooltip("Damage made when this target is killed")]
     [SerializeField] protected AudioClipSO deathSound;
 
+    [Tooltip("Cooldown between ability for damaged sound effect play")]
+    [SerializeField] private float damagedSoundCooldown = 0.5f;
+
+    private ScaledTimer damagedSoundCooldownTracker;
+
     [Header("Drop Stuff")]
     [SerializeField] protected List<DroppableQuantity> dropList;
 
@@ -74,6 +79,7 @@ public abstract class Target : MonoBehaviour
     protected virtual void Awake()
     {
         _healthManager = GetComponent<HealthManager>();
+        damagedSoundCooldownTracker = new ScaledTimer(damagedSoundCooldown, false);
         // If initialization of health manager fails, destroy itself
         if (_healthManager == null || !_healthManager.Init())
         {
@@ -90,7 +96,12 @@ public abstract class Target : MonoBehaviour
     {
         if(_killed) return;
 
-        damagedSound.PlayClip(_center, audioSource);
+        if(damagedSoundCooldownTracker != null && damagedSoundCooldownTracker.TimerDone())
+        {
+            damagedSound.PlayClip(_center, audioSource);
+            damagedSoundCooldownTracker.ResetTimer();
+        }
+        
 
         if (!_killed && _healthManager.Damage(dmg))
         {

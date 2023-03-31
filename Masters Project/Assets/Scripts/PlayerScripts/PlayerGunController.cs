@@ -2,7 +2,7 @@
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 23th, 2022
- * Last Edited - October 23th, 2022 by Ben Schuster
+ * Last Edited - March 30th, 2022 by Ben Schuster
  * Description - Manage the shooting for the player
  * ================================================================================================
  */
@@ -84,18 +84,15 @@ public class PlayerGunController : MonoBehaviour
     [Tooltip("Default target")]
     [SerializeField] private Transform defaultTarget;
     [Tooltip("Layers for raycast to ignore")]
-    [SerializeField] LayerMask layersToIgnore;
+    [SerializeField] LayerMask hitLayers;
 
+    [SerializeField] private Animator animator;
 
     [Header("Enhanced Bullets")]
     [SerializeField] private int enhancedBulletsPerShot;
     [SerializeField] private GameObject enhancedBulletPrefab;
     [SerializeField] private float enhancedSpeedMultiplier;
-    [SerializeField, Range(0, 1f)] private float enhancedShotThreshold;
-    public float EnhancedShotThreshold
-    {
-        get { return enhancedShotThreshold; }
-    }
+
     /// <summary>
     /// Whether this gun is shooting
     /// </summary>
@@ -156,13 +153,13 @@ public class PlayerGunController : MonoBehaviour
     {
         // Get reference to camera shoot, initialize
         shootCam = Camera.main.GetComponent<CameraShoot>();
-        shootCam.Initialize(defaultTarget, layersToIgnore, minAimRange);
+        shootCam.Initialize(defaultTarget, hitLayers, minAimRange);
     }
 
     private void FixedUpdate()
     {
         // Tell the accuracy to recover over time while not firing
-        if(!firing && currBloom != baseBloom && bloomRecoveryCDTracker.TimerDone() && TimeManager.WorldTimeScale > enhancedShotThreshold)
+        if(!firing && currBloom != baseBloom && bloomRecoveryCDTracker.TimerDone() && !TimeManager.TimeStopped)
         {
             float newAccuracy = currBloom - bloomRecoveryRate * Time.deltaTime;
             if(newAccuracy < baseBloom)
@@ -194,11 +191,16 @@ public class PlayerGunController : MonoBehaviour
     {
         if(muzzleflashVFX != null)
         {
-            Instantiate(muzzleflashVFX, shootPoint.position, shootPoint.transform.rotation);
+            Instantiate(muzzleflashVFX, shootPoint.position, shootPoint.rotation);
         }
 
+        if(animator != null)
+        {
+            animator.SetTrigger("Fire");
+        }
 
-        if(TimeManager.WorldTimeScale > enhancedShotThreshold)
+        // If time is not stopped, fire normal bullets
+        if(!TimeManager.TimeStopped)
         {
             for (int i = 0; i < bulletsPerShot; i++)
             {
@@ -223,6 +225,7 @@ public class PlayerGunController : MonoBehaviour
                 currBloom = Mathf.Clamp(currBloom + bloomPerShot, baseBloom, maxBloom);
             }
         }
+        // Else if time is stopped, fire enhanced bullets
         else
         {
             for (int i = 0; i < enhancedBulletsPerShot; i++)
@@ -313,5 +316,10 @@ public class PlayerGunController : MonoBehaviour
     public float GetBaseDamage()
     {
         return shotPrefab.GetComponent<Projectile>().GetDamage();
+    }
+
+    public float GetMaxRange()
+    {
+        return maxRange;
     }
 }

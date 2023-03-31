@@ -16,7 +16,7 @@ public class EnhancedShot : Projectile
         base.Activate();
 
         lineRenderer.positionCount = 2;
-        lineRenderer.SetPosition(0, transform.position);
+        lineRenderer.SetPosition(0, lineRenderer.transform.position);
 
         RaycastHit target;
         if (Physics.SphereCast(transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, range, targetLayers))
@@ -40,7 +40,7 @@ public class EnhancedShot : Projectile
     private void Update()
     {
         if (TimeManager.WorldTimeScale == 0 && lineRenderer.GetPosition(0) != transform.position)
-            lineRenderer.SetPosition(0, transform.position);
+            lineRenderer.SetPosition(0, lineRenderer.transform.position);
 
         if(lineRenderer.enabled && lineLifeTracker.TimerDone())
         {

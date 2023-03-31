@@ -6,6 +6,7 @@
  * Description - Manage individual spawnpoints
  * ================================================================================================
  */
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,7 +35,7 @@ public class SpawnPoint : MonoBehaviour
     /// <summary>
     /// Enemy for this spawn point to spawn
     /// </summary>
-    private EnemySO enemyStorage;
+    [ShowInInspector, ReadOnly] private EnemySO enemyStorage;
     /// <summary>
     /// Whether or not the spawn point is overlapped by a living enemy
     /// </summary>
@@ -180,8 +181,8 @@ public class SpawnPoint : MonoBehaviour
     /// </summary>
     private void ResetSpawnPoint()
     {
-        spawnDelayTimer.ResetTimer();
-        spawnOverrideTimer.ResetTimer();
+        spawnDelayTimer?.ResetTimer();
+        spawnOverrideTimer?.ResetTimer();
     }
 
     /// <summary>

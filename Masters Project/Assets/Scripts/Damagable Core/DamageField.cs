@@ -72,7 +72,7 @@ public class DamageField : MonoBehaviour
                     else if (entity.Key.Team == Team.PLAYER)
                     {
                         entity.Key.RegisterEffect(playerTickDamage);
-                        Debug.Log("Registering player damage tick");
+                        //Debug.Log("Registering player damage tick");
                     }
                 }
             }
