@@ -362,6 +362,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _center: {fileID: 8361226403309176128}
+  immuneToKnockback: 0
+  maxKnockback: 14
   _team: 2
   _targetThreat: 25
   _unkillable: 0
@@ -373,6 +375,11 @@ MonoBehaviour:
   - spawnObject: {fileID: 3071240432754548792, guid: 2001e4aa90ac76a47866171fcaafdf7f, type: 3}
     quantityRange: {x: 4, y: 5}
     dropChance: 70
+  minKnockbackDuration: 0.5
+  groundDist: 2
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 9
 --- !u!114 &7659091947077932698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -390,6 +397,7 @@ MonoBehaviour:
   _damagedInvulnerabilityDuration: 0
   _gateHealthbarDamage: 0
   _gateHealthbarHealing: 0
+  _gatedHealthInvulnerability: 0
   _godMode: 0
 --- !u!114 &7034608366477982382
 MonoBehaviour:

@@ -66,6 +66,16 @@ public class PlayerTarget : Target
         _healthManager.Damage(cheatDamage);
     }
 
+    public override void Knockback(float force, float verticalForce, Vector3 origin)
+    {
+        if (immuneToKnockback)
+            return;
+
+        // kick the player up a tiny bit to reduce any ground drag
+        transform.position += Vector3.up * 0.5f;
+        base.Knockback(force, verticalForce, origin);
+    }
+
     private void OnDisable()
     {
         godCheat.performed -= ToggleGodmode;

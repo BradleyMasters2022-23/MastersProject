@@ -172,7 +172,7 @@ public class RepositionBehavior : BaseEnemyMovement
         return complete;
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
         complete = true;
 

@@ -35,12 +35,20 @@ public abstract class Target : MonoBehaviour
 
     [Tooltip("The center point of this entity, used for targeting and spawning")]
     [SerializeField] protected Transform _center;
+    [Tooltip("Whether or not this target is immune to knockback")]
+    [SerializeField] protected bool immuneToKnockback = true;
+    [SerializeField, ShowIf("@this.immuneToKnockback == false")] protected float maxKnockback;
     [Tooltip("The team this target is a part of")]
     [SerializeField] protected Team _team = Team.UNASSIGNED;
     [Tooltip("The threat of this target, used for AI targeting")]
     [SerializeField] protected float _targetThreat = 0;
     [Tooltip("Whether or not this target is killable. Unkillable targets still take damage but cannot die.")]
     [SerializeField] protected bool _unkillable;
+    /// <summary>
+    /// Rigidbody for this target, if it exists
+    /// </summary>
+    protected Rigidbody _rb;
+
     /// <summary>
     /// The manager controlling health for this target
     /// </summary>
@@ -79,6 +87,7 @@ public abstract class Target : MonoBehaviour
     protected virtual void Awake()
     {
         _healthManager = GetComponent<HealthManager>();
+        _rb = GetComponent<Rigidbody>();
         damagedSoundCooldownTracker = new ScaledTimer(damagedSoundCooldown, false);
         // If initialization of health manager fails, destroy itself
         if (_healthManager == null || !_healthManager.Init())
@@ -169,6 +178,26 @@ public abstract class Target : MonoBehaviour
                 Instantiate(orb, _center.position, Quaternion.identity);
         }
     }
+
+    public virtual void Knockback(float force, float verticalForce, Vector3 origin)
+    {
+        // make sure knockback can be applied
+        if (immuneToKnockback || _rb == null || _rb.isKinematic)
+            return;
+
+        // Calculate force vector, draw for debug reasons
+        Vector3 forceVector = (_center.position - origin).normalized * force;
+        forceVector += Vector3.up * verticalForce;
+        // Clamp max knockback
+        if(forceVector.magnitude > maxKnockback)
+            forceVector= forceVector.normalized * maxKnockback;
+        Debug.DrawRay(origin, forceVector, Color.red, 3f);
+
+        // Zero current velocity, apply new force
+        _rb.velocity= Vector3.zero;
+        _rb.AddForce(forceVector, ForceMode.Impulse);
+    }
+
 
     #region Getters
 

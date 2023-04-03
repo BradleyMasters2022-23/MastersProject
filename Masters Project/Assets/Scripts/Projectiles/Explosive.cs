@@ -136,6 +136,13 @@ public class Explosive : MonoBehaviour
             else
                 target.RegisterEffect(damage);
 
+            // Apply knockback on target
+            float targetDist = Vector3.Distance(transform.position, target.Center.position);
+            float knockback = knockbackFalloff.Evaluate(targetDist);
+            target.Knockback(
+                horizontalForce * knockback, 
+                verticalForce * knockback, 
+                transform.position);
         }
     }
 }

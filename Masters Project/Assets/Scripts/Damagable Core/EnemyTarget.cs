@@ -11,6 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.AI;
 
 public class EnemyTarget : Target
 {
@@ -43,6 +44,23 @@ public class EnemyTarget : Target
     }
     #endregion
 
+    private NavMeshAgent _agentRef;
+    private EnemyManager _managerRef;
+
+    [ShowIf("@this.immuneToKnockback == false")]
+    [SerializeField] private float minKnockbackDuration = 0.5f;
+    [ShowIf("@this.immuneToKnockback == false")]
+    [SerializeField] private float groundDist;
+    [ShowIf("@this.immuneToKnockback == false")]
+    [SerializeField] private LayerMask groundMask;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        _agentRef= GetComponent<NavMeshAgent>();
+        _managerRef= GetComponent<EnemyManager>();
+    }
+
     /// <summary>
     /// Kill the current target, modified to work with enemies
     /// </summary>
@@ -53,6 +71,59 @@ public class EnemyTarget : Target
             SpawnManager.instance.DestroyEnemy();
 
         base.KillTarget();
+    }
+
+    public override void Knockback(float force, float verticalForce, Vector3 origin)
+    {
+        if (immuneToKnockback)
+            return;
+
+        StartCoroutine(KnockbackDuration(minKnockbackDuration));
+        base.Knockback(force, verticalForce, origin);
+    }
+
+    private IEnumerator KnockbackDuration(float dur)
+    {
+        DisableAI();
+
+        // start minimum knockback duration while enemy lifts up
+        ScaledTimer tracker = new ScaledTimer(dur);
+        yield return new WaitUntil(() => tracker.TimerDone());
+
+        // Wait until enemy returns to ground
+        while(!LandedOnGround())
+        {
+            yield return new WaitForFixedUpdate();
+        }
+
+
+        EnableAI();
+    }
+    private void DisableAI()
+    {
+        _rb.isKinematic = false;
+        _rb.useGravity = true;
+
+        if (_managerRef != null)
+            _managerRef.enabled= false;
+        if(_agentRef != null)
+            _agentRef.enabled = false;
+    }
+
+    private void EnableAI()
+    {
+        _rb.isKinematic = true;
+        _rb.useGravity = false;
+
+        if (_managerRef != null)
+            _managerRef.enabled = true;
+        if (_agentRef != null)
+            _agentRef.enabled = true;
+    }
+
+    private bool LandedOnGround()
+    {
+        return Physics.CheckSphere(_center.position, groundDist, groundMask);
     }
 
     /// <summary>

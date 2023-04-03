@@ -193,6 +193,8 @@ public class EnemyManager : MonoBehaviour
     private void OnDisable()
     {
         StopAllCoroutines();
+
+        mainAttack.ResetAttack();
     }
 
     /// <summary>

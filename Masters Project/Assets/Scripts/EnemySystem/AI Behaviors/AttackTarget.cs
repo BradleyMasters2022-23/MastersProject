@@ -115,6 +115,11 @@ public abstract class AttackTarget : MonoBehaviour
         target = null;
     }
 
+    public void ResetAttack()
+    {
+        OnDisable();
+    }
+
     public void SetTarget(Transform t)
     {
         target = t;
