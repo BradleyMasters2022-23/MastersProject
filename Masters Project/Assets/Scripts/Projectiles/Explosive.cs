@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
 using Sirenix.OdinInspector;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Explosive : MonoBehaviour
 {
@@ -14,6 +15,10 @@ public class Explosive : MonoBehaviour
     [SerializeField] private float VFXDuration = 1;
     [SerializeField] private bool affectedByTimestop = true;
     [SerializeField] private bool solidInTimetop = false;
+    [SerializeField] private bool inturruptEnemies = false;
+    [SerializeField] private bool destroyBullets = false;
+    [HideIf("@this.destroyBullets == false")]
+    [SerializeField] private LayerMask bulletLayers;
     private ScaledTimer VFXLifeTracker;
     private ScaledTimer damageLifeTracker;
 
@@ -118,6 +123,19 @@ public class Explosive : MonoBehaviour
         Transform parent = other.transform;
         Target target;
 
+        // try to destroy bullets, if possible
+        // Does not work, fix later
+        if(destroyBullets)
+        {
+            if (bulletLayers == (bulletLayers | (1 << other.gameObject.layer)))
+            {
+                // TEMP - update to call proper end function instead
+                Projectile p = other.GetComponent<Projectile>();
+                if (p != null)
+                    Destroy(p.gameObject);
+            }
+        }
+
         // continually escelate up for a targetable reference
         while (!parent.TryGetComponent<Target>(out target) && parent.parent != null)
         {
@@ -143,6 +161,9 @@ public class Explosive : MonoBehaviour
                 horizontalForce * knockback, 
                 verticalForce * knockback, 
                 transform.position);
+
+            if (inturruptEnemies)
+                target.Inturrupt();
         }
     }
 }

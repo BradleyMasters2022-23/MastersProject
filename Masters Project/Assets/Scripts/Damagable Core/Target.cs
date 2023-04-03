@@ -158,6 +158,14 @@ public abstract class Target : MonoBehaviour
     }
 
     /// <summary>
+    /// Inturrupt the target. By default, do nothing.
+    /// </summary>
+    public virtual void Inturrupt()
+    {
+        return;
+    }
+
+    /// <summary>
     /// Determine if drops should drop, and spawn them
     /// </summary>
     protected void SpawnDrops(GameObject orb, float dropChance, Vector2 dropAmountRange)

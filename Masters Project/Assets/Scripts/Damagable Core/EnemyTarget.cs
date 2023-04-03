@@ -13,7 +13,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.AI;
 
-public class EnemyTarget : Target
+public class EnemyTarget : Target, TimeObserver
 {
     #region Pooling
     /// <summary>
@@ -54,6 +54,9 @@ public class EnemyTarget : Target
     [ShowIf("@this.immuneToKnockback == false")]
     [SerializeField] private LayerMask groundMask;
 
+    private bool inKnockbackState;
+    private Vector3 storedVelocity;
+
     protected override void Awake()
     {
         base.Awake();
@@ -84,6 +87,8 @@ public class EnemyTarget : Target
 
     private IEnumerator KnockbackDuration(float dur)
     {
+        inKnockbackState = true;
+
         DisableAI();
 
         // start minimum knockback duration while enemy lifts up
@@ -91,16 +96,27 @@ public class EnemyTarget : Target
         yield return new WaitUntil(() => tracker.TimerDone());
 
         // Wait until enemy returns to ground
-        while(!LandedOnGround())
+        while(true)
         {
-            yield return new WaitForFixedUpdate();
+            if (TimeManager.TimeStopped)
+            {
+                yield return new WaitForFixedUpdate();
+                continue;
+            }
+            else if (LandedOnGround())
+                break;
+
+            yield return null;
         }
 
 
         EnableAI();
+        inKnockbackState = false;
     }
     private void DisableAI()
     {
+        Inturrupt();
+
         _rb.isKinematic = false;
         _rb.useGravity = true;
 
@@ -121,6 +137,15 @@ public class EnemyTarget : Target
             _agentRef.enabled = true;
     }
 
+    /// <summary>
+    /// Inturrupt the enemy AI if possible
+    /// </summary>
+    public override void Inturrupt()
+    {
+        if(_managerRef != null)
+            _managerRef.InturruptAI();
+    }
+
     private bool LandedOnGround()
     {
         return Physics.CheckSphere(_center.position, groundDist, groundMask);
@@ -135,6 +160,25 @@ public class EnemyTarget : Target
             EnemyPooler.instance.Return(enemyData, gameObject);
         else
             Destroy(gameObject);
+    }
+
+    public void OnStop()
+    {
+        if (_rb != null)
+        {
+            storedVelocity = _rb.velocity;
+            _rb.isKinematic = true;
+        }
+
+    }
+
+    public void OnResume()
+    {
+        if (inKnockbackState && !immuneToKnockback && _rb != null)
+        {
+            _rb.isKinematic = false;
+            _rb.velocity = storedVelocity;
+        }
     }
 
     #region Cheats
@@ -162,8 +206,8 @@ public class EnemyTarget : Target
             endEncounter.performed += DebugKill;
             endEncounter.Enable();
         }
-        
-        
+
+        TimeManager.instance.Subscribe(this);
     }
 
     private void OnDisable()
@@ -171,6 +215,8 @@ public class EnemyTarget : Target
         // remove cheat to prevent bugs
         if(endEncounter != null)
             endEncounter.performed -= DebugKill;
+
+        TimeManager.instance.UnSubscribe(this);
     }
 
     /// <summary>
@@ -187,5 +233,6 @@ public class EnemyTarget : Target
 
         KillTarget();
     }
+
     #endregion
 }
