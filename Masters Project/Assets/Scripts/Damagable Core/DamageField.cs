@@ -39,8 +39,8 @@ public class DamageField : MonoBehaviour
     {
         initialDamage= initDmg;
         tickDamage= tkDmg;
-        playerInitialDamage= pTkDmg;
-        tickRate= pTkDmg;
+        playerInitialDamage= pInitDmg;
+        playerTickDamage = pTkDmg;
         tickRate= tkR;
     }
 
@@ -72,7 +72,7 @@ public class DamageField : MonoBehaviour
                     else if (entity.Key.Team == Team.PLAYER)
                     {
                         entity.Key.RegisterEffect(playerTickDamage);
-                        Debug.Log("Registering player damage tick");
+                        //Debug.Log("Registering player damage tick");
                     }
                 }
             }

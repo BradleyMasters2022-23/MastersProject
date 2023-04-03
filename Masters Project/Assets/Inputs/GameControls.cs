@@ -179,6 +179,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DismissTooltip"",
+                    ""type"": ""Button"",
+                    ""id"": ""58b69633-e91a-42ad-b987-4eceb3b615ee"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -478,6 +487,28 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""DamageCheat"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""13a08cad-2a9b-444b-9371-bdc5f4b81040"",
+                    ""path"": ""<Keyboard>/tab"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DismissTooltip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""483cdaf1-e49b-4bb5-894a-5b239f902d2b"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DismissTooltip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -643,6 +674,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_PlayerGameplay_GodCheat = m_PlayerGameplay.FindAction("GodCheat", throwIfNotFound: true);
         m_PlayerGameplay_HealCheat = m_PlayerGameplay.FindAction("HealCheat", throwIfNotFound: true);
         m_PlayerGameplay_DamageCheat = m_PlayerGameplay.FindAction("DamageCheat", throwIfNotFound: true);
+        m_PlayerGameplay_DismissTooltip = m_PlayerGameplay.FindAction("DismissTooltip", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Mouse = m_UI.FindAction("Mouse", throwIfNotFound: true);
@@ -727,6 +759,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_GodCheat;
     private readonly InputAction m_PlayerGameplay_HealCheat;
     private readonly InputAction m_PlayerGameplay_DamageCheat;
+    private readonly InputAction m_PlayerGameplay_DismissTooltip;
     public struct PlayerGameplayActions
     {
         private @GameControls m_Wrapper;
@@ -748,6 +781,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @GodCheat => m_Wrapper.m_PlayerGameplay_GodCheat;
         public InputAction @HealCheat => m_Wrapper.m_PlayerGameplay_HealCheat;
         public InputAction @DamageCheat => m_Wrapper.m_PlayerGameplay_DamageCheat;
+        public InputAction @DismissTooltip => m_Wrapper.m_PlayerGameplay_DismissTooltip;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -808,6 +842,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @DamageCheat.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDamageCheat;
                 @DamageCheat.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDamageCheat;
                 @DamageCheat.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDamageCheat;
+                @DismissTooltip.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDismissTooltip;
+                @DismissTooltip.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDismissTooltip;
+                @DismissTooltip.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDismissTooltip;
             }
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -863,6 +900,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @DamageCheat.started += instance.OnDamageCheat;
                 @DamageCheat.performed += instance.OnDamageCheat;
                 @DamageCheat.canceled += instance.OnDamageCheat;
+                @DismissTooltip.started += instance.OnDismissTooltip;
+                @DismissTooltip.performed += instance.OnDismissTooltip;
+                @DismissTooltip.canceled += instance.OnDismissTooltip;
             }
         }
     }
@@ -968,6 +1008,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnGodCheat(InputAction.CallbackContext context);
         void OnHealCheat(InputAction.CallbackContext context);
         void OnDamageCheat(InputAction.CallbackContext context);
+        void OnDismissTooltip(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

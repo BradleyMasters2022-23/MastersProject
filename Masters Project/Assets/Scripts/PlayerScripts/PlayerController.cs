@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     [Header("---Game Flow---")]
     [SerializeField] private ChannelGMStates onStateChangeChannel;
 
-    public static GameObject instance;
+    public static PlayerController instance;
 
     /// <summary>
     /// Current state of the player
@@ -231,7 +231,7 @@ public class PlayerController : MonoBehaviour
         currentJumps = jumps.Current;
         targetMaxSpeed = maxMoveSpeed.Current;
 
-        source = GetComponent<AudioSource>();        
+        source = GetComponent<AudioSource>();
     }
 
     /// <summary>

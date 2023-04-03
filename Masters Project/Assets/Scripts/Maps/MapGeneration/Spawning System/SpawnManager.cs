@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Linq;
 using Unity.VisualScripting;
-
+using Sirenix.OdinInspector;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -33,16 +33,16 @@ public class SpawnManager : MonoBehaviour
     /// <summary>
     /// Current number of enemies spawned
     /// </summary>
-    private int enemyCount = 0;
+    [ShowInInspector, ReadOnly] private int enemyCount = 0;
     /// <summary>
     /// Current number of enemies waiting in spawners not yet spawned
     /// </summary>
-    private int waitingEnemies = 0;
+    [ShowInInspector, ReadOnly] private int waitingEnemies = 0;
 
     /// <summary>
     /// Whether or not the spawner is currently spawning
     /// </summary>
-    private bool spawning;
+    [ShowInInspector, ReadOnly] private bool spawning;
 
     /// <summary>
     /// The encounter that was chosen
@@ -52,7 +52,7 @@ public class SpawnManager : MonoBehaviour
     /// <summary>
     /// References to every spawnpoint in the scene
     /// </summary>
-    private SpawnPoint[] spawnPoints;
+    private List<SpawnPoint> spawnPoints;
 
     /// <summary>
     /// Whether or not this spawner is complete
@@ -152,7 +152,7 @@ public class SpawnManager : MonoBehaviour
     public void PrepareEncounter(EncounterDifficulty[] encounterData, SpawnPoint[] spawnData)
     {
         chosenEncounter = LinearSpawnManager.instance.RequestBatch(encounterData);
-        spawnPoints = spawnData;
+        spawnPoints = spawnData.ToList<SpawnPoint>();
     }
 
     /// <summary>
@@ -170,7 +170,7 @@ public class SpawnManager : MonoBehaviour
     public void BeginEncounter()
     {
 
-        if (chosenEncounter == null || spawnPoints.Length <= 0)
+        if (chosenEncounter == null || spawnPoints.Count <= 0)
         {
             Debug.Log("No encounter or not enough spawnpoints! Unlocking room!");
             CompleteEncounter();
@@ -215,11 +215,18 @@ public class SpawnManager : MonoBehaviour
                 // Spawn a new enemy with a randomized delay between the range, not choosing same point twice back to back
                 do
                 {
-                    _spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Length)];
+                    _spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Count)];
+
+                    if (_spawnPoint != null && !_spawnPoint.isActiveAndEnabled)
+                    {
+                        spawnPoints.Remove(_spawnPoint);
+                        spawnPoints.TrimExcess();
+                        continue;
+                    }
 
                     yield return null;
 
-                } while (spawnQueue.Count != 0 && !_spawnPoint.Open(spawnQueue.Peek()));
+                } while (spawnQueue.Count != 0 && _spawnPoint != null && !_spawnPoint.Open(spawnQueue.Peek()));
 
                 // Spawn enemy after double checking count
                 if (spawnQueue.Count != 0)

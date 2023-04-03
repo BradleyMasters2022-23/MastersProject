@@ -1,3 +1,11 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - January 30th, 2022
+ * Last Edited - January 30th, 2022 by Ben Schuster
+ * Description - Manages the player's crosshair functionality
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,9 +16,6 @@ public class Crosshairs : MonoBehaviour
     [SerializeField] private PlayerGunController gunRef;
     [SerializeField] private AnimationCurve scaleOverBloom;
     private float maxBloom;
-    private float minBloom;
-    private float lastBloom;
-    private float enhancedThreshold;
     private Vector3 scaleRef;
     [SerializeField] private RectTransform crosshair;
 
@@ -35,12 +40,7 @@ public class Crosshairs : MonoBehaviour
             Destroy(this); 
             return;
         }
-
-        // get necessary data to determine the scale and base points on the curve
         maxBloom = gunRef.MaxBloom;
-        minBloom = gunRef.BaseBloom;
-        enhancedThreshold = gunRef.EnhancedShotThreshold;
-
         currColor = new Color(noTargetColor.r, noTargetColor.g, noTargetColor.b, outRangeAlpha);
     }
 
@@ -53,10 +53,11 @@ public class Crosshairs : MonoBehaviour
 
     private void CrosshairBloomAdjustments()
     {
-        if (TimeManager.WorldTimeScale > enhancedThreshold)
+        if (!TimeManager.TimeStopped)
         {
             // Get current bloom, determine if this would be redundent to change
             float currBloom = gunRef.CurrBloom;
+
             // convert to use the animation curve
             currBloom = scaleOverBloom.Evaluate(currBloom / (maxBloom));
             scaleRef.x = currBloom;
