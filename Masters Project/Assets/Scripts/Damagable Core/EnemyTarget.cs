@@ -60,7 +60,10 @@ public class EnemyTarget : Target
     /// </summary>
     protected override void DestroyObject()
     {
-        EnemyPooler.instance.Return(enemyData, gameObject);
+        if(EnemyPooler.instance != null)
+            EnemyPooler.instance.Return(enemyData, gameObject);
+        else
+            Destroy(gameObject);
     }
 
     #region Cheats

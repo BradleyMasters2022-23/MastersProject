@@ -132,7 +132,7 @@ public abstract class Target : MonoBehaviour
         Destroy(gameObject);
     }
 
-    protected void DropAllObjs()
+    public void DropAllObjs()
     {
         foreach (DroppableQuantity obj in dropList)
         {
@@ -140,7 +140,7 @@ public abstract class Target : MonoBehaviour
         }
     }
 
-    protected void DeathEffects()
+    public void DeathEffects()
     {
         deathSound.PlayClip(_center);
 

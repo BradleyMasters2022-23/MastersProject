@@ -34,6 +34,9 @@ public class HealthManager : MonoBehaviour
     [SerializeField] private bool _gateHealthbarDamage;
     [Tooltip("Whether or not to gate healing. Gated healing will not overflow to the healthbar above it.")]
     [SerializeField] private bool _gateHealthbarHealing;
+    [Tooltip("When health is gated, how long to remain invulnerable for afterwards")]
+    [SerializeField] private float _gatedHealthInvulnerability;
+
     /// <summary>
     /// Whether or not this entity is invulnerable
     /// </summary>
@@ -45,6 +48,10 @@ public class HealthManager : MonoBehaviour
     /// Tracker for invulnerability duration
     /// </summary>
     private ScaledTimer invulnerabilityTracker;
+
+    public delegate void OnBarTransition();
+
+    public OnBarTransition onHealthbarLostEvents;
 
     public bool Init()
     {
@@ -119,16 +126,30 @@ public class HealthManager : MonoBehaviour
         InvulnerabilityDuration(_damagedInvulnerabilityDuration);
 
         float damagePool = dmg;
-        
+        int lowestHealthbarAffected = 0;
+
         // Apply damage onto the top most non-empty healthbar
         // Apply overflow damage if capable
         for(int i = _healthbars.Length-1; i >= 0; i--)
         {
             // Apply damage on the top bar. Do this to reset any potential regeneration timers
             damagePool = _healthbars[i].Decrease(damagePool);
+            lowestHealthbarAffected = i;
 
-            // Break if no overflow damage, or if damage was dealt and damage set to be gated
-            if (damagePool == 0 || (_gateHealthbarDamage && damagePool != dmg))
+            // If the healthbar was lost and damage dealt, perform any on lost events
+            if(damagePool < dmg && _healthbars[i].IsEmptied())
+            {
+                onHealthbarLostEvents?.Invoke();
+
+                if (_gateHealthbarDamage)
+                {
+                    InvulnerabilityDuration(_gatedHealthInvulnerability);
+                    break;
+                }
+            }
+
+            // Break if no more damage left to deal
+            if (damagePool == 0)
             {
                 break;
             }
@@ -224,6 +245,16 @@ public class HealthManager : MonoBehaviour
     public ResourceBarSO ResourceDataAtIndex(int index)
     {
         return _healthbarData[index];
+    }
+
+    /// <summary>
+    /// Get the current value of the health, given the index
+    /// </summary>
+    /// <param name="index">index healthbar to use</param>
+    /// <returns></returns>
+    public float CurrentHealth(int index)
+    {
+        return _healthbars[index].CurrentValue();
     }
 
     #endregion
