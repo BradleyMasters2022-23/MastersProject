@@ -47,6 +47,10 @@ public class Crystal : MonoBehaviour
         par = p;
     }
 
+    /// <summary>
+    /// Adds a stat to the crystal
+    /// </summary>
+    /// <param name="stat">Stat to be added</param>
     public void AddStat(IStat stat)
     {
         if (statIndex < 3)
@@ -69,25 +73,33 @@ public class Crystal : MonoBehaviour
         crystalName += "Crystal";
     }
 
+    /// <summary>
+    /// Calculates the cost of the current stat based on its index
+    /// </summary>
+    /// <param name="index">Determines cost of stat</param>
     private void CalculateStatCost(int index)
     {
         switch (index)
         {
+            // for the first stat, cost is between par/2 and par+par/2
             case 0:
                 mods[index] = Random.Range(Mathf.FloorToInt(par / 2), Mathf.CeilToInt(par + par / 2));
                 cost += mods[index];
                 break;
 
+            // for the second stat
             case 1:
+                // if current cost is less than par, second stat's cost is between 
                 if (cost < par)
                 {
                     mods[index] = Random.Range(Mathf.FloorToInt(par - cost), Mathf.CeilToInt(par));
                     cost += mods[index];
                 }
 
+                // if current cost is more than par, cost of second stat is the difference between them
                 if (cost > par)
                 {
-                    mods[index] = (cost - par);
+                    mods[index] = (par - cost);
                     cost += mods[index];
                 }
                 break;
@@ -100,6 +112,10 @@ public class Crystal : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Loads all stats onto the player 
+    /// </summary>
+    /// <param name="player">Player reference</param>
     public void EquipCrystal(PlayerController player)
     {
         for(int i = 0; i < 3; i++)
@@ -108,6 +124,10 @@ public class Crystal : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Unloads all stats from the player
+    /// </summary>
+    /// <param name="player">Player reference</param>
     public void DequipCrystal(PlayerController player)
     {
         for (int i = 0; i < 3; i++)
