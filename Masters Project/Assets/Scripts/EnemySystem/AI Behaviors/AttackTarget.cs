@@ -108,16 +108,17 @@ public abstract class AttackTarget : MonoBehaviour
     private void OnDisable()
     {
         StopAllCoroutines();
-        currentAttackState = AttackState.Ready;
         HideIndicator();
         HideAttackDone();
-
-        target = null;
+        currentAttackState = AttackState.Cooldown;
+        //target = null;
     }
 
     public void ResetAttack()
     {
         OnDisable();
+        attackTracker.ResetTimer();
+        currentAttackState = AttackState.Cooldown;
     }
 
     public void SetTarget(Transform t)

@@ -9,7 +9,7 @@ public class Explosive : MonoBehaviour
 {
     [SerializeField] private List<string> damagableTags;
 
-    [SerializeField] private List<Target> damagedTargets;
+    private List<Target> damagedTargets;
     [SerializeField] private float explosiveRadius;
     [SerializeField] private float damageDuration = 1;
     [SerializeField] private float VFXDuration = 1;
@@ -39,9 +39,6 @@ public class Explosive : MonoBehaviour
     [SerializeField] private bool instantDetoante = false;
 
     [SerializeField] private AudioClipSO explosionSound;
-
-    [SerializeField] private bool requireLoS;
-    [SerializeField] private LayerMask lineOfSightLayers;
 
     private void Awake()
     {
@@ -128,14 +125,13 @@ public class Explosive : MonoBehaviour
 
         // try to destroy bullets, if possible
         // Does not work, fix later
-        if(destroyBullets)
+        if (destroyBullets)
         {
-            if (bulletLayers == (bulletLayers | (1 << other.gameObject.layer)))
+            Projectile p = other.GetComponent<Projectile>();
+
+            if(p != null) 
             {
-                // TEMP - update to call proper end function instead
-                Projectile p = other.GetComponent<Projectile>();
-                if (p != null)
-                    Destroy(p.gameObject);
+                p.Inturrupt();
             }
         }
 
@@ -153,22 +149,6 @@ public class Explosive : MonoBehaviour
             //Debug.Log($"{target.name} not damaged, adding to list");
             damagedTargets.Add(target);
 
-
-            //// Test for LOS first
-            //if(requireLoS)
-            //{
-            //    Ray testRay = new Ray(transform.position, target.transform.position - transform.position);
-                
-            //    RaycastHit col;
-            //    if(Physics.Raycast(testRay, out col, Mathf.Infinity, lineOfSightLayers))
-            //    {
-            //        Debug.DrawLine(transform.position, transform.position + testRay.direction * col.distance, Color.red, 1f);
-
-            //        Target hitTar = col.rigidbody.GetComponent<Target>();
-            //        if (hitTar == null || hitTar != target)
-            //            return;
-            //    }
-            //}
 
             if (target.CompareTag("Player"))
                 target.RegisterEffect(playerDamage);

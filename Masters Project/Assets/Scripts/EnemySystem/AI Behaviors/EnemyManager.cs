@@ -192,6 +192,8 @@ public class EnemyManager : MonoBehaviour
 
     private void OnDisable()
     {
+        StopAllCoroutines();
+
         InturruptAI();
     }
 
@@ -200,8 +202,6 @@ public class EnemyManager : MonoBehaviour
     /// </summary>
     public void InturruptAI()
     {
-        StopAllCoroutines();
-
         mainAttack.ResetAttack();
 
         if (strafingAttack != null)
