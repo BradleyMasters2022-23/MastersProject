@@ -54,6 +54,9 @@ public abstract class Target : MonoBehaviour
     /// </summary>
     protected HealthManager _healthManager;
 
+    [Tooltip("If enabled, this target can not take damage until the shield is destroyed")]
+    [SerializeField] private HealthManager invincibilityShield;
+
     // The manger controlling buffs and debuffs for this target
     //private EffectManager _effectManager;
 
@@ -105,6 +108,10 @@ public abstract class Target : MonoBehaviour
     {
         if(_killed) return;
 
+        // if a shield is enabled, dont take damage
+        if (invincibilityShield != null)
+            return;
+
         if(damagedSoundCooldownTracker != null && damagedSoundCooldownTracker.TimerDone())
         {
             damagedSound.PlayClip(_center, audioSource);
@@ -155,6 +162,11 @@ public abstract class Target : MonoBehaviour
 
         if (_deathVFX != null)
             Instantiate(_deathVFX, _center.position, Quaternion.identity);
+    }
+
+    public bool Killed()
+    {
+        return _killed;
     }
 
     /// <summary>

@@ -152,7 +152,7 @@ public class EnemyTarget : Target, TimeObserver
     }
 
     /// <summary>
-    /// Return enemy to pool instead of destroying it
+    /// Return enemy to pool, if available, instead of destroying it
     /// </summary>
     protected override void DestroyObject()
     {
