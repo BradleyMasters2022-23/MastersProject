@@ -106,11 +106,7 @@ public abstract class Target : MonoBehaviour
     /// <param name="dmg">PLACEHOLDER - pass damage to deal to this target</param>
     public virtual void RegisterEffect(float dmg)
     {
-        if(_killed) return;
-
-        // if a shield is enabled, dont take damage
-        if (invincibilityShield != null)
-            return;
+        if(!AffectedByAttacks()) return;
 
         if(damagedSoundCooldownTracker != null && damagedSoundCooldownTracker.TimerDone())
         {
@@ -128,6 +124,19 @@ public abstract class Target : MonoBehaviour
             KillTarget();
         }
             
+    }
+
+    /// <summary>
+    /// Whether or not this target can be affected by attacks
+    /// </summary>
+    /// <returns></returns>
+    protected bool AffectedByAttacks()
+    {
+        // if a shield is enabled, dont take damage
+        if (invincibilityShield != null && invincibilityShield.isActiveAndEnabled)
+            return false;
+
+        return !_killed;
     }
 
     /// <summary>
@@ -201,6 +210,9 @@ public abstract class Target : MonoBehaviour
 
     public virtual void Knockback(float force, float verticalForce, Vector3 origin)
     {
+        if (!AffectedByAttacks())
+            return;
+
         // make sure knockback can be applied
         if (immuneToKnockback || _rb == null || _rb.isKinematic)
             return;

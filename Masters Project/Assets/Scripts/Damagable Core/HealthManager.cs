@@ -251,10 +251,26 @@ public class HealthManager : MonoBehaviour
     /// Get the current value of the health, given the index
     /// </summary>
     /// <param name="index">index healthbar to use</param>
-    /// <returns></returns>
+    /// <returns>current health of that healthbar</returns>
     public float CurrentHealth(int index)
     {
+        if (index >= _healthbars.Length)
+            return 0;
+
         return _healthbars[index].CurrentValue();
+    }
+
+    /// <summary>
+    /// Get the max health of the indexed healthbar
+    /// </summary>
+    /// <param name="index">index healthbar to use</param>
+    /// <returns>current health of that max </returns>
+    public float MaxHealth(int index)
+    {
+        if (index >= _healthbars.Length)
+            return 0;
+
+        return _healthbars[index].MaxValue();
     }
 
     #endregion

@@ -78,7 +78,7 @@ public class EnemyTarget : Target, TimeObserver
 
     public override void Knockback(float force, float verticalForce, Vector3 origin)
     {
-        if (immuneToKnockback)
+        if (immuneToKnockback || !AffectedByAttacks())
             return;
 
         StartCoroutine(KnockbackDuration(minKnockbackDuration));
