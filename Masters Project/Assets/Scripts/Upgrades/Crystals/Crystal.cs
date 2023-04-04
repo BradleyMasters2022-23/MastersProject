@@ -7,10 +7,9 @@
  */
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 using UnityEngine;
 
-public class Crystal : MonoBehaviour
+public class Crystal
 {
     /// <summary>
     /// Name of crystal. Populated as stats are added.
@@ -41,11 +40,6 @@ public class Crystal : MonoBehaviour
     /// number from which to generate stats. the "level" of the crystal
     /// </summary>
     public int par;
-
-    public Crystal(int p)
-    {
-        par = p;
-    }
 
     /// <summary>
     /// Adds a stat to the crystal
@@ -83,7 +77,7 @@ public class Crystal : MonoBehaviour
         {
             // for the first stat, cost is between par/2 and par+par/2
             case 0:
-                mods[index] = Random.Range(Mathf.FloorToInt(par / 2), Mathf.CeilToInt(par + par / 2));
+                mods.Add(Random.Range(Mathf.FloorToInt(par / 2), Mathf.CeilToInt(par + par / 2)));
                 cost += mods[index];
                 break;
 
@@ -92,20 +86,20 @@ public class Crystal : MonoBehaviour
                 // if current cost is less than par, second stat's cost is between 
                 if (cost < par)
                 {
-                    mods[index] = Random.Range(Mathf.FloorToInt(par - cost), Mathf.CeilToInt(par));
+                    mods.Add(Random.Range(Mathf.FloorToInt(par - cost), Mathf.CeilToInt(par)));
                     cost += mods[index];
                 }
 
                 // if current cost is more than par, cost of second stat is the difference between them
                 if (cost > par)
                 {
-                    mods[index] = (par - cost);
+                    mods.Add(par - cost);
                     cost += mods[index];
                 }
                 break;
 
             case 2:
-                mods[index] = (cost - par);
+                mods.Add(cost - par);
                 cost += mods[index];
                 break;
         }
@@ -118,9 +112,11 @@ public class Crystal : MonoBehaviour
     /// <param name="player">Player reference</param>
     public void EquipCrystal(PlayerController player)
     {
-        for(int i = 0; i < 3; i++)
+        int i = 0;
+        foreach(IStat stat in stats)
         {
-            stats[i].LoadStat(player, mods[i]);
+            stat.LoadStat(player, mods[i]);
+            i++;
         }
     }
 
@@ -130,9 +126,11 @@ public class Crystal : MonoBehaviour
     /// <param name="player">Player reference</param>
     public void DequipCrystal(PlayerController player)
     {
-        for (int i = 0; i < 3; i++)
+        int i = 0;
+        foreach(IStat stat in stats)
         {
-            stats[i].UnloadStat(player, mods[i]);
+            stat.UnloadStat(player, mods[i]);
+            i++;
         }
     }
 }
