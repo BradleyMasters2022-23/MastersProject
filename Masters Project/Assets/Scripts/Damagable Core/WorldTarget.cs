@@ -17,10 +17,13 @@ public class WorldTarget : Target
     /// </summary>
     private Trigger onDamageTrigger;
 
+    private bool triggerRegistered = false;
+
     protected override void Awake()
     {
         base.Awake();
         onDamageTrigger= GetComponent<Trigger>();
+        triggerRegistered= true;
     }
 
     public override void RegisterEffect(float dmg)
@@ -29,5 +32,10 @@ public class WorldTarget : Target
             onDamageTrigger.Activate();
 
         base.RegisterEffect(dmg);
+    }
+
+    public bool IsTriggerRegistered()
+    {
+        return triggerRegistered;
     }
 }

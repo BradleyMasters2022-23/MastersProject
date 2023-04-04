@@ -95,9 +95,11 @@ GameObject:
   - component: {fileID: 9020080356677620961}
   - component: {fileID: 9020080356677620960}
   - component: {fileID: 9020080356677620959}
-  - component: {fileID: 9020080356677620962}
+  - component: {fileID: 6983316890083000466}
   - component: {fileID: 9020080356677620958}
   - component: {fileID: 286477761370217905}
+  - component: {fileID: 9185083501945365124}
+  - component: {fileID: 4714689005564842323}
   m_Layer: 19
   m_Name: Enemy Bubble Shield Destroyable
   m_TagString: Enemy
@@ -184,7 +186,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &9020080356677620962
+--- !u!114 &6983316890083000466
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -193,7 +195,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 9020080356677620954}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58a7794549a027e4dac175e049ecb438, type: 3}
+  m_Script: {fileID: 11500000, guid: bf67b8df4d7f2ea43b3de7cbf2b245b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _center: {fileID: 9020080356677620955}
@@ -209,13 +211,8 @@ MonoBehaviour:
   damagedSoundCooldown: 0.5
   dropList:
   - spawnObject: {fileID: 3071240432754548792, guid: 2001e4aa90ac76a47866171fcaafdf7f, type: 3}
-    quantityRange: {x: 6, y: 8}
+    quantityRange: {x: 4, y: 5}
     dropChance: 100
-  minKnockbackDuration: 0.5
-  groundDist: 0
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!114 &9020080356677620958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,3 +246,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _targetShield: {fileID: 9020080356677620958}
   _redTintRenderer: {fileID: 780896976955779119}
+--- !u!114 &9185083501945365124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9020080356677620954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ba8c79905ceabf4786818529f37214e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4714689005564842323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9020080356677620954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90a39b37339a5fd4d9faeb644a440d60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tooltip: {fileID: 11400000, guid: b5748a24aadab7e458999260844d2900, type: 2}
+  shieldReference: {fileID: 9185083501945365124}
