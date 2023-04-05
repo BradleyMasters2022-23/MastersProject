@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2667508934263414614}
   - component: {fileID: 994005374467358117}
   - component: {fileID: 2547772607706674082}
+  - component: {fileID: 3245179308723112759}
   m_Layer: 0
   m_Name: Laser
   m_TagString: Untagged
@@ -45,18 +46,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9de5498fec7556746a0e6cb7ca208539, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 15
+  damage: 5
+  playerDamage: 5
   knockback: 1
-  horizontalKnockback: 90
-  verticalKnockback: 30
+  horizontalKnockback: 0
+  verticalKnockback: 0
+  playerHorizontalKnockback: 90
+  playerVerticalKnockback: 30
   affectedByTimestop: 1
   shotByPlayer: 0
   hitLayers:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 320
   worldLayers:
     serializedVersion: 2
-    m_Bits: 2097153
+    m_Bits: 2097161
   speed: 0
   range: 100
   maxHits: 5
@@ -68,8 +72,10 @@ MonoBehaviour:
   endVFX: {fileID: 0}
   beamLineRenderer: {fileID: 2547772607706674082}
   startBeamColor: {r: 1, g: 0, b: 0, a: 1}
-  endBeamColor: {r: 0.49056602, g: 0.02499106, b: 0.02499106, a: 1}
-  laserRadius: 0.1
+  endBeamColor: {r: 0.10546887, g: 1, b: 0, a: 1}
+  laserRadius: 0.2
+  solidInTimestop: 1
+  col: {fileID: 3245179308723112759}
 --- !u!120 &2547772607706674082
 LineRenderer:
   m_ObjectHideFlags: 0
@@ -90,7 +96,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -169,3 +175,17 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!136 &3245179308723112759
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6348129516241413590}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 0.1
+  m_Height: 1
+  m_Direction: 2
+  m_Center: {x: 0, y: 0, z: 0}

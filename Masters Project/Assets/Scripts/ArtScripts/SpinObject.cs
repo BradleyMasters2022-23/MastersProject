@@ -11,6 +11,6 @@ public class SpinObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.rotation *= Quaternion.Euler(0, spinSpeed, 0);
+        transform.rotation *= Quaternion.Euler(0, spinSpeed * TimeManager.WorldTimeScale, 0);
     }
 }

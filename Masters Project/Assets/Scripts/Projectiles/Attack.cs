@@ -18,13 +18,20 @@ public abstract class Attack : MonoBehaviour
 
     [Tooltip("Damage this attack deals")]
     [SerializeField] protected int damage;
+    [SerializeField] protected int playerDamage;
 
     [Tooltip("Amount of knockback this attack does")]
     [SerializeField] protected bool knockback;
+
     [HideIf("@this.knockback == false")]
     [SerializeField] private float horizontalKnockback;
     [HideIf("@this.knockback == false")]
     [SerializeField] private float verticalKnockback;
+    [HideIf("@this.knockback == false")]
+    [SerializeField] private float playerHorizontalKnockback;
+    [HideIf("@this.knockback == false")]
+    [SerializeField] private float playerVerticalKnockback;
+    
 
     [SerializeField] protected bool affectedByTimestop;
 
@@ -75,14 +82,31 @@ public abstract class Attack : MonoBehaviour
         // Check if the target can be damaged
         if (target != null && !hitTargets.Contains(target.transform) && !target.Killed())
         {
-            // Damage target, prevent multi damaging
-            target.RegisterEffect(damage);
-            hitTargets.Add(target.transform.root);
+            float dmg;
+            float horKnockback;
+            float verKnockback;
 
-            if (knockback)
+            // Determine which profile of damage and knockback to use
+            if(target.GetType() == typeof(PlayerTarget))
             {
-                target.Knockback(horizontalKnockback, verticalKnockback, damagePoint);
+                dmg = playerDamage;
+                horKnockback = playerHorizontalKnockback;
+                verKnockback= playerVerticalKnockback;
             }
+            else
+            {
+                dmg = damage;
+                horKnockback = horizontalKnockback;
+                verKnockback = verticalKnockback;
+            }
+
+            target.RegisterEffect(dmg);
+            if (knockback && horKnockback + verKnockback > 0)
+            {
+                target.Knockback(horKnockback, verKnockback, damagePoint);
+            }
+
+            hitTargets.Add(target.transform.root);
 
             return true;
         }
