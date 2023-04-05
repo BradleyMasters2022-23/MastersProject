@@ -19,9 +19,12 @@ public class PlayerTarget : Target
     private InputAction healCheat;
 
     [Header("Cheats")]
+    private bool godMode = false;
     [SerializeField] private GameObject godCheatNotification;
     [SerializeField] private float cheatDamage = 25;
     [SerializeField] private float cheatHeal = 25;
+    [SerializeField] private TimeManager timestop;
+    [SerializeField] private Ability grenadeAbility;
     
 
     private void Start()
@@ -47,13 +50,23 @@ public class PlayerTarget : Target
 
     private void ToggleGodmode(InputAction.CallbackContext ctx = default)
     {
-        if (_healthManager.God)
-            _healthManager.ToggleGodmode(false);
-        else
-            _healthManager.ToggleGodmode(true);
+        godMode = !godMode;
+
+        if(_healthManager != null)
+            _healthManager.ToggleGodmode(godMode);
 
         if(godCheatNotification != null)
-            godCheatNotification.SetActive(_healthManager.God);
+            godCheatNotification.SetActive(godMode);
+
+        if(timestop != null)
+        {
+            timestop.SetCheatMode(godMode);
+        }
+
+        if(grenadeAbility != null)
+        {
+            grenadeAbility.CheatMode(godMode);
+        }
     }
 
     private void CheatHeal(InputAction.CallbackContext ctx = default)

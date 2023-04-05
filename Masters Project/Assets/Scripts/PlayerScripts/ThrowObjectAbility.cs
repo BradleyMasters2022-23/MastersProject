@@ -24,34 +24,6 @@ public class ThrowObjectAbility : Ability
 
     [SerializeField] protected AudioClipSO throwAbilitySound;
 
-    /*
-    [Header("Arc Trajectory")]
-    [SerializeField] protected LineRenderer trajectoryArc;
-    [Range(1, 50)]
-    [SerializeField] protected int trajectoryStepCount;
-    [Range(0.01f, 1f)]
-    [SerializeField] private float timeBetweenPoints = 0.1f;
-    private Rigidbody projectileRBRef;
-    
-
-    private void Awake()
-    {
-        HideLine();
-    }
-
-    protected override void Update()
-    {
-        base.Update();
-
-        if (projectileRBRef is null)
-            projectileRBRef = projectile.GetComponent<Rigidbody>();
-        if (trajectoryArc.enabled)
-            Trajectory(Vector3.up * verticalArcForce + spawnPoint.transform.forward * force,
-                projectileRBRef,
-                spawnPoint.position);
-    }
-    */
-
     protected override IEnumerator OnAbility()
     {
         if(projectile is null)

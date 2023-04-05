@@ -163,6 +163,22 @@ public abstract class Ability : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Set cooldown to nothing when in cheat mode
+    /// </summary>
+    /// <param name="cheat">whether to enable cheat mode</param>
+    public void CheatMode(bool cheat)
+    {
+        if(cheat)
+        {
+            cooldownTimer.ResetTimer(0);
+        }
+        else
+        {
+            cooldownTimer.ResetTimer(cooldown);
+        }
+    }
+
     #endregion
 
     #region Input Holding
