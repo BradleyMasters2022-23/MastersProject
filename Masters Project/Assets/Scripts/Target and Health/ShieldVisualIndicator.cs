@@ -1,3 +1,11 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - March 4th, 2022
+ * Last Edited - March 4th, 2022 by Ben Schuster
+ * Description - Manages red tint on the regenerating shields
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,7 +37,7 @@ public class ShieldVisualIndicator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_targetShield == null || _redTintRenderer == null)
+        if (_targetShield == null  || !_targetShield.isActiveAndEnabled || _redTintRenderer == null)
             return;
 
         currHealth = _targetShield.CurrentHealth(ShieldIndex);

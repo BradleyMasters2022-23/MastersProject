@@ -1398,7 +1398,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8877474355173619778}
   - component: {fileID: 8477986082741360450}
-  - component: {fileID: 7759409178150867414}
   m_Layer: 8
   m_Name: Backpack [WEAK]
   m_TagString: Enemy
@@ -1434,23 +1433,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.657198, y: 0.7481618, z: 0.1982609}
   m_Center: {x: 0, y: 0.99546444, z: -0.89911824}
---- !u!114 &7759409178150867414
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6309547900755185939}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3649e819e4c27cc42b6a37214fb092ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxVerticalKnockback: 0
-  damageMultiplier: 5
-  weakPoint: {fileID: 8300000, guid: 07bb9e13676cd0d44bf41d2a94cdb242, type: 3}
-  armoredPoint: {fileID: 8300000, guid: 783625c99ffed2c47b4b650fc0fee16b, type: 3}
-  basicHit: {fileID: 8300000, guid: c8f86fc7748ff914a8b2855390669915, type: 3}
 --- !u!1 &6338953847128549188
 GameObject:
   m_ObjectHideFlags: 0
@@ -1622,6 +1604,8 @@ MonoBehaviour:
   _team: 2
   _targetThreat: 40
   _unkillable: 0
+  invincibilityShield: {fileID: 0}
+  shieldOnStart: 1
   _deathVFX: {fileID: 7428150280865193490, guid: a4f29aa8e8157a14283aec722c7c18ab, type: 3}
   damagedSound: {fileID: 11400000, guid: 4ba21dac44b2634469d022e7027035df, type: 2}
   deathSound: {fileID: 11400000, guid: e9eb6a05acbfe4b4a9897c4a09a84f2b, type: 2}
@@ -2207,7 +2191,6 @@ GameObject:
   - component: {fileID: 7123534606254138159}
   - component: {fileID: 4116088007954603430}
   - component: {fileID: 540711410129340013}
-  - component: {fileID: 7304667214989347073}
   m_Layer: 8
   m_Name: Body
   m_TagString: Enemy
@@ -2256,23 +2239,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.33464584, y: 0.42275476, z: 0.8169944}
   m_Center: {x: 0, y: 0.7898281, z: 0.65155745}
---- !u!114 &7304667214989347073
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8004048564290428822}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3649e819e4c27cc42b6a37214fb092ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxVerticalKnockback: 0
-  damageMultiplier: 1
-  weakPoint: {fileID: 8300000, guid: 07bb9e13676cd0d44bf41d2a94cdb242, type: 3}
-  armoredPoint: {fileID: 8300000, guid: 783625c99ffed2c47b4b650fc0fee16b, type: 3}
-  basicHit: {fileID: 8300000, guid: c8f86fc7748ff914a8b2855390669915, type: 3}
 --- !u!1 &8028579012812630097
 GameObject:
   m_ObjectHideFlags: 0

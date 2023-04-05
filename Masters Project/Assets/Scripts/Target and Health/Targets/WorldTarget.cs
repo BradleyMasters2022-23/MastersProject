@@ -38,4 +38,9 @@ public class WorldTarget : Target
     {
         return triggerRegistered;
     }
+
+    protected override void DestroyObject()
+    {
+        gameObject.SetActive(false);
+    }
 }

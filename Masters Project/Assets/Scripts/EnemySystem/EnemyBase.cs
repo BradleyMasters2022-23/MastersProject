@@ -12,6 +12,8 @@ using UnityEngine;
 
 public abstract class EnemyBase : MonoBehaviour
 {
+    /*
+
     // Interface Stuff
     public enum EnemyState
     {
@@ -50,4 +52,6 @@ public abstract class EnemyBase : MonoBehaviour
             centerMass = transform;
         }
     }
+
+    */
 }

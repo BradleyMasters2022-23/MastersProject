@@ -539,7 +539,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5672539245749411870}
   - component: {fileID: 2209843730064207266}
-  - component: {fileID: 174487282954562753}
   m_Layer: 8
   m_Name: Base [Resistent]
   m_TagString: Untagged
@@ -580,23 +579,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.9895896, y: 1.9151478, z: 0.7399464}
   m_Center: {x: 0.31528428, y: 1.1730266, z: 0.000000037584407}
---- !u!114 &174487282954562753
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3833350582575110500}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3649e819e4c27cc42b6a37214fb092ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxVerticalKnockback: 0
-  damageMultiplier: 0.7
-  weakPoint: {fileID: 8300000, guid: 07bb9e13676cd0d44bf41d2a94cdb242, type: 3}
-  armoredPoint: {fileID: 8300000, guid: 783625c99ffed2c47b4b650fc0fee16b, type: 3}
-  basicHit: {fileID: 8300000, guid: c8f86fc7748ff914a8b2855390669915, type: 3}
 --- !u!1 &4565767903238201078
 GameObject:
   m_ObjectHideFlags: 0
@@ -865,12 +847,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _center: {fileID: 8349789203748842687}
-  immuneToKnockback: 1
-  maxKnockback: 0
   _team: 2
   _targetThreat: 50
   _unkillable: 0
-  invincibilityShield: {fileID: 2188227310329205158}
+  immuneToKnockback: 1
+  maxKnockback: 0
+  invincibilityShield: {fileID: 1877889653686987640}
   _deathVFX: {fileID: 7428150280865193490, guid: 33bdfb6bb241c1448997c3b2718813a5, type: 3}
   damagedSound: {fileID: 11400000, guid: 4ba21dac44b2634469d022e7027035df, type: 2}
   deathSound: {fileID: 11400000, guid: e9eb6a05acbfe4b4a9897c4a09a84f2b, type: 2}
@@ -880,7 +862,6 @@ MonoBehaviour:
     quantityRange: {x: 6, y: 7}
     dropChance: 100
   minKnockbackDuration: 0.5
-  groundDist: 0
   groundMask:
     serializedVersion: 2
     m_Bits: 0
@@ -1334,7 +1315,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8360387513118762235}
   - component: {fileID: 7219662706283755521}
-  - component: {fileID: 4517100152901991422}
   m_Layer: 8
   m_Name: Head_Pivot
   m_TagString: Untagged
@@ -1378,23 +1358,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.1919116, y: 1.061311, z: 2.8793855}
   m_Center: {x: 2.2144994e-14, y: 0.3467131, z: 0.048004463}
---- !u!114 &4517100152901991422
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8632230613915139039}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3649e819e4c27cc42b6a37214fb092ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxVerticalKnockback: 0
-  damageMultiplier: 1
-  weakPoint: {fileID: 8300000, guid: 07bb9e13676cd0d44bf41d2a94cdb242, type: 3}
-  armoredPoint: {fileID: 8300000, guid: 783625c99ffed2c47b4b650fc0fee16b, type: 3}
-  basicHit: {fileID: 8300000, guid: c8f86fc7748ff914a8b2855390669915, type: 3}
 --- !u!1 &8988617009113605978
 GameObject:
   m_ObjectHideFlags: 0
@@ -1764,19 +1727,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7220cdce21e047e4cb0ea7d3c7f316e6, type: 3}
---- !u!4 &2188227310329205155 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9020080356677620955, guid: 7220cdce21e047e4cb0ea7d3c7f316e6, type: 3}
-  m_PrefabInstance: {fileID: 7166324793787319672}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2188227310329205158 stripped
+--- !u!114 &1877889653686987640 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9020080356677620958, guid: 7220cdce21e047e4cb0ea7d3c7f316e6, type: 3}
+  m_CorrespondingSourceObject: {fileID: 8754009071203413504, guid: 7220cdce21e047e4cb0ea7d3c7f316e6, type: 3}
   m_PrefabInstance: {fileID: 7166324793787319672}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df5a001e63515124d9fff01548e22564, type: 3}
+  m_Script: {fileID: 11500000, guid: b90a392112cbb2742aeda69bd2653874, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &2188227310329205155 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 9020080356677620955, guid: 7220cdce21e047e4cb0ea7d3c7f316e6, type: 3}
+  m_PrefabInstance: {fileID: 7166324793787319672}
+  m_PrefabAsset: {fileID: 0}

@@ -41,7 +41,7 @@ public class MapLoader : MonoBehaviour
     /// <summary>
     /// Current state of the loader
     /// </summary>
-    private States currState;
+    //private States currState;
 
     private LoadState loadState;
 
@@ -231,7 +231,7 @@ public class MapLoader : MonoBehaviour
 
         PrepareNavmesh();
 
-        currState = States.Start;
+        //currState = States.Start;
         loadState = LoadState.Done;
 
         yield return null;
@@ -410,18 +410,18 @@ public class MapLoader : MonoBehaviour
         // Increment room index. Do by 2 because its accounting for room and hallway
         roomIndex += 2;
 
-        if (loadedMap[roomIndex].segmentInfo.segmentType == MapSegmentSO.MapSegmentType.Room)
-        {
-            currState = States.Room;
-        }
-        else if(loadedMap[roomIndex].segmentInfo.segmentType == MapSegmentSO.MapSegmentType.Hallway)
-        {
-            currState = States.Hallway;
-        }
-        else if (loadedMap[roomIndex].segmentInfo.segmentType == MapSegmentSO.MapSegmentType.FinalRoom)
-        {
-            currState = States.Final;
-        }
+        //if (loadedMap[roomIndex].segmentInfo.segmentType == MapSegmentSO.MapSegmentType.Room)
+        //{
+        //    currState = States.Room;
+        //}
+        //else if(loadedMap[roomIndex].segmentInfo.segmentType == MapSegmentSO.MapSegmentType.Hallway)
+        //{
+        //    currState = States.Hallway;
+        //}
+        //else if (loadedMap[roomIndex].segmentInfo.segmentType == MapSegmentSO.MapSegmentType.FinalRoom)
+        //{
+        //    currState = States.Final;
+        //}
 
         // Deactivate the last 2 sections, if possible
 

@@ -300,7 +300,7 @@ GameObject:
   - component: {fileID: 5908019881246828722}
   - component: {fileID: 4926249345645598418}
   m_Layer: 8
-  m_Name: MineEnemy
+  m_Name: MineEnemy_GameReady
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -362,11 +362,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _center: {fileID: 8361226403309176128}
-  immuneToKnockback: 0
-  maxKnockback: 14
   _team: 2
   _targetThreat: 25
   _unkillable: 0
+  immuneToKnockback: 0
+  maxKnockback: 18
+  invincibilityShield: {fileID: 0}
+  shieldDeathImmunity: 0
   _deathVFX: {fileID: 7428150280865193490, guid: 52202a5140c1c0a438fae66d4b85c181, type: 3}
   damagedSound: {fileID: 11400000, guid: 4ba21dac44b2634469d022e7027035df, type: 2}
   deathSound: {fileID: 11400000, guid: e9eb6a05acbfe4b4a9897c4a09a84f2b, type: 2}
@@ -376,7 +378,6 @@ MonoBehaviour:
     quantityRange: {x: 4, y: 5}
     dropChance: 70
   minKnockbackDuration: 0.5
-  groundDist: 2
   groundMask:
     serializedVersion: 2
     m_Bits: 9
@@ -855,7 +856,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7110427349003950651}
   - component: {fileID: 1900634712858676584}
-  - component: {fileID: 257445485149255813}
   m_Layer: 8
   m_Name: Head [Weak]
   m_TagString: Enemy
@@ -891,23 +891,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.72828877, y: 0.5536623, z: 2.112958}
   m_Center: {x: 0, y: 2.9164662, z: 0.26894617}
---- !u!114 &257445485149255813
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2948744847689339382}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3649e819e4c27cc42b6a37214fb092ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxVerticalKnockback: 0
-  damageMultiplier: 1.5
-  weakPoint: {fileID: 8300000, guid: 07bb9e13676cd0d44bf41d2a94cdb242, type: 3}
-  armoredPoint: {fileID: 8300000, guid: 783625c99ffed2c47b4b650fc0fee16b, type: 3}
-  basicHit: {fileID: 8300000, guid: c8f86fc7748ff914a8b2855390669915, type: 3}
 --- !u!1 &3423467441649169617
 GameObject:
   m_ObjectHideFlags: 0
@@ -1198,7 +1181,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7789056167180850056}
   - component: {fileID: 6558380036256897458}
-  - component: {fileID: 425457434523105647}
   m_Layer: 8
   m_Name: Body
   m_TagString: Enemy
@@ -1235,23 +1217,6 @@ CapsuleCollider:
   m_Height: 2.1399655
   m_Direction: 1
   m_Center: {x: 0, y: 1.6577603, z: 0}
---- !u!114 &425457434523105647
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4821280699960884801}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3649e819e4c27cc42b6a37214fb092ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxVerticalKnockback: 0
-  damageMultiplier: 1
-  weakPoint: {fileID: 8300000, guid: 07bb9e13676cd0d44bf41d2a94cdb242, type: 3}
-  armoredPoint: {fileID: 8300000, guid: 783625c99ffed2c47b4b650fc0fee16b, type: 3}
-  basicHit: {fileID: 8300000, guid: c8f86fc7748ff914a8b2855390669915, type: 3}
 --- !u!1 &5280570142200375438
 GameObject:
   m_ObjectHideFlags: 0

@@ -15,53 +15,15 @@ using UnityEngine.AI;
 
 public class EnemyTarget : Target, TimeObserver
 {
-    #region Pooling
     /// <summary>
-    /// Core data used by enemy
+    /// Get necessary data for knockback stuff
     /// </summary>
-    private EnemySO enemyData;
-
-    /// <summary>
-    /// Return this object to its pool
-    /// </summary>
-    public void ReturnToPool()
-    {
-        gameObject.SetActive(false);
-    }
-
-    /// <summary>
-    /// Retrieve from pool
-    /// </summary>
-    public void PullFromPool(EnemySO data)
-    {
-        if (enemyData == null)
-            enemyData = data;
-
-        _killed = false;
-        _healthManager.ResetHealth();
-        // gameObject.SetActive(true);
-        // TODO - get data from difficulty scaler
-    }
-    #endregion
-
-    private NavMeshAgent _agentRef;
-    private EnemyManager _managerRef;
-
-    [ShowIf("@this.immuneToKnockback == false")]
-    [SerializeField] private float minKnockbackDuration = 0.5f;
-    [ShowIf("@this.immuneToKnockback == false")]
-    [SerializeField] private float groundDist;
-    [ShowIf("@this.immuneToKnockback == false")]
-    [SerializeField] private LayerMask groundMask;
-
-    private bool inKnockbackState;
-    private Vector3 storedVelocity;
-
     protected override void Awake()
     {
         base.Awake();
         _agentRef= GetComponent<NavMeshAgent>();
         _managerRef= GetComponent<EnemyManager>();
+        groundDist = Vector3.Distance(transform.position, _center.position) + 0.2f;
     }
 
     /// <summary>
@@ -76,15 +38,59 @@ public class EnemyTarget : Target, TimeObserver
         base.KillTarget();
     }
 
+    /// <summary>
+    /// Return enemy to pool, if available, instead of destroying it
+    /// </summary>
+    protected override void DestroyObject()
+    {
+        if (EnemyPooler.instance != null)
+            EnemyPooler.instance.Return(enemyData, gameObject);
+        else
+            Destroy(gameObject);
+    }
+
+    #region Knockback AI
+
+    /// <summary>
+    /// reference to navmesh agent
+    /// </summary>
+    private NavMeshAgent _agentRef;
+    /// <summary>
+    /// reference to enemy manager 
+    /// </summary>
+    private EnemyManager _managerRef;
+
+    [ShowIf("@this.immuneToKnockback == false")]
+    [SerializeField] private float minKnockbackDuration = 0.5f;
+    [ShowIf("@this.immuneToKnockback == false")]
+    [SerializeField] private LayerMask groundMask;
+    private float groundDist;
+
+    private bool inKnockbackState;
+    private Vector3 storedVelocity;
+
+    private Coroutine knockbackRoutine;
+
+    /// <summary>
+    /// Apply knockback, set up AI
+    /// </summary>
+    /// <param name="force">force to apply on target</param>
+    /// <param name="verticalForce">Additional vertical force to apply</param>
+    /// <param name="origin">Origin of the knockback</param>
     public override void Knockback(float force, float verticalForce, Vector3 origin)
     {
         if (immuneToKnockback || !AffectedByAttacks())
             return;
 
-        StartCoroutine(KnockbackDuration(minKnockbackDuration));
+        knockbackRoutine = StartCoroutine(KnockbackDuration(minKnockbackDuration));
         base.Knockback(force, verticalForce, origin);
     }
 
+    /// <summary>
+    /// Remain in a knockback duration until landing
+    /// </summary>
+    /// <param name="dur">minimum duration to remain in this state</param>
+    /// <returns></returns>
     private IEnumerator KnockbackDuration(float dur)
     {
         inKnockbackState = true;
@@ -96,7 +102,7 @@ public class EnemyTarget : Target, TimeObserver
         yield return new WaitUntil(() => tracker.TimerDone());
 
         // Wait until enemy returns to ground
-        while(true)
+        while (true)
         {
             if (TimeManager.TimeStopped)
             {
@@ -112,7 +118,11 @@ public class EnemyTarget : Target, TimeObserver
 
         EnableAI();
         inKnockbackState = false;
+        knockbackRoutine = null;
     }
+    /// <summary>
+    /// Disable the AI
+    /// </summary>
     private void DisableAI()
     {
         Inturrupt();
@@ -121,11 +131,13 @@ public class EnemyTarget : Target, TimeObserver
         _rb.useGravity = true;
 
         if (_managerRef != null)
-            _managerRef.enabled= false;
-        if(_agentRef != null)
+            _managerRef.enabled = false;
+        if (_agentRef != null)
             _agentRef.enabled = false;
     }
-
+    /// <summary>
+    /// Reactivate the AI
+    /// </summary>
     private void EnableAI()
     {
         _rb.isKinematic = true;
@@ -142,26 +154,23 @@ public class EnemyTarget : Target, TimeObserver
     /// </summary>
     public override void Inturrupt()
     {
-        if(_managerRef != null)
+        if (_managerRef != null)
             _managerRef.InturruptAI();
     }
 
+    /// <summary>
+    /// Check if the AI has landed on the ground
+    /// </summary>
+    /// <returns></returns>
     private bool LandedOnGround()
     {
-        return Physics.CheckSphere(_center.position, groundDist, groundMask);
+        Debug.DrawLine(_center.position, _center.position + Vector3.down * groundDist, Color.yellow);
+        return Physics.Raycast(_center.position, Vector3.down, groundDist, groundMask);
     }
 
     /// <summary>
-    /// Return enemy to pool, if available, instead of destroying it
+    /// When time is stopped (called by TimeManager), store velocity and freeze
     /// </summary>
-    protected override void DestroyObject()
-    {
-        if(EnemyPooler.instance != null)
-            EnemyPooler.instance.Return(enemyData, gameObject);
-        else
-            Destroy(gameObject);
-    }
-
     public void OnStop()
     {
         if (_rb != null)
@@ -172,6 +181,9 @@ public class EnemyTarget : Target, TimeObserver
 
     }
 
+    /// <summary>
+    /// When time resumes (called by TimeManager), reapply velocity 
+    /// </summary>
     public void OnResume()
     {
         if (inKnockbackState && !immuneToKnockback && _rb != null)
@@ -180,6 +192,58 @@ public class EnemyTarget : Target, TimeObserver
             _rb.velocity = storedVelocity;
         }
     }
+
+    #endregion
+
+    #region Pooling
+    /// <summary>
+    /// Core data used by enemy
+    /// </summary>
+    private EnemySO enemyData;
+
+    /// <summary>
+    /// Return this object to its pool
+    /// </summary>
+    public void ReturnToPool()
+    {
+        ResetTarget();
+
+        gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Retrieve from pool
+    /// </summary>
+    public void PullFromPool(EnemySO data)
+    {
+        if (enemyData == null)
+            enemyData = data;
+
+        // TODO - get data from difficulty scaler
+    }
+
+    /// <summary>
+    /// On top of base things, reset AI so it doesnt break on respawn
+    /// </summary>
+    public override void ResetTarget()
+    {
+        base.ResetTarget();
+
+        EnableAI();
+
+        storedVelocity = Vector3.zero;
+        OnResume();
+
+        inKnockbackState = false;
+
+        if (knockbackRoutine != null)
+        {
+            StopCoroutine(knockbackRoutine);
+            knockbackRoutine = null;
+        }
+    }
+
+    #endregion
 
     #region Cheats
     /// <summary>

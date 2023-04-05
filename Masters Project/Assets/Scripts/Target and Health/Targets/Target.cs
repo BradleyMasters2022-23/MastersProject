@@ -35,9 +35,6 @@ public abstract class Target : MonoBehaviour
 
     [Tooltip("The center point of this entity, used for targeting and spawning")]
     [SerializeField] protected Transform _center;
-    [Tooltip("Whether or not this target is immune to knockback")]
-    [SerializeField] protected bool immuneToKnockback = true;
-    [SerializeField, ShowIf("@this.immuneToKnockback == false")] protected float maxKnockback;
     [Tooltip("The team this target is a part of")]
     [SerializeField] protected Team _team = Team.UNASSIGNED;
     [Tooltip("The threat of this target, used for AI targeting")]
@@ -54,16 +51,22 @@ public abstract class Target : MonoBehaviour
     /// </summary>
     protected HealthManager _healthManager;
 
-    [Tooltip("If enabled, this target can not take damage until the shield is destroyed")]
-    [SerializeField] private HealthManager invincibilityShield;
-
-    // The manger controlling buffs and debuffs for this target
-    //private EffectManager _effectManager;
-
     /// <summary>
     /// Whether or not this entity has already been killed
     /// </summary>
     protected bool _killed = false;
+
+    [Header("Core Gameplay Features")]
+
+    [Tooltip("Whether or not this target is immune to knockback")]
+    [SerializeField] protected bool immuneToKnockback = true;
+    [SerializeField, ShowIf("@this.immuneToKnockback == false")] protected float maxKnockback;
+    [Tooltip("If enabled, this target can not take damage until the shield is destroyed")]
+    [SerializeField] protected ShieldTarget invincibilityShield;
+    [SerializeField] protected float shieldDeathImmunity;
+
+    // The manger controlling buffs and debuffs for this target
+    //private EffectManager _effectManager;
 
     [Header("Core Visual Info")]
 
@@ -173,11 +176,6 @@ public abstract class Target : MonoBehaviour
             Instantiate(_deathVFX, _center.position, Quaternion.identity);
     }
 
-    public bool Killed()
-    {
-        return _killed;
-    }
-
     /// <summary>
     /// Inturrupt the target. By default, do nothing.
     /// </summary>
@@ -185,6 +183,23 @@ public abstract class Target : MonoBehaviour
     {
         return;
     }
+
+    /// <summary>
+    /// Reset the core values of the target
+    /// </summary>
+    public virtual void ResetTarget()
+    {
+        _killed = false;
+        _healthManager.ResetHealth();
+
+        if (invincibilityShield != null)
+            invincibilityShield.ResetTarget();
+    }
+    
+    //public void ShieldDestroyed()
+    //{
+    //    _healthManager.InvulnerabilityDuration(shieldDeathImmunity);
+    //}
 
     /// <summary>
     /// Determine if drops should drop, and spawn them
@@ -230,7 +245,6 @@ public abstract class Target : MonoBehaviour
         _rb.AddForce(forceVector, ForceMode.Impulse);
     }
 
-
     #region Getters
 
     /// <summary>
@@ -253,6 +267,15 @@ public abstract class Target : MonoBehaviour
     public float Threat
     {
         get { return _targetThreat; }
+    }
+
+    /// <summary>
+    /// Whether or not this target is killed
+    /// </summary>
+    /// <returns></returns>
+    public bool Killed()
+    {
+        return _killed;
     }
 
     #endregion

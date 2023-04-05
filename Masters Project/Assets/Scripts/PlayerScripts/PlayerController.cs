@@ -169,10 +169,6 @@ public class PlayerController : MonoBehaviour
     /// Tracker for if the player can jump mid air
     /// </summary>
     private ScaledTimer kyoteTracker;
-    /// <summary>
-    /// whether kyote time is active
-    /// </summary>
-    private bool kyoteTimeActive = false;
 
     [Header("---Gravity and Ground---")]
 

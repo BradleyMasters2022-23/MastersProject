@@ -65,7 +65,7 @@ public class HealthManager : MonoBehaviour
         _healthbars = new ResourceBar[_healthbarData.Length];
         for(int i = 0; i < _healthbarData.Length; i++)
         {
-            _healthbars[i] = gameObject.AddComponent<ResourceBar>();
+            _healthbars[i] = new ResourceBar();
             _healthbars[i].Init(_healthbarData[i]);
         }
 
@@ -85,6 +85,17 @@ public class HealthManager : MonoBehaviour
         if(_invulnerable && invulnerabilityTracker.TimerDone())
         {
             _invulnerable = false;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if(!initialized) return;
+
+        // check if any of the resource bars should regenerate
+        foreach(ResourceBar bar in _healthbars)
+        {
+            bar.StateUpdateFunction();
         }
     }
 
@@ -188,6 +199,12 @@ public class HealthManager : MonoBehaviour
     {
         float healPool = hp;
 
+        if(_healthbars == null)
+        {
+            Debug.Log("ENEMY HEATH BUG DETECTED");
+            return false;
+        }
+
         for(int i = 0; i < _healthbars.Length; i++)
         {
             // If the bar does not fit this type, then skip it
@@ -211,7 +228,14 @@ public class HealthManager : MonoBehaviour
     /// </summary>
     public void ResetHealth()
     {
-        Heal(999);
+        // turn off gated healing for the full heal
+        bool originalSetting = _gateHealthbarHealing;
+        _gateHealthbarHealing = false;
+
+        Heal(9999);
+
+        // set it back to its original setting
+        _gateHealthbarHealing = originalSetting;
     }
 
     /// <summary>

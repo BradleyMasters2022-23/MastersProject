@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
 
-public class ResourceBar : MonoBehaviour
+public class ResourceBar
 {
     protected enum State
     {
@@ -61,13 +61,13 @@ public class ResourceBar : MonoBehaviour
         NonRegenStateCheck();
     }
 
-    private void FixedUpdate()
-    {
-        if (_currState == State.UNINITIALIZED)
-            return;
+    //private void FixedUpdate()
+    //{
+    //    if (_currState == State.UNINITIALIZED)
+    //        return;
 
-        StateUpdateFunction();
-    }
+    //    StateUpdateFunction();
+    //}
 
     #region State Functionality
 
@@ -127,6 +127,10 @@ public class ResourceBar : MonoBehaviour
                     if (IsFull())
                         ChangeState(State.FULL);
 
+                    break;
+                }
+            default:
+                {
                     break;
                 }
         }
@@ -284,7 +288,7 @@ public class ResourceBar : MonoBehaviour
     private void RegenTick()
     {
         // If not allowed to regen, then exit
-        if (!_regen || (_affectedByTimestop && TimeManager.WorldTimeScale != 1))
+        if (!_regen || (_affectedByTimestop && TimeManager.TimeStopped))
             return;
 
         // calculate amount to recharge, rounding down. Add to buffer

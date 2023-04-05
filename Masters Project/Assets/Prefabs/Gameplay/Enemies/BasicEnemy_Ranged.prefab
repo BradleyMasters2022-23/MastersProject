@@ -42,7 +42,6 @@ GameObject:
   - component: {fileID: 7462146391020688223}
   - component: {fileID: 5044299064169570578}
   - component: {fileID: 1319378403396501825}
-  - component: {fileID: 8449528169208757830}
   m_Layer: 8
   m_Name: Bottom
   m_TagString: Untagged
@@ -92,23 +91,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.46250343, y: 0.46749914, z: 1.105795}
   m_Center: {x: 0, y: 1.51, z: 0.89794606}
---- !u!114 &8449528169208757830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3180979698000028102}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3649e819e4c27cc42b6a37214fb092ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxVerticalKnockback: 0
-  damageMultiplier: 1
-  weakPoint: {fileID: 8300000, guid: 07bb9e13676cd0d44bf41d2a94cdb242, type: 3}
-  armoredPoint: {fileID: 8300000, guid: 783625c99ffed2c47b4b650fc0fee16b, type: 3}
-  basicHit: {fileID: 8300000, guid: c8f86fc7748ff914a8b2855390669915, type: 3}
 --- !u!1 &5110983048130871982
 GameObject:
   m_ObjectHideFlags: 0
@@ -274,6 +256,8 @@ MonoBehaviour:
   _team: 2
   _targetThreat: 40
   _unkillable: 0
+  invincibilityShield: {fileID: 0}
+  shieldOnStart: 1
   _deathVFX: {fileID: 7428150280865193490, guid: 6e221f18ca47d5547a8bd26d21fd46a8, type: 3}
   damagedSound: {fileID: 11400000, guid: 4ba21dac44b2634469d022e7027035df, type: 2}
   deathSound: {fileID: 11400000, guid: e9eb6a05acbfe4b4a9897c4a09a84f2b, type: 2}
@@ -876,7 +860,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4513353920264541414}
-  - component: {fileID: 2727972098896880311}
   - component: {fileID: 927205269294769694}
   m_Layer: 8
   m_Name: Top [WEAK]
@@ -900,23 +883,6 @@ Transform:
   m_Father: {fileID: 3157863991490307576}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2727972098896880311
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8395687668893870016}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3649e819e4c27cc42b6a37214fb092ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxVerticalKnockback: 0
-  damageMultiplier: 2
-  weakPoint: {fileID: 8300000, guid: 07bb9e13676cd0d44bf41d2a94cdb242, type: 3}
-  armoredPoint: {fileID: 8300000, guid: 783625c99ffed2c47b4b650fc0fee16b, type: 3}
-  basicHit: {fileID: 8300000, guid: c8f86fc7748ff914a8b2855390669915, type: 3}
 --- !u!64 &927205269294769694
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1171,7 +1137,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 923ebfc81b1a34d41ab508007c030731, type: 2}
     - target: {fileID: 7245663367553617137, guid: fb508180db179684aab13560ae54f22d, type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7481244171217644973, guid: fb508180db179684aab13560ae54f22d, type: 3}
       propertyPath: m_RootOrder
@@ -1219,7 +1185,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7620971392124543361, guid: fb508180db179684aab13560ae54f22d, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7825399365762283287, guid: fb508180db179684aab13560ae54f22d, type: 3}
       propertyPath: m_Name

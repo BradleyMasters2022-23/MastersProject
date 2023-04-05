@@ -144,7 +144,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0095fbc8655ffd2458102e7fe9b121f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timestopFreezeThreshold: 0.1
   explosive: {fileID: 9190282065216066553, guid: 814f38b5085ab7646921f0dd0c040b47, type: 3}
   detonateTimer: 0
   affectedByTimestop: 1
@@ -155,9 +154,10 @@ MonoBehaviour:
   instantDetonateTags:
   - Enemy
   - Interactable
+  - Shield
   velocityLossOnBounce: 0.5
-  LaunchGrenade: {fileID: 8300000, guid: acf7a163b9fa60741ad77a4c7d0a3493, type: 3}
-  ExplodeGrenade: {fileID: 8300000, guid: 0552107b29c7d264694fe6d461084f13, type: 3}
+  flyGrenade: {fileID: 0}
+  triggerGrenade: {fileID: 0}
 --- !u!82 &495900248370318436
 AudioSource:
   m_ObjectHideFlags: 0
