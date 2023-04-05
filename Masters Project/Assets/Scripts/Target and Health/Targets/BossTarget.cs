@@ -37,7 +37,7 @@ public class BossTarget : Target
 
     public void StartBoss()
     {
-        Debug.Log("Starting boss encounter");
+        //Debug.Log("Starting boss encounter");
         _healthManager.onHealthbarLostEvents += CallTransition;
         phaseIndex = -1;
         CallTransition();
@@ -71,20 +71,20 @@ public class BossTarget : Target
         // If there is a phase left, transition to it
         if(phaseIndex < phaseChangeEvents.Length)
         {
-            Debug.Log($"[BOSS] Transitioning to phase {phaseChangeEvents[phaseIndex].stageName}");
+            //Debug.Log($"[BOSS] Transitioning to phase {phaseChangeEvents[phaseIndex].stageName}");
 
             TimedEvent[] events = phaseChangeEvents[phaseIndex].OnTriggerEvent;
             yield return StartCoroutine("ExecuteEvents", events);
         }
 
 
-        Debug.Log("[BOSS] Transition done");
+        //Debug.Log("[BOSS] Transition done");
         yield return null;
     }
 
     protected IEnumerator ExecuteEvents(TimedEvent[] events)
     {
-        Debug.Log("Executing events");
+        //Debug.Log("Executing events");
         foreach (var e in events)
         {
             e.action.Invoke();
