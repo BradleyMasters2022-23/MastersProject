@@ -324,7 +324,7 @@ public class GameManager : MonoBehaviour
     /// <param name="c"></param>
     public void TogglePause(InputAction.CallbackContext c = default)
     {
-        Debug.Log("Toggle pause called");
+        //Debug.Log("Toggle pause called");
 
         // try pausing
         if (ValidateStateChange(States.PAUSED))
