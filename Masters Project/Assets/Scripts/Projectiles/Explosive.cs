@@ -24,6 +24,7 @@ public class Explosive : MonoBehaviour
     [SerializeField] private VisualEffect VFX;
     [Tooltip("Duration to play detonate VFX for")]
     [SerializeField] private float VFXDuration = 1;
+    [SerializeField, Range(0.01f, 3f)] private float effectScalingRate = 1.04f;
     /// <summary>
     /// tracker for VFX lifetime
     /// </summary>
@@ -87,6 +88,10 @@ public class Explosive : MonoBehaviour
         damageLifeTracker = new ScaledTimer(damageDuration, affectedByTimestop);
         VFXLifeTracker = new ScaledTimer(VFXDuration, affectedByTimestop);
         VFX.Stop();
+
+        // 1.08 is the general eyeball for extra increase for scale to ensure effect and radius match
+        VFX.transform.localScale = Vector3.one * explosiveRadius * effectScalingRate;
+
         col = GetComponent<SphereCollider>();
 
         if (instantDetoante)

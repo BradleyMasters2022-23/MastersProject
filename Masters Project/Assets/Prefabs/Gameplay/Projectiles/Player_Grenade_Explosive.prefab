@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 7197688024548056736}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 9190282065216066552}
@@ -66,7 +66,7 @@ VisualEffect:
       - m_Value: 16
         m_Name: Cloud Amount
         m_Overridden: 1
-      - m_Value: 5
+      - m_Value: 1.6
         m_Name: Cloud Size
         m_Overridden: 1
       - m_Value: 1
@@ -81,16 +81,16 @@ VisualEffect:
       m_Array: []
     m_Vector4f:
       m_Array:
-      - m_Value: {x: 0, y: 0.027543306, z: 1, w: 0}
+      - m_Value: {x: 1, y: 0, z: 0, w: 0}
         m_Name: Cloud Color
         m_Overridden: 1
-      - m_Value: {x: 0, y: 1, z: 0.6021943, w: 0}
+      - m_Value: {x: 1, y: 0.46964312, z: 0, w: 0}
         m_Name: Cloud Emmisive
         m_Overridden: 1
-      - m_Value: {x: 0, y: 3.9999995, z: 1.0394934, w: 0}
+      - m_Value: {x: 3.9999995, y: 1.1108148, z: 0, w: 0}
         m_Name: Flash Color
         m_Overridden: 1
-      - m_Value: {x: 0, y: 12.103939, z: 4.949549, w: 0}
+      - m_Value: {x: 12.10394, y: 2.3597064, z: 0, w: 0}
         m_Name: Spark Color
         m_Overridden: 1
       - m_Value: {x: 0.011764706, y: 0.011764706, z: 0.011764706, w: 0}
@@ -267,12 +267,13 @@ MonoBehaviour:
   instantDetoante: 0
   VFX: {fileID: 2084103834189661254}
   VFXDuration: 1.3
+  effectScalingRate: 1.04
   explosionSound: {fileID: 11400000, guid: 737ecf3f1baa2f54f86d7d7d335b802e, type: 2}
   affectedByTimestop: 1
   solidInTimetop: 0
   damage: 140
   playerDamage: 0
-  explosiveRadius: 8
+  explosiveRadius: 6
   damageDuration: 0.01
   horizontalForce: 20
   verticalForce: 30
@@ -322,5 +323,5 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 6
   m_Center: {x: 0, y: 0, z: 0}
