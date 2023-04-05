@@ -63,7 +63,6 @@ public abstract class Target : MonoBehaviour
     [SerializeField, ShowIf("@this.immuneToKnockback == false")] protected float maxKnockback;
     [Tooltip("If enabled, this target can not take damage until the shield is destroyed")]
     [SerializeField] protected ShieldTarget invincibilityShield;
-    [SerializeField] protected float shieldDeathImmunity;
 
     // The manger controlling buffs and debuffs for this target
     //private EffectManager _effectManager;
