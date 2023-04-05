@@ -101,7 +101,7 @@ public class Projectile : RangeAttack
         if (Physics.SphereCast(transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, dist, hitLayers))
         {
             Hit(target.point, target.normal);
-            ApplyDamage(target.collider.transform);
+            ApplyDamage(target.collider.transform, target.point);
         }
         else if (Physics.Raycast(transform.position, transform.forward, out target, dist, worldLayers))
         {

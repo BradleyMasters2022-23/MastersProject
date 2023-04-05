@@ -29,6 +29,11 @@ public abstract class RangeAttack : Attack
     [SerializeField] protected LayerMask hitLayers;
     [SerializeField] protected LayerMask worldLayers;
 
+    /// <summary>
+    /// Owner of the ranged attacks
+    /// </summary>
+    protected GameObject owner;
+
     [Header("Ranged Gameplay")]
 
     [Tooltip("Base speed this attack moves at")]
@@ -58,14 +63,18 @@ public abstract class RangeAttack : Attack
     /// </summary>
     /// <param name="_damageMultiplier">multiplier for the damage. % based.</param>
     /// <param name="_speedMultiplier">multiplier for the speed. % based.</param>
-    public virtual void Initialize(float _damageMultiplier, float _speedMultiplier, float maxRange, bool _shotByPlayer = false)
+    public virtual void Initialize(float _damageMultiplier, float _speedMultiplier, float maxRange, GameObject owner, bool _shotByPlayer = false)
     {
+        active = false;
+
         source = GetComponent<AudioSource>();
 
         damage *= Mathf.FloorToInt(_damageMultiplier);
         speed *= _speedMultiplier;
         shotByPlayer = _shotByPlayer;
         range = maxRange;
+        this.owner = owner;
+        
         // Activate the projectile after being initialized
         Activate();
     }
@@ -104,7 +113,7 @@ public abstract class RangeAttack : Attack
         else
             hitTargets = new List<Transform>();
 
-        onActivateSFX.PlayClip(transform);
+        onActivateSFX?.PlayClip(transform);
 
         UniqueActivate();
 
@@ -132,9 +141,9 @@ public abstract class RangeAttack : Attack
     /// Apply damage, check if max hits has been reached
     /// </summary>
     /// <param name="target"></param>
-    protected virtual void ApplyDamage(Transform target)
+    protected virtual void ApplyDamage(Transform target, Vector3 damagePoint)
     {
-        bool dealtDamage = DealDamage(target);
+        bool dealtDamage = DealDamage(target, damagePoint);
 
         // if damage was dealt and max targets reached, end projectile
         if (dealtDamage && hitTargets.Count >= maxHits)

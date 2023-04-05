@@ -231,13 +231,15 @@ public abstract class Target : MonoBehaviour
         if (immuneToKnockback || _rb == null || _rb.isKinematic)
             return;
 
+        Debug.DrawLine(_center.position, origin, Color.blue, 3f);
+
         // Calculate force vector, draw for debug reasons
         Vector3 forceVector = (_center.position - origin).normalized * force;
         forceVector += Vector3.up * verticalForce;
         // Clamp max knockback
         if(forceVector.magnitude > maxKnockback)
             forceVector= forceVector.normalized * maxKnockback;
-        Debug.DrawRay(origin, forceVector, Color.red, 3f);
+        //Debug.DrawRay(origin, forceVector, Color.red, 3f);
 
         // Zero current velocity, apply new force
         _rb.velocity= Vector3.zero;

@@ -220,7 +220,7 @@ public class PlayerGunController : MonoBehaviour
                 newShot.transform.LookAt(shootCam.TargetPos);
                 newShot.transform.eulerAngles = ApplySpread(newShot.transform.eulerAngles);
 
-                newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current, maxRange, true);
+                newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current, maxRange, gameObject, true);
                 currBloom = Mathf.Clamp(currBloom + bloomPerShot, baseBloom, maxBloom);
             }
         }
@@ -243,7 +243,7 @@ public class PlayerGunController : MonoBehaviour
 
                 // Aim to center screen, apply inaccuracy bonuses
                 newShot.transform.LookAt(shootCam.TargetPos);
-                newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current * enhancedSpeedMultiplier, maxRange, true);
+                newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current * enhancedSpeedMultiplier, maxRange, gameObject, true);
 
             }
         }

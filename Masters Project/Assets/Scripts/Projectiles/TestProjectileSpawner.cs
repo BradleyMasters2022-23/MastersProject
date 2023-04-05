@@ -12,6 +12,8 @@ public class TestProjectileSpawner : MonoBehaviour
     public GameObject projectile;
     public Transform shootPoint;
 
+    public float range;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +25,9 @@ public class TestProjectileSpawner : MonoBehaviour
         for(int i = 0; i < numOfShotsPer; i++)
         {
             Quaternion lookRot = Quaternion.LookRotation(transform.forward, Vector3.up);
-            Instantiate(projectile, shootPoint.position, lookRot);
+            GameObject p = Instantiate(projectile, shootPoint.position, lookRot);
+
+            p.GetComponent<RangeAttack>().Initialize(1, 1, range, gameObject);
         }
     }
 }

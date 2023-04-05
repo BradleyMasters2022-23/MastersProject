@@ -9,6 +9,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
+using UnityEngine.UIElements;
 
 public abstract class Attack : MonoBehaviour
 {
@@ -17,11 +19,12 @@ public abstract class Attack : MonoBehaviour
     [Tooltip("Damage this attack deals")]
     [SerializeField] protected int damage;
 
-    //[Tooltip("What layers should this attack ignore")]
-    //[SerializeField] protected LayerMask layersToIgnore;
-
     [Tooltip("Amount of knockback this attack does")]
-    [SerializeField] protected float knockback;
+    [SerializeField] protected bool knockback;
+    [HideIf("@this.knockback == false")]
+    [SerializeField] private float horizontalKnockback;
+    [HideIf("@this.knockback == false")]
+    [SerializeField] private float verticalKnockback;
 
     [SerializeField] protected bool affectedByTimestop;
 
@@ -37,17 +40,28 @@ public abstract class Attack : MonoBehaviour
     }
 
     /// <summary>
-    /// Deal damage to the given target, if possible
+    /// Deal damage and knockback to the given target, if possible
     /// </summary>
     /// <param name="_targetObj">Target to try and deal damage to </param>
     /// <returns>Whether damage was successfully dealt</returns>
     protected virtual bool DealDamage(Transform _targetObj)
     {
+        return DealDamage(_targetObj, transform.position);
+    }
+
+    /// <summary>
+    /// Deal damage and knockback to the given target, if possible
+    /// </summary>
+    /// <param name="_targetObj">target object to deal damage to</param>
+    /// <param name="damagePoint">override point of damage for knockback</param>
+    /// <returns></returns>
+    protected virtual bool DealDamage(Transform _targetObj, Vector3 damagePoint)
+    {
         Target target = _targetObj.GetComponent<Target>();
         Transform parentPointer = _targetObj.parent;
         while (target == null)
         {
-            if(parentPointer == null)
+            if (parentPointer == null)
             {
                 return false;
             }
@@ -58,13 +72,18 @@ public abstract class Attack : MonoBehaviour
             }
         }
 
-
         // Check if the target can be damaged
         if (target != null && !hitTargets.Contains(target.transform) && !target.Killed())
         {
             // Damage target, prevent multi damaging
             target.RegisterEffect(damage);
             hitTargets.Add(target.transform.root);
+
+            if (knockback)
+            {
+                target.Knockback(horizontalKnockback, verticalKnockback, damagePoint);
+            }
+
             return true;
         }
         // otherwise if no target, return false bc no damage dealt
@@ -99,12 +118,4 @@ public abstract class Attack : MonoBehaviour
     /// Activate this attack
     /// </summary>
     public abstract void Activate();
-
-    /// <summary>
-    /// Call a hit function, public so others can call it
-    /// </summary>
-    public virtual void ScriptCallHit(Transform target)
-    {
-        Hit(target.position, -transform.forward);
-    }
 }
