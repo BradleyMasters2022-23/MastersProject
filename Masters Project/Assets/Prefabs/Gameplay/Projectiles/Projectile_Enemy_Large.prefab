@@ -130,19 +130,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 6
   knockback: 10
-  addativeKnockback: 1
+  affectedByTimestop: 1
+  shotByPlayer: 0
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 2359360
+  worldLayers:
+    serializedVersion: 2
+    m_Bits: 2057
   speed: 21
   range: 200
-  shotByPlayer: 0
-  onHitEffect: {fileID: 293939513845853792, guid: e5a26414f710b8f4b870ba95ee78b7d5, type: 3}
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 64
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 2056
-  bulletShot: {fileID: 0}
-  bulletHit: {fileID: 0}
+  maxHits: 1
+  onActivateSFX: {fileID: 0}
+  hitSFX: {fileID: 0}
+  onHitVFX: {fileID: 293939513845853792, guid: e5a26414f710b8f4b870ba95ee78b7d5, type: 3}
   bulletVisual: {fileID: 0}
   scaleOverDistance:
     serializedVersion: 2
@@ -151,8 +152,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   fadeVFX: {fileID: 0}
-  maxHits: 1
-  affectedByTimestop: 1
 --- !u!1001 &1004978908215395016
 PrefabInstance:
   m_ObjectHideFlags: 0

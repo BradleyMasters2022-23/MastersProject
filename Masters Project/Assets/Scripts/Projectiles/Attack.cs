@@ -22,10 +22,8 @@ public abstract class Attack : MonoBehaviour
 
     [Tooltip("Amount of knockback this attack does")]
     [SerializeField] protected float knockback;
-    [Tooltip("Whether the knockback is added to the target's velocity or overwrites it.")]
-    [SerializeField] protected bool addativeKnockback;
 
-    protected bool hitTarget;
+    [SerializeField] protected bool affectedByTimestop;
 
     /// <summary>
     /// Keep track of hit targets
@@ -66,7 +64,6 @@ public abstract class Attack : MonoBehaviour
         {
             // Damage target, prevent multi damaging
             target.RegisterEffect(damage);
-            //hitTarget = true;
             hitTargets.Add(target.transform.root);
             return true;
         }
@@ -81,7 +78,14 @@ public abstract class Attack : MonoBehaviour
     /// <param name="other">Object it hit</param>
     private void OnTriggerEnter(Collider other)
     {
-        Hit(transform.position);
+        Vector3 hitNormal;
+
+        if (other.GetType() == typeof(MeshCollider) && !other.GetComponent<MeshCollider>().convex)
+            hitNormal = -transform.forward;
+        else
+            hitNormal = transform.position - other.ClosestPoint(transform.position);
+
+        Hit(transform.position, hitNormal.normalized);
         DealDamage(other.transform);
     }
 
@@ -89,7 +93,7 @@ public abstract class Attack : MonoBehaviour
     /// What visually happens when this attack hits something
     /// These effects should happen on the impact point
     /// </summary>
-    protected abstract void Hit(Vector3 impactPoint);
+    protected abstract void Hit(Vector3 impactPoint, Vector3 hitNormal);
 
     /// <summary>
     /// Activate this attack
@@ -101,6 +105,6 @@ public abstract class Attack : MonoBehaviour
     /// </summary>
     public virtual void ScriptCallHit(Transform target)
     {
-        Hit(target.position);
+        Hit(target.position, -transform.forward);
     }
 }

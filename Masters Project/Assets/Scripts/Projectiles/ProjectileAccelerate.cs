@@ -14,7 +14,7 @@ using UnityEngine.Assertions.Must;
 
 public class ProjectileAccelerate : Projectile
 {
-    [Header("--- Acceleration Stuff ---")]
+    [Header("Acceleration")]
  
     [SerializeField] private float acceleratingRate;
     [SerializeField] private float targetEndVelocity;
@@ -26,6 +26,9 @@ public class ProjectileAccelerate : Projectile
     [Tooltip("If this shot is decelerating and can stop, how long does it live for?")]
     [SerializeField] private float projectileLifetime;
 
+    /// <summary>
+    /// Track its lifetime timer
+    /// </summary>
     private ScaledTimer lifetime;
 
     // Update is called once per frame
@@ -35,12 +38,12 @@ public class ProjectileAccelerate : Projectile
         base.Fly();
     }
 
-    protected override void CheckLife()
+    protected override bool CheckLife()
     {
-        base.CheckLife();
-        
-        if (lifetime != null && lifetime.TimerDone())
-            End();
+        if (base.CheckLife())
+            return true;
+        else
+            return lifetime != null && lifetime.TimerDone();
     }
 
     /// <summary>
@@ -70,9 +73,6 @@ public class ProjectileAccelerate : Projectile
             targetVelocity = transform.forward * targetEndVelocity;
         }
 
-        //rb.velocity = targetVelocity * TimeManager.WorldTimeScale;
-
-
         // if accelerating, check to see if it reached its max velocity
         if (!reachedTarget
             && ((acceleratingRate > 1 && targetVelocity.magnitude >= targetEndVelocity)
@@ -80,7 +80,5 @@ public class ProjectileAccelerate : Projectile
         {
             reachedTarget = true;
         }
-
-        //futurePos = transform.position + rb.velocity;
     }
 }

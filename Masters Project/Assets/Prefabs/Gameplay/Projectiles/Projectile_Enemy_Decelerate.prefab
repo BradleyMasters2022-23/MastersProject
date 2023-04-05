@@ -326,21 +326,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 5
   knockback: 0
-  addativeKnockback: 0
+  affectedByTimestop: 1
+  shotByPlayer: 0
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 2359360
+  worldLayers:
+    serializedVersion: 2
+    m_Bits: 0
   speed: 75
   range: 300
-  shotByPlayer: 0
-  onHitEffect: {fileID: 8310898044211945277, guid: 011a9baa743b55648b354e6aaf58a345, type: 3}
-  targetLayers:
+  maxHits: 0
+  onActivateSFX: {fileID: 0}
+  hitSFX: {fileID: 0}
+  onHitVFX: {fileID: 0}
+  bulletVisual: {fileID: 0}
+  scaleOverDistance:
     serializedVersion: 2
-    m_Bits: 32960
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 2185
-  enemyShoot: []
-  enemyHit: []
-  startSpeed: 12
-  affectedByTimestop: 1
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  fadeVFX: {fileID: 0}
   acceleratingRate: 0.34
   targetEndVelocity: 0
   projectileLifetime: 15
