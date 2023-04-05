@@ -70,7 +70,7 @@ public class CallManager : MonoBehaviour
             if(conversation.currentState == Conversation.ConversationState.UNREAD && !availableConversations.Contains(conversation))
             {
                 availableConversations.Add(conversation);
-                Debug.Log(conversation.ID + "added to available");
+                //Debug.Log(conversation.ID + " added to available");
             }
 
         }
