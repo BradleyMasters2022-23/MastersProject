@@ -41,7 +41,7 @@ public class Conversation : ScriptableObject
     {
         if(currentState != ConversationState.UNREAD && ID >= 0)
         {
-            Debug.Log("Conversation " + ID + " cannot be read");
+            //Debug.Log("Conversation " + ID + " cannot be read");
         }
         else
         {
@@ -55,11 +55,11 @@ public class Conversation : ScriptableObject
         if(currentState== ConversationState.LOCKED)
         {
             currentState = ConversationState.UNREAD;
-            Debug.Log("Conversation " + ID + " is now available");
+            //Debug.Log("Conversation " + ID + " is now available");
         }
         else
         {
-            Debug.Log("Conversation " + ID + " is not locked");
+            //Debug.Log("Conversation " + ID + " is not locked");
         }
     }
 
@@ -71,7 +71,7 @@ public class Conversation : ScriptableObject
         }
         else
         {
-            Debug.Log("Conversation " + ID + " is already locked");
+            //Debug.Log("Conversation " + ID + " is already locked");
         }
     }
 }

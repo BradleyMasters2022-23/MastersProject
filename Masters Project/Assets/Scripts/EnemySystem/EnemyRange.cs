@@ -17,6 +17,8 @@ using Masters.AI;
 
 public class EnemyRange : EnemyBase
 {
+    /*
+
     private enum MoveState
     {
         Moving,
@@ -30,7 +32,7 @@ public class EnemyRange : EnemyBase
 
     [SerializeField] private MoveState moveState;
 
-    [SerializeField] private bool hasLineOfSight;
+    //[SerializeField] private bool hasLineOfSight;
 
     /// <summary>
     /// The navmesh component for the enemy
@@ -281,12 +283,12 @@ public class EnemyRange : EnemyBase
         // Use a cast to make sure it accounts for the shot's radius
         if (Physics.SphereCast(shootPoints[0].position, shotRadius, direction, out hit, attackRange, visionLayer))
         {
-            hasLineOfSight = true;
+            //hasLineOfSight = true;
             if (hit.transform.CompareTag("Player"))
                 return true;
         }
 
-        hasLineOfSight = false;
+        //hasLineOfSight = false;
         return false;
     }
 
@@ -388,7 +390,7 @@ public class EnemyRange : EnemyBase
             StopCoroutine(attackRoutine);
     }
 
-    */
+    
     #endregion
 
     #region Movement
@@ -560,5 +562,7 @@ public class EnemyRange : EnemyBase
         }
     }
 
+    
     #endregion
+    */
 }

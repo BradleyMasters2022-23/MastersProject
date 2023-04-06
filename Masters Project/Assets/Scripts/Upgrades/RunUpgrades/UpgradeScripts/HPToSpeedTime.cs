@@ -9,23 +9,25 @@ public class HPToSpeedTime : IUpgrade {
     //[SerializeField] private float timeGaugeMultiplier;
     [SerializeField] private float moveSpeedMultiplier;
     
-    private PlayerHealth hp;
+    //private PlayerHealth hp;
     private TimeManager time;
 
-    public override void LoadUpgrade(PlayerController player) {
-        hp = player.GetComponent<PlayerHealth>();
-        time = FindObjectOfType<TimeManager>();
-        hp.SetHealthPerSection(healthPerSection);
-        foreach (PlayerHealthSection section in hp.GetSections())
-        {
-            section.SetMaxHealth(healthPerSection);
-        }
+    // Commented stuff out while removing old health system
 
-        hp.ResetSectionIndex();
-        player.SetMoveSpeed(moveSpeedMultiplier);
-        time.SetRegenTime(timeRegenMultiplier);
+    public override void LoadUpgrade(PlayerController player) {
+        //hp = player.GetComponent<PlayerHealth>();
+        //time = FindObjectOfType<TimeManager>();
+        //hp.SetHealthPerSection(healthPerSection);
+        //foreach (PlayerHealthSection section in hp.GetSections())
+        //{
+        //    section.SetMaxHealth(healthPerSection);
+        //}
+
+        //hp.ResetSectionIndex();
+        //player.SetMoveSpeed(moveSpeedMultiplier);
+        //time.SetRegenTime(timeRegenMultiplier);
         //time.SetGaugeMax(timeGaugeMultiplier);
-        time.SetRegenDelay(regenDelayMultiplier);
+        //time.SetRegenDelay(regenDelayMultiplier);
         //time.ChipRefillGauge();
         
 
@@ -33,13 +35,13 @@ public class HPToSpeedTime : IUpgrade {
 
     private void Update()
     {
-        foreach(PlayerHealthSection section in hp.GetSections())
-        {
-            if(section.GetState() == PlayerHealthSection.HealthSectionState.EMPTIED)
-            {
-                section.ChipChangeState(PlayerHealthSection.HealthSectionState.IDLE);
-                hp.ResetSectionIndex();
-            }
-        }
+        //foreach(PlayerHealthSection section in hp.GetSections())
+        //{
+        //    if(section.GetState() == PlayerHealthSection.HealthSectionState.EMPTIED)
+        //    {
+        //        section.ChipChangeState(PlayerHealthSection.HealthSectionState.IDLE);
+        //        hp.ResetSectionIndex();
+        //    }
+        //}
     }
 }

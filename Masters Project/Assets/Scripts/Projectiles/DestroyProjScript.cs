@@ -13,6 +13,6 @@ public class DestroyProjScript : MonoBehaviour
 
     public void DestroyProj()
     {
-        parent.ScriptCallHit();
+        //parent.ScriptCallHit();
     }
 }

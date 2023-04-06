@@ -110,6 +110,11 @@ public class LookAtTarget : BaseEnemyMovement
         
     }
 
+    protected override void OnDisable()
+    {
+        target = null;
+    }
+
     /// <summary>
     /// Suprise! The player isnt there anymore!
     /// be stunned for a moment. Put things like visual effects or SFX here. 
