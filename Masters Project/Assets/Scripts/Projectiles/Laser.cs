@@ -5,18 +5,70 @@ using UnityEngine.VFX;
 
 public class Laser : RangeAttack, TimeObserver
 {
+    [Header("Laser Gameplay")]
+
+    [Tooltip("Whether or not to attach to its owner on fire")]
+    [SerializeField] private bool attachToOwner;
+    [Tooltip("Duration this laser remains active")]
     [SerializeField] private float duration;
+    [Tooltip("Radius of the laser")]
+    [SerializeField] private float laserRadius;
+    [Tooltip("Whether or not the laser is solid in timestop")]
+    [SerializeField] private bool solidInTimestop;
+    [Tooltip("Collider of the laser")]
+    [SerializeField] private CapsuleCollider col;
+    /// <summary>
+    /// Tracker for the timed duration of the laser
+    /// </summary>
     private ScaledTimer durationTracker;
-    [SerializeField] private VisualEffect originVFX;
-    [SerializeField] private VisualEffect endVFX;
+
+    [Header("Laser Effects")]
+    [Tooltip("Object playing the laser origin VFX, where the beam starts")]
+    [SerializeField] private GameObject originVFX;
+    [SerializeField] private float originVFXOffset;
+    [Tooltip("Object playing the laser wall impact VFX, where the beam ends if it hits the world")]
+    [SerializeField] private GameObject endVFX;
+    [Tooltip("Reference to the line renderer this laser uses")]
     [SerializeField] private LineRenderer beamLineRenderer;
+
+    [SerializeField] private float hitVFXCooldown;
+
     [SerializeField] private Color startBeamColor;
     [SerializeField] private Color endBeamColor;
 
-    [SerializeField] private float laserRadius;
-    [SerializeField] private bool solidInTimestop;
+    private ScaledTimer hitVFXCooldownTracker;
 
-    [SerializeField] private CapsuleCollider col;
+    /// <summary>
+    /// Activate everything regarding the laser
+    /// </summary>
+    protected override void UniqueActivate()
+    {
+        if (owner != null && attachToOwner)
+            transform.SetParent(owner.transform, true);
+
+        beamLineRenderer.startColor = startBeamColor;
+        beamLineRenderer.endColor = endBeamColor;
+        beamLineRenderer.startWidth = laserRadius * 2;
+        beamLineRenderer.endWidth = laserRadius * 2;
+
+        if (solidInTimestop && col != null)
+            TimeManager.instance.Subscribe(this);
+
+        if (originVFX != null)
+        {
+            originVFX.SetActive(true);
+            originVFX.transform.localPosition = Vector3.forward * originVFXOffset;
+        }
+
+        durationTracker = new ScaledTimer(duration, affectedByTimestop);
+        hitVFXCooldownTracker = new ScaledTimer(hitVFXCooldown);
+    }
+
+    private void OnDisable()
+    {
+        if(solidInTimestop && col!=null)
+            TimeManager.instance.UnSubscribe(this);
+    }
 
     private void FixedUpdate()
     {
@@ -33,9 +85,61 @@ public class Laser : RangeAttack, TimeObserver
         Fly();
     }
 
-    public override void Inturrupt()
+    /// <summary>
+    /// Perform flight behavior for laser, which is hitscan
+    /// </summary>
+    protected override void Fly()
     {
-        return;
+        // Update origin point and target point
+        beamLineRenderer.SetPosition(0, transform.position);
+
+        RaycastHit hitInfo;
+        float hitRange = range;
+        // Check for wall collision first
+        if (Physics.SphereCast(transform.position, laserRadius, transform.forward, out hitInfo, range, worldLayers))
+        {
+            beamLineRenderer.SetPosition(1, hitInfo.point);
+            hitRange = Vector3.Distance(hitInfo.point, transform.position);
+
+            // update the world hit VFX position and if its enabled or not
+            if (endVFX != null)
+            {
+                if (!endVFX.activeInHierarchy)
+                    endVFX.SetActive(true);
+
+                endVFX.transform.position = hitInfo.point;
+                endVFX.transform.LookAt(transform.position + hitInfo.normal);
+            }
+        }
+        // if no world hit, turn off VFX
+        else if (endVFX != null && endVFX.activeInHierarchy)
+        {
+            endVFX.SetActive(false);
+        }
+
+        // Update laser effect to hit wall, check if a damage target is between range
+        beamLineRenderer.SetPosition(1, transform.position + transform.forward * hitRange);
+
+        //AlignCollider();
+
+
+        // get all targets between this and the end of the laser
+        RaycastHit[] targetsHit =
+            Physics.SphereCastAll(transform.position, laserRadius, transform.forward, hitRange - laserRadius, hitLayers);
+
+        foreach (RaycastHit target in targetsHit)
+        {
+            Debug.Log($"Landing hit against {target.transform.name}");
+            if (hitVFXCooldownTracker.TimerDone())
+                Hit(target.point, target.normal);
+
+            ApplyDamage(target.transform, target.point);
+        }
+
+        if (targetsHit.Length > 0 && hitVFXCooldownTracker.TimerDone())
+            hitVFXCooldownTracker.ResetTimer();
+
+        hitTargets.Clear();
     }
 
     protected override bool CheckLife()
@@ -43,70 +147,49 @@ public class Laser : RangeAttack, TimeObserver
         return durationTracker.TimerDone();
     }
 
-    protected override void Fly()
+    public override void Inturrupt()
     {
-        // Update origin point and target point
-        beamLineRenderer.SetPosition(0, transform.position);
-        
-
-        RaycastHit hitInfo;
-        float hitRange = range;
-        // Check for wall collision first
-        if (Physics.SphereCast(transform.position, laserRadius, transform.forward, out hitInfo, range, worldLayers))
-        {
-            Debug.Log("World hit");
-            beamLineRenderer.SetPosition(1, hitInfo.point);
-            hitRange = Vector3.Distance(hitInfo.point, transform.position);
-        }
-
-        // Update laser effect to hit wall, check if a damage target is between range
-        beamLineRenderer.SetPosition(1, transform.position + transform.forward * hitRange);
-        if (Physics.SphereCast(transform.position, laserRadius, transform.forward, out hitInfo, hitRange, hitLayers))
-        {
-            Hit(hitInfo.point, hitInfo.normal);
-            ApplyDamage(hitInfo.transform, hitInfo.point);
-        }
-
-
-        hitTargets.Clear();
+        End();
     }
 
-    protected override void UniqueActivate()
+    /// <summary>
+    /// Align the collider with the current laser
+    /// </summary>
+    private void AlignCollider()
     {
-        if (owner != null)
-            transform.SetParent(owner.transform, true);
+        if (col == null) return;
 
-        beamLineRenderer.startColor= startBeamColor;
-        beamLineRenderer.endColor= endBeamColor;
-        beamLineRenderer.startWidth = laserRadius*2;
-        beamLineRenderer.endWidth = laserRadius * 2;
+        col.radius = laserRadius;
 
-        TimeManager.instance.Subscribe(this);
-
-        durationTracker = new ScaledTimer(duration, affectedByTimestop);
+        col.height = Vector3.Distance(beamLineRenderer.GetPosition(0), beamLineRenderer.GetPosition(1));
+        col.center = new Vector3(0, 0, (col.height / 2));
     }
 
-    private void OnDisable()
-    {
-        TimeManager.instance.UnSubscribe(this);
-    }
-
+    /// <summary>
+    /// Toggle the solidness of the laser
+    /// </summary>
     private void ToggleSolid(bool solid)
     {
-        if(solid)
-        {
-            col.radius = laserRadius;
+        AlignCollider();
 
-            col.height = Vector3.Distance(beamLineRenderer.GetPosition(0), beamLineRenderer.GetPosition(1));
-            col.center = new Vector3(0, 0, (col.height / 2));
-
-            col.enabled = true;
-        }
-        else
+        if (col != null)
         {
-            col.enabled = false;
+            col.isTrigger = !solid;
+            col.enabled = solid;
         }
     }
+
+    // Dont use trigger stay, above spherecast is more performative
+    //private void OnTriggerStay(Collider other)
+    //{
+    //    Vector3 target = other.ClosestPoint(transform.position);
+
+    //    if (hitVFXCooldownTracker.TimerDone())
+    //        Hit(target, (target - other.transform.position).normalized);
+
+    //    ApplyDamage(other.transform, target);
+    //}
+
 
     public void OnStop()
     {
