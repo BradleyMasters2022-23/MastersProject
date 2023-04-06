@@ -26,6 +26,9 @@
         },
         {
             "m_Id": "99240fe179d842feade46329005f82db"
+        },
+        {
+            "m_Id": "dd41588befb141d2aebdf97813604267"
         }
     ],
     "m_Keywords": [],
@@ -176,6 +179,9 @@
         },
         {
             "m_Id": "7d7330ad80c54c5c9eeb782296bd9e6a"
+        },
+        {
+            "m_Id": "2572569d3325490eafdf19e3d2a14d89"
         }
     ],
     "m_GroupDatas": [
@@ -240,6 +246,20 @@
             "m_InputSlot": {
                 "m_Node": {
                     "m_Id": "4975ced731be4897b65ebf121800fa4e"
+                },
+                "m_SlotId": 1
+            }
+        },
+        {
+            "m_OutputSlot": {
+                "m_Node": {
+                    "m_Id": "2572569d3325490eafdf19e3d2a14d89"
+                },
+                "m_SlotId": 0
+            },
+            "m_InputSlot": {
+                "m_Node": {
+                    "m_Id": "a80d6059a9954ee0ae66caee67175ce1"
                 },
                 "m_SlotId": 1
             }
@@ -1068,6 +1088,21 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
+    "m_ObjectId": "0bc6136794dc40ed87b771ef765e0373",
+    "m_Id": 0,
+    "m_DisplayName": "Movement",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Out",
+    "m_StageCapability": 3,
+    "m_Value": 0.0,
+    "m_DefaultValue": 0.0,
+    "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.TimeNode",
     "m_ObjectId": "0cb0d5588df146e3a8461a78cb739380",
     "m_Group": {
@@ -1538,6 +1573,41 @@
 
 {
     "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.PropertyNode",
+    "m_ObjectId": "2572569d3325490eafdf19e3d2a14d89",
+    "m_Group": {
+        "m_Id": "abd35d1f587c4ad3b39c3753dfa28f76"
+    },
+    "m_Name": "Property",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": -2001.0,
+            "y": -247.9999237060547,
+            "width": 131.0,
+            "height": 33.999969482421878
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "0bc6136794dc40ed87b771ef765e0373"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_Property": {
+        "m_Id": "dd41588befb141d2aebdf97813604267"
+    }
+}
+
+{
+    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.TilingAndOffsetNode",
     "m_ObjectId": "29dc00e35c9f4d69b50d1234820faf11",
     "m_Group": {
@@ -1794,10 +1864,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -849.0743408203125,
-            "y": -1131.9566650390625,
-            "width": 207.99990844726563,
-            "height": 350.0
+            "x": -639.0000610351563,
+            "y": -1301.0,
+            "width": 208.00003051757813,
+            "height": 349.99993896484377
         }
     },
     "m_Slots": [
@@ -1964,7 +2034,7 @@
     "m_Hidden": false,
     "m_ShaderOutputName": "X",
     "m_StageCapability": 3,
-    "m_Value": 0.5,
+    "m_Value": 0.029999999329447748,
     "m_DefaultValue": 0.0,
     "m_Labels": []
 }
@@ -4596,8 +4666,8 @@
     "m_ObjectId": "abd35d1f587c4ad3b39c3753dfa28f76",
     "m_Title": "Vertex Distortion",
     "m_Position": {
-        "x": 10.0,
-        "y": 10.0
+        "x": -2845.0,
+        "y": -1360.0
     }
 }
 
@@ -4885,6 +4955,9 @@
         },
         {
             "m_Id": "99240fe179d842feade46329005f82db"
+        },
+        {
+            "m_Id": "dd41588befb141d2aebdf97813604267"
         }
     ]
 }
@@ -5355,6 +5428,33 @@
         "w": 0.0
     },
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 1,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Vector1ShaderProperty",
+    "m_ObjectId": "dd41588befb141d2aebdf97813604267",
+    "m_Guid": {
+        "m_GuidSerialized": "7edfec39-581b-444f-9940-1f751221a9f3"
+    },
+    "m_Name": "Movement",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Movement",
+    "m_DefaultReferenceName": "_Movement",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_Value": 0.029999999329447748,
+    "m_FloatType": 0,
+    "m_RangeValues": {
+        "x": 0.0,
+        "y": 1.0
+    }
 }
 
 {
