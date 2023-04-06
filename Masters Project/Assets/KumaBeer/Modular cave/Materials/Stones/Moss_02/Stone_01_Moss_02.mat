@@ -2,14 +2,20 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Stone_01_Moss_02
   m_Shader: {fileID: 4800000, guid: 93093dd05eb82af448f81b848d35b28f, type: 3}
-  m_ShaderKeywords: _DETAIL_MULX2 _METALLICGLOSSMAP _NORMALMAP _USENOISE_ON
+  m_ValidKeywords:
+  - _USEDETAIL_ON
+  - _USENOISE_ON
+  m_InvalidKeywords:
+  - _DETAIL_MULX2
+  - _METALLICGLOSSMAP
+  - _NORMALMAP
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -53,6 +59,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _DetailNormalMap:
         m_Texture: {fileID: 2800000, guid: e6e5d80228a8ee34a8d8cbed50621690, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Detailmask:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
@@ -111,13 +121,16 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _AOscale: 1
+    - _AlphaCutoff: 0.5
     - _Blendnormals: 0.7
     - _BumpScale: 0.7
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DetailTiling: 1
+    - _Detailmasktriplanar: 1
     - _Detailmultiply: 2
     - _Detailnormalscale: 1
     - _Detailtriplanarmultiply: 1
@@ -141,6 +154,7 @@ Material:
     - _Snownoisescale: 1.5
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _TriplanarDetailTiling: 1
     - _TriplanarNormalScale: 1
     - _TriplanarSmoothness: 0.1
     - _TriplanarTiling: 3
@@ -149,9 +163,12 @@ Material:
     - _UVSec: 0
     - _UseNoise: 1
     - _UseSnownoise: 0
+    - _Usedetail: 1
+    - _Usedetailmaskfortriplanar: 0
     - _ZWrite: 1
     - __dirty: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
     - _TriplanarColor: {r: 0.745283, g: 0.3431167, b: 0.116011046, a: 1}
+  m_BuildTextureStacks: []
