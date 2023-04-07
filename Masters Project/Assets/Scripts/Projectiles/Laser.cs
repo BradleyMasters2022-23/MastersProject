@@ -108,7 +108,7 @@ public class Laser : RangeAttack, TimeObserver
                     endVFX.SetActive(true);
 
                 endVFX.transform.position = hitInfo.point;
-                endVFX.transform.LookAt(transform.position + hitInfo.normal);
+                endVFX.transform.LookAt(hitInfo.point + hitInfo.normal);
             }
         }
         // if no world hit, turn off VFX
@@ -152,6 +152,17 @@ public class Laser : RangeAttack, TimeObserver
     public override void Inturrupt()
     {
         End();
+    }
+
+    protected override void End()
+    {
+        if (spawnProjectileOnEnd && onEndPrefab != null && (endVFX != null && endVFX.activeInHierarchy))
+        {
+            Instantiate(onEndPrefab, endVFX.transform.position, endVFX.transform.rotation);
+        }
+            
+
+        Destroy(gameObject);
     }
 
     /// <summary>

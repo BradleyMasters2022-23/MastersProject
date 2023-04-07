@@ -60,7 +60,12 @@ public abstract class Target : MonoBehaviour
 
     [Tooltip("Whether or not this target is immune to knockback")]
     [SerializeField] protected bool immuneToKnockback = true;
-    [SerializeField, ShowIf("@this.immuneToKnockback == false")] protected float maxKnockback;
+    [ShowIf("@this.immuneToKnockback == false")]
+    [SerializeField] protected float knockbackModifier = 1f;
+    [ShowIf("@this.immuneToKnockback == false")]
+    [SerializeField] protected float maxKnockback;
+    
+
     [Tooltip("If enabled, this target can not take damage until the shield is destroyed")]
     [SerializeField] protected ShieldTarget invincibilityShield;
 
@@ -126,6 +131,31 @@ public abstract class Target : MonoBehaviour
             KillTarget();
         }
             
+    }
+
+    public virtual void RegisterEffect(TeamDamage data, float dmgMultiplier = 1)
+    {
+        if(!AffectedByAttacks() || data == null) return;
+
+        // Check which damage profile needs to be used, if available
+        TeamDmgProfile profile = data.GetTeam(_team);
+        if (profile == null || profile.team != _team || !profile.active) return;
+
+
+        if (damagedSoundCooldownTracker != null && damagedSoundCooldownTracker.TimerDone())
+        {
+            damagedSound.PlayClip(_center, audioSource);
+            damagedSoundCooldownTracker.ResetTimer();
+        }
+
+        if (!_killed && _healthManager.Damage(profile.damage) && profile.canKill)
+        {
+            if (_unkillable)
+                return;
+
+            _killed = true;
+            KillTarget();
+        }
     }
 
     /// <summary>
@@ -194,11 +224,6 @@ public abstract class Target : MonoBehaviour
         if (invincibilityShield != null)
             invincibilityShield.ResetTarget();
     }
-    
-    //public void ShieldDestroyed()
-    //{
-    //    _healthManager.InvulnerabilityDuration(shieldDeathImmunity);
-    //}
 
     /// <summary>
     /// Determine if drops should drop, and spawn them
@@ -231,7 +256,7 @@ public abstract class Target : MonoBehaviour
         if (immuneToKnockback || _rb == null || _rb.isKinematic)
             return;
 
-        Debug.DrawLine(_center.position, origin, Color.blue, 3f);
+        // Debug.DrawLine(_center.position, origin, Color.blue, 3f);
 
         // Calculate force vector, draw for debug reasons
         Vector3 forceVector = (_center.position - origin).normalized * force;
@@ -243,7 +268,17 @@ public abstract class Target : MonoBehaviour
 
         // Zero current velocity, apply new force
         _rb.velocity= Vector3.zero;
-        _rb.AddForce(forceVector, ForceMode.Impulse);
+        _rb.AddForce(forceVector * knockbackModifier, ForceMode.Impulse);
+    }
+
+    public virtual void Knockback(TeamDamage data, Vector3 origin, float multiplier = 1)
+    {
+        TeamDmgProfile profile = data.GetTeam(_team);
+
+        if(profile != null)
+        {
+            Knockback(profile.horizontalKnockback * multiplier, profile.verticalKnockback * multiplier, origin);
+        }
     }
 
     #region Getters

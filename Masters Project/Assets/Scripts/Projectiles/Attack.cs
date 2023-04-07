@@ -11,6 +11,51 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
+[System.Serializable]
+public class TeamDmgProfile
+{
+    public Team team;
+    public bool active = true;
+    public float damage;
+    public float verticalKnockback;
+    public float horizontalKnockback;
+    public bool canKill = true;
+
+    public void ToggleActive()
+    {
+        active = !active;
+    }
+}
+
+[System.Serializable]
+public class TeamDamage
+{
+    [TableList]
+    [SerializeField] List<TeamDmgProfile> damageProfiles;
+
+    public TeamDmgProfile GetTeam(Team team)
+    {
+        foreach(TeamDmgProfile profile in damageProfiles)
+        {
+            if(profile.team == team)
+                return profile;
+        }
+        return null;
+    }
+
+    public void FlipTeamActive(Team team)
+    {
+        foreach (TeamDmgProfile profile in damageProfiles)
+        {
+            if (profile.team == team)
+            {
+                profile.ToggleActive();
+                return;
+            }
+        }
+    }
+}
+
 public abstract class Attack : MonoBehaviour
 {
     [Header("===== Core Info =====")]

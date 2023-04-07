@@ -292,10 +292,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4ee4e2343443fc42ab9d4ce292655f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialDamage: 50
-  tickDamage: 15
-  playerInitialDamage: 15
-  playerTickDamage: 5
+  initialDamageProfiles:
+    damageProfiles: []
+  tickDamageProfiles:
+    damageProfiles: []
   tickRate: 0.5
 --- !u!1 &7675398446920086086
 GameObject:
@@ -358,10 +358,34 @@ MonoBehaviour:
   activationIndicators:
   - {fileID: 7675398446686802315}
   damageCollider: {fileID: 7675398446581624918}
-  initialDamage: 50
-  tickDamage: 1.5
-  playerInitialDamage: 20
-  playerTickDamage: 2
+  initialDamageProfiles:
+    damageProfiles:
+    - team: 1
+      active: 1
+      damage: 30
+      verticalKnockback: 0
+      horizontalKnockback: 0
+      canKill: 1
+    - team: 2
+      active: 1
+      damage: 50
+      verticalKnockback: 0
+      horizontalKnockback: 0
+      canKill: 1
+  tickDamageProfiles:
+    damageProfiles:
+    - team: 1
+      active: 1
+      damage: 2
+      verticalKnockback: 0
+      horizontalKnockback: 0
+      canKill: 1
+    - team: 2
+      active: 1
+      damage: 2
+      verticalKnockback: 0
+      horizontalKnockback: 0
+      canKill: 1
   tickRate: 0.01
 --- !u!114 &7675398446920086083
 MonoBehaviour:
