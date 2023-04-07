@@ -122,7 +122,7 @@ public class Laser : RangeAttack, TimeObserver
 
         // get all targets between this and the end of the laser
         RaycastHit[] targetsHit =
-            Physics.SphereCastAll(transform.position, laserRadius, transform.forward, hitRange - laserRadius, hitLayers);
+            Physics.SphereCastAll(transform.position, laserRadius, transform.forward, hitRange, hitLayers);
 
         // deal damage and effects on all targets hit by sphere cast
         foreach (RaycastHit target in targetsHit)
@@ -131,7 +131,8 @@ public class Laser : RangeAttack, TimeObserver
             if (hitVFXCooldownTracker.TimerDone())
                 Hit(target.point, target.normal);
 
-            ApplyDamage(target.transform, target.point);
+            Debug.Log($"Attempting to deal damage to {target.transform.name}");
+            ApplyDamage(target.collider.transform, target.point);
         }
 
         // If any target was hit and the cooldown is done, then reset the cooldown

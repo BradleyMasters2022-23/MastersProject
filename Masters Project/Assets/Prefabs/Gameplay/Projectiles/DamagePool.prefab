@@ -125,7 +125,7 @@ MonoBehaviour:
       damage: 10
       verticalKnockback: 0
       horizontalKnockback: 0
-      canKill: 0
+      canKill: 1
   tickRate: 0.02
 --- !u!1 &8869874275031778412
 GameObject:
@@ -175,13 +175,7 @@ MonoBehaviour:
   lifeDuration: 5
   affectedByTimestop: 1
   initialDamageProfiles:
-    damageProfiles:
-    - team: 1
-      active: 1
-      damage: 20
-      verticalKnockback: 50
-      horizontalKnockback: 100
-      canKill: 1
+    damageProfiles: []
   tickDamageProfiles:
     damageProfiles:
     - team: 1
@@ -192,8 +186,8 @@ MonoBehaviour:
       canKill: 1
     - team: 2
       active: 1
-      damage: 10
+      damage: 3
       verticalKnockback: 0
       horizontalKnockback: 0
-      canKill: 1
+      canKill: 0
   tickRate: 0.1
