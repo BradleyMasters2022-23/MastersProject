@@ -5,7 +5,7 @@ using UnityEngine.VFX;
 
 public class Laser : RangeAttack, TimeObserver
 {
-    [Header("Laser Gameplay")]
+    [Header("===== Laser Info =====")]
 
     [Tooltip("Whether or not to attach to its owner on fire")]
     [SerializeField] private bool attachToOwner;
@@ -120,27 +120,29 @@ public class Laser : RangeAttack, TimeObserver
         // Update laser effect to hit wall, check if a damage target is between range
         beamLineRenderer.SetPosition(1, transform.position + transform.forward * hitRange);
 
-        //AlignCollider();
-
-
         // get all targets between this and the end of the laser
         RaycastHit[] targetsHit =
             Physics.SphereCastAll(transform.position, laserRadius, transform.forward, hitRange - laserRadius, hitLayers);
 
+        // deal damage and effects on all targets hit by sphere cast
         foreach (RaycastHit target in targetsHit)
         {
-            Debug.Log($"Landing hit against {target.transform.name}");
+            // Check for hit cooldown to prevent overwhelming VFX spam
             if (hitVFXCooldownTracker.TimerDone())
                 Hit(target.point, target.normal);
 
             ApplyDamage(target.transform, target.point);
         }
 
+        // If any target was hit and the cooldown is done, then reset the cooldown
         if (targetsHit.Length > 0 && hitVFXCooldownTracker.TimerDone())
             hitVFXCooldownTracker.ResetTimer();
 
+        // Clear hit targets as the laser can hit infinite times
+        // maybe rework later with dictionary and hit count or use damage field
         hitTargets.Clear();
     }
+
 
     protected override bool CheckLife()
     {
@@ -179,7 +181,7 @@ public class Laser : RangeAttack, TimeObserver
         }
     }
 
-    // Dont use trigger stay, above spherecast is more performative
+    // Dont use trigger stay, above spherecast is more performative for some reason
     //private void OnTriggerStay(Collider other)
     //{
     //    Vector3 target = other.ClosestPoint(transform.position);

@@ -206,9 +206,9 @@ GameObject:
   - component: {fileID: 6670382296444136332}
   - component: {fileID: 1342889785973055828}
   - component: {fileID: 7441908486783889822}
+  - component: {fileID: 7834320510034559563}
   - component: {fileID: 2294109497907925019}
-  - component: {fileID: 6433262106479852011}
-  - component: {fileID: 3056943052655479381}
+  - component: {fileID: 9152104763318064867}
   m_Layer: 9
   m_Name: Projectile_Enemy_Mine
   m_TagString: Enemy
@@ -314,6 +314,30 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &7834320510034559563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4730330725648419445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a28c8378d1415b74ba0c940a1c858237, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _center: {fileID: 3194122223138261050}
+  _team: 3
+  _targetThreat: 0
+  _unkillable: 0
+  immuneToKnockback: 1
+  maxKnockback: 0
+  invincibilityShield: {fileID: 0}
+  _deathVFX: {fileID: 0}
+  damagedSound: {fileID: 0}
+  deathSound: {fileID: 0}
+  damagedSoundCooldown: 0.5
+  dropList: []
 --- !u!114 &2294109497907925019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,8 +355,9 @@ MonoBehaviour:
   _damagedInvulnerabilityDuration: 0
   _gateHealthbarDamage: 0
   _gateHealthbarHealing: 0
+  _gatedHealthInvulnerability: 0
   _godMode: 0
---- !u!114 &6433262106479852011
+--- !u!114 &9152104763318064867
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -341,48 +366,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 4730330725648419445}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf67b8df4d7f2ea43b3de7cbf2b245b5, type: 3}
+  m_Script: {fileID: 11500000, guid: 1ef9a8a007c9c93488ebdb35b7868fbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _center: {fileID: 3194122223138261050}
-  _team: 2
-  _targetThreat: 0
-  _unkillable: 0
-  _deathVFX: {fileID: 0}
-  damagedSound: {fileID: 0}
-  deathSound: {fileID: 0}
-  damagedSoundCooldown: 0.5
-  dropList:
-  - spawnObject: {fileID: 9190282065216066553, guid: 9ce42a2ac67043d44bca09b82a8ef5fd, type: 3}
-    quantityRange: {x: 1, y: 1}
-    dropChance: 100
---- !u!114 &3056943052655479381
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4730330725648419445}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49cb75506c243e34cb24c89d4a678e93, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  dealDamage: 0
   damage: 0
+  playerDamage: 0
+  spawnProjectileOnEnd: 1
+  onEndPrefab: {fileID: 9190282065216066553, guid: 9ce42a2ac67043d44bca09b82a8ef5fd, type: 3}
   knockback: 0
-  addativeKnockback: 0
+  horizontalKnockback: 0
+  verticalKnockback: 0
+  playerHorizontalKnockback: 0
+  playerVerticalKnockback: 0
+  affectedByTimestop: 1
+  shotByPlayer: 0
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 2359360
+  worldLayers:
+    serializedVersion: 2
+    m_Bits: 2057
   speed: 40
   range: 30
-  shotByPlayer: 0
-  onHitEffect: {fileID: 0}
-  targetLayers:
-    serializedVersion: 2
-    m_Bits: 32960
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 2185
-  bulletShot: {fileID: 0}
-  bulletHit: {fileID: 0}
+  maxHits: 1
+  onActivateSFX: {fileID: 0}
+  hitSFX: {fileID: 0}
+  onHitVFX: {fileID: 0}
   bulletVisual: {fileID: 3194122223138261050}
   scaleOverDistance:
     serializedVersion: 2
@@ -409,12 +419,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   fadeVFX: {fileID: 0}
-  maxHits: 1
-  affectedByTimestop: 1
   acceleratingRate: 0.1
   targetEndVelocity: 0.05
   projectileLifetime: 10
-  targetManager: {fileID: 6433262106479852011}
 --- !u!1 &5105302778671605131
 GameObject:
   m_ObjectHideFlags: 0

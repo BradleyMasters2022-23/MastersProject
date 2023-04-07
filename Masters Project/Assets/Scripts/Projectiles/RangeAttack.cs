@@ -14,6 +14,8 @@ public abstract class RangeAttack : Attack
 {
     #region Variables
 
+    [Header("===== Ranged Attack =====")]
+
     /// <summary>
     /// Whether or not this ranged attack is currently active
     /// </summary>
@@ -156,6 +158,9 @@ public abstract class RangeAttack : Attack
     /// </summary>
     protected virtual void End()
     {
+        if (spawnProjectileOnEnd && onEndPrefab != null)
+            Instantiate(onEndPrefab, transform.position, transform.rotation);
+
         Destroy(gameObject);
     }
 

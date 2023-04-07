@@ -10,19 +10,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
-using UnityEngine.UIElements;
 
 public abstract class Attack : MonoBehaviour
 {
-    [Header("===== Core Attack Info =====")]
+    [Header("===== Core Info =====")]
 
     [Tooltip("Damage this attack deals")]
+    [SerializeField] protected bool dealDamage;
+    [HideIf("@this.dealDamage == false")]
     [SerializeField] protected int damage;
+    [HideIf("@this.dealDamage == false")]
     [SerializeField] protected int playerDamage;
 
+    [Space(5)]
+    [Tooltip("Whether or not this spawns another object on end")]
+    [SerializeField] protected bool spawnProjectileOnEnd;
+    [HideIf("@this.spawnProjectileOnEnd == false")]
+    [Tooltip("Projectile to spawn on end")]
+    [SerializeField] protected GameObject onEndPrefab;
+
+    [Space(5)]
     [Tooltip("Amount of knockback this attack does")]
     [SerializeField] protected bool knockback;
-
     [HideIf("@this.knockback == false")]
     [SerializeField] private float horizontalKnockback;
     [HideIf("@this.knockback == false")]
@@ -31,8 +40,8 @@ public abstract class Attack : MonoBehaviour
     [SerializeField] private float playerHorizontalKnockback;
     [HideIf("@this.knockback == false")]
     [SerializeField] private float playerVerticalKnockback;
-    
 
+    [Space(5)]
     [SerializeField] protected bool affectedByTimestop;
 
     /// <summary>
@@ -100,7 +109,9 @@ public abstract class Attack : MonoBehaviour
                 verKnockback = verticalKnockback;
             }
 
-            target.RegisterEffect(dmg);
+            if(dealDamage && dmg > 0)
+                target.RegisterEffect(dmg);
+
             if (knockback && horKnockback + verKnockback > 0)
             {
                 target.Knockback(horKnockback, verKnockback, damagePoint);
