@@ -47,11 +47,11 @@ public class Crystal
     /// <param name="stat">Stat to be added</param>
     public void AddStat(IStat stat)
     {
-        if (statIndex < 3)
+        if (statIndex < 3 && cost != par)
         {
             stats.Add(stat);
             CalculateStatCost(statIndex);
-            if (mods[statIndex] >= 0)
+            if (mods[statIndex] > 0)
             {
                 crystalName += stat.GetPlusKeyword();
                 crystalName += " ";
@@ -64,7 +64,6 @@ public class Crystal
             statIndex++;
         }
 
-        crystalName += "Crystal";
     }
 
     /// <summary>
@@ -112,6 +111,8 @@ public class Crystal
     /// <param name="player">Player reference</param>
     public void EquipCrystal(PlayerController player)
     {
+        crystalName += "Crystal";
+
         int i = 0;
         foreach(IStat stat in stats)
         {

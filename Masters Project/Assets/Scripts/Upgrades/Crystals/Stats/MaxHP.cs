@@ -5,13 +5,14 @@ using UnityEngine;
 public class MaxHP : IStat
 {
     private HealthManager hp;
-    [Tooltip("Value par multiplies by to get final HP increase")]
+    [Tooltip("Value stat mod multiplies by to get final HP increase")]
     [SerializeField] private int statBase;
     public int healthBarIndex = 0;
 
     public override void LoadStat(PlayerController player, int mod)
     {
         hp = player.gameObject.GetComponent<HealthManager>();
+        Debug.Log("HP up");
 
         hp.IncreaseMaxHealth(statBase * mod, healthBarIndex);
         
