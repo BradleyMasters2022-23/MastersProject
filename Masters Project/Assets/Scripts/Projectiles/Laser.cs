@@ -131,7 +131,6 @@ public class Laser : RangeAttack, TimeObserver
             if (hitVFXCooldownTracker.TimerDone())
                 Hit(target.point, target.normal);
 
-            Debug.Log($"Attempting to deal damage to {target.transform.name}");
             ApplyDamage(target.collider.transform, target.point);
         }
 
