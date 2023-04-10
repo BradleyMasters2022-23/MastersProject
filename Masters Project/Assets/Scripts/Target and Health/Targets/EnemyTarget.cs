@@ -33,7 +33,11 @@ public class EnemyTarget : Target, TimeObserver
     {
         // Try telling spawn manager to destroy self, if needed
         if (SpawnManager.instance != null)
+        {
             SpawnManager.instance.DestroyEnemy();
+            // Debug.Log($"Target {name} told manager to die!");
+        }
+            
 
         base.KillTarget();
     }
@@ -79,11 +83,15 @@ public class EnemyTarget : Target, TimeObserver
     /// <param name="origin">Origin of the knockback</param>
     public override void Knockback(float force, float verticalForce, Vector3 origin)
     {
-        if (immuneToKnockback || !AffectedByAttacks())
+        if (immuneToKnockback || !AffectedByAttacks() || _killed || !gameObject.activeInHierarchy)
             return;
 
-        knockbackRoutine = StartCoroutine(KnockbackDuration(minKnockbackDuration));
-        base.Knockback(force, verticalForce, origin);
+        try
+        {
+            knockbackRoutine = StartCoroutine(KnockbackDuration(minKnockbackDuration));
+            base.Knockback(force, verticalForce, origin);
+        }
+        catch { }
     }
 
     /// <summary>
