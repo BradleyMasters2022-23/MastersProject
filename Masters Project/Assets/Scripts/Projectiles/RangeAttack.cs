@@ -176,7 +176,7 @@ public abstract class RangeAttack : Attack
         get { return speed; }
     }
 
-    public int GetDamage()
+    public float GetDamage()
     {
         return damage;
     }

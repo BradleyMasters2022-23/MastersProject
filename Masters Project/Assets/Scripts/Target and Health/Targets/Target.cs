@@ -253,7 +253,7 @@ public abstract class Target : MonoBehaviour
             return;
 
         // make sure knockback can be applied
-        if (immuneToKnockback || _rb == null || _rb.isKinematic)
+        if (immuneToKnockback || _rb == null || _rb.isKinematic || (force + verticalForce <= 0))
             return;
 
         // Debug.DrawLine(_center.position, origin, Color.blue, 3f);

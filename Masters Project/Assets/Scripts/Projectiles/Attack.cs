@@ -63,9 +63,9 @@ public abstract class Attack : MonoBehaviour
     [Tooltip("Damage this attack deals")]
     [SerializeField] protected bool dealDamage;
     [HideIf("@this.dealDamage == false")]
-    [SerializeField] protected int damage;
+    [SerializeField] protected float damage;
     [HideIf("@this.dealDamage == false")]
-    [SerializeField] protected int playerDamage;
+    [SerializeField] protected float playerDamage;
 
     [Space(5)]
     [Tooltip("Whether or not this spawns another object on end")]

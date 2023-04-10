@@ -9,8 +9,6 @@ public class Laser : RangeAttack, TimeObserver
 
     [Tooltip("Whether or not to attach to its owner on fire")]
     [SerializeField] private bool attachToOwner;
-    [Tooltip("Duration this laser remains active")]
-    [SerializeField] private float duration;
     [Tooltip("Radius of the laser")]
     [SerializeField] private float laserRadius;
     [Tooltip("Whether or not the laser is solid in timestop")]
@@ -48,8 +46,8 @@ public class Laser : RangeAttack, TimeObserver
 
         beamLineRenderer.startColor = startBeamColor;
         beamLineRenderer.endColor = endBeamColor;
-        beamLineRenderer.startWidth = laserRadius * 2;
-        beamLineRenderer.endWidth = laserRadius * 2;
+        beamLineRenderer.startWidth = laserRadius;
+        beamLineRenderer.endWidth = laserRadius;
 
         if (solidInTimestop && col != null)
             TimeManager.instance.Subscribe(this);
@@ -60,7 +58,7 @@ public class Laser : RangeAttack, TimeObserver
             originVFX.transform.localPosition = Vector3.forward * originVFXOffset;
         }
 
-        durationTracker = new ScaledTimer(duration, affectedByTimestop);
+        durationTracker = new ScaledTimer(range, affectedByTimestop);
         hitVFXCooldownTracker = new ScaledTimer(hitVFXCooldown);
     }
 
@@ -96,7 +94,7 @@ public class Laser : RangeAttack, TimeObserver
         RaycastHit hitInfo;
         float hitRange = range;
         // Check for wall collision first
-        if (Physics.SphereCast(transform.position, laserRadius, transform.forward, out hitInfo, range, worldLayers))
+        if (Physics.Raycast(transform.position, transform.forward, out hitInfo, 999f, worldLayers))
         {
             beamLineRenderer.SetPosition(1, hitInfo.point);
             hitRange = Vector3.Distance(hitInfo.point, transform.position);
@@ -118,11 +116,11 @@ public class Laser : RangeAttack, TimeObserver
         }
 
         // Update laser effect to hit wall, check if a damage target is between range
-        beamLineRenderer.SetPosition(1, transform.position + transform.forward * hitRange);
+        beamLineRenderer.SetPosition(1, transform.position + transform.forward * (hitRange + laserRadius));
 
         // get all targets between this and the end of the laser
         RaycastHit[] targetsHit =
-            Physics.SphereCastAll(transform.position, laserRadius, transform.forward, hitRange, hitLayers);
+            Physics.SphereCastAll(transform.position, laserRadius, transform.forward, hitRange + laserRadius, hitLayers);
 
         // deal damage and effects on all targets hit by sphere cast
         foreach (RaycastHit target in targetsHit)
