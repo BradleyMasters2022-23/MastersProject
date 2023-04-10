@@ -171,6 +171,8 @@ public class TimeManager : MonoBehaviour
 
     public static TimeManager instance;
 
+    private bool cheatMode;
+
     /// <summary>
     /// Initialize controls and starting values
     /// </summary>
@@ -430,6 +432,10 @@ public class TimeManager : MonoBehaviour
     /// </summary>
     private void DrainGauge()
     {
+        // if cheat mode enabled, dont drain gauge
+        if (cheatMode)
+            return;
+
         // Drain the gauge, determine if state should change
         if(currSlowGauge - DepleteAmount <= 0)
         {
@@ -515,9 +521,10 @@ public class TimeManager : MonoBehaviour
 
     #endregion
 
-
-
-
+    public void SetCheatMode(bool cheat)
+    {
+        cheatMode = cheat;
+    }
 
     public void ChipRefillGauge()
     {

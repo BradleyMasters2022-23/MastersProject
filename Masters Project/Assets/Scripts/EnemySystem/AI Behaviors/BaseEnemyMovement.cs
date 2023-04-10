@@ -113,6 +113,12 @@ public abstract class BaseEnemyMovement : MonoBehaviour
         {
             case MoveState.Moving:
                 {
+                    if (agent != null && !agent.enabled)
+                    {
+                        OnDisable();
+                        return;
+                    }
+
                     BehaviorFunction();
                     break;
                 }
@@ -131,12 +137,17 @@ public abstract class BaseEnemyMovement : MonoBehaviour
     protected abstract void BehaviorFunction();
 
     /// <summary>
+    /// Perform any emergancy cut off function
+    /// </summary>
+    protected abstract void OnDisable();
+
+    /// <summary>
     /// Go to the target position
     /// </summary>
     /// <param name="target"></param>
     protected virtual void GoToTarget(Vector3 target)
     {
-        if (agent is null)
+        if (agent is null || !agent.enabled)
             return;
 
         if (target == null)

@@ -39,8 +39,8 @@ public class SpawnTriggerField : MonoBehaviour
 
     [Tooltip("All waves of relative difficulties to use for this encounter.")]
     [SerializeField] private EncounterDifficulty[] relativeDifficulty;
-    [Tooltip("Modifier to the encounter size, intended based on size of the room the encouter is in. Multiplied to the batch list.")]
-    [SerializeField] private float sizeModifier = 1;
+    //[Tooltip("Modifier to the encounter size, intended based on size of the room the encouter is in. Multiplied to the batch list.")]
+    //[SerializeField] private float sizeModifier = 1;
 
     private Dictionary<EnemySO, int>[] waves;
     #endregion

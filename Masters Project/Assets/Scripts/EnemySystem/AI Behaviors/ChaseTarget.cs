@@ -39,6 +39,12 @@ public class ChaseTarget : BaseEnemyMovement
     /// </summary>
     protected override void BehaviorFunction()
     {
+        if (!agent.enabled)
+        {
+            StopChase();
+            return;
+        }
+
         if (target == null || reachedTarget)
         {
             agent.ResetPath();
@@ -76,8 +82,14 @@ public class ChaseTarget : BaseEnemyMovement
 
     public void StopChase()
     {
-        agent.ResetPath();
+        if(agent.enabled && agent.isOnNavMesh)
+            agent.ResetPath();
         reachedTarget = true;
+    }
+
+    protected override void OnDisable()
+    {
+        StopChase();
     }
 
     public bool ReachedTargetDistance()
