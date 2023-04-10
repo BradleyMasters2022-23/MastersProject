@@ -1,3 +1,11 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - March 27th, 2022
+ * Last Edited - March 27th, 2022 by Ben Schuster
+ * Description - Manages pooling for all enemies
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,8 +21,12 @@ public class EnemyPool
 
 public class EnemyPooler : MonoBehaviour
 {
+    /// <summary>
+    /// Global instance of enemy pooler
+    /// </summary>
     public static EnemyPooler instance;
 
+    [Tooltip("All initial enemy pools to use")]
     [SerializeField] private EnemyPool[] enemyPools;
 
     /// <summary>
@@ -38,6 +50,9 @@ public class EnemyPooler : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Initialize the pool based on starting values
+    /// </summary>
     protected void Init()
     {
         pool = new Dictionary<EnemySO, Pool>();
@@ -50,6 +65,11 @@ public class EnemyPooler : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Request an enemy from the pool
+    /// </summary>
+    /// <param name="enemyRequest">Type of enemy to request</param>
+    /// <returns>Instanced version of the requested enemy, as a game object</returns>
     public GameObject RequestEnemy(EnemySO enemyRequest)
     {
         if (pool.ContainsKey(enemyRequest))
@@ -67,18 +87,29 @@ public class EnemyPooler : MonoBehaviour
         }
     }
 
-    public void Return(EnemySO type, GameObject enemyReturn)
+    /// <summary>
+    /// Return an enemy to the pool
+    /// </summary>
+    /// <param name="type">Type of enemy to use (its key)</param>
+    /// <param name="enemyReturn">Reference to instanced enemy to return</param>
+    /// <returns>Whether or not the enemy was returned to the pool</returns>
+    public bool Return(EnemySO type, GameObject enemyReturn)
     {
+        if (type == null || enemyReturn == null)
+            return false;
+
         if(pool.ContainsKey(type))
         {
             // do other funcs when being returned
             enemyReturn.GetComponent<EnemyTarget>().ReturnToPool();
             pool[type].Return(enemyReturn);
             enemyReturn.transform.parent = transform;
+            return true;
         }
         else
         {
             Debug.Log($"[EnemyPooler] Pool of enemy {enemyReturn.name} is trying to be returned but does not exist!");
+            return false;
         }
     }
 }

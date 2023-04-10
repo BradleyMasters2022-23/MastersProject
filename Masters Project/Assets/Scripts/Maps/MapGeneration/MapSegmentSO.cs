@@ -28,9 +28,9 @@ public class MapSegmentSO : ScriptableObject
     [Tooltip("The maximum difficulty level this room can be used in")]
     public int maxDifficulty = 999;
 
-    [ShowIf("@this.segmentType == MapSegmentType.Room")]
-    [Tooltip("Potential encounters this room can have")]
-    public EncounterSO[] potentialEncounters;
+    //[ShowIf("@this.segmentType == MapSegmentType.Room")]
+    //[Tooltip("Potential encounters this room can have")]
+    //public EncounterSO[] potentialEncounters;
 
     /// <summary>
     /// Check if the difficulty level can be used

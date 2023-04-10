@@ -58,6 +58,8 @@ public class ScaledTimer
     /// </summary>
     public void ResetTimer()
     {
+        if (CoreTimeline.instance == null) return;
+
         if (scaled)
         {
             startTime = CoreTimeline.instance.ScaledTimeline;

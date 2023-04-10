@@ -27,44 +27,52 @@ public abstract class Attack : MonoBehaviour
 
     protected bool hitTarget;
 
-    
+    /// <summary>
+    /// Keep track of hit targets
+    /// Track transform roots to ensure it doesnt hit multiple colliders
+    /// </summary>
+    protected List<Transform> hitTargets;
 
-    protected abstract void Awake();
-
-    protected virtual void DealDamage(GameObject _target)
+    protected virtual void Awake()
     {
-        Transform parent = _target.transform;
-        Target target;
-
-        // continually escelate up for a targetable reference
-        while (!parent.TryGetComponent<Target>(out target) && parent.parent != null)
-        {
-            parent = parent.parent;
-        }
-
-        // Check if the target can be damaged
-        if(!hitTarget && target != null)
-        {
-            // Damage target, prevent multi damaging
-            target.RegisterEffect(damage);
-            hitTarget = true;
-        }
+        hitTargets = new List<Transform>();
     }
 
     /// <summary>
-    /// Trigger the damage effects on a target
+    /// Deal damage to the given target, if possible
     /// </summary>
-    /// <param name="other"></param>
-    protected void TriggerTarget(Collider other)
+    /// <param name="_targetObj">Target to try and deal damage to </param>
+    /// <returns>Whether damage was successfully dealt</returns>
+    protected virtual bool DealDamage(Transform _targetObj)
     {
-        Hit();
+        Target target = _targetObj.GetComponent<Target>();
+        Transform parentPointer = _targetObj.parent;
+        while (target == null)
+        {
+            if(parentPointer == null)
+            {
+                return false;
+            }
+            else
+            {
+                target = parentPointer.GetComponent<Target>();
+                parentPointer = parentPointer.parent;
+            }
+        }
 
-        DestroyProjScript test;
 
-        if (other.TryGetComponent<DestroyProjScript>(out test))
-            test.DestroyProj();
-
-        DealDamage(other.gameObject);
+        // Check if the target can be damaged
+        if (target != null && !hitTargets.Contains(target.transform) && !target.Killed())
+        {
+            // Damage target, prevent multi damaging
+            target.RegisterEffect(damage);
+            //hitTarget = true;
+            hitTargets.Add(target.transform.root);
+            return true;
+        }
+        // otherwise if no target, return false bc no damage dealt
+        else
+            return false;
     }
 
     /// <summary>
@@ -73,24 +81,26 @@ public abstract class Attack : MonoBehaviour
     /// <param name="other">Object it hit</param>
     private void OnTriggerEnter(Collider other)
     {
-        TriggerTarget(other);
+        Hit(transform.position);
+        DealDamage(other.transform);
     }
 
     /// <summary>
-    /// What happens when this attack hits something
+    /// What visually happens when this attack hits something
+    /// These effects should happen on the impact point
     /// </summary>
-    protected abstract void Hit();
+    protected abstract void Hit(Vector3 impactPoint);
 
     /// <summary>
-    /// What happens when this attack is activated
+    /// Activate this attack
     /// </summary>
     public abstract void Activate();
 
     /// <summary>
     /// Call a hit function, public so others can call it
     /// </summary>
-    public virtual void ScriptCallHit()
+    public virtual void ScriptCallHit(Transform target)
     {
-        Hit();
+        Hit(target.position);
     }
 }

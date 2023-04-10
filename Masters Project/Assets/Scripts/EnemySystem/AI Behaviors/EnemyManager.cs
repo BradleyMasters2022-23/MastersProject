@@ -193,6 +193,19 @@ public class EnemyManager : MonoBehaviour
     private void OnDisable()
     {
         StopAllCoroutines();
+
+        InturruptAI();
+    }
+
+    /// <summary>
+    /// Inturrupt the AI currently
+    /// </summary>
+    public void InturruptAI()
+    {
+        mainAttack.ResetAttack();
+
+        if (strafingAttack != null)
+            strafingAttack.ResetAttack();
     }
 
     /// <summary>
@@ -205,8 +218,6 @@ public class EnemyManager : MonoBehaviour
         WaitForFixedUpdate tick = new WaitForFixedUpdate();
 
         yield return StartCoroutine(ActivateDelay());
-
-
 
         // start the thing here
         if (agent != null)
