@@ -15,15 +15,7 @@ public class CrystalManager : MonoBehaviour
     [Tooltip("Number of crystals we want the player to be able to have equipped at once.")]
     [SerializeField] private int crystalSlots;
 
-    [Tooltip("Number of crystals we want the player to be able to hold in inventory at once.")]
-    [SerializeField] private int inventorySize;
-
     public static CrystalManager instance;
-
-    /// <summary>
-    /// All crystals the player currently holds. 
-    /// </summary>
-    private List<Crystal> crystalInventory = new List<Crystal>();
 
     /// <summary>
     /// All crystals the player currently has equipped. 
@@ -83,7 +75,6 @@ public class CrystalManager : MonoBehaviour
         {
             crystal.EquipCrystal(player);
             equippedCrystals.Add(crystal);
-            equippedCrystals.Add(crystal);
         }
         
     }
@@ -93,48 +84,10 @@ public class CrystalManager : MonoBehaviour
     /// </summary>
     /// <param name="crystal">crystal to be unloaded</param>
     /// <param name="store"> whether the crystal should be stored in inv or dropped</param>
-    public void UnloadCrystal(Crystal crystal, bool store)
+    public void UnloadCrystal(Crystal crystal)
     {
-        if(crystalInventory.Contains(crystal))
-        {
-            crystal.DequipCrystal(player);
-            equippedCrystals.Remove(crystal);
-        }
-
-        if(store)
-        {
-            PickUpCrystal(crystal);
-        } else
-        {
-            DropCrystal(crystal);
-        }
+        crystal.DequipCrystal(player);
+        equippedCrystals.Remove(crystal);
     }
 
-    /// <summary>
-    /// pick up a crystal and add it to inventory, but don't equip it
-    /// </summary>
-    /// <param name="crystal"></param>
-    public void PickUpCrystal(Crystal crystal)
-    {
-        if(crystalInventory.Count < inventorySize)
-        {
-            crystalInventory.Add(crystal);
-        }
-    }
-
-    /// <summary>
-    /// removes crystal from inventory
-    /// </summary>
-    /// <param name="crystal"></param>
-    public void DropCrystal(Crystal crystal)
-    {
-        
-        if(equippedCrystals.Contains(crystal))
-        {
-            equippedCrystals.Remove(crystal);
-        }
-
-        crystalInventory.Remove(crystal);
-        // TODO: make this actually drop a physical crystalinteract object with the crystal attached
-    }
 }
