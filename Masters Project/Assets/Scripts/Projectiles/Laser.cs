@@ -1,3 +1,11 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - April 6, 2022
+ * Last Edited - April 6, 2022 by Ben Schuster
+ * Description - Implementation for laser projectiles
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -92,7 +100,7 @@ public class Laser : RangeAttack, TimeObserver
         beamLineRenderer.SetPosition(0, transform.position);
 
         RaycastHit hitInfo;
-        float hitRange = range;
+        float hitRange = 999;
         // Check for wall collision first
         if (Physics.Raycast(transform.position, transform.forward, out hitInfo, 999f, worldLayers))
         {
