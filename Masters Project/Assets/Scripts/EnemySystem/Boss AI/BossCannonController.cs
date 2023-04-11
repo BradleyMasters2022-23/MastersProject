@@ -17,10 +17,33 @@ public class BossCannonController : MonoBehaviour
     private void Awake()
     {
         targetRB = target.GetComponent<Rigidbody>();
-
         restingPos = transform.position + transform.forward*100;
 
-        currAttack = StartCoroutine(ChaseBeamAttack());
+        //currAttack = StartCoroutine(ChaseBeamAttack());
+    }
+
+    public void ChooseAttack()
+    {
+        if (currAttack != null) return;
+
+        // if both allowed, randomly choose one
+        if(chaseBeamAttackEnabled && focusedBeamAttackEnabled)
+        {
+            int choice = Random.Range(0, 2);
+
+            if (choice == 0)
+                currAttack = StartCoroutine(FocusedAttack());
+            else
+                currAttack = StartCoroutine(ChaseBeamAttack());
+        }
+        else if (focusedBeamAttackEnabled)
+        {
+            currAttack = StartCoroutine(FocusedAttack());
+        }
+        else if(chaseBeamAttackEnabled)
+        {
+            currAttack = StartCoroutine(ChaseBeamAttack());
+        }
     }
 
     public void RotateToTarget(Vector3 targetPos, float rotSpeed)
@@ -49,6 +72,8 @@ public class BossCannonController : MonoBehaviour
     #region Focused Beam Attack
 
     [Header("Focused Beam Attack")]
+
+    [SerializeField] private bool focusedBeamAttackEnabled;
 
     [SerializeField] private GameObject focusedBeamPrefab;
     [SerializeField] private Transform shootPoint;
@@ -131,6 +156,8 @@ public class BossCannonController : MonoBehaviour
     #region Chase Beam Attack
 
     [Header("Chase Beam Attack")]
+
+    [SerializeField] private bool chaseBeamAttackEnabled;
 
     [SerializeField] private GameObject chaseBeamPrefab;
 

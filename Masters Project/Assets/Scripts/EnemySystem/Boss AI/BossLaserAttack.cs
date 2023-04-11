@@ -1,43 +1,79 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public abstract class BossLaserAttack : MonoBehaviour
+using Sirenix.OdinInspector;
+
+public class BossLaserAttack : MonoBehaviour
 {
-    protected enum AttackState
+    [SerializeField] BossCannonController phase1Cannon;
+    [SerializeField] BossCannonController phase2Cannon;
+
+    private bool canAttack;
+
+    [SerializeField] float phaseChangeCooldown;
+    [SerializeField] float attackIntervalPhase1;
+    [SerializeField] float attackIntervalPhase2;
+    [SerializeField] float attackIntervalPhase3;
+    private ScaledTimer tracker;
+    private float currentInterval;
+
+    private void Awake()
     {
-        Idle,
-        Active, 
-        Cooldown
+        tracker = new ScaledTimer(1f, true);
     }
 
-    private AttackState currentState;
-    private Coroutine attackRoutine;
-
-    /// <summary>
-    /// Whether or not this attack can be used
-    /// </summary>
-    /// <returns></returns>
-    public abstract bool CanAttack();
-
-    /// <summary>
-    /// Start the attack
-    /// </summary>
-    public void StartAttack()
+    private void Update()
     {
-        currentState = AttackState.Active;
-        StartCoroutine(AttackRoutine());
-    }
-
-    protected abstract IEnumerator AttackRoutine();
-
-    public abstract bool AttackDone();
-
-    public virtual void Inturrupt()
-    {
-        if(attackRoutine != null)
+        if(tracker.TimerDone())
         {
-            attackRoutine = null;
-            currentState = AttackState.Idle;
+            if (phase1Cannon.isActiveAndEnabled)
+            {
+                phase1Cannon.ChooseAttack();
+            }
+            if (phase2Cannon.isActiveAndEnabled)
+            {
+                phase2Cannon.ChooseAttack();
+            }
+
+            tracker.ResetTimer(currentInterval);
+        }
+    }
+
+    public void PhaseChange(int newPhase)
+    {
+        Inturrupt();
+
+        switch (newPhase)
+        {
+            case 1:
+                {
+                    currentInterval = attackIntervalPhase1;
+                    break;
+                }
+            case 2:
+                {
+                    currentInterval = attackIntervalPhase2;
+                    break;
+                }
+            case 3:
+                {
+                    currentInterval = attackIntervalPhase3;
+                    break;
+                }
+        }
+
+        tracker.ResetTimer(phaseChangeCooldown);
+    }
+
+    public void Inturrupt()
+    {
+        if (phase1Cannon.isActiveAndEnabled)
+        {
+            phase1Cannon.Inturrupt();
+        }
+        if (phase2Cannon.isActiveAndEnabled)
+        {
+            phase2Cannon.Inturrupt();
         }
     }
 }
