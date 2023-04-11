@@ -9,8 +9,15 @@ public class CrystalInteract : Interactable
     private Crystal crystal;
     private int par;
 
+    private CrystalSlotScreen ui;
+
     [Tooltip("Amount to add to room count to make par. Increases overall stats of a crystal. MUST be at least 1.")]
     [SerializeField] private int parMod = 1;
+
+    private void Awake()
+    {
+        ui = FindObjectOfType<CrystalSlotScreen>(true);
+    }
 
     private void Start()
     {
@@ -36,14 +43,24 @@ public class CrystalInteract : Interactable
 
     public override void OnInteract(PlayerController player)
     {
-        if(crystal != null)
+        if (crystal != null)
         {
-            CrystalManager.instance.LoadCrystal(crystal);
-            Destroy(gameObject);
+            if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
+            {
+                Debug.Log("Not in a state where the player can interact with ths object");
+                return;
+            }
+
+            ui.OpenScreen(this);
         } else
         {
             Debug.Log("No crystal found");
         }
         
+    }
+
+    public Crystal GetCrystal()
+    {
+        return crystal;
     }
 }

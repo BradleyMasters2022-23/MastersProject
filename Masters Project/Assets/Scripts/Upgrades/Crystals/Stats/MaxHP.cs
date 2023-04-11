@@ -24,4 +24,11 @@ public class MaxHP : IStat
 
         hp.DecreaseMaxHealth(statBase*mod, healthBarIndex);
     }
+
+    public override float GetStatIncrease(int mod)
+    {
+        float statIncrease = (float)statBase * (float)mod;
+
+        return statIncrease;
+    }
 }

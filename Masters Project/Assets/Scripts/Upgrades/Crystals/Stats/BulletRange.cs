@@ -18,4 +18,9 @@ public class BulletRange : IStat
     {
         gun = player.gameObject.GetComponent<PlayerGunController>();
     }
+
+    public override float GetStatIncrease(int mod)
+    {
+        return 1;
+    }
 }

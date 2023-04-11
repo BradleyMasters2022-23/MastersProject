@@ -13,4 +13,9 @@ public class GrenadeDamage : IStat
     {
 
     }
+
+    public override float GetStatIncrease(int mod)
+    {
+        return 1;
+    }
 }

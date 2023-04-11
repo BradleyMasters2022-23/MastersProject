@@ -61,6 +61,7 @@ public class CrystalManager : MonoBehaviour
             }
         }
 
+        newCrystal.crystalName += " Crystal";
         return newCrystal;
     }
 
@@ -88,6 +89,11 @@ public class CrystalManager : MonoBehaviour
     {
         crystal.DequipCrystal(player);
         equippedCrystals.Remove(crystal);
+    }
+
+    public Crystal GetEquippedCrystal(int index)
+    {
+        return equippedCrystals[index];
     }
 
 }

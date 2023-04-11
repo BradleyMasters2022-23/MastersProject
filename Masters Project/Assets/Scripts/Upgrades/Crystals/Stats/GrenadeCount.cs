@@ -13,4 +13,9 @@ public class GrenadeCount : IStat
     {
 
     }
+
+    public override float GetStatIncrease(int mod)
+    {
+        return 1;
+    }
 }

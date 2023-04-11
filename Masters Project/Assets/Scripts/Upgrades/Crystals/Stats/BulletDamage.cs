@@ -23,4 +23,9 @@ public class BulletDamage : IStat
         gun = player.gameObject.GetComponent<PlayerGunController>();
         gun.SetDamageMultiplier(gun.GetDamageMultiplier() - ((float)mod * statBase));
     }
+
+    public override float GetStatIncrease(int mod)
+    {
+        return 1;
+    }
 }

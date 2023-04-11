@@ -32,6 +32,8 @@ public abstract class IStat : MonoBehaviour
     [Tooltip("Name keyword for crystals with a - in this stat.")]
     [SerializeField] protected string minusKeyword;
 
+    [SerializeField] protected string statText;
+
     /// <summary>
     /// Loads the given stat to the player with the provided mod
     /// </summary>
@@ -45,6 +47,8 @@ public abstract class IStat : MonoBehaviour
     /// <param name="player">Player reference</param>
     /// <param name="mod">Stat modifier</param>
     public abstract void UnloadStat(PlayerController player, int mod);
+
+    public abstract float GetStatIncrease(int mod);
 
     /// <summary>
     /// Gets positive keyword 
@@ -71,5 +75,10 @@ public abstract class IStat : MonoBehaviour
     public StatGroup GetGroup()
     {
         return group;
+    }
+
+    public string GetStatText()
+    {
+        return statText;
     }
 }

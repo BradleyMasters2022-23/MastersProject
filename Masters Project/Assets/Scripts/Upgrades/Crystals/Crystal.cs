@@ -26,6 +26,8 @@ public class Crystal
     /// </summary>
     public List<int> mods = new List<int>();
 
+    public List<string> statsDesc = new List<string>();
+
     /// <summary>
     /// current stat to be added. doubles as total # of stats after initialization
     /// </summary>
@@ -111,8 +113,6 @@ public class Crystal
     /// <param name="player">Player reference</param>
     public void EquipCrystal(PlayerController player)
     {
-        crystalName += "Crystal";
-
         int i = 0;
         foreach(IStat stat in stats)
         {
