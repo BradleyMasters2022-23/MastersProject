@@ -202,6 +202,8 @@ public class SpawnManager : MonoBehaviour
         while (!startDelayTimer.TimerDone())
             yield return null;
 
+        // Debug.Log($"Total enemies spawning this wave : {spawnQueue.Count}");
+
         // set to spawning state [TODO - proper state system]
         spawning = true;
 
