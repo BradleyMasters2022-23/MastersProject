@@ -18,7 +18,7 @@ public class BossCannonController : MonoBehaviour
     {
         targetRB = target.GetComponent<Rigidbody>();
         restingPos = transform.position + transform.forward*100;
-
+        tracker = new ScaledTimer(0);
         //currAttack = StartCoroutine(ChaseBeamAttack());
     }
 
@@ -85,6 +85,8 @@ public class BossCannonController : MonoBehaviour
     [SerializeField] private float fbFireDuration;
     [SerializeField] private float fbRecoveryTime;
 
+    [SerializeField] private float fbMinimumAimTime;
+
     [SerializeField] private IIndicator[] fbAimingIndicator;
     [SerializeField] private IIndicator[] fbFiringIndicator;
 
@@ -108,6 +110,8 @@ public class BossCannonController : MonoBehaviour
 
         Indicators.SetIndicators(fbAimingIndicator, true);
 
+        tracker.ResetTimer(fbMinimumAimTime);
+
         // Aim at target, whether leading or not
         do
         {
@@ -120,11 +124,11 @@ public class BossCannonController : MonoBehaviour
             yield return new WaitForFixedUpdate();
             yield return null;
 
-        } while (!AcquiredTarget(targetPos, fbAccuracy));
+        } while (!AcquiredTarget(targetPos, fbAccuracy) || !tracker.TimerDone());
 
         // Stay on target, delay but activate indicator
         Indicators.SetIndicators(fbFiringIndicator, true);
-        tracker = new ScaledTimer(fbFireDelay);
+        tracker.ResetTimer(fbFireDelay);
         yield return new WaitUntil(tracker.TimerDone);
 
         

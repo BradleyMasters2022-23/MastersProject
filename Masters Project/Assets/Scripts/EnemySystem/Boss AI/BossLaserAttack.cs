@@ -5,15 +5,11 @@ using Sirenix.OdinInspector;
 
 public class BossLaserAttack : MonoBehaviour
 {
-    [SerializeField] BossCannonController phase1Cannon;
-    [SerializeField] BossCannonController phase2Cannon;
-
-    private bool canAttack;
+    [SerializeField] BFLController phase1Cannon;
+    [SerializeField] BFLController phase2Cannon;
 
     [SerializeField] float phaseChangeCooldown;
-    [SerializeField] float attackIntervalPhase1;
-    [SerializeField] float attackIntervalPhase2;
-    [SerializeField] float attackIntervalPhase3;
+
     private ScaledTimer tracker;
     private float currentInterval;
 
@@ -43,24 +39,8 @@ public class BossLaserAttack : MonoBehaviour
     {
         Inturrupt();
 
-        switch (newPhase)
-        {
-            case 1:
-                {
-                    currentInterval = attackIntervalPhase1;
-                    break;
-                }
-            case 2:
-                {
-                    currentInterval = attackIntervalPhase2;
-                    break;
-                }
-            case 3:
-                {
-                    currentInterval = attackIntervalPhase3;
-                    break;
-                }
-        }
+        phase1Cannon.NewStage(newPhase);
+        phase2Cannon.NewStage(newPhase);
 
         tracker.ResetTimer(phaseChangeCooldown);
     }
