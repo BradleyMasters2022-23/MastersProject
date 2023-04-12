@@ -25,10 +25,22 @@ public class PlayerTarget : Target
     [SerializeField] private float cheatHeal = 25;
     [SerializeField] private TimeManager timestop;
     [SerializeField] private Ability grenadeAbility;
-    
+
+
+    public static PlayerTarget p;
 
     private void Start()
     {
+        if (p == null)
+        {
+            p = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         c = GameManager.controls;
         godCheat = c.PlayerGameplay.GodCheat;
         godCheat.performed += ToggleGodmode;
@@ -94,5 +106,6 @@ public class PlayerTarget : Target
         godCheat.performed -= ToggleGodmode;
         healCheat.performed -= CheatHeal;
         damageCheat.performed -= CheatDamage;
+        p = null;
     }
 }
