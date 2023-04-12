@@ -86,13 +86,13 @@ public class Crystal
         {
             // for the first stat, cost is between par/2 and par+par/2
             case 0:
-                mods.Add(Random.Range(Mathf.CeilToInt(par / 2), Mathf.CeilToInt(par + par / 2)));
+                mods.Add(Random.Range(Mathf.CeilToInt(par/2), Mathf.CeilToInt(par + (par/2))));
                 cost += mods[index];
                 break;
 
             // for the second stat
             case 1:
-                // if current cost is less than par, second stat's cost is between 
+                // if current cost is less than par, second stat's cost is between par-cost and par
                 if (cost < par)
                 {
                     mods.Add(Random.Range(Mathf.CeilToInt(par - cost), Mathf.CeilToInt(par)));
