@@ -23,6 +23,7 @@ public class SpawnTriggerField : MonoBehaviour
     [SerializeField] private SpawnTriggerField[] conflictingTriggers;
     [Tooltip("All spawnpoints usable with this field. Can be shared with others.")]
     [SerializeField] private SpawnPoint[] spawnPoints;
+
     [Tooltip("Any walls that activate while this encounter starts and disabled when finished.")]
     [SerializeField] private GameObject[] blockerWalls;
 
@@ -292,6 +293,17 @@ public class SpawnTriggerField : MonoBehaviour
             for (int i = spawnedEnemies.Count - 1; i >= 0; i--)
             {
                 Destroy(spawnedEnemies[i]);
+            }
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        foreach (var points in spawnPoints)
+        {
+            if (points != null)
+            {
+                Gizmos.DrawLine(transform.position, points.transform.position);
             }
         }
     }
