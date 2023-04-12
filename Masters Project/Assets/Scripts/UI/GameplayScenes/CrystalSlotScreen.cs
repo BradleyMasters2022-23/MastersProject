@@ -30,9 +30,15 @@ public class CrystalSlotScreen : MonoBehaviour
         if(CrystalManager.instance.CrystalEquipped(selectedCrystalIndex))
         {
             selectedCrystal = CrystalManager.instance.GetEquippedCrystal(selectedCrystalIndex);
+            selectedCrystalName.enabled = true;
+            selectedCrystalStats.enabled = true;
             DisplaySelectedCrystal();
+        } else
+        {
+            selectedCrystalName.enabled = false;
+            selectedCrystalStats.enabled = false;
         }
-        //DisplayCrystalIcons();
+        DisplayCrystalIcons();
         DisplayNewCrystalStats();
 
         GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
@@ -43,7 +49,7 @@ public class CrystalSlotScreen : MonoBehaviour
     {
         if(CrystalManager.instance.CrystalEquipped(0))
         {
-            equippedCrystal1 = CrystalManager.instance.GetEquippedCrystal(0).icon;
+            equippedCrystal1.sprite = CrystalManager.instance.GetEquippedCrystal(0).stats[0].GetIcon();
         } else
         {
             equippedCrystal1.enabled = false;
@@ -51,7 +57,7 @@ public class CrystalSlotScreen : MonoBehaviour
 
         if (CrystalManager.instance.CrystalEquipped(1))
         {
-            equippedCrystal2 = CrystalManager.instance.GetEquippedCrystal(1).icon;
+            equippedCrystal2.sprite = CrystalManager.instance.GetEquippedCrystal(1).stats[0].GetIcon();
         }
         else
         {
@@ -60,12 +66,14 @@ public class CrystalSlotScreen : MonoBehaviour
 
         if (CrystalManager.instance.CrystalEquipped(2))
         {
-            equippedCrystal3 = CrystalManager.instance.GetEquippedCrystal(2).icon;
+            equippedCrystal3.sprite = CrystalManager.instance.GetEquippedCrystal(2).stats[0].GetIcon();
         }
         else
         {
             equippedCrystal3.enabled = false;
         }
+
+        newCrystal.sprite = caller.GetCrystal().stats[0].GetIcon();
     }
 
     private void DisplayNewCrystalStats()
@@ -73,6 +81,7 @@ public class CrystalSlotScreen : MonoBehaviour
         newCrystalName.text = caller.GetCrystal().crystalName;
         int statIndex = 0;
         int mod;
+        newCrystalStats.text = "";
         
         foreach(IStat stat in caller.GetCrystal().stats)
         {
@@ -80,11 +89,8 @@ public class CrystalSlotScreen : MonoBehaviour
             // is the stat positive or negative?
             if (mod > 0)
             {
-                newCrystalStats.text = "+";
-            } else
-            {
-                newCrystalStats.text = "-";
-            }
+                newCrystalStats.text += "+";
+            } 
 
             // what is the modifier of the stat?
             newCrystalStats.text += stat.GetStatIncrease(mod).ToString();
@@ -107,7 +113,13 @@ public class CrystalSlotScreen : MonoBehaviour
         if(CrystalManager.instance.GetEquippedCrystal(index) != null)
         {
             selectedCrystal = CrystalManager.instance.GetEquippedCrystal(index);
+            selectedCrystalName.enabled = true;
+            selectedCrystalStats.enabled = true;
             DisplaySelectedCrystal();
+        } else
+        {
+            selectedCrystalName.enabled = false;
+            selectedCrystalStats.enabled = false;
         }
     }
 
@@ -119,6 +131,7 @@ public class CrystalSlotScreen : MonoBehaviour
         selectedCrystalName.text = selectedCrystal.crystalName;
         int statIndex = 0;
         int mod;
+        selectedCrystalStats.text = "";
 
         foreach (IStat stat in selectedCrystal.stats)
         {
@@ -126,11 +139,7 @@ public class CrystalSlotScreen : MonoBehaviour
             // is the stat positive or negative?
             if (mod > 0)
             {
-                selectedCrystalStats.text = "+";
-            }
-            else
-            {
-                selectedCrystalStats.text = "+";
+                selectedCrystalStats.text += "+";
             }
 
             // what is the modifier of the stat?
@@ -155,17 +164,10 @@ public class CrystalSlotScreen : MonoBehaviour
         if(selectedCrystalIndex >= 0)
         {
             CrystalManager.instance.LoadCrystal(caller.GetCrystal(), selectedCrystalIndex);
-            Destroy(caller.gameObject);
         }
-
-        ResetScreen();
+        caller.BegoneCrystalInteract();
+        
     }
 
-    /// <summary>
-    /// Reset the screen to its original initialization
-    /// </summary>
-    public void ResetScreen()
-    {
-        caller = null;
-    }
+    
 }

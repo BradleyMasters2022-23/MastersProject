@@ -19,30 +19,29 @@ public class CrystalInteract : Interactable
         ui = FindObjectOfType<CrystalSlotScreen>(true);
     }
 
-    private void Start()
+    public override void OnInteract(PlayerController player)
     {
-        if(LinearSpawnManager.instance != null)
+        // loads crystal
+        if (LinearSpawnManager.instance != null)
         {
             par = LinearSpawnManager.instance.GetCombatRoomCount() + parMod;
 
-        } else
+        }
+        else
         {
             Debug.Log("No linear spawn manager found");
         }
 
-        if (CrystalManager.instance != null)
+        if (CrystalManager.instance != null && crystal == null)
         {
             crystal = CrystalManager.instance.GenerateCrystal(par);
 
-        } else
+        }
+        else
         {
             Debug.Log("No crystal manager found");
         }
 
-    }
-
-    public override void OnInteract(PlayerController player)
-    {
         if (crystal != null)
         {
             if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
@@ -62,5 +61,11 @@ public class CrystalInteract : Interactable
     public Crystal GetCrystal()
     {
         return crystal;
+    }
+
+    public void BegoneCrystalInteract()
+    {
+        //gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 }

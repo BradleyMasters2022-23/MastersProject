@@ -44,12 +44,6 @@ public class Crystal
 
     public Image icon;
 
-    private void Awake()
-    {
-        cost = 0;
-        statIndex = 0;
-    }
-
     /// <summary>
     /// Adds a stat to the crystal
     /// </summary>

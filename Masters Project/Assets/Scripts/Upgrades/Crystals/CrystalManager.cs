@@ -7,7 +7,6 @@
  */
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -64,7 +63,6 @@ public class CrystalManager : MonoBehaviour
                 newCrystal.AddStat(stat);
             }
         }
-
         newCrystal.crystalName += "Crystal";
         return newCrystal;
     }
@@ -98,7 +96,6 @@ public class CrystalManager : MonoBehaviour
 
     public Crystal GetEquippedCrystal(int index)
     {
-
         return equippedCrystals[index];
     }
 
