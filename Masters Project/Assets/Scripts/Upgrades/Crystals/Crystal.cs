@@ -86,7 +86,11 @@ public class Crystal
         {
             // for the first stat, cost is between par/2 and par+par/2
             case 0:
-                mods.Add(Random.Range(Mathf.CeilToInt(par/2), Mathf.CeilToInt(par + (par/2))));
+                int val = Random.Range(Mathf.CeilToInt(par / 2f), Mathf.CeilToInt(par + (par / 2f)));
+                //Debug.Log($"Set par : {par}");
+                //Debug.Log($"Calculating random between {Mathf.CeilToInt(par / 2f)} and {Mathf.CeilToInt(par + (par / 2f))}");
+                //Debug.Log($"Modded value at mod[0] is : {val}");
+                mods.Add(val);
                 cost += mods[index];
                 break;
 
