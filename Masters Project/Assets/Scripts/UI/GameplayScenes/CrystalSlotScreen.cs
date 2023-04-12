@@ -20,7 +20,6 @@ public class CrystalSlotScreen : MonoBehaviour
     [SerializeField] private Image equippedCrystal2;
     [SerializeField] private Image equippedCrystal3;
 
-
     /// <summary>
     /// Open the screen, change state
     /// </summary>
@@ -46,7 +45,7 @@ public class CrystalSlotScreen : MonoBehaviour
             equippedCrystal1 = CrystalManager.instance.GetEquippedCrystal(0).icon;
         } else
         {
-            equippedCrystal1.gameObject.SetActive(false);
+            equippedCrystal1.enabled = false;
         }
 
         if (CrystalManager.instance.CrystalEquipped(1))
@@ -55,7 +54,7 @@ public class CrystalSlotScreen : MonoBehaviour
         }
         else
         {
-            equippedCrystal2.gameObject.SetActive(false);
+            equippedCrystal2.enabled = false;
         }
 
         if (CrystalManager.instance.CrystalEquipped(2))
@@ -64,7 +63,7 @@ public class CrystalSlotScreen : MonoBehaviour
         }
         else
         {
-            equippedCrystal3.gameObject.SetActive(false);
+            equippedCrystal3.enabled = false;
         }
     }
 

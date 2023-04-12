@@ -23,7 +23,7 @@ public class CrystalManager : MonoBehaviour
     private Crystal[] equippedCrystals;
 
     [Tooltip("List of possible stats. Should contain stat prefabs.")]
-    [SerializeField] private List<IStat> stats = new List<IStat>();
+    [SerializeField] private IStat[] stats;
 
     private PlayerController player;
 
@@ -58,7 +58,7 @@ public class CrystalManager : MonoBehaviour
         {
             if (newCrystal.cost != newCrystal.par)
             {
-                newCrystal.AddStat(stats[Random.Range(0, stats.Count-1)]);
+                newCrystal.AddStat(stats[Random.Range(0, stats.Length-1)]);
             }
         }
 
