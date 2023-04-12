@@ -21,8 +21,10 @@ public class Trigger : MonoBehaviour
 
     public void Register(ITriggerable triggerable)
     {
+        
         if(subscribers!= null && !subscribers.Contains(triggerable))
         {
+            //Debug.Log("Successfully registered trigger");
             subscribers.Add(triggerable);
         }
     }

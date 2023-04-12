@@ -202,6 +202,8 @@ public class SpawnManager : MonoBehaviour
         while (!startDelayTimer.TimerDone())
             yield return null;
 
+        // Debug.Log($"Total enemies spawning this wave : {spawnQueue.Count}");
+
         // set to spawning state [TODO - proper state system]
         spawning = true;
 
@@ -372,8 +374,19 @@ public class SpawnManager : MonoBehaviour
         if (spawning || waitingEnemies > 0)
             return;
 
+        // double check by counting all active enemy targets
+        EnemyTarget[] alive = FindObjectsOfType<EnemyTarget>(false);
+        int currentNum = 0;
+        foreach(EnemyTarget e in alive)
+        {
+            if(e.Killable())
+            {
+                currentNum++;
+            }
+        }
+
         // If enemy count is 0, cancel backup and complete wave
-        if (enemyCount <= 0)
+        if (enemyCount <= 0 || currentNum <= 0)
         {
             if (backupCheckRoutine != null)
             {
@@ -387,7 +400,7 @@ public class SpawnManager : MonoBehaviour
     private IEnumerator CheckCount()
     {
         // Consistantly check if a wave is finished every few seconds
-        WaitForSeconds delay = new WaitForSeconds(5f);
+        WaitForSeconds delay = new WaitForSeconds(3f);
         while (!finished)
         {
             CheckWaveFinished();

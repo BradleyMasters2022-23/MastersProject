@@ -403,7 +403,6 @@ MonoBehaviour:
   immuneToKnockback: 0
   maxKnockback: 10
   invincibilityShield: {fileID: 0}
-  shieldDeathImmunity: 0
   _deathVFX: {fileID: 7428150280865193490, guid: a4f29aa8e8157a14283aec722c7c18ab, type: 3}
   damagedSound: {fileID: 11400000, guid: 4ba21dac44b2634469d022e7027035df, type: 2}
   deathSound: {fileID: 11400000, guid: e9eb6a05acbfe4b4a9897c4a09a84f2b, type: 2}
@@ -453,9 +452,9 @@ MonoBehaviour:
     rotationSpeed: 5
     acceleration: 35
   - name: strafe
-    moveSpeed: 25
+    moveSpeed: 60
     rotationSpeed: 5
-    acceleration: 45
+    acceleration: 50
   currentMoveStates:
     name: 
     moveSpeed: 0
@@ -651,11 +650,11 @@ MonoBehaviour:
   collisionLayers:
     serializedVersion: 2
     m_Bits: 9
-  sideToSideDistance: {x: 3, y: 6}
-  forwardAndBackDistance: {x: 0.2, y: 2}
+  sideToSideDistance: {x: 4, y: 10}
+  forwardAndBackDistance: {x: 0.2, y: 4}
   moveProfile: 1
-  maxRange: 10
-  minRange: 6
+  maxRange: 16
+  minRange: 4
   relinquishRotation: 0
   repositionCooldown: {x: 1, y: 2.5}
 --- !u!114 &6103605054193528594
@@ -1168,6 +1167,10 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2757878521360870048, guid: deabab1230b973c428b02ce67c8bb042, type: 3}
+      propertyPath: _targetResource
+      value: 
+      objectReference: {fileID: 6433282564666175865}
     - target: {fileID: 3402813018557646957, guid: deabab1230b973c428b02ce67c8bb042, type: 3}
       propertyPath: _targetResource
       value: 

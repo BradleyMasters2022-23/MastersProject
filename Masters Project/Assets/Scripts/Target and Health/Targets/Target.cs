@@ -314,5 +314,10 @@ public abstract class Target : MonoBehaviour
         return _killed;
     }
 
+    public bool Killable()
+    {
+        return !_unkillable;
+    }
+
     #endregion
 }
