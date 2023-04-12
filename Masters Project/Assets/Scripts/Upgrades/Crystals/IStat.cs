@@ -7,6 +7,7 @@
  */
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public abstract class IStat : MonoBehaviour
@@ -33,6 +34,8 @@ public abstract class IStat : MonoBehaviour
     [SerializeField] protected string minusKeyword;
 
     [SerializeField] protected string statText;
+    [SerializeField] protected Color color;
+    [SerializeField] protected Sprite sprite;
 
     /// <summary>
     /// Loads the given stat to the player with the provided mod
@@ -80,5 +83,15 @@ public abstract class IStat : MonoBehaviour
     public string GetStatText()
     {
         return statText;
+    }
+
+    public Sprite GetIcon()
+    {
+        return sprite;
+    }
+
+    public Color GetColor()
+    {
+        return color;
     }
 }

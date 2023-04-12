@@ -20,7 +20,7 @@ public class CrystalManager : MonoBehaviour
     /// <summary>
     /// All crystals the player currently has equipped. 
     /// </summary>
-    private List<Crystal> equippedCrystals = new List<Crystal>();
+    private Crystal[] equippedCrystals;
 
     [Tooltip("List of possible stats. Should contain stat prefabs.")]
     [SerializeField] private List<IStat> stats = new List<IStat>();
@@ -39,6 +39,7 @@ public class CrystalManager : MonoBehaviour
             Destroy(this.gameObject);
         }
 
+        equippedCrystals = new Crystal[crystalSlots];
         player = FindObjectOfType<PlayerController>();
     }
 
@@ -61,6 +62,11 @@ public class CrystalManager : MonoBehaviour
             }
         }
 
+        if (newCrystal.stats[1] == null)
+        {
+            newCrystal.icon.color = newCrystal.stats[0].GetColor();
+        }
+
         newCrystal.crystalName += " Crystal";
         return newCrystal;
     }
@@ -69,15 +75,16 @@ public class CrystalManager : MonoBehaviour
     /// Loads a crystal to the player
     /// </summary>
     /// <param name="crystal">Crystal to be loaded. Stored in the CrystalInteract object</param>
-    public void LoadCrystal(Crystal crystal)
+    public void LoadCrystal(Crystal crystal, int index)
     {
-        // note: currently this adds crystal to equipped and to inventory and equips it. eventually
-        if(equippedCrystals.Count < crystalSlots)
+        if (equippedCrystals[index] != null)
         {
-            crystal.EquipCrystal(player);
-            equippedCrystals.Add(crystal);
+            equippedCrystals[index].DequipCrystal(player);
         }
-        
+
+        equippedCrystals[index] = crystal;
+        crystal.EquipCrystal(player);
+
     }
 
     /// <summary>
@@ -88,12 +95,22 @@ public class CrystalManager : MonoBehaviour
     public void UnloadCrystal(Crystal crystal)
     {
         crystal.DequipCrystal(player);
-        equippedCrystals.Remove(crystal);
+
     }
 
     public Crystal GetEquippedCrystal(int index)
     {
+
         return equippedCrystals[index];
+    }
+
+    public bool CrystalEquipped(int index)
+    {
+        if (equippedCrystals[index] != null)
+        {
+            return true;
+        }
+        return false;
     }
 
 }

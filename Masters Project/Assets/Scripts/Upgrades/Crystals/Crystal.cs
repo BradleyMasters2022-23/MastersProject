@@ -8,6 +8,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Crystal
 {
@@ -42,6 +43,8 @@ public class Crystal
     /// number from which to generate stats. the "level" of the crystal
     /// </summary>
     public int par;
+
+    public Image icon;
 
     /// <summary>
     /// Adds a stat to the crystal
@@ -80,6 +83,7 @@ public class Crystal
             case 0:
                 mods.Add(Random.Range(Mathf.FloorToInt(par / 2), Mathf.CeilToInt(par + par / 2)));
                 cost += mods[index];
+                icon.sprite = stats[index].GetIcon();
                 break;
 
             // for the second stat
@@ -97,6 +101,7 @@ public class Crystal
                     mods.Add(par - cost);
                     cost += mods[index];
                 }
+                icon.color = stats[index].GetColor();
                 break;
 
             case 2:

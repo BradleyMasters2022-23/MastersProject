@@ -53,8 +53,8 @@ public class SelectUpgradeUI : MonoBehaviour
             PlayerUpgradeManager.instance.AddUpgrade(chosenUpgrade);
 
         // Tell container that its request has been granted and it can continue the game
-        if(caller != null)
-            caller.UpgradeSelected();
+        //if(caller != null)
+            //caller.UpgradeSelected();
 
         // Debug.Log(chosenUpgrade.displayName + " was selected!");
     }
