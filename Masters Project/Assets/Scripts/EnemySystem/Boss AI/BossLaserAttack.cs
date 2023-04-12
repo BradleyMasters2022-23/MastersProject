@@ -11,11 +11,10 @@ public class BossLaserAttack : MonoBehaviour
     [SerializeField] float phaseChangeCooldown;
 
     private ScaledTimer tracker;
-    private float currentInterval;
 
     private void Awake()
     {
-        tracker = new ScaledTimer(1f, true);
+        tracker = new ScaledTimer(phaseChangeCooldown, true);
     }
 
     private void Update()
@@ -31,7 +30,6 @@ public class BossLaserAttack : MonoBehaviour
                 phase2Cannon.ChooseAttack();
             }
 
-            tracker.ResetTimer(currentInterval);
         }
     }
 
@@ -42,7 +40,7 @@ public class BossLaserAttack : MonoBehaviour
         phase1Cannon.NewStage(newPhase);
         phase2Cannon.NewStage(newPhase);
 
-        tracker.ResetTimer(phaseChangeCooldown);
+        tracker.ResetTimer();
     }
 
     public void Inturrupt()
