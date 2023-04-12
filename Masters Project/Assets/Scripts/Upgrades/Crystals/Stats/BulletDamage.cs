@@ -15,7 +15,7 @@ public class BulletDamage : IStat
     {
         gun = player.gameObject.GetComponent<PlayerGunController>();
         gun.SetDamageMultiplier(((float)mod * statBase) + gun.GetDamageMultiplier());
-        Debug.Log("Bullet damage up");
+        Debug.Log("Bullet damage up " + ((float)mod * statBase).ToString());
     }
 
     public override void UnloadStat(PlayerController player, int mod)

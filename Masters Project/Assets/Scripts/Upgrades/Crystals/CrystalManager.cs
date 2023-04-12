@@ -7,7 +7,9 @@
  */
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CrystalManager : MonoBehaviour
 {
@@ -63,12 +65,7 @@ public class CrystalManager : MonoBehaviour
             }
         }
 
-        //newCrystal.icon.sprite = newCrystal.stats[0].GetIcon();
-        //newCrystal.icon.color = newCrystal.stats[1].GetColor();
-
         newCrystal.crystalName += "Crystal";
-        Debug.Log(newCrystal.crystalName);
-        Debug.Log(newCrystal.GetNumStats());
         return newCrystal;
     }
 
@@ -112,6 +109,30 @@ public class CrystalManager : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public void OnLevelLoad(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "Hub")
+        {
+            foreach(Crystal crystal in equippedCrystals)
+            {
+                UnloadCrystal(crystal);
+            }
+            DestroyCM();
+            return;
+        }
+
+    }
+
+    public void DestroyCM()
+    {
+        equippedCrystals = null;
+        CrystalManager.instance = null;
+        Destroy(gameObject);
     }
 
 }

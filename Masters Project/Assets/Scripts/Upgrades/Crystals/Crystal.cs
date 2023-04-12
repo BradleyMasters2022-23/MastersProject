@@ -27,8 +27,6 @@ public class Crystal
     /// </summary>
     public List<int> mods = new List<int>();
 
-    public List<string> statsDesc = new List<string>();
-
     /// <summary>
     /// current stat to be added. doubles as total # of stats after initialization
     /// </summary>
@@ -46,6 +44,12 @@ public class Crystal
 
     public Image icon;
 
+    private void Awake()
+    {
+        cost = 0;
+        statIndex = 0;
+    }
+
     /// <summary>
     /// Adds a stat to the crystal
     /// </summary>
@@ -55,6 +59,7 @@ public class Crystal
         if (statIndex < 3 && cost != par)
         {
             stats.Add(stat);
+
             CalculateStatCost(statIndex);
             if (mods[statIndex] > 0)
             {
@@ -74,7 +79,7 @@ public class Crystal
     /// <summary>
     /// Calculates the cost of the current stat based on its index
     /// </summary>
-    /// <param name="index">Determines cost of stat</param>
+    /// <param name="index">Determines cost formula</param>
     private void CalculateStatCost(int index)
     {
         switch (index)

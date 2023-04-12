@@ -19,6 +19,7 @@ public class CrystalSlotScreen : MonoBehaviour
     [SerializeField] private Image equippedCrystal1;
     [SerializeField] private Image equippedCrystal2;
     [SerializeField] private Image equippedCrystal3;
+    [SerializeField] private Image newCrystal;
 
     /// <summary>
     /// Open the screen, change state
@@ -82,7 +83,7 @@ public class CrystalSlotScreen : MonoBehaviour
                 newCrystalStats.text = "+";
             } else
             {
-                newCrystalStats.text = "+";
+                newCrystalStats.text = "-";
             }
 
             // what is the modifier of the stat?
