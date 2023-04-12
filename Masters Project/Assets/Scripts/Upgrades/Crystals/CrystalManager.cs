@@ -58,16 +58,17 @@ public class CrystalManager : MonoBehaviour
         {
             if (newCrystal.cost != newCrystal.par)
             {
-                newCrystal.AddStat(stats[Random.Range(0, stats.Length-1)]);
+                IStat stat = stats[Random.Range(0, stats.Length-1)];
+                newCrystal.AddStat(stat);
             }
         }
 
-        if (newCrystal.stats[1] == null)
-        {
-            newCrystal.icon.color = newCrystal.stats[0].GetColor();
-        }
+        //newCrystal.icon.sprite = newCrystal.stats[0].GetIcon();
+        //newCrystal.icon.color = newCrystal.stats[1].GetColor();
 
-        newCrystal.crystalName += " Crystal";
+        newCrystal.crystalName += "Crystal";
+        Debug.Log(newCrystal.crystalName);
+        Debug.Log(newCrystal.GetNumStats());
         return newCrystal;
     }
 

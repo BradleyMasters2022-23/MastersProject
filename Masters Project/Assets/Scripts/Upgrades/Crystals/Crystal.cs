@@ -20,12 +20,14 @@ public class Crystal
     /// <summary>
     /// List of stats the crystal has.
     /// </summary>
-    public IStat[] stats;
+    public List<IStat> stats = new List<IStat>();
 
     /// <summary>
     /// List of the modifiers for the stats in stats.
     /// </summary>
-    public int[] mods;
+    public List<int> mods = new List<int>();
+
+    public List<string> statsDesc = new List<string>();
 
     /// <summary>
     /// current stat to be added. doubles as total # of stats after initialization
@@ -44,14 +46,6 @@ public class Crystal
 
     public Image icon;
 
-    private void Start()
-    {
-        stats = new IStat[3];
-        mods = new int[3];
-        statIndex = 0;
-        cost = 0;
-    }
-
     /// <summary>
     /// Adds a stat to the crystal
     /// </summary>
@@ -60,7 +54,7 @@ public class Crystal
     {
         if (statIndex < 3 && cost != par)
         {
-            stats[statIndex] = stat;
+            stats.Add(stat);
             CalculateStatCost(statIndex);
             if (mods[statIndex] > 0)
             {
@@ -87,32 +81,30 @@ public class Crystal
         {
             // for the first stat, cost is between par/2 and par+par/2
             case 0:
-                icon.sprite = stats[index].GetIcon();
-                mods[statIndex] = Random.Range(Mathf.FloorToInt(par / 2), Mathf.CeilToInt(par + par / 2));
+                mods.Add(Random.Range(Mathf.CeilToInt(par / 2), Mathf.CeilToInt(par + par / 2)));
                 cost += mods[index];
                 break;
 
             // for the second stat
             case 1:
-                icon.color = stats[index].GetColor();
                 // if current cost is less than par, second stat's cost is between 
                 if (cost < par)
                 {
-                    mods[statIndex] = Random.Range(Mathf.FloorToInt(par - cost), Mathf.CeilToInt(par));
+                    mods.Add(Random.Range(Mathf.CeilToInt(par - cost), Mathf.CeilToInt(par)));
                     cost += mods[index];
                 }
 
                 // if current cost is more than par, cost of second stat is the difference between them
                 if (cost > par)
                 {
-                    mods[statIndex] = par - cost;
+                    mods.Add(par - cost);
                     cost += mods[index];
                 }
                 
                 break;
 
             case 2:
-                mods[statIndex] = cost - par;
+                mods.Add(cost - par);
                 cost += mods[index];
                 break;
         }
@@ -145,5 +137,19 @@ public class Crystal
             stat.UnloadStat(player, mods[i]);
             i++;
         }
+    }
+
+    public int GetNumStats()
+    {
+        int i = 0;
+        foreach (IStat stat in stats)
+        {
+            if(stat != null)
+            {
+                i++;
+            }
+        }
+
+        return i;
     }
 }

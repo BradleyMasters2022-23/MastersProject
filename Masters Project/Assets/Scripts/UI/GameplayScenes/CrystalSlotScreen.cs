@@ -31,7 +31,7 @@ public class CrystalSlotScreen : MonoBehaviour
             selectedCrystal = CrystalManager.instance.GetEquippedCrystal(selectedCrystalIndex);
             DisplaySelectedCrystal();
         }
-        DisplayCrystalIcons();
+        //DisplayCrystalIcons();
         DisplayNewCrystalStats();
 
         GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
