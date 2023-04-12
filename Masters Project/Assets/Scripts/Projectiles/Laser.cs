@@ -167,8 +167,8 @@ public class Laser : RangeAttack, TimeObserver
             Instantiate(onEndPrefab, endVFX.transform.position, endVFX.transform.rotation);
         }
             
-
-        Destroy(gameObject);
+        if(gameObject != null)
+            Destroy(gameObject);
     }
 
     /// <summary>

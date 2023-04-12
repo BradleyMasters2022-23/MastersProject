@@ -37,21 +37,22 @@ public class BossLaserAttack : MonoBehaviour
     {
         Inturrupt();
 
-        phase1Cannon.NewStage(newPhase);
-        phase2Cannon.NewStage(newPhase);
+        phase1Cannon?.NewStage(newPhase);
+        phase2Cannon?.NewStage(newPhase);
 
-        tracker.ResetTimer();
+
+        tracker?.ResetTimer();
     }
 
     public void Inturrupt()
     {
         if (phase1Cannon.isActiveAndEnabled)
         {
-            phase1Cannon.Inturrupt();
+            phase1Cannon?.Inturrupt();
         }
         if (phase2Cannon.isActiveAndEnabled)
         {
-            phase2Cannon.Inturrupt();
+            phase2Cannon?.Inturrupt();
         }
     }
 }

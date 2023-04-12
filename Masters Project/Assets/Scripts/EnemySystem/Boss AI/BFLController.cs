@@ -11,7 +11,8 @@ public class BFLController : MonoBehaviour
 
     [SerializeField, ReadOnly] private int currentStage;
 
-    private bool active;
+    [SerializeField] private bool onCooldown = false;
+    [SerializeField] private bool active = false;
     private ScaledTimer cooldown;
     private BaseBossAttack currentAttack;
 
@@ -22,17 +23,19 @@ public class BFLController : MonoBehaviour
 
     private void Update()
     {
-        if(currentAttack != null)
+        if(active && currentAttack != null)
         {
             if(currentAttack.AttackDone())
             {
+                Debug.Log("Attack done");
                 currentAttack = null;
+                active = false;
                 SetCooldown();
             }
         }
 
         if(onCooldown && cooldown.TimerDone())
-            onCooldown= false;
+            onCooldown = false;
     }
 
     public void NewStage(int stageNum)
@@ -42,13 +45,13 @@ public class BFLController : MonoBehaviour
 
     public void ChooseAttack()
     {
-        if (active || !cooldown.TimerDone()) return;
-
-        Debug.Log("Attack chosen");
-
-        active = true;
-        currentAttack = attacks.Pull();
-        currentAttack.Attack();
+        if (CanAttack())
+        {
+            Debug.Log("Attacking");
+            active = true;
+            currentAttack = attacks.Pull();
+            currentAttack.Attack();
+        }
     }
 
     public void Inturrupt()
@@ -59,17 +62,17 @@ public class BFLController : MonoBehaviour
 
     private void SetCooldown()
     {
+        onCooldown = true;
+
         float num = Random.Range(
             stageCooldowns[currentStage].x,
             stageCooldowns[currentStage].y);
 
         cooldown.ResetTimer(num);
-
-        onCooldown = true;
     }
 
     public bool CanAttack()
     {
-        return cooldown.TimerDone();
+        return (!onCooldown && !active);
     }
 }
