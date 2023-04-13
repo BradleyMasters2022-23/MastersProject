@@ -30,15 +30,16 @@ public class CrystalManager : MonoBehaviour
 
     private void Start()
     {
-        if(instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(this.gameObject);
-}
-        else
-        {
-            Destroy(this.gameObject);
-        }
+        //if(instance == null)
+        //{
+        //    instance = this;
+        //    DontDestroyOnLoad(this.gameObject);
+        //}
+        //else
+        //{
+        //    Destroy(this.gameObject);
+        //}
+        instance = this;
 
         equippedCrystals = new Crystal[crystalSlots];
         player = FindObjectOfType<PlayerController>();
