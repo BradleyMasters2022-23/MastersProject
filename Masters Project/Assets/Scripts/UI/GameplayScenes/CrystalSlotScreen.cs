@@ -163,6 +163,8 @@ public class CrystalSlotScreen : MonoBehaviour
     public void Trash()
     {
         selectedCrystalIndex = -1;
+        selectedCrystalName.enabled = false;
+        selectedCrystalStats.enabled = false;
     }
 
     public void ApplyChanges()
