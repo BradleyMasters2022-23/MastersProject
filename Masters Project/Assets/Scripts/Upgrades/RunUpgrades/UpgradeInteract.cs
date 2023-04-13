@@ -52,10 +52,10 @@ public class UpgradeInteract : Interactable
         //Debug.Log("It's an upgrade!");
     }
 
-    public void UpgradeSelected()
-    {
-        GetComponentInParent<HallwayLoader>().UpgradeSelected();
+    //public void UpgradeSelected()
+    //{
+    //    GetComponentInParent<HallwayLoader>().UpgradeSelected();
 
-        Destroy(gameObject);
-    }
+    //    Destroy(gameObject);
+    //}
 }
