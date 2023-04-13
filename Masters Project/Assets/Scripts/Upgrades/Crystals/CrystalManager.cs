@@ -59,7 +59,7 @@ public class CrystalManager : MonoBehaviour
         {
             if (newCrystal.cost != newCrystal.par)
             {
-                IStat stat = stats[Random.Range(0, stats.Length-1)];
+                IStat stat = stats[Random.Range(0, stats.Length)];
                 newCrystal.AddStat(stat);
             }
         }

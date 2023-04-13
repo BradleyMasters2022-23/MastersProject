@@ -45,9 +45,53 @@ public class CrystalSlotScreen : MonoBehaviour
         }
         DisplayCrystalIcons();
         DisplayNewCrystalStats();
+        DisplayPennyStats();
 
         GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
         gameObject.SetActive(true);
+    }
+
+    private void DisplayPennyStats()
+    {
+        pennyStats.text = "";
+        for(int i = 0; i < 3; i++)
+        {
+            // instead of the selected crystal, display the new crystal
+            if(selectedCrystalIndex == i)
+            {
+                pennyStats.text += newCrystalStats.text;
+                pennyStats.text += "\n";
+            } else
+            {
+                if(CrystalManager.instance.CrystalEquipped(i))
+                {
+                    int statIndex = 0;
+                    int mod;
+
+                    foreach (IStat stat in CrystalManager.instance.GetEquippedCrystal(i).stats)
+                    {
+                        mod = CrystalManager.instance.GetEquippedCrystal(i).mods[statIndex];
+                        // is the stat positive or negative?
+                        if (mod > 0)
+                        {
+                            pennyStats.text += "+";
+                        }
+
+                        // what is the modifier of the stat?
+                        pennyStats.text += stat.GetStatIncrease(mod).ToString();
+                        pennyStats.text += " ";
+
+                        // what stat is it?
+                        pennyStats.text += stat.GetStatText();
+                        pennyStats.text += "\n";
+
+                        statIndex++;
+                    }
+                }
+                
+            }
+
+        }
     }
 
     private void DisplayCrystalIcons()
@@ -127,6 +171,8 @@ public class CrystalSlotScreen : MonoBehaviour
             selectedCrystalName.enabled = false;
             selectedCrystalStats.enabled = false;
         }
+
+        DisplayPennyStats();
     }
 
     /// <summary>
@@ -165,6 +211,7 @@ public class CrystalSlotScreen : MonoBehaviour
         selectedCrystalIndex = -1;
         selectedCrystalName.enabled = false;
         selectedCrystalStats.enabled = false;
+        DisplayPennyStats();
     }
 
     public void ApplyChanges()
