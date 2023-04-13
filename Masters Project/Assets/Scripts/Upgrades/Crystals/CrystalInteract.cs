@@ -27,19 +27,11 @@ public class CrystalInteract : Interactable
             par = LinearSpawnManager.instance.GetCombatRoomCount() + parMod;
 
         }
-        else
-        {
-            Debug.Log("No linear spawn manager found");
-        }
 
         if (CrystalManager.instance != null && crystal == null)
         {
             crystal = CrystalManager.instance.GenerateCrystal(par);
 
-        }
-        else
-        {
-            Debug.Log("No crystal manager found");
         }
 
         if (crystal != null)
@@ -51,11 +43,7 @@ public class CrystalInteract : Interactable
             }
 
             ui.OpenScreen(this);
-        } else
-        {
-            Debug.Log("No crystal found");
         }
-        
     }
 
     public Crystal GetCrystal()
