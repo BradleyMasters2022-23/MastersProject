@@ -18,6 +18,8 @@ public class CrystalSlotScreen : MonoBehaviour
     [SerializeField] private TextMeshProUGUI selectedCrystalName;
     [SerializeField] private TextMeshProUGUI selectedCrystalStats;
 
+    [SerializeField] private TextMeshProUGUI pennyStats;
+
     [SerializeField] private Image equippedCrystal1;
     [SerializeField] private Image equippedCrystal2;
     [SerializeField] private Image equippedCrystal3;
@@ -53,13 +55,7 @@ public class CrystalSlotScreen : MonoBehaviour
         if(CrystalManager.instance.CrystalEquipped(0))
         {
             equippedCrystal1.sprite = CrystalManager.instance.GetEquippedCrystal(0).stats[0].GetIcon();
-            if (CrystalManager.instance.GetEquippedCrystal(0).GetNumStats() > 1)
-            {
-                equippedCrystal1.color = CrystalManager.instance.GetEquippedCrystal(0).stats[1].GetColor();
-            } else
-            {
-                equippedCrystal3.color = CrystalManager.instance.GetEquippedCrystal(0).stats[0].GetColor();
-            }
+            
         } else
         {
             equippedCrystal1.sprite = blank;
@@ -68,13 +64,7 @@ public class CrystalSlotScreen : MonoBehaviour
         if (CrystalManager.instance.CrystalEquipped(1))
         {
             equippedCrystal2.sprite = CrystalManager.instance.GetEquippedCrystal(1).stats[0].GetIcon();
-            if (CrystalManager.instance.GetEquippedCrystal(1).GetNumStats() > 1)
-            {
-                equippedCrystal2.color = CrystalManager.instance.GetEquippedCrystal(1).stats[1].GetColor();
-            } else
-            {
-                equippedCrystal3.color = CrystalManager.instance.GetEquippedCrystal(1).stats[0].GetColor();
-            }
+            
         } else
         {
             equippedCrystal2.sprite = blank;
@@ -83,26 +73,13 @@ public class CrystalSlotScreen : MonoBehaviour
         if (CrystalManager.instance.CrystalEquipped(2))
         {
             equippedCrystal3.sprite = CrystalManager.instance.GetEquippedCrystal(2).stats[0].GetIcon();
-            if (CrystalManager.instance.GetEquippedCrystal(0).GetNumStats() > 1)
-            {
-                equippedCrystal3.color = CrystalManager.instance.GetEquippedCrystal(2).stats[1].GetColor();
-            } else
-            {
-                equippedCrystal3.color = CrystalManager.instance.GetEquippedCrystal(2).stats[0].GetColor();
-            }
+            
         } else
         {
             equippedCrystal3.sprite = blank;
         }
 
         newCrystal.sprite = caller.GetCrystal().stats[0].GetIcon();
-        if (caller.GetCrystal().GetNumStats() > 1)
-        {
-            newCrystal.color = caller.GetCrystal().stats[1].GetColor();
-        } else
-        {
-            newCrystal.color = caller.GetCrystal().stats[0].GetColor();
-        }
     }
 
     private void DisplayNewCrystalStats()
@@ -197,6 +174,4 @@ public class CrystalSlotScreen : MonoBehaviour
         caller.BegoneCrystalInteract();
         
     }
-
-    
 }

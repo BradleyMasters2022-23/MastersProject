@@ -14,7 +14,7 @@ public class CrystalManager : MonoBehaviour
 {
 
     [Tooltip("Number of crystals we want the player to be able to have equipped at once.")]
-    [SerializeField] private int crystalSlots;
+    public int crystalSlots;
 
     public static CrystalManager instance;
 
