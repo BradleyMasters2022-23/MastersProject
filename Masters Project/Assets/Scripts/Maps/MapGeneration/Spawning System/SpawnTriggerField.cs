@@ -51,6 +51,7 @@ public class SpawnTriggerField : MonoBehaviour
 
     [Tooltip("The initial delay between activating encounter and spawning enemies")]
     [SerializeField] private float activationDelay;
+    [SerializeField] private float waveChangeDelay;
     [Tooltip("The delay between spawning each individiaul enemy. Randomly chosen between these bounds")]
     [SerializeField] private Vector2 spawningDelayRange;
     
@@ -244,6 +245,7 @@ public class SpawnTriggerField : MonoBehaviour
                 yield return null;
             }
 
+            yield return new WaitForSeconds(waveChangeDelay);
             // Debug.Log("Wave Finished, moving to next");
         }
 

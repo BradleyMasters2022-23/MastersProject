@@ -27,7 +27,7 @@ public class ArenaLoader : SegmentLoader
 
     protected override IEnumerator UniquePoolInitialization()
     {
-        Debug.Log($"Pool init for {gameObject.name}");
+        // Debug.Log($"Pool init for {gameObject.name}");
         // Get reference to all spawnpoints
         allSpawnpoints = GetComponentsInChildren<SpawnPoint>(false);
 

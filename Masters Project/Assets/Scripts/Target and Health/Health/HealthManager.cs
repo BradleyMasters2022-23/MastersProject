@@ -9,6 +9,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum HealthType
 {
@@ -27,6 +28,10 @@ public class HealthManager : MonoBehaviour
     private ResourceBar[] _healthbars;
 
     private bool initialized = false;
+    public bool Initialized
+    {
+        get { return initialized; }
+    }
 
     [Tooltip("Duration of time to remain invulnerable after taking damage")]
     [SerializeField] private float _damagedInvulnerabilityDuration;
@@ -52,6 +57,8 @@ public class HealthManager : MonoBehaviour
     public delegate void OnBarTransition();
 
     public OnBarTransition onHealthbarLostEvents;
+
+    public UnityAction onDamagedEvent;
 
     public bool Init()
     {
@@ -132,6 +139,8 @@ public class HealthManager : MonoBehaviour
         // Exit the game 
         if (_invulnerable || _godMode)
             return false;
+
+        onDamagedEvent?.Invoke();
 
         // activate invulnerability 
         InvulnerabilityDuration(_damagedInvulnerabilityDuration);
