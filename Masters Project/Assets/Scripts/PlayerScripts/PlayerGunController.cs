@@ -322,4 +322,9 @@ public class PlayerGunController : MonoBehaviour
     {
         return maxRange;
     }
+
+    public void SetMaxRange(float newVal)
+    {
+        maxRange = newVal;
+    }
 }

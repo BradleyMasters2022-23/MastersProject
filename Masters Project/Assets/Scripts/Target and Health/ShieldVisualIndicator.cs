@@ -20,6 +20,11 @@ public class ShieldVisualIndicator : MonoBehaviour
 
     private Color baseColor;
 
+    private float minimumRedTime = 0.5f;
+    private float minimumRedTint = 0.3f;
+
+    private ScaledTimer minRedTimer;
+
     private void Start()
     {
         if(_redTintRenderer != null)
@@ -32,6 +37,8 @@ public class ShieldVisualIndicator : MonoBehaviour
             maxHealth = _targetShield.MaxHealth(ShieldIndex);
             currHealth = _targetShield.CurrentHealth(ShieldIndex);
         }
+
+        minRedTimer = new ScaledTimer(minimumRedTime);
     }
 
     // Update is called once per frame
@@ -43,7 +50,11 @@ public class ShieldVisualIndicator : MonoBehaviour
         currHealth = _targetShield.CurrentHealth(ShieldIndex);
 
         float ratio = 1 - (currHealth / (float)maxHealth);
-        baseColor.a = ratio;
+
+        if(ratio <= minimumRedTint && ratio != 0)
+            baseColor.a = minimumRedTint;
+        else
+            baseColor.a = ratio;
 
         _redTintRenderer.material.color = baseColor;
     }

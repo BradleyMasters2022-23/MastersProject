@@ -85,23 +85,23 @@ public class AimController : MonoBehaviour
         ManageCamera();
     }
 
-    /// <summary>
-    /// Update the camera's rotation
-    /// </summary>
-    private void ManageCamera()
+    // Figure out which control input to use, adjust sensitivity values
+    Vector2 lookDelta;
+    float sensitivity;
+    float horizontalInversion = 1;
+    float verticalInversion = 1;
+
+    private void Update()
     {
-        // Figure out which control input to use, adjust sensitivity values
-        Vector2 lookDelta;
-        float sensitivity;
-        float horizontalInversion = 1;
-        float verticalInversion = 1;
+        lookDelta = Vector2.zero;
+        sensitivity = 0;
+        horizontalInversion = 1;
+        verticalInversion = 1;
 
         if (aim.ReadValue<Vector2>() != Vector2.zero)
         {
             lookDelta = aim.ReadValue<Vector2>();
             sensitivity = mouseSensitivity;
-
-            // Debug.Log("Using sensitivity with : " + sensitivity);
 
             if (mouseXInverted)
                 horizontalInversion *= -1;
@@ -119,16 +119,16 @@ public class AimController : MonoBehaviour
             if (controllerYInverted)
                 verticalInversion *= -1;
         }
-        else
-        {
-            return;
-        }
+    }
 
-
+    /// <summary>
+    /// Update the camera's rotation
+    /// </summary>
+    private void ManageCamera()
+    {
         // Manage horizontal rotation
         transform.rotation *= Quaternion.AngleAxis(lookDelta.x * sensitivity * horizontalInversion * Time.deltaTime, Vector3.up);
         
-
 
         // Manage vertical rotaiton
         Quaternion temp = cameraLook.transform.localRotation *

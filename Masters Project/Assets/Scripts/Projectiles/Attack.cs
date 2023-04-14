@@ -15,7 +15,7 @@ public abstract class Attack : MonoBehaviour
     [Header("===== Core Attack Info =====")]
 
     [Tooltip("Damage this attack deals")]
-    [SerializeField] protected int damage;
+    [SerializeField] protected float damage;
 
     //[Tooltip("What layers should this attack ignore")]
     //[SerializeField] protected LayerMask layersToIgnore;

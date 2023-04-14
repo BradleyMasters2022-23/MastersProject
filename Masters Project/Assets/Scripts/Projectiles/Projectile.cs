@@ -209,7 +209,7 @@ public class Projectile : RangeAttack
         End();
     }
 
-    public int GetDamage()
+    public float GetDamage()
     {
         return damage;
     }
