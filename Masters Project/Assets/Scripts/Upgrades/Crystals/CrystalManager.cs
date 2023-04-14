@@ -97,7 +97,10 @@ public class CrystalManager : MonoBehaviour
 
     public Crystal GetEquippedCrystal(int index)
     {
-        return equippedCrystals[index];
+        if (index < equippedCrystals.Length && index >= 0)
+            return equippedCrystals[index];
+        else
+            return null;
     }
 
     public bool CrystalEquipped(int index)
@@ -133,4 +136,13 @@ public class CrystalManager : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public int MaxSlots()
+    {
+        return crystalSlots;
+    }
+
+    public IStat[] AllStats()
+    {
+        return stats;
+    }
 }

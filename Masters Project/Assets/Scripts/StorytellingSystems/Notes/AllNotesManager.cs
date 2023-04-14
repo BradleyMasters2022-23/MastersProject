@@ -65,7 +65,7 @@ public class AllNotesManager : MonoBehaviour
     public NoteObject GetRandomLostNote()
     {
         int ran = Random.Range(0, notes.Count);
-        Debug.Log($"Lost notes size {lostNotes.Count} | num selected {ran}");
+        // Debug.Log($"Lost notes size {lostNotes.Count} | num selected {ran}");
         if (lostNotes != null && lostNotes.Count > 0 && ran < lostNotes.Count)
             return lostNotes[ran];
         else

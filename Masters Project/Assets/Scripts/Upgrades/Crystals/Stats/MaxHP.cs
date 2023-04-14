@@ -13,7 +13,7 @@ public class MaxHP : IStat
     {
         hp = player.gameObject.GetComponent<HealthManager>();
         hp.IncreaseMaxHealth(statBase * mod, healthBarIndex);
-        Debug.Log("HP up " + (statBase * mod).ToString());
+        // Debug.Log("HP up " + (statBase * mod).ToString());
     }
 
     public override void UnloadStat(PlayerController player, int mod)
