@@ -44,6 +44,8 @@ public class Crystal
 
     public Image icon;
 
+    private Dictionary<IStat, float> statDict;
+
     /// <summary>
     /// Adds a stat to the crystal
     /// </summary>
@@ -67,7 +69,6 @@ public class Crystal
             
             statIndex++;
         }
-
     }
 
     /// <summary>
@@ -155,4 +156,78 @@ public class Crystal
 
         return i;
     }
+
+    /// <summary>
+    /// Get the icon for this crystal
+    /// </summary>
+    /// <returns>this icon's crystal</returns>
+    public Sprite Icon()
+    {
+        return stats[0].GetIcon();
+    }
+
+    /// <summary>
+    /// Get the color for this crystal. Will be the second stats color, if available
+    /// </summary>
+    /// <returns>The color for this crystal</returns>
+    public Color GetColor()
+    {
+        if (stats.Count > 1 && stats[1] != null)
+            return stats[1].GetColor();
+        else
+            return stats[0].GetColor();
+    }
+    public Dictionary<IStat, float> GetStats()
+    {
+        if (statDict != null)
+            return new Dictionary<IStat, float>(statDict);
+        else
+            return GetStatDict();
+    }
+
+    /// <summary>
+    /// Create a new dictionary of stats and values. Send in a starting dict to add onto a dict instead.
+    /// </summary>
+    /// <param name="startingDict">Any dictionary to start from</param>
+    /// <returns>Dictionary with the stats of the passed in crystal added</returns>
+    public Dictionary<IStat, float> GetStatDict(Dictionary<IStat, float> startingDict = null)
+    {
+        Dictionary<IStat, float> newDict;
+
+        // Either create a new dictionary or make a copy of the passed in one
+        if (startingDict == null)
+            newDict = new Dictionary<IStat, float>();
+        else
+            newDict = new Dictionary<IStat, float>(startingDict);
+
+        // return early if no new crystal stats to add
+        if (stats == null)
+        {
+            return newDict;
+        }
+
+
+        // Iterate through all stats and mods the crystal has
+        IStat stat;
+        int mod;
+        for (int i = 0; i < stats.Count; i++)
+        {
+            stat = stats[i];
+            mod = mods[i];
+
+            // Increase the stat if already counted
+            if (newDict.ContainsKey(stat))
+            {
+                newDict[stat] += stat.GetStatIncrease(mod);
+            }
+            // Apply the stat if not already acounted
+            else
+            {
+                newDict.Add(stat, stat.GetStatIncrease(mod));
+            }
+        }
+
+        return newDict;
+    }
+
 }

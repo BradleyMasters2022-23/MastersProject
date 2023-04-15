@@ -17,6 +17,7 @@ public class BulletRange : IStat
     public override void UnloadStat(PlayerController player, int mod)
     {
         gun = player.gameObject.GetComponent<PlayerGunController>();
+        gun.SetMaxRange(gun.GetMaxRange() - (statBase * (float)mod));
     }
 
     public override float GetStatIncrease(int mod)

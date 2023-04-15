@@ -120,6 +120,19 @@ public class TooltipManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Unload any tooltip active
+    /// </summary>
+    public void UnloadTooltip()
+    {
+        currentTooltip = null;
+        titleTextbox.text = "";
+        descriptionTextbox.text = "";
+
+        HideTooltip();
+    }
+
+
+    /// <summary>
     /// Display tooltip on HUD
     /// </summary>
     private void DisplayTooltip()

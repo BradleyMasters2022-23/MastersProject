@@ -80,7 +80,8 @@ public class CrystalManager : MonoBehaviour
         }
 
         equippedCrystals[index] = crystal;
-        crystal.EquipCrystal(player);
+        if(crystal != null)
+            crystal.EquipCrystal(player);
 
     }
 
