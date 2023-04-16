@@ -35,12 +35,6 @@ public class CrystalUIDisplay : MonoBehaviour
     [HideIf("@this.allowTrashing == false")]
     [SerializeField] private GameObject trashButton;
 
-
-    [Tooltip("Color applied to stat text when theres a positive effect")]
-    [SerializeField] private Color buffColor;
-    [Tooltip("Color applied to stat text when theres a negative effect")]
-    [SerializeField] private Color debuffColor;
-
     private Dictionary<IStat, float> personalStatDict;
 
     /// <summary>
@@ -153,11 +147,11 @@ public class CrystalUIDisplay : MonoBehaviour
             if (val.Value >= 0)
             {
                 startChar = "+";
-                colorHex = ColorUtility.ToHtmlStringRGBA(buffColor);
+                colorHex = CrystalManager.instance.PositiveTextHex();
             }
             else
             {
-                colorHex = ColorUtility.ToHtmlStringRGBA(debuffColor);
+                colorHex = CrystalManager.instance.NegativeTextHex();
             }
 
             displayString += "<color=#" + colorHex + ">" + startChar + val.Value.ToString("0.0") + " " + val.Key.GetStatText() + "</color>";

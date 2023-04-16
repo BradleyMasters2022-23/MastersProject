@@ -26,6 +26,11 @@ public class CrystalManager : MonoBehaviour
     [Tooltip("List of possible stats. Should contain stat prefabs.")]
     [SerializeField] private IStat[] stats;
 
+    [Tooltip("Text color used when an crystal offers a positive effect")]
+    [SerializeField] private Color positiveTextColor;
+    [Tooltip("Text color used when a crystal offers a negative effect")]
+    [SerializeField] private Color negativeTextColor;
+
     private PlayerController player;
 
     private void Start()
@@ -145,5 +150,23 @@ public class CrystalManager : MonoBehaviour
     public IStat[] AllStats()
     {
         return stats;
+    }
+
+    /// <summary>
+    /// Color text to the positive effect color
+    /// </summary>
+    /// <returns>RGBA Hexcode of positive color</returns>
+    public string PositiveTextHex()
+    {
+        return ColorUtility.ToHtmlStringRGBA(positiveTextColor);
+    }
+
+    /// <summary>
+    /// Color text to the negative effect color
+    /// </summary>
+    /// <returns>RGBA Hexcode of negative color</returns>
+    public string NegativeTextHex()
+    {
+        return ColorUtility.ToHtmlStringRGBA(negativeTextColor);
     }
 }

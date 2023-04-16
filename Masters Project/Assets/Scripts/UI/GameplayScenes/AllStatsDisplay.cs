@@ -12,11 +12,6 @@ public class AllStatsDisplay : MonoBehaviour
 
     private CrystalManager source;
 
-    [Tooltip("Color applied to stat text when theres a positive effect")]
-    [SerializeField] private Color buffColor;
-    [Tooltip("Color applied to stat text when theres a negative effect")]
-    [SerializeField] private Color debuffColor;
-
     private void OnEnable()
     {
         if(display == null)
@@ -117,11 +112,11 @@ public class AllStatsDisplay : MonoBehaviour
                 if (differences[val.Key] >= 0)
                 {
                     modDiff = "+";
-                    colorHex = ColorUtility.ToHtmlStringRGBA(buffColor);
+                    colorHex = CrystalManager.instance.PositiveTextHex();
                 }
                 else
                 {
-                    colorHex = ColorUtility.ToHtmlStringRGBA(debuffColor);
+                    colorHex = CrystalManager.instance.NegativeTextHex();
                 }
 
                 // Combine the append
