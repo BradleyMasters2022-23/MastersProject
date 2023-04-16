@@ -49,7 +49,6 @@ public class Waypoint : MonoBehaviour
         Vector3 pointDir = (pos - screenCenter);
         inBounds = InBounds(pos);
 
-        /*
         #region SCALE and DISTANCE
 
         // Determine if this should even display based on range
@@ -66,10 +65,9 @@ public class Waypoint : MonoBehaviour
         transform.localScale = baseScale * totalScale;
 
         #endregion
-        */
-
+        
         #region POSITION
-
+        
         // If behind...
         if (pos.z < 0)
         {
@@ -93,16 +91,20 @@ public class Waypoint : MonoBehaviour
         pos.x = Mathf.Clamp(pos.x, horBounds.x, horBounds.y);
         pos.y = Mathf.Clamp(pos.y, verBounds.x, verBounds.y);
         t.transform.position = pos;
-
+        
         #endregion
 
         #region ROTATION
 
         pointerImg.gameObject.SetActive(!inBounds);
 
-        // dont bother updating rotation if in bounds, as it wont be shown
+        // only update rotation if object is out of bounds
         if(!inBounds)
         {
+            // recalculate now that its been flipped
+            pointDir = (pos - screenCenter);
+
+            // dont bother updating rotation if in bounds, as it wont be shown
             // Calculate rotation with ATAN
             float r = Mathf.Atan2(pointDir.y, pointDir.x) * Mathf.Rad2Deg;
             r -= 90;
@@ -112,7 +114,6 @@ public class Waypoint : MonoBehaviour
                 r = 360 - r;
             }
 
-            // apply rotation
             pointerImg.rotation = Quaternion.Euler(new Vector3(0, 0, r));
         }
 
