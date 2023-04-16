@@ -5,20 +5,34 @@ using UnityEngine.UI;
 
 public class Waypoint : MonoBehaviour
 {
-    [SerializeField] Transform pointToTarget;
+    [Header("Setup")]
 
-    [SerializeField] Image t;
+    /// <summary>
+    /// Target transform to point to
+    /// </summary>
+    [SerializeField] private Transform target;
+    /// <summary>
+    /// Reference to personal rect transform
+    /// </summary>
+    private RectTransform t;
+    /// <summary>
+    /// Main camera reference
+    /// </summary>
+    private Transform cam;
 
-    [SerializeField] Transform player;
-
+    [SerializeField] GameObject imageContainer;
     [SerializeField] RectTransform pointerImg;
+    [SerializeField] Image iconImage;
 
-    [SerializeField] AnimationCurve scaleOverPositionDistance;
+    [Header("Functionality")]
 
-    [SerializeField] GameObject imageContainers;
-
+    [Tooltip("Max range for this tooltip can appear as. Overwritten by others.")]
     [SerializeField] float maxRange;
-
+    [Tooltip("Max range for this tooltip can appear as")]
+    [SerializeField] AnimationCurve scaleOverPositionDistance;
+    [Tooltip("Color of the tooltip")]
+    [SerializeField] Color displayColor;
+    
     /// <summary>
     /// Reference to center of the screen
     /// </summary>
@@ -31,32 +45,68 @@ public class Waypoint : MonoBehaviour
     /// Vertical bounds reference, radius included
     /// </summary>
     private Vector2 verBounds;
-
+    /// <summary>
+    /// Base scale for the waypoint
+    /// </summary>
     private Vector3 baseScale;
-
+    /// <summary>
+    /// Whether or not the target is in camera bounds
+    /// </summary>
     private bool inBounds;
 
     private void Awake()
     {
+        t = GetComponent<RectTransform>();
+
         baseScale = t.transform.localScale;
-        player = Camera.main.transform;
-        UpdateAllBounds();
+        cam = Camera.main.transform;
+
+
+        // TESTING
+        AssignTarget(target, displayColor, maxRange, null);
     } 
+
+    /// <summary>
+    /// Assign a waypoint
+    /// </summary>
+    /// <param name="target">target to point to</param>
+    /// <param name="displayColor">Color of object</param>
+    /// <param name="maxRange"></param>
+    public void AssignTarget(Transform target, Color displayColor, float maxRange, Sprite iconSprite)
+    {
+        this.target = target;
+        this.displayColor = displayColor;
+        this.maxRange = maxRange;
+
+        // Load in any icon if possible
+        if(iconSprite != null)
+        {
+            iconImage.sprite = iconSprite;
+            iconImage.enabled = true;
+        }
+        // Disable otherwise
+        else
+        {
+            iconImage.enabled = false;
+        }
+
+        UpdateColor(displayColor);
+    }
 
     private void Update()
     {
-        Vector3 pos = Camera.main.WorldToScreenPoint(pointToTarget.position, Camera.MonoOrStereoscopicEye.Mono);
+        Vector3 pos = Camera.main.WorldToScreenPoint(target.position);
         Vector3 pointDir = (pos - screenCenter);
         inBounds = InBounds(pos);
 
         #region SCALE and DISTANCE
 
         // Determine if this should even display based on range
-        float positionDist = Vector3.Distance(player.position, pointToTarget.position);
+        float positionDist = Vector3.Distance(cam.position, target.position);
         bool show = positionDist <= maxRange;
 
         // Set view status. If can't show, then dont do anything else to minimize impact
-        imageContainers.SetActive(show);
+        imageContainer.SetActive(show);
         if (!show) return;
 
         float distRatio = positionDist / maxRange;
@@ -74,9 +124,9 @@ public class Waypoint : MonoBehaviour
             // Flip it so it displays correctly
             pos *= -1;
 
-            // Due to flip, it always displays to the player's left. Use this DOT to determine if
-            // the position of it is to the left or right of the player, and lock the appropriate max (more accurate)
-            float dot = Vector3.Dot((pointToTarget.position - player.position).normalized, player.right);
+            // Due to flip, it always displays to the cam's left. Use this DOT to determine if
+            // the position of it is to the left or right of the cam, and lock the appropriate max (more accurate)
+            float dot = Vector3.Dot((target.position - cam.position).normalized, cam.right);
             if(dot > 0)
             {
                 pos.x = horBounds.y;
@@ -134,19 +184,16 @@ public class Waypoint : MonoBehaviour
         screenCenter.y = Screen.height;
         screenCenter /= 2;
 
-        // Get screen boundaries
-        horBounds.x = t.GetPixelAdjustedRect().width / 2;
+        // Get screen boundaries with radius
+        horBounds.x = t.rect.width / 2;
         horBounds.y = Screen.width - horBounds.x;
 
-        verBounds.x = t.GetPixelAdjustedRect().height / 2;
+        verBounds.x = t.rect.height / 2;
         verBounds.y = Screen.height - verBounds.x;
-
-        // Get radius of waypoint
-
     }
 
     /// <summary>
-    /// Determine if a point is within bounds and infront of the player
+    /// Determine if a point is within bounds and infront of the cam
     /// </summary>
     /// <param name="pos">point to check</param>
     /// <returns>Whether the point is in camera bounds</returns>
@@ -155,5 +202,16 @@ public class Waypoint : MonoBehaviour
         return (pos.x > horBounds.x && pos.x < horBounds.y
             && pos.y > verBounds.x && pos.y < verBounds.y)
             && pos.z > 0;
+    }
+
+    /// <summary>
+    /// Set the color of all images in this transform
+    /// </summary>
+    /// <param name="c">Color to set to</param>
+    private void UpdateColor(Color c)
+    {
+        Image[] images = GetComponentsInChildren<Image>(true);
+        foreach(var img in images)
+            img.color= c;
     }
 }
