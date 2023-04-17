@@ -21,7 +21,6 @@ public class JumpHeight : IStat
 
     public override float GetStatIncrease(int mod)
     {
-        PlayerController player = FindObjectOfType<PlayerController>();
-        return ((float)mod * statBase) * player.GetJumpForce();
+        return ((float)mod * statBase) * 100;
     }
 }
