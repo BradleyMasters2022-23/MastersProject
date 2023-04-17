@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4316441572618508043}
   - component: {fileID: -2865439527699801535}
   - component: {fileID: -2391270385750659515}
+  - component: {fileID: 648914722470160458}
   m_Layer: 13
   m_Name: CrystalContainer
   m_TagString: Untagged
@@ -98,7 +99,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 2.25
+  m_Radius: 1.7126818
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &-2391270385750659515
 MonoBehaviour:
@@ -113,6 +114,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parMod: 1
+--- !u!114 &648914722470160458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1568899558011619016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8ed886af6042224491c3491de4c6483, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetOverride: {fileID: 6779813439984072579}
+  displayData:
+    displayColor: {r: 1, g: 0.3433962, b: 0.72934544, a: 1}
+    maxRange: 15
+    minRange: 0
+    icon: {fileID: 0}
 --- !u!1 &2873715357458527144
 GameObject:
   m_ObjectHideFlags: 0
@@ -183,7 +202,6 @@ GameObject:
   - component: {fileID: 6779813439984072579}
   - component: {fileID: 2979231229724461295}
   - component: {fileID: 2658356212067536019}
-  - component: {fileID: 132551328453142302}
   m_Layer: 13
   m_Name: Cube
   m_TagString: Untagged
@@ -256,16 +274,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &132551328453142302
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3963583095664673362}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}

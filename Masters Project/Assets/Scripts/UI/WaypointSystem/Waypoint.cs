@@ -139,6 +139,9 @@ public class Waypoint : MonoBehaviour
         t.transform.localScale = baseScale;
         iconImage.sprite = null;
         iconImage.enabled = false;
+
+        displayColor = Color.white;
+        UpdateColor(displayColor);
     }
 
     #endregion
@@ -271,7 +274,7 @@ public class Waypoint : MonoBehaviour
     /// <param name="c">Color to set to</param>
     private void UpdateColor(Color c)
     {
-        Image[] images = GetComponentsInChildren<Image>(false);
+        Image[] images = GetComponentsInChildren<Image>(true);
         foreach(var img in images)
             img.color= c;
     }
