@@ -181,6 +181,7 @@ public class GameManager : MonoBehaviour
         {
             case States.MAINMENU:
                 {
+                    Time.timeScale = 1f;
                     SceneManager.LoadScene(mainMenuScene);
                     menuStack.Clear();
 
