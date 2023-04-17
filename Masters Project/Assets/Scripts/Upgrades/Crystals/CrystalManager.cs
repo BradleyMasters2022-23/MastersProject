@@ -60,12 +60,16 @@ public class CrystalManager : MonoBehaviour
         Crystal newCrystal = new Crystal();
         newCrystal.par = p;
 
+        List<IStat> tempStats = new List<IStat>(stats);
+
         // need to gate this from picking the same stat multiple times
         for (int i = 0; i < 3; i++)
         {
             if (newCrystal.cost != newCrystal.par)
             {
-                IStat stat = stats[Random.Range(0, stats.Length)];
+                IStat stat = tempStats[Random.Range(0, stats.Length)];
+                tempStats.Remove(stat);
+                
                 newCrystal.AddStat(stat);
             }
         }
