@@ -115,7 +115,6 @@ public class SpawnPoint : MonoBehaviour
 
         if(spawnParticles!= null)
         {
-            Debug.Log("Calling spawner parts to stop");
             spawnParticles.Stop();
             spawnParticles.Reinit();
             spawnParticles.playRate *= VFXSpeedScalar;
