@@ -1,3 +1,11 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - April 16th, 2023
+ * Last Edited - April 17th, 2023 by Ben Schuster
+ * Description - Concrete controller for a UI world waypoint
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +13,8 @@ using UnityEngine.UI;
 
 public class Waypoint : MonoBehaviour
 {
+    #region Variables 
+
     [Header("Setup")]
 
     /// <summary>
@@ -20,19 +30,19 @@ public class Waypoint : MonoBehaviour
     /// </summary>
     private Transform cam;
 
+    [Tooltip("Game object containing every image")]
     [SerializeField] GameObject imageContainer;
+    [Tooltip("Transform containing the pointer image")]
     [SerializeField] RectTransform pointerImg;
+    [Tooltip("Image holding the icon")]
     [SerializeField] Image iconImage;
 
-    [Header("Functionality")]
+    [Tooltip("Additional buffer added to the horizontal bounds")]
+    [SerializeField] private float horizontalBuffer;
+    [Tooltip("Additional buffer added to the vertical bounds")]
+    [SerializeField] private float verticalBuffer;
 
-    [Tooltip("Max range for this tooltip can appear as. Overwritten by others.")]
-    [SerializeField] float maxRange;
-    [Tooltip("Max range for this tooltip can appear as")]
-    [SerializeField] AnimationCurve scaleOverPositionDistance;
-    [Tooltip("Color of the tooltip")]
-    [SerializeField] Color displayColor;
-    
+
     /// <summary>
     /// Reference to center of the screen
     /// </summary>
@@ -55,36 +65,51 @@ public class Waypoint : MonoBehaviour
     private bool inBounds;
 
 
-    [SerializeField] private float horizontalBuffer;
-    [SerializeField] private float verticalBuffer;
-    private void Awake()
+    [Header("Functionality")]
+
+    [Tooltip("Scale of the tooltip based on player position")]
+    [SerializeField] AnimationCurve scaleOverPositionDistance;
+
+    /// <summary>
+    /// Max range this waypoint can be viewable at
+    /// </summary>
+    private float maxRange = 15f;
+    /// <summary>
+    /// Color thats applied to the waypoint 
+    /// </summary>
+    private Color displayColor = Color.white;
+
+    #endregion
+
+    #region Pool Functions
+
+    /// <summary>
+    /// Initialize. Called by pooler after creation.
+    /// </summary>
+    public void Init()
     {
         t = GetComponent<RectTransform>();
-
         baseScale = t.transform.localScale;
         cam = Camera.main.transform;
 
-
-        // TESTING
-        AssignTarget(target, displayColor, maxRange, null);
-    } 
+    }
 
     /// <summary>
-    /// Assign a waypoint
+    /// Assign a waypoint. Called by pooler
     /// </summary>
     /// <param name="target">target to point to</param>
     /// <param name="displayColor">Color of object</param>
     /// <param name="maxRange"></param>
-    public void AssignTarget(Transform target, Color displayColor, float maxRange, Sprite iconSprite)
+    public void AssignTarget(Transform target, WaypointData data)
     {
         this.target = target;
-        this.displayColor = displayColor;
-        this.maxRange = maxRange;
+        displayColor = data.displayColor;
+        maxRange = data.maxRange;
 
         // Load in any icon if possible
-        if(iconSprite != null)
+        if(data.icon != null)
         {
-            iconImage.sprite = iconSprite;
+            iconImage.sprite = data.icon;
             iconImage.enabled = true;
         }
         // Disable otherwise
@@ -96,8 +121,30 @@ public class Waypoint : MonoBehaviour
         UpdateColor(displayColor);
     }
 
+    /// <summary>
+    /// Reset values
+    /// </summary>
+    public void ReturnToPool()
+    {
+        target = null;
+        maxRange = 0f;
+        t.transform.localScale = baseScale;
+        iconImage.sprite = null;
+        iconImage.enabled = false;
+    }
+
+    #endregion
+
     private void Update()
     {
+        // If no target, turn off and stop
+        if (target == null)
+        {
+            imageContainer.SetActive(false);
+            return;
+        }
+            
+
         Vector3 pos = Camera.main.WorldToScreenPoint(target.position);
         Vector3 pointDir = (pos - screenCenter);
         inBounds = InBounds(pos);
@@ -213,7 +260,7 @@ public class Waypoint : MonoBehaviour
     /// <param name="c">Color to set to</param>
     private void UpdateColor(Color c)
     {
-        Image[] images = GetComponentsInChildren<Image>(true);
+        Image[] images = GetComponentsInChildren<Image>(false);
         foreach(var img in images)
             img.color= c;
     }
