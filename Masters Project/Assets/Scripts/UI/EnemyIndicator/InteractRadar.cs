@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class InteractRadar : GenericRadar<WaypointContainer>
 {
-    protected override void Awake()
+    /// <summary>
+    /// When pointing to a waypoint container, load in its
+    /// container color for consistency
+    /// </summary>
+    /// <param name="data"></param>
+    /// <returns>Color of container to use</returns>
+    protected override Color ChooseCol(WaypointContainer data)
     {
-        base.Awake();
-
+        return data.GetData().displayColor;
     }
 }

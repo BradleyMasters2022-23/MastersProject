@@ -13,20 +13,20 @@ using UnityEngine;
 public class GenericRadar<T> : MonoBehaviour where T : Component
 {
     [Tooltip("Prefab of pointer to aim at")]
-    [SerializeField] private GenericRadarPointer arrow;
+    [SerializeField] protected GenericRadarPointer arrow;
 
-    private Queue<GenericRadarPointer> pointerQueue;
+    protected Queue<GenericRadarPointer> pointerQueue;
 
-    [SerializeField] private int startingPts;
+    [SerializeField] protected int startingPts;
 
-    [SerializeField] private int increaseIncrement;
+    [SerializeField] protected int increaseIncrement;
 
-    [SerializeField] private Color pointerColor;
+    [SerializeField] protected Color pointerColor;
 
     /// <summary>
     /// List of active targets in the scene
     /// </summary>
-    private List<T> targetList;
+    protected List<T> targetList;
 
     /// <summary>
     /// Reference to full display
@@ -38,7 +38,7 @@ public class GenericRadar<T> : MonoBehaviour where T : Component
     /// </summary>
     public float maxDistance = Mathf.Infinity;
 
-    protected virtual void Awake()
+    protected void Awake()
     {
         targetList = new List<T>();
         pointerQueue = new Queue<GenericRadarPointer>();
@@ -53,7 +53,7 @@ public class GenericRadar<T> : MonoBehaviour where T : Component
         }
     }
 
-    private void Update()
+    protected void Update()
     {
         // Check for null references or deactivated targets, remove them
         for (int i = targetList.Count - 1; i >= 0; i--)
@@ -75,14 +75,24 @@ public class GenericRadar<T> : MonoBehaviour where T : Component
             {
                 targetList.Add(t);
                 GenericRadarPointer ptr = GetPtr();
-                ptr.SetTarget(t.transform, pointerColor,
+                ptr.SetTarget(t.transform, ChooseCol(t),
                     indicatorDisplay.sizeDelta.y / 2, maxDistance);
                 ptr.gameObject.SetActive(true);
             }
         }
     }
 
-    private GenericRadarPointer GetPtr()
+    /// <summary>
+    /// By default, return the normal color
+    /// </summary>
+    /// <param name="data">data to load in</param>
+    /// <returns>Color to us for the pointer</returns>
+    protected virtual Color ChooseCol(T data)
+    {
+        return pointerColor;
+    }
+
+    protected GenericRadarPointer GetPtr()
     {
         if (pointerQueue.Count <= 0)
             return ExpandPool();
@@ -90,7 +100,7 @@ public class GenericRadar<T> : MonoBehaviour where T : Component
             return pointerQueue.Dequeue();
     }
 
-    private GenericRadarPointer ExpandPool()
+    protected GenericRadarPointer ExpandPool()
     {
         // Load in initial amount as requested
         for (int i = 0; i < increaseIncrement; i++)
