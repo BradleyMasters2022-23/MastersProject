@@ -54,6 +54,9 @@ public class Waypoint : MonoBehaviour
     /// </summary>
     private bool inBounds;
 
+
+    [SerializeField] private float horizontalBuffer;
+    [SerializeField] private float verticalBuffer;
     private void Awake()
     {
         t = GetComponent<RectTransform>();
@@ -185,10 +188,10 @@ public class Waypoint : MonoBehaviour
         screenCenter /= 2;
 
         // Get screen boundaries with radius
-        horBounds.x = t.rect.width / 2;
+        horBounds.x = t.rect.width / 3 + horizontalBuffer;
         horBounds.y = Screen.width - horBounds.x;
 
-        verBounds.x = t.rect.height / 2;
+        verBounds.x = t.rect.height / 3 + verticalBuffer;
         verBounds.y = Screen.height - verBounds.x;
     }
 
