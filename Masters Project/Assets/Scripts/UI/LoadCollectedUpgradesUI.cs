@@ -3,23 +3,26 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using TMPro;
 
 public class LoadCollectedUpgradesUI : MonoBehaviour
 {
-    private List<UpgradeObject> collectedUpgrades;
+    private CrystalManager source;
 
-    [SerializeField] private UpgradeSelectModule[] options;
+    [SerializeField] private CrystalUIDisplay[] options;
 
-    [SerializeField] private SmartExpandContent contentDrawer;
+    [SerializeField] private AllStatsDisplay allStatsDisplay;
 
-    private Dictionary<UpgradeObject, int> upgradeAndCount = new Dictionary<UpgradeObject, int>();
+    ConfirmationBox deleteConfirm;
+
+    int targetIndex = -1;
 
     private void OnEnable()
     {
-        if (PlayerUpgradeManager.instance != null)
-            collectedUpgrades = new List<UpgradeObject>(PlayerUpgradeManager.instance.upgrades);
-        else
-            collectedUpgrades = new List<UpgradeObject>();
+        source = CrystalManager.instance;
+
+        if (source == null)
+            return;
 
         PopulateList();
     }
@@ -27,53 +30,60 @@ public class LoadCollectedUpgradesUI : MonoBehaviour
 
     private void PopulateList()
     {
-        if(collectedUpgrades.Count > options.Length)
+        // Load in UI for each upgrade
+        for(int i = 0; i < source.MaxSlots(); i++)
         {
-            Debug.LogError("[LoadCollectedUpgradesUI] Warning! there are too many upgrades for the UI to load!" +
-                "Increase the buffer for the options available!");
-            return;
-        }
-
-        upgradeAndCount.Clear();
-
-        // Condense and count repeats
-        for (int i = 0; i < collectedUpgrades.Count; i++)
-        {
-            if (upgradeAndCount.ContainsKey(collectedUpgrades[i]))
+            if(i >= options.Length)
             {
-                upgradeAndCount[collectedUpgrades[i]]++;
+                Debug.LogError("Trying to load too many options!");
+                return;
             }
-            else
-            {
-                upgradeAndCount.Add(collectedUpgrades[i], 1);
-            }
-        }
 
-
-        // Load the initial ones 
-        for (int i = 0; i < upgradeAndCount.Count; i++)
-        {
-            options[i].InitializeUIElement(upgradeAndCount.ElementAt(i).Key, "X" + upgradeAndCount.ElementAt(i).Value.ToString());
+            options[i].LoadCrystal(null, source.GetEquippedCrystal(i), i);
             options[i].gameObject.SetActive(true);
         }
 
-        // hide the rest
-        for(int i = upgradeAndCount.Count; i < options.Length; i++)
-        {
-            options[i].ClearUI();
-            options[i].gameObject.SetActive(false);
-        }
-
-        contentDrawer.CalculateHeight();
+        // Calculate all stats
+        allStatsDisplay.LoadEquippedStats();
     }
 
     private void OnDisable()
     {
-        // Load the initial ones 
-        for (int i = 0; i < collectedUpgrades.Count; i++)
+        // Unload all stats 
+        for (int i = 0; i < options.Length; i++)
         {
-            options[i].ClearUI();
+            options[i].LoadEmpty();
             options[i].gameObject.SetActive(false);
+        }
+
+        // Clear display
+        allStatsDisplay.Clear();
+    }
+
+    /// <summary>
+    /// Request to trash an upgrade.
+    /// </summary>
+    /// <param name="i">target index to trash</param>
+    public void RequestTrash(int i)
+    {
+        if(deleteConfirm == null)
+            deleteConfirm = FindObjectOfType<ConfirmationBox>(true);
+        if (deleteConfirm == null)
+            return;
+        targetIndex = i;
+        string txt = $"Discard <b>{source.GetEquippedCrystal(targetIndex).crystalName}?</b>";
+        deleteConfirm.RequestConfirmation(TrashCrystal, txt);
+    }
+    /// <summary>
+    /// Trash the last targeted crystal, update UI accordingly
+    /// </summary>
+    private void TrashCrystal()
+    {
+        if (targetIndex >= 0 && source.CrystalEquipped(targetIndex))
+        {
+            CrystalManager.instance.LoadCrystal(null, targetIndex);
+            options[targetIndex].LoadEmpty();
+            allStatsDisplay.LoadEquippedStats();
         }
     }
 }

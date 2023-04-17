@@ -26,6 +26,11 @@ public class CrystalManager : MonoBehaviour
     [Tooltip("List of possible stats. Should contain stat prefabs.")]
     [SerializeField] private IStat[] stats;
 
+    [Tooltip("Text color used when an crystal offers a positive effect")]
+    [SerializeField] private Color positiveTextColor;
+    [Tooltip("Text color used when a crystal offers a negative effect")]
+    [SerializeField] private Color negativeTextColor;
+
     private PlayerController player;
 
     private void Start()
@@ -55,12 +60,17 @@ public class CrystalManager : MonoBehaviour
         Crystal newCrystal = new Crystal();
         newCrystal.par = p;
 
+        List<IStat> tempStats = new List<IStat>(stats);
+
         // need to gate this from picking the same stat multiple times
         for (int i = 0; i < 3; i++)
         {
             if (newCrystal.cost != newCrystal.par)
             {
-                IStat stat = stats[Random.Range(0, stats.Length)];
+                IStat stat = tempStats[Random.Range(0, tempStats.Count)];
+                tempStats.Remove(stat);
+                tempStats.TrimExcess();
+
                 newCrystal.AddStat(stat);
             }
         }
@@ -80,7 +90,8 @@ public class CrystalManager : MonoBehaviour
         }
 
         equippedCrystals[index] = crystal;
-        crystal.EquipCrystal(player);
+        if(crystal != null)
+            crystal.EquipCrystal(player);
 
     }
 
@@ -97,7 +108,10 @@ public class CrystalManager : MonoBehaviour
 
     public Crystal GetEquippedCrystal(int index)
     {
-        return equippedCrystals[index];
+        if (index < equippedCrystals.Length && index >= 0)
+            return equippedCrystals[index];
+        else
+            return null;
     }
 
     public bool CrystalEquipped(int index)
@@ -133,4 +147,31 @@ public class CrystalManager : MonoBehaviour
         Destroy(gameObject);
     }
 
+    public int MaxSlots()
+    {
+        return crystalSlots;
+    }
+
+    public IStat[] AllStats()
+    {
+        return stats;
+    }
+
+    /// <summary>
+    /// Color text to the positive effect color
+    /// </summary>
+    /// <returns>RGBA Hexcode of positive color</returns>
+    public string PositiveTextHex()
+    {
+        return ColorUtility.ToHtmlStringRGBA(positiveTextColor);
+    }
+
+    /// <summary>
+    /// Color text to the negative effect color
+    /// </summary>
+    /// <returns>RGBA Hexcode of negative color</returns>
+    public string NegativeTextHex()
+    {
+        return ColorUtility.ToHtmlStringRGBA(negativeTextColor);
+    }
 }

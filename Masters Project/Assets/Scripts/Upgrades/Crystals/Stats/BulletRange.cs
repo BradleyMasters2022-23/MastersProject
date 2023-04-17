@@ -11,12 +11,13 @@ public class BulletRange : IStat
     {
         gun = player.gameObject.GetComponent<PlayerGunController>();
         gun.SetMaxRange(gun.GetMaxRange() + (statBase * (float)mod));
-        Debug.Log("Bullet range up " + (statBase * (float)mod).ToString());
+        // Debug.Log("Bullet range up " + (statBase * (float)mod).ToString());
     }
 
     public override void UnloadStat(PlayerController player, int mod)
     {
         gun = player.gameObject.GetComponent<PlayerGunController>();
+        gun.SetMaxRange(gun.GetMaxRange() - (statBase * (float)mod));
     }
 
     public override float GetStatIncrease(int mod)

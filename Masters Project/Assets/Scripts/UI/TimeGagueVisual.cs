@@ -41,4 +41,9 @@ public class TimeGagueVisual : MonoBehaviour
         if (timeBar != null)
             timeBar.value = time.CurrSlowGauge;
     }
+
+    public void ResetMaxValue()
+    {
+        timeBar.maxValue = time.MaxGauge();
+    }
 }
