@@ -20,11 +20,11 @@ public interface SegmentInterface
 
     void SetSO(MapSegmentSO newSegment);
 
-    void Sync(Transform syncPoint);
+    void Sync(Door syncPoint);
 
     IEnumerator ActivateSegment();
 
     IEnumerator DeactivateSegment(bool instant);
 
-    Transform GetExit();
+    Door GetExit();
 }

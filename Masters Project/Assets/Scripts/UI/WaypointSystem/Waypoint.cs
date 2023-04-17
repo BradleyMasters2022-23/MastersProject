@@ -75,6 +75,12 @@ public class Waypoint : MonoBehaviour
     /// Max range this waypoint can be viewable at
     /// </summary>
     private float maxRange = 15f;
+
+    /// <summary>
+    /// Max range this waypoint can be viewable at
+    /// </summary>
+    private float minRange = 0f;
+
     /// <summary>
     /// Color thats applied to the waypoint 
     /// </summary>
@@ -106,6 +112,7 @@ public class Waypoint : MonoBehaviour
         this.target = target;
         displayColor = data.displayColor;
         maxRange = data.maxRange;
+        minRange = data.minRange;
 
         // Load in any icon if possible
         if(data.icon != null)
@@ -155,13 +162,13 @@ public class Waypoint : MonoBehaviour
 
         // Determine if this should even display based on range
         float positionDist = Vector3.Distance(cam.position, target.position);
-        bool show = positionDist <= maxRange;
+        bool show = (positionDist <= maxRange) && (positionDist >= minRange);
 
         // Set view status. If can't show, then dont do anything else to minimize impact
         imageContainer.SetActive(show);
         if (!show) return;
 
-        float distRatio = positionDist / maxRange;
+        float distRatio = (positionDist-minRange) / (maxRange-minRange);
 
         float totalScale = scaleOverPositionDistance.Evaluate(distRatio);
         transform.localScale = baseScale * totalScale;

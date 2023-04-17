@@ -16,6 +16,7 @@ public struct WaypointData
 {
     public Color displayColor;
     public float maxRange;
+    public float minRange;
     public Sprite icon;
 }
 

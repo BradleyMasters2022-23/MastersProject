@@ -68,7 +68,8 @@ public class Door : MonoBehaviour
     [Tooltip("Color of the light when door is disabled"), HideIf("@this.doorLight == null")]
     [SerializeField] private Material disabledColor;
 
-    
+    [SerializeField] private GameObject waypoint;
+    [SerializeField, ReadOnly] Door pairedDoor;
 
     #endregion
 
@@ -86,14 +87,20 @@ public class Door : MonoBehaviour
     /// Whether the door is currently locked 
     /// </summary>
     [SerializeField] private bool locked;
-    
-    
     public bool Locked { get { return locked; } }
 
+    [SerializeField] private bool trueUnlocked;
 
     private bool initialized = false;
 
+     public bool TrueUnlocked {  get { return trueUnlocked; } }  
+
     #region Initialization Functions
+
+    public void PairDoor(Door p)
+    {
+        pairedDoor= p;
+    }
 
     /// <summary>
     /// Automatically initialize, unlock if needed
@@ -108,6 +115,7 @@ public class Door : MonoBehaviour
         }
         source = gameObject.AddComponent<AudioSource>();
 
+        waypoint.SetActive(false);
     }
 
     /// <summary>
@@ -163,13 +171,15 @@ public class Door : MonoBehaviour
         {
             door.SetActive(false);
 
-            openDoor.PlayClip(transform, source);
+            if(trueUnlocked)
+                openDoor.PlayClip(transform, source);
         }
         else
         {
             door.SetActive(true);
 
-            closeDoor.PlayClip(transform, source);
+            if(trueUnlocked)
+                closeDoor.PlayClip(transform, source);
         }
     }
 
@@ -215,6 +225,24 @@ public class Door : MonoBehaviour
 
     #endregion
 
+    private void Update()
+    {
+        if (waypoint == null || pairedDoor == null)
+            return;
+
+        bool doorReq = (type == PlayerDoorType.Open || type == PlayerDoorType.Entrance
+            || type == PlayerDoorType.Custom || type == PlayerDoorType.ReturnToHub);
+
+        bool lockedReq = !locked && !pairedDoor.Locked;
+
+        trueUnlocked = doorReq && lockedReq;
+
+        if (!waypoint.activeInHierarchy && trueUnlocked)
+            waypoint.SetActive(true);
+        else if(waypoint.activeInHierarchy && !trueUnlocked)
+            waypoint.SetActive(false);
+    }
+
 
     /// <summary>
     /// When player enters, tell the room generator to load next room
@@ -245,6 +273,7 @@ public class Door : MonoBehaviour
                         // Call system to activate room
 
                         MapLoader.instance.StartRoomEncounter();
+
 
                         // lock door behind player
                         LockDoor();
