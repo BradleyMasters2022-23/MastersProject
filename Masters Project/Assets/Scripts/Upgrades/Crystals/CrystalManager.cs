@@ -67,7 +67,7 @@ public class CrystalManager : MonoBehaviour
         {
             if (newCrystal.cost != newCrystal.par)
             {
-                IStat stat = tempStats[Random.Range(0, stats.Length)];
+                IStat stat = tempStats[Random.Range(0, tempStats.Count)];
                 tempStats.Remove(stat);
                 tempStats.TrimExcess();
 
