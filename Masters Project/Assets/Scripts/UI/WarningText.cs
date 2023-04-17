@@ -53,7 +53,19 @@ public class WarningText : MonoBehaviour
         targetDisplay.text = "";
     }
 
+    /// <summary>
+    /// Play the warning text with default text
+    /// </summary>
     public void Play()
+    {
+        Play(warningText);
+    }
+
+    /// <summary>
+    /// Play the warning text with new text
+    /// </summary>
+    /// <param name="newText">New text to be played</param>
+    public void Play(string newText)
     {
         active = true;
         activeTimer.ResetTimer();
@@ -63,7 +75,7 @@ public class WarningText : MonoBehaviour
         tarColor = alertColor2;
         colorTimer.ResetTimer();
 
-        displayRoutine = StartCoroutine(targetDisplay.SlowTextLoad(warningText, delayTime));
+        displayRoutine = StartCoroutine(targetDisplay.SlowTextLoad(newText, delayTime));
     }
 
     private void Update()
