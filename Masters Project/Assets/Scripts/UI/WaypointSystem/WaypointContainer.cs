@@ -49,4 +49,9 @@ public class WaypointContainer : MonoBehaviour
             wp = null;
         }
     }
+
+    public WaypointData GetData()
+    {
+        return displayData;
+    }
 }

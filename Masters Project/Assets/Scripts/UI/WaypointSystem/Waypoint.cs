@@ -42,7 +42,8 @@ public class Waypoint : MonoBehaviour
     [Tooltip("Additional buffer added to the vertical bounds")]
     [SerializeField] private float verticalBuffer;
 
-
+    [Tooltip("Offset for displaying directly above the target")]
+    [SerializeField] private float offset;
     /// <summary>
     /// Reference to center of the screen
     /// </summary>
@@ -143,9 +144,10 @@ public class Waypoint : MonoBehaviour
             imageContainer.SetActive(false);
             return;
         }
-            
-
-        Vector3 pos = Camera.main.WorldToScreenPoint(target.position);
+        
+        // apply offset first
+        Vector3 tarPos = target.position + target.up * offset;
+        Vector3 pos = Camera.main.WorldToScreenPoint(tarPos);
         Vector3 pointDir = (pos - screenCenter);
         inBounds = InBounds(pos);
 
@@ -196,8 +198,6 @@ public class Waypoint : MonoBehaviour
 
         #region ROTATION
 
-        pointerImg.gameObject.SetActive(!inBounds);
-
         // only update rotation if object is out of bounds
         if(!inBounds)
         {
@@ -215,6 +215,10 @@ public class Waypoint : MonoBehaviour
             }
 
             pointerImg.rotation = Quaternion.Euler(new Vector3(0, 0, r));
+        }
+        else // if in bounds, just rotate down
+        {
+            pointerImg.rotation = Quaternion.Euler(new Vector3(0, 0, 180));
         }
 
         #endregion

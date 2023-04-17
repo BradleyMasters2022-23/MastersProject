@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5946480568154061494}
   - component: {fileID: 790600813916047289}
   - component: {fileID: 1296651527856330438}
+  - component: {fileID: 3143782415567170526}
   m_Layer: 5
   m_Name: Radar
   m_TagString: Untagged
@@ -90,5 +91,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arrow: {fileID: 1686497691051189079, guid: 229905e5e5af6564cb5749b1e30419f7, type: 3}
+  indicatorDisplay: {fileID: 3064241345094461125}
+  maxDistance: 30
+--- !u!114 &3143782415567170526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6746572109880109360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e4f32a5a88f11340bfdd6e85da28eb0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  arrow: {fileID: 7321451073592894562, guid: bacabc7349a11b040a11f02ebbee35c7, type: 3}
+  startingPts: 5
+  increaseIncrement: 5
+  pointerColor: {r: 1, g: 0.2584905, b: 0.8213845, a: 1}
   indicatorDisplay: {fileID: 3064241345094461125}
   maxDistance: 30
