@@ -2,7 +2,7 @@
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - December 2, 2022
- * Last Edited - December 2, 2022 by Ben Schuster
+ * Last Edited - April 15, 2022 by Ben Schuster
  * Description - Functionality for the confirmation box system
  * ================================================================================================
  */
@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using TMPro;
 
 public class ConfirmationBox : MonoBehaviour
 {
@@ -18,12 +19,20 @@ public class ConfirmationBox : MonoBehaviour
     /// </summary>
     private System.Action onConfirm;
 
+    [SerializeField] private string defaultText;
+    [SerializeField] private TextMeshProUGUI bonusText;
+
     /// <summary>
     /// Request a confirmation, passing in the requested action
     /// </summary>
     /// <param name="action">action requesting to happen</param>
-    public void RequestConfirmation(System.Action action)
+    public void RequestConfirmation(System.Action action, string bonusText = "")
     {
+        if(bonusText != "")
+            this.bonusText.text = bonusText;
+        else
+            this.bonusText.text = defaultText;
+
         onConfirm = action;
         gameObject.SetActive(true);
     }
@@ -34,7 +43,6 @@ public class ConfirmationBox : MonoBehaviour
     public void ConfirmAction()
     {
         onConfirm?.Invoke();
-
         gameObject.SetActive(false);
     }
 
@@ -43,6 +51,7 @@ public class ConfirmationBox : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        bonusText.text = defaultText;
         onConfirm = null;
     }
 }

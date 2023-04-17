@@ -212,4 +212,12 @@ public abstract class Ability : MonoBehaviour
     }
 
     #endregion
+
+    #region Setters
+    public void IncreaseMaxCharges(int amount)
+    {
+        maxCharges += amount;
+        currentCharges += amount;
+    }
+    #endregion
 }

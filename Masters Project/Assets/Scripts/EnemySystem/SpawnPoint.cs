@@ -11,6 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
 
 public class SpawnPoint : MonoBehaviour
 {
@@ -31,7 +32,10 @@ public class SpawnPoint : MonoBehaviour
     /// <summary>
     /// What particle plays when spawning
     /// </summary>
-    private ParticleSystem spawnParticles;
+    [SerializeField] private VisualEffect spawnParticles;
+
+    [SerializeField] private float VFXSpeedScalar;
+
     /// <summary>
     /// Enemy for this spawn point to spawn
     /// </summary>
@@ -67,10 +71,6 @@ public class SpawnPoint : MonoBehaviour
     /// </summary>
     private Transform player;
     /// <summary>
-    /// Light visual for indication
-    /// </summary>
-    private Light spawnLight;
-    /// <summary>
     /// Audio source player
     /// </summary>
     private AudioSource s;
@@ -93,8 +93,6 @@ public class SpawnPoint : MonoBehaviour
     private void Awake()
     {
         // Get internal references
-        spawnLight = GetComponentInChildren<Light>();
-        spawnParticles = GetComponentInChildren<ParticleSystem>();
         s = gameObject.AddComponent<AudioSource>();
 
         // Initialize timers
@@ -114,6 +112,13 @@ public class SpawnPoint : MonoBehaviour
     {
         player = FindObjectOfType<PlayerController>().transform;
         spawnManager = SpawnManager.instance;
+
+        if(spawnParticles!= null)
+        {
+            spawnParticles.Stop();
+            spawnParticles.Reinit();
+            spawnParticles.playRate *= VFXSpeedScalar;
+        }
 
         controls = GameManager.controls;
         endCheat = controls.PlayerGameplay.ClearEncounter;
@@ -275,9 +280,12 @@ public class SpawnPoint : MonoBehaviour
         // Prepare indicators
         spawnSound.PlayClip(s);
 
-        spawnLight.enabled = true;
         if(spawnParticles != null)
+        {
+            spawnParticles.Reinit();
             spawnParticles.Play();
+        }
+            
 
         // Reset the timer and wait for the delay
         spawnDelayTimer.ResetTimer();
@@ -295,7 +303,6 @@ public class SpawnPoint : MonoBehaviour
         // Reset the spawnpoint, disable indicators
         enemyStorage = null;
         spawnRoutine = null;
-        spawnLight.enabled = false;
         if(spawnParticles != null)
             spawnParticles.Stop();
 
@@ -328,7 +335,6 @@ public class SpawnPoint : MonoBehaviour
         
         enemyStorage = null;
         spawnRoutine = null;
-        spawnLight.enabled = false;
         if (spawnParticles != null)
             spawnParticles.Stop();
 

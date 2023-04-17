@@ -579,6 +579,7 @@ public class TimeManager : MonoBehaviour
     {
         float temp = slowDuration.Current * gaugeMultiplier;
         slowDuration.ChangeVal(Mathf.Ceil(temp));
+        currentState = TimeGaugeState.RECHARGING;
     }
 
     public void SetRegenDelay(float delayMultiplier)
@@ -588,7 +589,10 @@ public class TimeManager : MonoBehaviour
         replenishDelayTimer.ResetTimer(replenishDelay.Current);
     }
 
-    
+    public bool IsFull()
+    {
+        return currSlowGauge >= (slowDuration.Current * FixedUpdateCalls);
+    }
 
     /// <summary>
     /// Toggle inputs if game pauses

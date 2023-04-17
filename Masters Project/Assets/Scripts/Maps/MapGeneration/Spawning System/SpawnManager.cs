@@ -198,6 +198,10 @@ public class SpawnManager : MonoBehaviour
     {
         PrepareWaveQueue();
 
+        // play alert text if possible
+        if (WarningText.instance != null)
+            WarningText.instance.Play();
+
         // Wait for the initial delay to begin spawning
         while (!startDelayTimer.TimerDone())
             yield return null;
