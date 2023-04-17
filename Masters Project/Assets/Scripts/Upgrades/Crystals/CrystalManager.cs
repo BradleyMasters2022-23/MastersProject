@@ -69,7 +69,8 @@ public class CrystalManager : MonoBehaviour
             {
                 IStat stat = tempStats[Random.Range(0, stats.Length)];
                 tempStats.Remove(stat);
-                
+                tempStats.TrimExcess();
+
                 newCrystal.AddStat(stat);
             }
         }
