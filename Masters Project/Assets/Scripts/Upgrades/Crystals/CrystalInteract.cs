@@ -11,15 +11,31 @@ public class CrystalInteract : Interactable
 
     private CrystalSlotScreen ui;
 
+    [SerializeField] private GameObject health;
+    [SerializeField] private GameObject gun;
+    [SerializeField] private GameObject time;
+    [SerializeField] private GameObject movement;
+    [SerializeField] private GameObject grenade;
+    [SerializeField] private GameObject shield;
+
+    private GameObject[] shapes;
+
     [Tooltip("Amount to add to room count to make par. Increases overall stats of a crystal. MUST be at least 1.")]
     [SerializeField] private int parMod = 1;
 
     private void Awake()
     {
         ui = FindObjectOfType<CrystalSlotScreen>(true);
+        shapes = new GameObject[6];
+        shapes[0] = health;
+        shapes[1] = gun;
+        shapes[2] = time;
+        shapes[3] = movement;
+        shapes[4] = grenade;
+        shapes[5] = shield;
     }
 
-    public override void OnInteract(PlayerController player)
+    public void RandomizeCrystal()
     {
         // loads crystal
         if (LinearSpawnManager.instance != null)
@@ -34,16 +50,49 @@ public class CrystalInteract : Interactable
 
         }
 
-        if (crystal != null)
+        switch(crystal.stats[0].GetGroup())
         {
-            if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
-            {
-                Debug.Log("Not in a state where the player can interact with ths object");
-                return;
-            }
-
-            ui.OpenScreen(this);
+            case IStat.StatGroup.HEALTH:
+                health.GetComponent<Renderer>().sharedMaterial.color = crystal.GetColor();
+                health.SetActive(true);
+                break;
+            case IStat.StatGroup.GUN:
+                gun.GetComponent<Renderer>().sharedMaterial.color = crystal.GetColor();
+                gun.SetActive(true);
+                break;
+            case IStat.StatGroup.GRENADE:
+                grenade.GetComponent<Renderer>().sharedMaterial.color = crystal.GetColor();
+                grenade.SetActive(true);
+                break;
+            case IStat.StatGroup.MOVEMENT:
+                movement.GetComponent<Renderer>().sharedMaterial.color = crystal.GetColor();
+                movement.SetActive(true);
+                break;
+            case IStat.StatGroup.TIMESTOP:
+                time.GetComponent<Renderer>().sharedMaterial.color = crystal.GetColor();
+                time.SetActive(true);
+                break;
+            case IStat.StatGroup.SHIELD:
+                shield.GetComponent<Renderer>().sharedMaterial.color = crystal.GetColor();
+                shield.SetActive(true);
+                break;
         }
+    }
+
+    public override void OnInteract(PlayerController player)
+    {
+        if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
+        {
+            Debug.Log("Not in a state where the player can interact with ths object");
+            return;
+        }
+
+        if (crystal == null)
+        {
+            RandomizeCrystal();
+        }
+
+        ui.OpenScreen(this);
     }
 
     public Crystal GetCrystal()
