@@ -3,27 +3,47 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 public class CrystalSlotScreen : MonoBehaviour
 {
     private CrystalInteract caller;
+    /// <summary>
+    /// The new crystal being offered
+    /// </summary>
+    private Crystal newCrystal;
+    /// <summary>
+    /// The currently selected/hovered crystal
+    /// </summary>
     private Crystal selectedCrystal;
     private int selectedCrystalIndex = 0;
 
-    [SerializeField] private Sprite blank;
+    // Currently empty, can be recommented to reimplement
+    // [SerializeField] private Sprite blank;
 
-    [SerializeField] private TextMeshProUGUI newCrystalName;
-    [SerializeField] private TextMeshProUGUI newCrystalStats;
+    [SerializeField] private CrystalUIDisplay newCrystalDisplay;
+    [SerializeField] private CrystalUIDisplay hoverCrystalDisplay;
+    [SerializeField] private AllStatsDisplay pennysStats;
 
-    [SerializeField] private TextMeshProUGUI selectedCrystalName;
-    [SerializeField] private TextMeshProUGUI selectedCrystalStats;
 
-    [SerializeField] private TextMeshProUGUI pennyStats;
+    [Tooltip("All inventory slots available to choose from")]
+    [SerializeField] private CrystalUIDisplay[] allSlots;
 
-    [SerializeField] private Image equippedCrystal1;
-    [SerializeField] private Image equippedCrystal2;
-    [SerializeField] private Image equippedCrystal3;
-    [SerializeField] private Image newCrystal;
+    [SerializeField] private RectTransform newCrystalTransform;
+    [SerializeField] private RectTransform trashDisplay;
+
+    /// <summary>
+    /// Reference to the global instance 
+    /// </summary>
+    private CrystalManager crystalManager;
+
+    private bool init = false;
+
+    /// <summary>
+    /// Reference to the confirmation box
+    /// </summary>
+    private ConfirmationBox confirmBox;
 
     /// <summary>
     /// Open the screen, change state
@@ -31,127 +51,69 @@ public class CrystalSlotScreen : MonoBehaviour
     public void OpenScreen(CrystalInteract c)
     {
         caller = c;
+        newCrystal = caller.GetCrystal();
         selectedCrystalIndex = 0;
-        if(CrystalManager.instance.CrystalEquipped(selectedCrystalIndex))
+        crystalManager = CrystalManager.instance;
+
+        if(crystalManager == null)
         {
-            selectedCrystal = CrystalManager.instance.GetEquippedCrystal(selectedCrystalIndex);
-            selectedCrystalName.enabled = true;
-            selectedCrystalStats.enabled = true;
-            DisplaySelectedCrystal();
-        } else
-        {
-            selectedCrystalName.enabled = false;
-            selectedCrystalStats.enabled = false;
+            Debug.LogError("Error! Tried to call open crystal screen, but theres no crystal manager!");
+            return;
         }
-        DisplayCrystalIcons();
-        DisplayNewCrystalStats();
-        DisplayPennyStats();
 
         GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
         gameObject.SetActive(true);
+
+        InitializeEquippedCrystals();
+        DisplayNewCrystalStats();
     }
 
     private void DisplayPennyStats()
     {
-        pennyStats.text = "";
-        for(int i = 0; i < 3; i++)
-        {
-            // instead of the selected crystal, display the new crystal
-            if(selectedCrystalIndex == i)
-            {
-                pennyStats.text += newCrystalStats.text;
-                pennyStats.text += "\n";
-            } else
-            {
-                if(CrystalManager.instance.CrystalEquipped(i))
-                {
-                    int statIndex = 0;
-                    int mod;
+        pennysStats.Clear();
 
-                    foreach (IStat stat in CrystalManager.instance.GetEquippedCrystal(i).stats)
-                    {
-                        mod = CrystalManager.instance.GetEquippedCrystal(i).mods[statIndex];
-                        // is the stat positive or negative?
-                        if (mod > 0)
-                        {
-                            pennyStats.text += "+";
-                        }
-
-                        // what is the modifier of the stat?
-                        pennyStats.text += stat.GetStatIncrease(mod).ToString();
-                        pennyStats.text += " ";
-
-                        // what stat is it?
-                        pennyStats.text += stat.GetStatText();
-                        pennyStats.text += "\n";
-
-                        statIndex++;
-                    }
-                }
-                
-            }
-
-        }
+        if (selectedCrystalIndex > -1)
+            pennysStats.DetermineDifferences(newCrystal, crystalManager.GetEquippedCrystal(selectedCrystalIndex));
+        else
+            pennysStats.LoadEquippedStats();
     }
 
-    private void DisplayCrystalIcons()
+    private void InitializeEquippedCrystals()
     {
-        if(CrystalManager.instance.CrystalEquipped(0))
+        gameObject.SetActive(true);
+
+        pennysStats.LoadEquippedStats();
+
+        for (int i = 0; i < crystalManager.MaxSlots(); i++)
         {
-            equippedCrystal1.sprite = CrystalManager.instance.GetEquippedCrystal(0).stats[0].GetIcon();
-            
-        } else
-        {
-            equippedCrystal1.sprite = blank;
+            // Load crystal function will automatically apply blank image if given a null crystal
+            allSlots[i].LoadCrystal(this, crystalManager.GetEquippedCrystal(i), i);
         }
 
-        if (CrystalManager.instance.CrystalEquipped(1))
+        bool found = false;
+        // Move selection to first empty slot, if possible. Auto calls string funcs
+        for (int i = 0; i < allSlots.Length; i++)
         {
-            equippedCrystal2.sprite = CrystalManager.instance.GetEquippedCrystal(1).stats[0].GetIcon();
-            
-        } else
-        {
-            equippedCrystal2.sprite = blank;
+            if (!allSlots[i].HasUpgrade())
+            {
+                found = true;
+                allSlots[i].SelectUpgrade();
+                break;
+            }
         }
+        // If no default slot found, set to first slot
+        if(!found)
+            allSlots[0].SelectUpgrade();
 
-        if (CrystalManager.instance.CrystalEquipped(2))
-        {
-            equippedCrystal3.sprite = CrystalManager.instance.GetEquippedCrystal(2).stats[0].GetIcon();
-            
-        } else
-        {
-            equippedCrystal3.sprite = blank;
-        }
+        // Load current new icon
+        newCrystalDisplay.LoadCrystal(this, newCrystal, -1);
 
-        newCrystal.sprite = caller.GetCrystal().stats[0].GetIcon();
+        init = true;
     }
 
     private void DisplayNewCrystalStats()
     {
-        newCrystalName.text = caller.GetCrystal().crystalName;
-        int statIndex = 0;
-        int mod;
-        newCrystalStats.text = "";
-        
-        foreach(IStat stat in caller.GetCrystal().stats)
-        {
-            mod = caller.GetCrystal().mods[statIndex];
-            // is the stat positive or negative?
-            if (mod > 0)
-            {
-                newCrystalStats.text += "+";
-            } 
-
-            // what is the modifier of the stat?
-            newCrystalStats.text += stat.GetStatIncrease(mod).ToString();
-            newCrystalStats.text += " ";
-
-            // what stat is it?
-            newCrystalStats.text += stat.GetStatText();
-            newCrystalStats.text += "\n";
-            
-            statIndex++;
-        }
+        newCrystalDisplay.LoadCrystal(this, newCrystal, -1);
     }
 
     /// <summary>
@@ -160,16 +122,19 @@ public class CrystalSlotScreen : MonoBehaviour
     public void SelectEquipSlot(int index)
     {
         selectedCrystalIndex = index;
-        if(CrystalManager.instance.GetEquippedCrystal(index) != null)
+
+        // Only do after init. otherwise, unity screen loading is weird and its wrong
+        if(init)
+            newCrystalTransform.position = allSlots[index].GetAnchoredPos();
+
+        if (crystalManager.GetEquippedCrystal(index) != null)
         {
-            selectedCrystal = CrystalManager.instance.GetEquippedCrystal(index);
-            selectedCrystalName.enabled = true;
-            selectedCrystalStats.enabled = true;
+            selectedCrystal = crystalManager.GetEquippedCrystal(index);
             DisplaySelectedCrystal();
-        } else
+        } 
+        else
         {
-            selectedCrystalName.enabled = false;
-            selectedCrystalStats.enabled = false;
+            hoverCrystalDisplay.LoadEmpty();
         }
 
         DisplayPennyStats();
@@ -180,47 +145,64 @@ public class CrystalSlotScreen : MonoBehaviour
     /// </summary>
     private void DisplaySelectedCrystal()
     {
-        selectedCrystalName.text = selectedCrystal.crystalName;
-        int statIndex = 0;
-        int mod;
-        selectedCrystalStats.text = "";
-
-        foreach (IStat stat in selectedCrystal.stats)
-        {
-            mod = selectedCrystal.mods[statIndex];
-            // is the stat positive or negative?
-            if (mod > 0)
-            {
-                selectedCrystalStats.text += "+";
-            }
-
-            // what is the modifier of the stat?
-            selectedCrystalStats.text += stat.GetStatIncrease(mod).ToString();
-            selectedCrystalStats.text += " ";
-
-            // what stat is it?
-            selectedCrystalStats.text += stat.GetStatText();
-            selectedCrystalStats.text += "\n";
-
-            statIndex++;
-        }
+        hoverCrystalDisplay.LoadCrystal(this, selectedCrystal, selectedCrystalIndex);
     }
 
     public void Trash()
     {
+        newCrystalTransform.position = trashDisplay.position;
+
         selectedCrystalIndex = -1;
-        selectedCrystalName.enabled = false;
-        selectedCrystalStats.enabled = false;
+        hoverCrystalDisplay.LoadEmpty();
+
         DisplayPennyStats();
     }
 
-    public void ApplyChanges()
+    public void RequestApplyChanges()
+    {
+        // Try to get box if null
+        if(confirmBox == null)
+            confirmBox = FindObjectOfType<ConfirmationBox>(true);
+
+        // If failed to get box, or no crystal will be replaced, just apply the new change
+        if (confirmBox == null)
+        {
+            ApplyChanges();
+            return;
+        }
+            
+        // Build the string based on trashing or replacing a crystal
+        string txt = "";
+        // Prompt for TRASHING NEW CRYSTAL
+        if (selectedCrystalIndex == -1)
+        {
+            txt = $"Discard new crystal <b>{newCrystal.crystalName}?</b>";
+        }
+        // Prompt for REPLACING A CRYSTAL
+        else if(crystalManager.CrystalEquipped(selectedCrystalIndex))
+        {
+            txt = $"Replace <b>{selectedCrystal.crystalName}?</b>";
+        }
+        // If not replacing 
+        else
+        {
+            ApplyChanges();
+            return;
+        }
+
+        // Send the request
+        confirmBox.RequestConfirmation(ApplyChanges, txt);
+    }
+
+
+    private void ApplyChanges()
     {
         if(selectedCrystalIndex >= 0)
         {
-            CrystalManager.instance.LoadCrystal(caller.GetCrystal(), selectedCrystalIndex);
+            crystalManager.LoadCrystal(newCrystal, selectedCrystalIndex);
         }
         caller.BegoneCrystalInteract();
-        
+
+        GetComponent<GameObjectMenu>().CloseButton();
     }
 }

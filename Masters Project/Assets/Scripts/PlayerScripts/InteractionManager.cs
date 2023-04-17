@@ -37,6 +37,10 @@ public class InteractionManager : MonoBehaviour
             if(hit.transform.GetComponent<Interactable>() != null)
             {
                 hit.transform.GetComponent<Interactable>().OnInteract(player);
+
+                // Clear any prompt on successful interact
+                if(TooltipManager.instance != null)
+                    TooltipManager.instance.UnloadTooltip();
             }
         } 
     }
