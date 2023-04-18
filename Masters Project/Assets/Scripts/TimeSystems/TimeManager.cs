@@ -584,7 +584,7 @@ public class TimeManager : MonoBehaviour
 
     public void UpgradeSetGaugeMax(float newMax)
     {
-        slowDuration.ChangeVal(newMax);
+        slowDuration.ChangeVal(Mathf.Ceil(newMax));
         currentState = TimeGaugeState.RECHARGING;
     }
 

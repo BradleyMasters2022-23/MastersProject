@@ -20,7 +20,7 @@ public class CrystalInteract : Interactable
 
     private GameObject[] shapes;
 
-    [Tooltip("Amount to add to room count to make par. Increases overall stats of a crystal. MUST be at least 1.")]
+    [Tooltip("Par multiplier. Increases overall stats of a crystal. MUST be at least 1.")]
     [SerializeField] private int parMod = 1;
 
     private void Awake()
@@ -40,7 +40,7 @@ public class CrystalInteract : Interactable
         // loads crystal
         if (LinearSpawnManager.instance != null)
         {
-            par = LinearSpawnManager.instance.GetCombatRoomCount() + parMod;
+            par = (LinearSpawnManager.instance.GetCombatRoomCount() + 1) * parMod;
 
         }
 

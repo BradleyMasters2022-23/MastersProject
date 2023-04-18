@@ -13,7 +13,6 @@ public class TimeStopGaugeSize : IStat
     {
         time = FindObjectOfType<TimeManager>();
         baseGauge = time.MaxGauge();
-        
     }
 
     public override void LoadStat(PlayerController player, int mod)
@@ -21,11 +20,11 @@ public class TimeStopGaugeSize : IStat
         time = FindObjectOfType<TimeManager>();
         timeUI = FindObjectOfType<TimeGagueVisual>();
         
-        float temp = baseGauge * ((float)mod / 10);
+        float temp = baseGauge * ((float)mod / 10f);
         time.UpgradeSetGaugeMax(time.MaxGauge() + temp);
-
-        timeUI.ResetMaxValue();
         time.AddGauge(temp);
+        timeUI.ResetMaxValue();
+        
     }
 
     public override void UnloadStat(PlayerController player, int mod)
@@ -33,11 +32,11 @@ public class TimeStopGaugeSize : IStat
         time = FindObjectOfType<TimeManager>();
         timeUI = FindObjectOfType<TimeGagueVisual>();
 
-        float temp = baseGauge * ((float)mod / 10);
+        float temp = baseGauge * ((float)mod / 10f);
         time.UpgradeSetGaugeMax(time.MaxGauge() - temp);
-
-        timeUI.ResetMaxValue();
         time.AddGauge(-1 * temp);
+        timeUI.ResetMaxValue();
+        
     }
 
     public override float GetStatIncrease(int mod)
