@@ -21,7 +21,7 @@ public class TimeStopGaugeSize : IStat
         timeUI = FindObjectOfType<TimeGagueVisual>();
         
         float temp = baseGauge * ((float)mod / 10f);
-        time.UpgradeSetGaugeMax(time.MaxGauge() + temp);
+        time.UpgradeSetGaugeMax(time.UpgradeMaxGauge() + temp);
         time.AddGauge(temp);
         timeUI.ResetMaxValue();
         
@@ -33,7 +33,7 @@ public class TimeStopGaugeSize : IStat
         timeUI = FindObjectOfType<TimeGagueVisual>();
 
         float temp = baseGauge * ((float)mod / 10f);
-        time.UpgradeSetGaugeMax(time.MaxGauge() - temp);
+        time.UpgradeSetGaugeMax(time.UpgradeMaxGauge() - temp);
         time.AddGauge(-1 * temp);
         timeUI.ResetMaxValue();
         
