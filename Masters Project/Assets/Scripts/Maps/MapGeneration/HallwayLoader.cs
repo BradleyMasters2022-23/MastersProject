@@ -33,7 +33,7 @@ public class HallwayLoader : SegmentLoader
         if(fragSpawnerComp!= null )
         {
             fragSpawnerComp.SetSpawnPoint(fragSpawnPoint);
-            fragSpawnerComp.SpawnFragment();
+            fragSpawnerComp.SpawnFragment(transform);
         }
 
         doorManager.UnlockExit();

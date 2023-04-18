@@ -128,7 +128,6 @@ public class ResourceBarUI : MonoBehaviour
     {
         if (_targetData.CurrentValue() != _mainSlider.value)
         {
-            
             lastVal = _mainSlider.value;
             _mainSlider.value = _targetData.CurrentValue();
 
@@ -183,7 +182,7 @@ public class ResourceBarUI : MonoBehaviour
         {
             effectSource.ActivateImpulse(fullColor);
         }
-        
+
         barFull.PlayClip(source);
     }
 

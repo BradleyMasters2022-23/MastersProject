@@ -10,6 +10,8 @@ public class TimestopTooltip : TooltipHolder, TimeObserver
     private ScaledTimer tooltipTracker;
     private ScaledTimer holdTimer;
 
+    bool sent = false;
+
     int maxCount = 3;
     int useCaseCount = 0;
 
@@ -37,9 +39,16 @@ public class TimestopTooltip : TooltipHolder, TimeObserver
         if(useCaseCount >= maxCount)
             this.enabled= false;
 
-        if(!manager.HasTooltip(tooltip) && tooltipTracker.TimerDone())
+        if(!sent && !manager.HasTooltip(tooltip) && tooltipTracker.TimerDone())
         {
             SubmitTooltip();
+            sent = true;
+        }
+        // if it was sent but not triggered normal dismiss, then reset timer
+        else if(sent && !manager.HasTooltip(tooltip))
+        {
+            tooltipTracker.ResetTimer();
+            sent = false;
         }
     }
 
