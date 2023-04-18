@@ -147,6 +147,11 @@ public class TooltipManager : MonoBehaviour
         tooltipPanel.SetActive(false);
     }
 
+    public bool HasTooltip(TooltipSO tooltipToCheck)
+    {
+        return currentTooltip == tooltipToCheck;
+    }
+
     #endregion
 
     #region Dismiss Current Tooptip

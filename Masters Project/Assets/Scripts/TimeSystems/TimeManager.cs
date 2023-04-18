@@ -589,7 +589,10 @@ public class TimeManager : MonoBehaviour
         replenishDelayTimer.ResetTimer(replenishDelay.Current);
     }
 
-    
+    public bool IsFull()
+    {
+        return currSlowGauge >= (slowDuration.Current * FixedUpdateCalls);
+    }
 
     /// <summary>
     /// Toggle inputs if game pauses
