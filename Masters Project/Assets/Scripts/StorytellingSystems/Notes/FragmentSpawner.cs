@@ -10,10 +10,12 @@ public class FragmentSpawner : MonoBehaviour
     [SerializeField] private GameObject fragInteractable;
     private float max;
 
-    public void SpawnFragment()
+    public void SpawnFragment(Transform parent)
     {
         if(FragShouldSpawn()) {
             GameObject obj = CreateFrag();
+
+            obj.transform.parent = parent;
             if(obj != null ) 
                 obj.GetComponent<Collider>().enabled = true;
             // Debug.Log(obj.GetComponent<FragmentInteract>().GetFragment().GetFragmentID());

@@ -50,6 +50,8 @@ public class WaypointManager : MonoBehaviour
         for (int i = 0; i < startingSize; i++)
         {
             Waypoint newWP = Instantiate(waypointPrefab, transform).GetComponent<Waypoint>();
+            // move them off screen when spawning
+            newWP.transform.position = Vector3.left * 1000;
             newWP.Init();
             newWP.gameObject.SetActive(false);
             waypoints.Enqueue(newWP);
@@ -90,6 +92,8 @@ public class WaypointManager : MonoBehaviour
         for(int i = 0; i < incrementAmt; i++)
         {
             Waypoint newWP = Instantiate(waypointPrefab, transform).GetComponent<Waypoint>();
+            // move them off screen when spawning
+            newWP.transform.position = Vector3.left * 1000;
             newWP.Init();
             newWP.gameObject.SetActive(false);
             waypoints.Enqueue(newWP);
@@ -105,8 +109,10 @@ public class WaypointManager : MonoBehaviour
     /// <param name="wp">waypoint to return</param>
     public void Return(Waypoint wp)
     {
-        wp.ReturnToPool();
+        // move them off screen when spawning
+        wp.transform.position = Vector3.left * 1000;
         wp.gameObject.SetActive(false);
+        wp.ReturnToPool();
         waypoints.Enqueue(wp);
     }
 }
