@@ -146,7 +146,7 @@ public class Waypoint : MonoBehaviour
 
     #endregion
 
-    private void Update()
+    private void FixedUpdate()
     {
         // If no target, turn off and stop
         if (target == null)

@@ -18,7 +18,7 @@ public class TimestopTooltip : TooltipHolder, TimeObserver
         base.Start();
 
         tooltipTracker = new ScaledTimer(timeUntilTooltip, false);
-        holdTimer = new ScaledTimer(0, false);
+        holdTimer = new ScaledTimer(minimumHoldTime, false);
     }
 
     private void OnEnable()
@@ -56,6 +56,6 @@ public class TimestopTooltip : TooltipHolder, TimeObserver
 
     public void OnStop()
     {
-        holdTimer.ResetTimer(minimumHoldTime);
+        holdTimer.ResetTimer();
     }
 }
