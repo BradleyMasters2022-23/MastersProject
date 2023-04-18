@@ -154,6 +154,12 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
             obj.Randomize();
         }
 
+        CrystalInteract[] crystals = FindObjectsOfType<CrystalInteract>();
+
+        foreach (CrystalInteract crystal in crystals)
+        {
+            crystal.RandomizeCrystal();
+        }
 
         UniqueActivate();
     }

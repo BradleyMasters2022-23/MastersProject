@@ -26,6 +26,6 @@ public class BulletDamage : IStat
 
     public override float GetStatIncrease(int mod)
     {
-        return (float)mod * statBase;
+        return (float)mod * statBase * 100;
     }
 }
