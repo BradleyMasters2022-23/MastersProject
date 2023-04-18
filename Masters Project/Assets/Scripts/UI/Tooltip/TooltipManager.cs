@@ -56,6 +56,9 @@ public class TooltipManager : MonoBehaviour
         // hide tooltip on load
         HideTooltip();
 
+        
+        
+
         // make it 8 for simplicity. The queue shouldnt be used often if at all
         //tooltipQueue = new Queue<TooltipSO>(8);
     }
@@ -159,9 +162,6 @@ public class TooltipManager : MonoBehaviour
     private GameControls controls;
     private InputAction dismissTooltip;
 
-    /// <summary>
-    /// Prepare input controls
-    /// </summary>
     private void Start()
     {
         controls = GameManager.controls;
@@ -170,9 +170,11 @@ public class TooltipManager : MonoBehaviour
         dismissTooltip.Enable();
     }
 
+
     private void OnDisable()
     {
         dismissTooltip.performed -= DismissCurrentTooltip;
+        dismissTooltip.Disable();
     }
 
     /// <summary>
@@ -181,6 +183,7 @@ public class TooltipManager : MonoBehaviour
     /// <param name="c"></param>
     private void DismissCurrentTooltip(InputAction.CallbackContext c)
     {
+        Debug.Log("Dismiss called");
         if (currentTooltip != null)
             UnloadTooltip(currentTooltip);
     }
