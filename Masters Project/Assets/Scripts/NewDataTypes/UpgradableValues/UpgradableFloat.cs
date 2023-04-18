@@ -14,6 +14,13 @@ public class UpgradableFloat : UpgradableValue<float>
 {
     public override void ChangeVal(float _newValue)
     {
-        current = Mathf.Clamp(_newValue, lowerLimit, upperLimit);
+        if (lowerLimit == 0 && upperLimit == 0)
+        {
+            current = _newValue;
+        }
+        else
+        {
+            current = Mathf.Clamp(_newValue, lowerLimit, upperLimit);
+        }
     }
 }

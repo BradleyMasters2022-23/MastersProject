@@ -11,56 +11,65 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Sirenix.OdinInspector;
-using static Cinemachine.DocumentationSortingAttribute;
-using UnityEngine.Rendering;
 
 public class ResourceBarUI : MonoBehaviour
 {
     [Header("Data and target info")]
 
-    private ResourceBar _targetData;
-    private ResourceBarSO _displayData;
+    protected ResourceBar _targetData;
+    protected ResourceBarSO _displayData;
     [Tooltip("The target resourcebar to visually display")]
-    [SerializeField] private HealthManager _targetResource;
+    [SerializeField] protected HealthManager _targetResource;
     [Tooltip("The target index of health manager's healthbars to display")]
-    [SerializeField] private int _targetIndex = 0;
+    [SerializeField] protected int _targetIndex = 0;
     [Tooltip("The slider to display the data to")]
-    [SerializeField] private Slider _mainSlider;
+    [SerializeField] protected Slider _mainSlider;
 
-    private float lastVal;
+    protected float lastVal;
 
-    private bool initialized = false;
+    protected bool initialized = false;
 
     [Header("Display info")]
 
+    [SerializeField] protected RectTransform coreReference;
+
     [SerializeField] private Image fillArea;
     [SerializeField] private Image emptyArea;
-
     [SerializeField] private bool scaleWithMax;
-    [HideIf("@this.scaleWithMax == false")]
-    [SerializeField] private RectTransform coreReference;
+    
     private float pixelsPerHealth;
 
+    
     [Header("Event HUD Impulse Effects")]
     [SerializeField] private ImpulseEffect effectSource;
+    [HideIf("@this.effectSource == null")]
     [SerializeField] private Color replenishColor;
+    [HideIf("@this.effectSource == null")]
     [SerializeField] private Color decreaseColor;
+    [HideIf("@this.effectSource == null")]
     [SerializeField] private Color fullColor;
+    [HideIf("@this.effectSource == null")]
     [SerializeField] private Color emptyColor;
 
-    [Tooltip("Sound while bar is recharging")]
+    [Tooltip("Sound while bar is recharging"), HideIf("@this.effectSource == null")]
     [SerializeField] private AudioClipSO barRefill;
-    [Tooltip("Sound when bar is full")]
+    [Tooltip("Sound when bar is full"), HideIf("@this.effectSource == null")]
     [SerializeField] private AudioClipSO barFull;
-    [Tooltip("Sound while bar is reduced")]
+    [Tooltip("Sound while bar is reduced"), HideIf("@this.effectSource == null")]
     [SerializeField] private AudioClipSO barReduce;
-    [Tooltip("Sound when bar is emptied")]
+    [Tooltip("Sound when bar is emptied"), HideIf("@this.effectSource == null")]
     [SerializeField] private AudioClipSO barEmpty;
     private AudioSource source;
 
-    private void Start()
+    protected virtual void Awake()
     {
-        StartCoroutine(TryInitialize());
+        source = gameObject.AddComponent<AudioSource>();
+    }
+
+    protected virtual void OnEnable()
+    {
+        if(!initialized)
+            StartCoroutine(TryInitialize());
     }
 
     private IEnumerator TryInitialize()
@@ -68,9 +77,10 @@ public class ResourceBarUI : MonoBehaviour
         int i = 0;
         while(_targetData == null)
         {
-            _targetData = _targetResource.ResourceBarAtIndex(_targetIndex);
+            if(_targetResource!= null && _targetResource.Initialized)
+                _targetData = _targetResource.ResourceBarAtIndex(_targetIndex);
 
-            yield return new WaitForSecondsRealtime(0.5f);
+            yield return new WaitForSecondsRealtime(0.1f);
             yield return null;
 
             i++;
@@ -95,7 +105,7 @@ public class ResourceBarUI : MonoBehaviour
         yield return null;
     }
 
-    private void GetScalingData()
+    protected void GetScalingData()
     {
         // calculate the original scale of it currently
         if (!scaleWithMax)
@@ -105,7 +115,7 @@ public class ResourceBarUI : MonoBehaviour
 
         pixelsPerHealth = coreReference.sizeDelta.x / _mainSlider.maxValue;
     }
-    private void LateUpdate()
+    protected virtual void LateUpdate()
     {
         if (!initialized)
             return;
@@ -188,8 +198,5 @@ public class ResourceBarUI : MonoBehaviour
         barEmpty.PlayClip(source);
     }
 
-    public void Awake()
-    {
-        source = gameObject.AddComponent<AudioSource>();
-    }
+    
 }

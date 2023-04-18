@@ -120,6 +120,19 @@ public class TooltipManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Unload any tooltip active
+    /// </summary>
+    public void UnloadTooltip()
+    {
+        currentTooltip = null;
+        titleTextbox.text = "";
+        descriptionTextbox.text = "";
+
+        HideTooltip();
+    }
+
+
+    /// <summary>
     /// Display tooltip on HUD
     /// </summary>
     private void DisplayTooltip()
@@ -132,6 +145,11 @@ public class TooltipManager : MonoBehaviour
     private void HideTooltip()
     {
         tooltipPanel.SetActive(false);
+    }
+
+    public bool HasTooltip(TooltipSO tooltipToCheck)
+    {
+        return currentTooltip == tooltipToCheck;
     }
 
     #endregion

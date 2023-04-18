@@ -201,7 +201,8 @@ public class MapLoader : MonoBehaviour
         // === Sync up each room === //
 
         // Pair first item to the start point
-        loadedMap[0].Sync(startingRoom.GetComponentInChildren<Door>().SyncPoint );
+        Door d = startingRoom.GetComponentInChildren<Door>();
+        loadedMap[0].Sync(d);
         // Pair all other consecutive rooms
         for(int i = 0; i < loadedMap.Count-1; i++)
         {
@@ -410,21 +411,7 @@ public class MapLoader : MonoBehaviour
         // Increment room index. Do by 2 because its accounting for room and hallway
         roomIndex += 2;
 
-        //if (loadedMap[roomIndex].segmentInfo.segmentType == MapSegmentSO.MapSegmentType.Room)
-        //{
-        //    currState = States.Room;
-        //}
-        //else if(loadedMap[roomIndex].segmentInfo.segmentType == MapSegmentSO.MapSegmentType.Hallway)
-        //{
-        //    currState = States.Hallway;
-        //}
-        //else if (loadedMap[roomIndex].segmentInfo.segmentType == MapSegmentSO.MapSegmentType.FinalRoom)
-        //{
-        //    currState = States.Final;
-        //}
-
         // Deactivate the last 2 sections, if possible
-
         yield return StartCoroutine(loadedMap[roomIndex - 1].DeactivateSegment(false));
 
         if (roomIndex - 2 >= 0)

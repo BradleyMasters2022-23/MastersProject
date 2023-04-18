@@ -293,8 +293,7 @@ GameObject:
   - component: {fileID: 671644478858017053}
   - component: {fileID: 115257059143747583}
   - component: {fileID: 6445182641303533574}
-  - component: {fileID: 3402813018557646957}
-  - component: {fileID: 3262785350411109950}
+  - component: {fileID: 2757878521360870048}
   m_Layer: 8
   m_Name: UI_EnemyHealthbar_Base
   m_TagString: Untagged
@@ -396,7 +395,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77d736ec45db0064483a5c3934c4b656, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3402813018557646957
+--- !u!114 &2757878521360870048
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -405,37 +404,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 5042779374246505407}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9c846d8ec7fe86469fc0f13845d3278, type: 3}
+  m_Script: {fileID: 11500000, guid: b9e2204f1baacca44bdd97484713fcd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _targetResource: {fileID: 0}
   _targetIndex: 0
   _mainSlider: {fileID: 5456170345752046514}
+  coreReference: {fileID: 178635635771102143}
   fillArea: {fileID: 3043801418134011686}
   emptyArea: {fileID: 6771018710207540564}
   scaleWithMax: 0
-  coreReference: {fileID: 0}
   effectSource: {fileID: 0}
   replenishColor: {r: 0, g: 0, b: 0, a: 0}
   decreaseColor: {r: 0, g: 0, b: 0, a: 0}
   fullColor: {r: 0, g: 0, b: 0, a: 0}
   emptyColor: {r: 0, g: 0, b: 0, a: 0}
-  BarRefill: {fileID: 0}
-  BarFull: {fileID: 0}
---- !u!114 &3262785350411109950
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5042779374246505407}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7041485016cf27499148399bb14fc2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  visualsRect: {fileID: 178635635771102143}
+  barRefill: {fileID: 0}
+  barFull: {fileID: 0}
+  barReduce: {fileID: 0}
+  barEmpty: {fileID: 0}
+  enableShowOnDamaged: 1
+  onDamagedDuration: 3
+  hideOutOfRange: 1
   distanceOffset: 2
+  target: {fileID: 0}
+  gunRef: {fileID: 0}
 --- !u!1 &5877905834039523235
 GameObject:
   m_ObjectHideFlags: 0

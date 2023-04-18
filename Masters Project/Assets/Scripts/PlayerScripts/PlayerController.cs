@@ -654,6 +654,16 @@ public class PlayerController : MonoBehaviour
         maxMoveSpeed.ChangeVal(temp);
     }
 
+    public float GetJumpForce()
+    {
+        return jumpForce;
+    }
+
+    public void SetJumpForce(float force)
+    {
+        jumpForce = force;
+    }
+
     #endregion
 
     #region Misc

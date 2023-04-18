@@ -38,7 +38,7 @@ public abstract class RangeAttack : Attack
     /// <param name="_speedMultiplier">multiplier for the speed. % based.</param>
     public void Initialize(float _damageMultiplier, float _speedMultiplier, bool _shotByPlayer = false)
     {
-        damage *= Mathf.FloorToInt(_damageMultiplier);
+        damage *= _damageMultiplier;
         speed *= _speedMultiplier;
         shotByPlayer = _shotByPlayer;
         // Activate the projectile after being initialized
