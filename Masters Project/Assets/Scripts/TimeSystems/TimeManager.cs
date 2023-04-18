@@ -579,6 +579,12 @@ public class TimeManager : MonoBehaviour
     {
         float temp = slowDuration.Current * gaugeMultiplier;
         slowDuration.ChangeVal(Mathf.Ceil(temp));
+        //currentState = TimeGaugeState.RECHARGING;
+    }
+
+    public void UpgradeSetGaugeMax(float newMax)
+    {
+        slowDuration.ChangeVal(newMax);
         currentState = TimeGaugeState.RECHARGING;
     }
 
