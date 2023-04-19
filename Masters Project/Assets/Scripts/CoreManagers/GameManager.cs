@@ -325,8 +325,6 @@ public class GameManager : MonoBehaviour
     /// <param name="c"></param>
     public void TogglePause(InputAction.CallbackContext c = default)
     {
-        //Debug.Log("Toggle pause called");
-
         // try pausing
         if (ValidateStateChange(States.PAUSED))
         {
@@ -658,7 +656,8 @@ public class GameManager : MonoBehaviour
         if (name != mainMenuScene && name != mainGameplayScene && name != mainHubScene)
             return;
 
-
+        menuStack.Clear();
+        controls.UI.Disable();
         Loader.instance.LoadToScene(name);
     }
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -58,6 +59,8 @@ public class Loader : MonoBehaviour
         if (c != null)
         {
             c.Enable();
+            c.UI.Disable();
+            c.PlayerGameplay.Enable();
         }
     }
 }

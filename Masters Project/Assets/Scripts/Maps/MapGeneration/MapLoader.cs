@@ -259,7 +259,12 @@ public class MapLoader : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.5f);
         // Wait half a second before reenabling controls
         if (controls != null)
+        {
             controls.Enable();
+            controls.UI.Disable();
+            controls.PlayerGameplay.Enable();
+        }
+            
 
         yield return null;
     }
