@@ -5,6 +5,7 @@ using UnityEngine;
 public class MineEnemyProjectile : ProjectileAccelerate
 {
     [SerializeField] private Target targetManager;
+    [SerializeField] private float shrinkTime;
 
     /// <summary>
     /// On mine enemy, detonate the explosive
@@ -15,4 +16,29 @@ public class MineEnemyProjectile : ProjectileAccelerate
         targetManager.RegisterEffect(999);
         return true;
     }
+
+    protected override void End()
+    {
+        StartCoroutine(ShrinkRoutine());
+
+        //base.End();
+    }
+
+    private IEnumerator ShrinkRoutine()
+    {
+        ScaledTimer t = new ScaledTimer(shrinkTime);
+        Vector3 baseScale = transform.localScale;
+
+        while(!t.TimerDone())
+        {
+            transform.localScale = baseScale * (1 - t.TimerProgress());
+            yield return null;
+        }
+
+        base.End();
+
+        yield return null;
+    }
+
+
 }
