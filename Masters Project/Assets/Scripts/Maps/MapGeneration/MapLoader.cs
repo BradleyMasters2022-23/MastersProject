@@ -153,7 +153,7 @@ public class MapLoader : MonoBehaviour
         // Load in the final room, if there is one. Add hallway buffer
         if(finalRoom != null)
         {
-            mapOrder.Add(SelectHallway());
+            //mapOrder.Add(SelectHallway());
             mapOrder.Add(finalRoom);
         }
 
