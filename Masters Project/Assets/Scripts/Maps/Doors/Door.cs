@@ -307,4 +307,25 @@ public class Door : MonoBehaviour
             }
         }
     }
+
+    [SerializeField] private LayerMask groundLayers;
+
+    /// <summary>
+    /// Ground the nodes to the first point of ground below them
+    /// </summary>
+    [Button]
+    public void GroundDoor()
+    {
+        RaycastHit h;
+        if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out h, Mathf.Infinity, groundLayers))
+        {
+            transform.position = h.point;
+        }
+        else
+        {
+            Debug.Log($"Door named {name} does not have any ground to be placed on! " +
+                $"Did you forget to set the groundlayers variable to the ground layer?");
+            return;
+        }
+    }
 }
