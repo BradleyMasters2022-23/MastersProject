@@ -569,6 +569,11 @@ public class TimeManager : MonoBehaviour
         return slowDuration.Current * FixedUpdateCalls;
     }
 
+    public float UpgradeMaxGauge()
+    {
+        return slowDuration.Current;
+    }
+
     public void SetRegenTime(float regenMultiplier)
     {
         float temp = replenishTime.Current * regenMultiplier;
@@ -579,6 +584,12 @@ public class TimeManager : MonoBehaviour
     {
         float temp = slowDuration.Current * gaugeMultiplier;
         slowDuration.ChangeVal(Mathf.Ceil(temp));
+        //currentState = TimeGaugeState.RECHARGING;
+    }
+
+    public void UpgradeSetGaugeMax(float newMax)
+    {
+        slowDuration.ChangeVal(Mathf.Ceil(newMax));
         currentState = TimeGaugeState.RECHARGING;
     }
 
