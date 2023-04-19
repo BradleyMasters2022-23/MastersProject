@@ -449,12 +449,18 @@ public class MapLoader : MonoBehaviour
 
     public void EndRoomEncounter()
     {
+        
+
         //Debug.Log($"Phew! You won it all good jorb {roomIndex+1}!");
         loadedMap[roomIndex+1].GetComponent<DoorManager>().UnlockExit();
 
         if (mapOrder[roomIndex+1].segmentType == MapSegmentSO.MapSegmentType.Room
             && LinearSpawnManager.instance != null)
+        {
+            WarningText.instance.Play("ANOMALY SUBSIDED, ROOM UNLOCKED", false);
             LinearSpawnManager.instance.IncrementDifficulty();
+        }
+            
 
     }
 
