@@ -137,6 +137,9 @@ public class Door : MonoBehaviour
         // Debug.Log($"Initializing door {id} to locked");
         locked = true;
 
+        if (type == PlayerDoorType.Null && !overrideOpen)
+            SetDecor();
+
         id = Random.Range(0, 9999);
 
         foreach (Collider c in col)
