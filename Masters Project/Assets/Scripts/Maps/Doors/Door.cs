@@ -54,6 +54,11 @@ public class Door : MonoBehaviour
 
     [Tooltip("Whether this door should always be open")]
     [SerializeField] private bool overrideOpen;
+
+    public bool AlwaysOpen()
+    {
+        return overrideOpen;
+    }
     public Transform SyncPoint { get { return syncPoint; } }
     public PlayerDoorType Type { get { return type; } }
 
@@ -188,7 +193,7 @@ public class Door : MonoBehaviour
     /// </summary>
     public void LockDoor()
     {
-        if (type == PlayerDoorType.Null)
+        if (type == PlayerDoorType.Null || overrideOpen)
             return;
 
         // Debug.Log($"Door {id} having locked state set to lock");
@@ -205,7 +210,7 @@ public class Door : MonoBehaviour
     /// </summary>
     public void UnlockDoor()
     {
-        if (type == PlayerDoorType.Null)
+        if (type == PlayerDoorType.Null && !overrideOpen)
             return;
 
         doorLight.GetComponent<Renderer>().material = unlockedColor;
