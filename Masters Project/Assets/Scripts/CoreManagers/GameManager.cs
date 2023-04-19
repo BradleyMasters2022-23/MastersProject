@@ -182,7 +182,7 @@ public class GameManager : MonoBehaviour
             case States.MAINMENU:
                 {
                     Time.timeScale = 1f;
-                    SceneManager.LoadScene(mainMenuScene);
+                    LoadToScene(mainMenuScene);
                     menuStack.Clear();
 
                     break;
@@ -197,7 +197,7 @@ public class GameManager : MonoBehaviour
                 {
                     if(SceneManager.GetActiveScene().name != mainHubScene)
                     {
-                        SceneManager.LoadScene(mainHubScene);
+                        LoadToScene(mainHubScene);
                         menuStack.Clear();
                     }
 
@@ -212,7 +212,7 @@ public class GameManager : MonoBehaviour
                 {
                     if(SceneManager.GetActiveScene().name != mainGameplayScene) 
                     {
-                        SceneManager.LoadScene(mainGameplayScene);
+                        LoadToScene(mainGameplayScene);
                         menuStack.Clear();
                     }
                     UnPause();
@@ -646,6 +646,16 @@ public class GameManager : MonoBehaviour
         }
 
     }
+
+    #endregion
+
+    #region SceneLoading
+
+    private void LoadToScene(string name)
+    {
+        Loader.instance.LoadToScene(name);
+    }
+
 
     #endregion
 }

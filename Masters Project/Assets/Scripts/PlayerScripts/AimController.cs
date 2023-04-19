@@ -50,12 +50,7 @@ public class AimController : MonoBehaviour
     private void Awake()
     {
         // Initialize aim controls
-        controller = new GameControls();
-        aim = controller.PlayerGameplay.Aim;
-        aim.Enable();
-
-        controllerAim = controller.PlayerGameplay.ControllerAim;
-        controllerAim.Enable();
+        StartCoroutine(InitializeControls());
 
         // move first person visuals to camera
         // Do this to prevent stuttering 
@@ -64,6 +59,22 @@ public class AimController : MonoBehaviour
 
         // Load in settings
         UpdateSettings();
+    }
+
+    private IEnumerator InitializeControls()
+    {
+        while (GameManager.controls == null)
+            yield return null;
+
+        controller = GameManager.controls;
+
+        aim = controller.PlayerGameplay.Aim;
+        aim.Enable();
+
+        controllerAim = controller.PlayerGameplay.ControllerAim;
+        controllerAim.Enable();
+
+        yield return null;
     }
 
     private void UpdateSettings()
@@ -93,6 +104,10 @@ public class AimController : MonoBehaviour
 
     private void Update()
     {
+        if (aim == null)
+            return;
+
+
         lookDelta = Vector2.zero;
         sensitivity = 0;
         horizontalInversion = 1;

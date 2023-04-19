@@ -15,6 +15,8 @@ using Sirenix.OdinInspector;
 using UnityEngine.AI;
 using UnityEngine.Events;
 using Unity.VisualScripting;
+using UnityEngine.InputSystem.XR;
+using UnityEditor.ShaderGraph;
 
 public enum LoadState
 {
@@ -96,6 +98,12 @@ public class MapLoader : MonoBehaviour
 
     #endregion
 
+    #region Loading Stuff
+
+    [SerializeField] GameObject loadingScreen;
+
+    #endregion
+
     #region Initialization
 
     /// <summary>
@@ -129,6 +137,19 @@ public class MapLoader : MonoBehaviour
     /// <returns></returns>
     private IEnumerator PrepareMapSegments()
     {
+        // Enable loading screen, wait to disable controls
+
+        loadingScreen.SetActive(true);
+
+        while (GameManager.controls == null)
+            yield return null;
+        GameControls controls = GameManager.controls;
+        if (controls != null)
+        {
+            controls.Disable();
+        }
+            
+
         loadState = LoadState.Loading;
 
         // === Choose what rooms to use === //
@@ -234,6 +255,13 @@ public class MapLoader : MonoBehaviour
 
         //currState = States.Start;
         loadState = LoadState.Done;
+
+        loadingScreen.SetActive(false);
+
+        yield return new WaitForSecondsRealtime(0.5f);
+        // Wait half a second before reenabling controls
+        if (controls != null)
+            controls.Enable();
 
         yield return null;
     }
