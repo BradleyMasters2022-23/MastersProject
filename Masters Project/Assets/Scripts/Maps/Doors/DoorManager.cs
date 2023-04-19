@@ -89,7 +89,7 @@ public class DoorManager : MonoBehaviour, MapInitialize
         // Set other doors as off
         foreach(Door d in doorways)
         {
-            if (d != entrance && d != exit)
+            if (d != entrance && d != exit && !d.AlwaysOpen())
                 d.SetDecor();
         }
 

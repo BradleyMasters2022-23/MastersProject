@@ -5,7 +5,9 @@ using UnityEngine;
 public class BulletRange : IStat
 {
     private PlayerGunController gun;
-    [SerializeField] private int statBase = 1;
+    [SerializeField] private float statBase = 1;
+    private PlayerController p;
+    private float baseRange;
 
     public override void LoadStat(PlayerController player, int mod)
     {

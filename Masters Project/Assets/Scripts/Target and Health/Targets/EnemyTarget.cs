@@ -228,6 +228,8 @@ public class EnemyTarget : Target, TimeObserver
             enemyData = data;
 
         // TODO - get data from difficulty scaler
+
+        _healthManager.Heal(9990f);
     }
 
     /// <summary>
