@@ -178,7 +178,7 @@ public class MapLoader : MonoBehaviour
             mapOrder.Add(finalRoom);
         }
 
-        Debug.Log("[MapLoader] Order Prepared");
+        //Debug.Log("[MapLoader] Order Prepared");
 
         // === Spawn in each room, initialize whats required ===/
 
@@ -186,6 +186,7 @@ public class MapLoader : MonoBehaviour
         {
             // Create map segment, give its info to it, add to list
             GameObject t = Instantiate(segment.segmentPrefab, Vector3.left * 1000, Quaternion.Euler(Vector3.zero));
+            yield return new WaitForEndOfFrame();
             t.GetComponent<SegmentLoader>().segmentInfo = segment;
             loadedMap.Add(t.GetComponent<SegmentLoader>());
 
@@ -196,6 +197,7 @@ public class MapLoader : MonoBehaviour
             for(int i = 0; i < test.Length; i++)
             {
                 StartCoroutine(test[i].InitializeComponent());
+                yield return new WaitForEndOfFrame();
             }
         }
 
@@ -217,7 +219,7 @@ public class MapLoader : MonoBehaviour
         } while (!doneInitializing);
 
 
-        Debug.Log("[MapLoader] Each component initialized");
+        //Debug.Log("[MapLoader] Each component initialized");
 
         // === Sync up each room === //
 
@@ -229,7 +231,8 @@ public class MapLoader : MonoBehaviour
         {
             loadedMap[i + 1].Sync(loadedMap[i].GetExit());
         }
-        Debug.Log("[MapLoader] Sync finished!");
+        
+        //Debug.Log("[MapLoader] Sync finished!");
 
 
         // === Set later rooms inactive === //
@@ -249,7 +252,7 @@ public class MapLoader : MonoBehaviour
             }
         }
         
-        Debug.Log("[MapLoader] Initial inactive set!");
+        //Debug.Log("[MapLoader] Initial inactive set!");
 
         PrepareNavmesh();
 
