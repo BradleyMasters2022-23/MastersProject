@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 public class CallManager : MonoBehaviour
 {
@@ -11,8 +13,16 @@ public class CallManager : MonoBehaviour
     public Conversation defaultConversation;
     public static CallManager instance;
 
+    public static GameControls controls;
+    private InputAction backslash;
+
     private void Awake()
     {
+        controls = new GameControls();
+        backslash = controls.PlayerGameplay.ResetConversations;
+        backslash.performed += ResetCalls;
+        backslash.Enable();
+        
         if (instance == null)
         {
             instance = this;
@@ -102,5 +112,22 @@ public class CallManager : MonoBehaviour
     public Conversation GetDefault()
     {
         return defaultConversation;
+    }
+
+    public void ResetCalls(InputAction.CallbackContext c = default)
+    {
+
+        availableConversations.Clear();
+
+        foreach (Conversation conversation in conversations)
+        {
+            conversation.Lock();
+        }
+
+        conversations[0].Unlock();
+        if (conversations.Count >= 4)
+            conversations[3].Unlock();
+        UpdateCalls();
+        Debug.Log("Calls Reset");
     }
 }

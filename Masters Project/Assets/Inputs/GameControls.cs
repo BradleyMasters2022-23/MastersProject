@@ -188,6 +188,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ResetConversations"",
+                    ""type"": ""Button"",
+                    ""id"": ""e6ea179f-5ba9-4490-ada9-59e123e1d404"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -443,6 +452,17 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""GodCheat"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2ddf514c-d042-406b-8478-bfec91636e62"",
+                    ""path"": ""<Keyboard>/backslash"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ResetConversations"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -609,6 +629,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_PlayerGameplay_HealCheat = m_PlayerGameplay.FindAction("HealCheat", throwIfNotFound: true);
         m_PlayerGameplay_DamageCheat = m_PlayerGameplay.FindAction("DamageCheat", throwIfNotFound: true);
         m_PlayerGameplay_DismissTooltip = m_PlayerGameplay.FindAction("DismissTooltip", throwIfNotFound: true);
+        m_PlayerGameplay_ResetConversations = m_PlayerGameplay.FindAction("ResetConversations", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Mouse = m_UI.FindAction("Mouse", throwIfNotFound: true);
@@ -694,6 +715,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_HealCheat;
     private readonly InputAction m_PlayerGameplay_DamageCheat;
     private readonly InputAction m_PlayerGameplay_DismissTooltip;
+    private readonly InputAction m_PlayerGameplay_ResetConversations;
     public struct PlayerGameplayActions
     {
         private @GameControls m_Wrapper;
@@ -716,6 +738,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @HealCheat => m_Wrapper.m_PlayerGameplay_HealCheat;
         public InputAction @DamageCheat => m_Wrapper.m_PlayerGameplay_DamageCheat;
         public InputAction @DismissTooltip => m_Wrapper.m_PlayerGameplay_DismissTooltip;
+        public InputAction @ResetConversations => m_Wrapper.m_PlayerGameplay_ResetConversations;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -779,6 +802,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @DismissTooltip.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDismissTooltip;
                 @DismissTooltip.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDismissTooltip;
                 @DismissTooltip.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDismissTooltip;
+                @ResetConversations.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnResetConversations;
+                @ResetConversations.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnResetConversations;
+                @ResetConversations.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnResetConversations;
             }
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -837,6 +863,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @DismissTooltip.started += instance.OnDismissTooltip;
                 @DismissTooltip.performed += instance.OnDismissTooltip;
                 @DismissTooltip.canceled += instance.OnDismissTooltip;
+                @ResetConversations.started += instance.OnResetConversations;
+                @ResetConversations.performed += instance.OnResetConversations;
+                @ResetConversations.canceled += instance.OnResetConversations;
             }
         }
     }
@@ -943,6 +972,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnHealCheat(InputAction.CallbackContext context);
         void OnDamageCheat(InputAction.CallbackContext context);
         void OnDismissTooltip(InputAction.CallbackContext context);
+        void OnResetConversations(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
