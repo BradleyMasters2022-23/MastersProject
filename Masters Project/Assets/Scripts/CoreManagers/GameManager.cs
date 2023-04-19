@@ -653,6 +653,12 @@ public class GameManager : MonoBehaviour
 
     private void LoadToScene(string name)
     {
+        // if none of the main scenes, dont load. 
+        // Useful for testing scenes and pausing/unpausing
+        if (name != mainMenuScene && name != mainGameplayScene && name != mainHubScene)
+            return;
+
+
         Loader.instance.LoadToScene(name);
     }
 

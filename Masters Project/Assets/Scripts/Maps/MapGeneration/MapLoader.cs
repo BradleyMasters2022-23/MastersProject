@@ -10,13 +10,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Sirenix.OdinInspector;
 using UnityEngine.AI;
-using UnityEngine.Events;
-using Unity.VisualScripting;
-using UnityEngine.InputSystem.XR;
-using UnityEditor.ShaderGraph;
 
 public enum LoadState
 {
