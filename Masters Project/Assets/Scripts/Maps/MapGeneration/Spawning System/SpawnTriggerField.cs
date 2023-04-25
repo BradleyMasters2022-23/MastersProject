@@ -196,7 +196,7 @@ public class SpawnTriggerField : MonoBehaviour
 
         // play alert text if possible
         if (WarningText.instance != null)
-            WarningText.instance.Play();
+            WarningText.instance.Play(true);
 
         yield return new WaitForSeconds(activationDelay);
 
@@ -251,7 +251,7 @@ public class SpawnTriggerField : MonoBehaviour
 
             // play alert text if possible. Dont play on last wave
             if (WarningText.instance != null && i != waves.Length-1)
-                WarningText.instance.Play();
+                WarningText.instance.Play(true);
 
             yield return new WaitForSeconds(waveChangeDelay);
             // Debug.Log("Wave Finished, moving to next");

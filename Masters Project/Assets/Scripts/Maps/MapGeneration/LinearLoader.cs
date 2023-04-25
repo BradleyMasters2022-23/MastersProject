@@ -62,6 +62,8 @@ public class LinearLoader : SegmentLoader
                 if (BackgroundMusicManager.instance != null)
                     BackgroundMusicManager.instance.SetMusic(Music.NonCombat, 2f);
 
+                
+
                 unlocked = true;
             }
                 

@@ -10,11 +10,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using Sirenix.OdinInspector;
 using UnityEngine.AI;
-using UnityEngine.Events;
-using Unity.VisualScripting;
 
 public enum LoadState
 {
@@ -96,6 +93,12 @@ public class MapLoader : MonoBehaviour
 
     #endregion
 
+    #region Loading Stuff
+
+    [SerializeField] GameObject loadingScreen;
+
+    #endregion
+
     #region Initialization
 
     /// <summary>
@@ -129,6 +132,19 @@ public class MapLoader : MonoBehaviour
     /// <returns></returns>
     private IEnumerator PrepareMapSegments()
     {
+        // Enable loading screen, wait to disable controls
+
+        loadingScreen.SetActive(true);
+
+        while (GameManager.controls == null)
+            yield return null;
+        GameControls controls = GameManager.controls;
+        if (controls != null)
+        {
+            controls.Disable();
+        }
+            
+
         loadState = LoadState.Loading;
 
         // === Choose what rooms to use === //
@@ -157,7 +173,7 @@ public class MapLoader : MonoBehaviour
             mapOrder.Add(finalRoom);
         }
 
-        Debug.Log("[MapLoader] Order Prepared");
+        //Debug.Log("[MapLoader] Order Prepared");
 
         // === Spawn in each room, initialize whats required ===/
 
@@ -165,6 +181,7 @@ public class MapLoader : MonoBehaviour
         {
             // Create map segment, give its info to it, add to list
             GameObject t = Instantiate(segment.segmentPrefab, Vector3.left * 1000, Quaternion.Euler(Vector3.zero));
+            yield return new WaitForEndOfFrame();
             t.GetComponent<SegmentLoader>().segmentInfo = segment;
             loadedMap.Add(t.GetComponent<SegmentLoader>());
 
@@ -175,6 +192,7 @@ public class MapLoader : MonoBehaviour
             for(int i = 0; i < test.Length; i++)
             {
                 StartCoroutine(test[i].InitializeComponent());
+                yield return new WaitForEndOfFrame();
             }
         }
 
@@ -196,7 +214,7 @@ public class MapLoader : MonoBehaviour
         } while (!doneInitializing);
 
 
-        Debug.Log("[MapLoader] Each component initialized");
+        //Debug.Log("[MapLoader] Each component initialized");
 
         // === Sync up each room === //
 
@@ -208,7 +226,8 @@ public class MapLoader : MonoBehaviour
         {
             loadedMap[i + 1].Sync(loadedMap[i].GetExit());
         }
-        Debug.Log("[MapLoader] Sync finished!");
+        
+        //Debug.Log("[MapLoader] Sync finished!");
 
 
         // === Set later rooms inactive === //
@@ -228,12 +247,24 @@ public class MapLoader : MonoBehaviour
             }
         }
         
-        Debug.Log("[MapLoader] Initial inactive set!");
+        //Debug.Log("[MapLoader] Initial inactive set!");
 
         PrepareNavmesh();
 
         //currState = States.Start;
         loadState = LoadState.Done;
+
+        loadingScreen.SetActive(false);
+
+        yield return new WaitForSecondsRealtime(0.5f);
+        // Wait half a second before reenabling controls
+        if (controls != null)
+        {
+            controls.Enable();
+            controls.UI.Disable();
+            controls.PlayerGameplay.Enable();
+        }
+            
 
         yield return null;
     }
@@ -449,12 +480,18 @@ public class MapLoader : MonoBehaviour
 
     public void EndRoomEncounter()
     {
+        
+
         //Debug.Log($"Phew! You won it all good jorb {roomIndex+1}!");
         loadedMap[roomIndex+1].GetComponent<DoorManager>().UnlockExit();
 
         if (mapOrder[roomIndex+1].segmentType == MapSegmentSO.MapSegmentType.Room
             && LinearSpawnManager.instance != null)
+        {
+            WarningText.instance.Play("ANOMALY SUBSIDED, ROOM UNLOCKED", false);
             LinearSpawnManager.instance.IncrementDifficulty();
+        }
+            
 
     }
 

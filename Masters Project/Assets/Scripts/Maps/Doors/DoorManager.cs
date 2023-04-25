@@ -58,13 +58,13 @@ public class DoorManager : MonoBehaviour, MapInitialize
 
         }
 
-        // Validate
+        // Validating doors
         if ((doorways.Count <= 0 && potentialEntrances.Count <= 0)
             || (doorways.Count <= 0 && potentialExits.Count <= 0))
         {
             Debug.LogError($"[DoorManager] Error! There are no doors set to neutral, and not enough set to either entrance and/or exits!" +
                 $" Door manager cannot continue initializing!");
-
+            
             yield break;
         }
 
@@ -86,20 +86,20 @@ public class DoorManager : MonoBehaviour, MapInitialize
         else
             exit = GetDoor(doorways, entrance);
 
+
         // Set other doors as off
-        foreach(Door d in doorways)
+        foreach (Door d in doorways)
         {
             if (d != entrance && d != exit && !d.AlwaysOpen())
                 d.SetDecor();
         }
+
 
         entrance.SetType(Door.PlayerDoorType.Entrance);
         entrance.UnlockDoor();
 
         // Initialization complete
         initialized = true;
-
-        //Debug.Log("Door manager initialized");
 
         yield return null;
     }

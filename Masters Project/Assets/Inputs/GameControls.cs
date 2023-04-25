@@ -188,6 +188,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ResetConversations"",
+                    ""type"": ""Button"",
+                    ""id"": ""e6ea179f-5ba9-4490-ada9-59e123e1d404"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -347,45 +356,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""e750d19b-88ad-4ed4-81cf-8a65032af88a"",
-                    ""path"": ""<Keyboard>/leftShift"",
-                    ""interactions"": ""Hold"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Sprint"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""d0892d9e-033f-40fc-aa9a-49a13c7c9f34"",
-                    ""path"": ""<Gamepad>/leftStickPress"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Sprint"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""b40069eb-36b1-4599-895d-95c969a73a34"",
                     ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Aim"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""01400614-7007-467d-afd0-7c42b21beeb3"",
-                    ""path"": ""<Keyboard>/y"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Reset"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -446,50 +422,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""7ca5eb8d-eb1d-412d-b468-ac03626d9c82"",
-                    ""path"": ""<Keyboard>/minus"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ClearEncounter"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""d5f81c8b-f1a5-4465-bf8f-c8039fc7d4f1"",
-                    ""path"": ""<Keyboard>/equals"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""GodCheat"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""d38b780c-3173-423a-b325-628bba15235f"",
-                    ""path"": ""<Keyboard>/leftBracket"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""HealCheat"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""df7f0064-356b-4790-9914-b49303fc1371"",
-                    ""path"": ""<Keyboard>/rightBracket"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""DamageCheat"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""13a08cad-2a9b-444b-9371-bdc5f4b81040"",
                     ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
@@ -507,6 +439,28 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""DismissTooltip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""87ec9ecc-79d0-4c22-8fd0-c0e58bef2a32"",
+                    ""path"": ""<Keyboard>/equals"",
+                    ""interactions"": ""Hold(duration=3)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GodCheat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2ddf514c-d042-406b-8478-bfec91636e62"",
+                    ""path"": ""<Keyboard>/backslash"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ResetConversations"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -675,6 +629,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_PlayerGameplay_HealCheat = m_PlayerGameplay.FindAction("HealCheat", throwIfNotFound: true);
         m_PlayerGameplay_DamageCheat = m_PlayerGameplay.FindAction("DamageCheat", throwIfNotFound: true);
         m_PlayerGameplay_DismissTooltip = m_PlayerGameplay.FindAction("DismissTooltip", throwIfNotFound: true);
+        m_PlayerGameplay_ResetConversations = m_PlayerGameplay.FindAction("ResetConversations", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Mouse = m_UI.FindAction("Mouse", throwIfNotFound: true);
@@ -760,6 +715,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_HealCheat;
     private readonly InputAction m_PlayerGameplay_DamageCheat;
     private readonly InputAction m_PlayerGameplay_DismissTooltip;
+    private readonly InputAction m_PlayerGameplay_ResetConversations;
     public struct PlayerGameplayActions
     {
         private @GameControls m_Wrapper;
@@ -782,6 +738,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @HealCheat => m_Wrapper.m_PlayerGameplay_HealCheat;
         public InputAction @DamageCheat => m_Wrapper.m_PlayerGameplay_DamageCheat;
         public InputAction @DismissTooltip => m_Wrapper.m_PlayerGameplay_DismissTooltip;
+        public InputAction @ResetConversations => m_Wrapper.m_PlayerGameplay_ResetConversations;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -845,6 +802,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @DismissTooltip.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDismissTooltip;
                 @DismissTooltip.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDismissTooltip;
                 @DismissTooltip.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDismissTooltip;
+                @ResetConversations.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnResetConversations;
+                @ResetConversations.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnResetConversations;
+                @ResetConversations.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnResetConversations;
             }
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -903,6 +863,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @DismissTooltip.started += instance.OnDismissTooltip;
                 @DismissTooltip.performed += instance.OnDismissTooltip;
                 @DismissTooltip.canceled += instance.OnDismissTooltip;
+                @ResetConversations.started += instance.OnResetConversations;
+                @ResetConversations.performed += instance.OnResetConversations;
+                @ResetConversations.canceled += instance.OnResetConversations;
             }
         }
     }
@@ -1009,6 +972,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnHealCheat(InputAction.CallbackContext context);
         void OnDamageCheat(InputAction.CallbackContext context);
         void OnDismissTooltip(InputAction.CallbackContext context);
+        void OnResetConversations(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

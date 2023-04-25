@@ -82,7 +82,6 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
         syncBuffer.parent = root;
         syncBuffer.localPosition = Vector3.zero;
 
-
         // Get sync points when its initialized
         while (!doorManager.Initialized)
             yield return null;

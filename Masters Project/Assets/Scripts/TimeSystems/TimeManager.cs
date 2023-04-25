@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Events;
+using System.Collections;
+using UnityEngine.Windows;
 
 /// <summary>
 /// Manages player-controlled time abilities
@@ -190,11 +192,7 @@ public class TimeManager : MonoBehaviour
 
 
         // Initialize controls
-        controller = new GameControls();
-        slowInput = controller.PlayerGameplay.SlowTime;
-        slowInput.started += ToggleSlow;
-        slowInput.canceled += ToggleSlow;
-        slowInput.Enable();
+        StartCoroutine(InitializeControls());
 
         timeChangeObservers = new List<TimeObserver>();
         stoppedLastFrame = false;
@@ -215,6 +213,21 @@ public class TimeManager : MonoBehaviour
         currSlowGauge = slowDuration.Current * FixedUpdateCalls;
 
         source = gameObject.AddComponent<AudioSource>();
+    }
+
+    private IEnumerator InitializeControls()
+    {
+        while (GameManager.controls == null)
+            yield return null;
+
+        controller = GameManager.controls;
+
+        slowInput = controller.PlayerGameplay.SlowTime;
+        slowInput.started += ToggleSlow;
+        slowInput.canceled += ToggleSlow;
+        slowInput.Enable();
+
+        yield return null;
     }
 
     private void OnEnable()

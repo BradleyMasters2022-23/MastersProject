@@ -33,6 +33,8 @@ public class WarningText : MonoBehaviour
     private ScaledTimer activeTimer;
     private AudioSource source;
 
+    private bool useWarningColors;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,16 +58,16 @@ public class WarningText : MonoBehaviour
     /// <summary>
     /// Play the warning text with default text
     /// </summary>
-    public void Play()
+    public void Play(bool dangerAlert)
     {
-        Play(warningText);
+        Play(warningText, dangerAlert);
     }
 
     /// <summary>
     /// Play the warning text with new text
     /// </summary>
     /// <param name="newText">New text to be played</param>
-    public void Play(string newText)
+    public void Play(string newText, bool dangerAlert)
     {
         active = true;
         activeTimer.ResetTimer();
@@ -73,7 +75,15 @@ public class WarningText : MonoBehaviour
 
         currColor = alertColor1;
         tarColor = alertColor2;
-        colorTimer.ResetTimer();
+        targetDisplay.color = currColor;
+
+        useWarningColors = dangerAlert;
+
+        if(useWarningColors)
+        {
+            colorTimer.ResetTimer();
+        }
+        
 
         displayRoutine = StartCoroutine(targetDisplay.SlowTextLoad(newText, delayTime));
     }
@@ -87,8 +97,9 @@ public class WarningText : MonoBehaviour
 
             // unload the text, x3 faster than the load speed
             StartCoroutine(targetDisplay.SlowTextUnload(delayTime/2f));
+            useWarningColors = false;
         }
-        else if(active)
+        else if(active && useWarningColors)
         {
             FlipColors();
         }
