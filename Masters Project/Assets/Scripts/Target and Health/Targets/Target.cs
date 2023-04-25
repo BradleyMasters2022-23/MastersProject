@@ -168,7 +168,7 @@ public abstract class Target : MonoBehaviour
         if (invincibilityShield != null && invincibilityShield.isActiveAndEnabled)
             return false;
 
-        return !_killed;
+        return !_killed && gameObject.activeInHierarchy;
     }
 
     /// <summary>

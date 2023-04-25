@@ -20,6 +20,8 @@ public class ConversationInteract : Interactable
     public delegate void OnInteraction();
     public OnInteraction onStartCall;
 
+    [SerializeField] private GameObject waypointAnchor;
+
     private void Start()
     {
         ui = FindObjectOfType<DisplayDialogueUI>(true);
@@ -39,7 +41,11 @@ public class ConversationInteract : Interactable
         if (flashRenderer == null)
             return;
 
-        if(calls.HasAvailable() && timer.TimerDone())
+        // keep the anchor on if calls are available
+        if(waypointAnchor != null)
+            waypointAnchor.SetActive(calls.HasAvailable());
+
+        if (calls.HasAvailable() && timer.TimerDone())
         {
             if(flashRenderer.material.color == Color.red)
             {

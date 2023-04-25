@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Events;
+using System.Collections;
+using UnityEngine.Windows;
 
 /// <summary>
 /// Manages player-controlled time abilities
@@ -190,11 +192,7 @@ public class TimeManager : MonoBehaviour
 
 
         // Initialize controls
-        controller = new GameControls();
-        slowInput = controller.PlayerGameplay.SlowTime;
-        slowInput.started += ToggleSlow;
-        slowInput.canceled += ToggleSlow;
-        slowInput.Enable();
+        StartCoroutine(InitializeControls());
 
         timeChangeObservers = new List<TimeObserver>();
         stoppedLastFrame = false;
@@ -215,6 +213,21 @@ public class TimeManager : MonoBehaviour
         currSlowGauge = slowDuration.Current * FixedUpdateCalls;
 
         source = gameObject.AddComponent<AudioSource>();
+    }
+
+    private IEnumerator InitializeControls()
+    {
+        while (GameManager.controls == null)
+            yield return null;
+
+        controller = GameManager.controls;
+
+        slowInput = controller.PlayerGameplay.SlowTime;
+        slowInput.started += ToggleSlow;
+        slowInput.canceled += ToggleSlow;
+        slowInput.Enable();
+
+        yield return null;
     }
 
     private void OnEnable()
@@ -569,6 +582,11 @@ public class TimeManager : MonoBehaviour
         return slowDuration.Current * FixedUpdateCalls;
     }
 
+    public float UpgradeMaxGauge()
+    {
+        return slowDuration.Current;
+    }
+
     public void SetRegenTime(float regenMultiplier)
     {
         float temp = replenishTime.Current * regenMultiplier;
@@ -579,6 +597,13 @@ public class TimeManager : MonoBehaviour
     {
         float temp = slowDuration.Current * gaugeMultiplier;
         slowDuration.ChangeVal(Mathf.Ceil(temp));
+        //currentState = TimeGaugeState.RECHARGING;
+    }
+
+    public void UpgradeSetGaugeMax(float newMax)
+    {
+        slowDuration.ChangeVal(Mathf.Ceil(newMax));
+        currentState = TimeGaugeState.RECHARGING;
     }
 
     public void SetRegenDelay(float delayMultiplier)
@@ -588,7 +613,10 @@ public class TimeManager : MonoBehaviour
         replenishDelayTimer.ResetTimer(replenishDelay.Current);
     }
 
-    
+    public bool IsFull()
+    {
+        return currSlowGauge >= (slowDuration.Current * FixedUpdateCalls);
+    }
 
     /// <summary>
     /// Toggle inputs if game pauses

@@ -198,6 +198,10 @@ public class SpawnManager : MonoBehaviour
     {
         PrepareWaveQueue();
 
+        // play alert text if possible
+        if (WarningText.instance != null)
+            WarningText.instance.Play(true);
+
         // Wait for the initial delay to begin spawning
         while (!startDelayTimer.TimerDone())
             yield return null;
@@ -207,10 +211,14 @@ public class SpawnManager : MonoBehaviour
         // set to spawning state [TODO - proper state system]
         spawning = true;
 
+        int backup = 0;
+
         // Continually decide spawnpoints to use
         SpawnPoint _spawnPoint;
         while (spawnQueue.Count > 0 || waitingEnemies > 0 || !SpawnpointsEmpty())
         {
+            backup++;
+
             // Only spawn if not past max
             if ((enemyCount + waitingEnemies) < maxEnemies)
             {
@@ -242,8 +250,17 @@ public class SpawnManager : MonoBehaviour
                 yield return null;
             }
 
+            if(backup >= 250)
+            {
+                Debug.Log("ERROR");
+                break;
+            }
+
             yield return null;
         }
+
+        Debug.Log("Total loops : " + backup);
+
         // End spawning, begin backup check routine
         spawning = false;
         backupCheckRoutine = StartCoroutine(CheckCount());
@@ -399,13 +416,43 @@ public class SpawnManager : MonoBehaviour
 
     private IEnumerator CheckCount()
     {
+        backupTimer = new ScaledTimer(5f, false);
         // Consistantly check if a wave is finished every few seconds
-        WaitForSeconds delay = new WaitForSeconds(3f);
+        WaitForSeconds delay = new WaitForSeconds(1f);
         while (!finished)
         {
-            CheckWaveFinished();
+            FailsafeCheck();
             yield return delay;
         }
+    }
+
+    ScaledTimer backupTimer;
+
+    private void FailsafeCheck()
+    {
+        // If a living enemy is found, reset timer
+        EnemyTarget[] alive = FindObjectsOfType<EnemyTarget>(false);
+        foreach (EnemyTarget e in alive)
+        {
+            if (e.Killable() && !e.Killed())
+            {
+                backupTimer.ResetTimer();
+                return;
+            }
+        }
+
+        // otherwise if timer was able to finish, move onto next wave
+        if(backupTimer.TimerDone())
+        {
+            if(backupCheckRoutine != null)
+            {
+                StopCoroutine(backupCheckRoutine);
+                backupCheckRoutine = null;
+            }
+            WaveFinished();
+        }
+
+        Debug.Log("SPAWNER FAILSAFE INITIATED");
     }
 
     /// <summary>

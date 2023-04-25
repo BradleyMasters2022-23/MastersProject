@@ -194,6 +194,10 @@ public class SpawnTriggerField : MonoBehaviour
 
         finished = false;
 
+        // play alert text if possible
+        if (WarningText.instance != null)
+            WarningText.instance.Play(true);
+
         yield return new WaitForSeconds(activationDelay);
 
         SetWallStatus(true);
@@ -244,6 +248,10 @@ public class SpawnTriggerField : MonoBehaviour
                 spawnedEnemies.TrimExcess();
                 yield return null;
             }
+
+            // play alert text if possible. Dont play on last wave
+            if (WarningText.instance != null && i != waves.Length-1)
+                WarningText.instance.Play(true);
 
             yield return new WaitForSeconds(waveChangeDelay);
             // Debug.Log("Wave Finished, moving to next");

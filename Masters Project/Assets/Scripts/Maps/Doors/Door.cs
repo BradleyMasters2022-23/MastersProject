@@ -54,6 +54,11 @@ public class Door : MonoBehaviour
 
     [Tooltip("Whether this door should always be open")]
     [SerializeField] private bool overrideOpen;
+
+    public bool AlwaysOpen()
+    {
+        return overrideOpen;
+    }
     public Transform SyncPoint { get { return syncPoint; } }
     public PlayerDoorType Type { get { return type; } }
 
@@ -68,7 +73,8 @@ public class Door : MonoBehaviour
     [Tooltip("Color of the light when door is disabled"), HideIf("@this.doorLight == null")]
     [SerializeField] private Material disabledColor;
 
-    
+    [SerializeField] private GameObject waypoint;
+    [SerializeField, ReadOnly] Door pairedDoor;
 
     #endregion
 
@@ -86,14 +92,20 @@ public class Door : MonoBehaviour
     /// Whether the door is currently locked 
     /// </summary>
     [SerializeField] private bool locked;
-    
-    
     public bool Locked { get { return locked; } }
 
+    [SerializeField] private bool trueUnlocked;
 
     private bool initialized = false;
 
+     public bool TrueUnlocked {  get { return trueUnlocked; } }  
+
     #region Initialization Functions
+
+    public void PairDoor(Door p)
+    {
+        pairedDoor= p;
+    }
 
     /// <summary>
     /// Automatically initialize, unlock if needed
@@ -108,6 +120,7 @@ public class Door : MonoBehaviour
         }
         source = gameObject.AddComponent<AudioSource>();
 
+        waypoint.SetActive(false);
     }
 
     /// <summary>
@@ -123,6 +136,9 @@ public class Door : MonoBehaviour
         col = GetComponents<Collider>();
         // Debug.Log($"Initializing door {id} to locked");
         locked = true;
+
+        if (type == PlayerDoorType.Null && !overrideOpen)
+            SetDecor();
 
         id = Random.Range(0, 9999);
 
@@ -163,13 +179,15 @@ public class Door : MonoBehaviour
         {
             door.SetActive(false);
 
-            openDoor.PlayClip(transform, source);
+            if(trueUnlocked)
+                openDoor.PlayClip(transform, source);
         }
         else
         {
             door.SetActive(true);
 
-            closeDoor.PlayClip(transform, source);
+            if(trueUnlocked)
+                closeDoor.PlayClip(transform, source);
         }
     }
 
@@ -178,7 +196,7 @@ public class Door : MonoBehaviour
     /// </summary>
     public void LockDoor()
     {
-        if (type == PlayerDoorType.Null)
+        if (type == PlayerDoorType.Null || overrideOpen)
             return;
 
         // Debug.Log($"Door {id} having locked state set to lock");
@@ -195,7 +213,7 @@ public class Door : MonoBehaviour
     /// </summary>
     public void UnlockDoor()
     {
-        if (type == PlayerDoorType.Null)
+        if (type == PlayerDoorType.Null && !overrideOpen)
             return;
 
         doorLight.GetComponent<Renderer>().material = unlockedColor;
@@ -214,6 +232,24 @@ public class Door : MonoBehaviour
     }
 
     #endregion
+
+    private void Update()
+    {
+        if (waypoint == null || pairedDoor == null)
+            return;
+
+        bool doorReq = (type == PlayerDoorType.Open || type == PlayerDoorType.Entrance
+            || type == PlayerDoorType.Custom || type == PlayerDoorType.ReturnToHub);
+
+        bool lockedReq = !locked && !pairedDoor.Locked;
+
+        trueUnlocked = doorReq && lockedReq;
+
+        if (!waypoint.activeInHierarchy && trueUnlocked)
+            waypoint.SetActive(true);
+        else if(waypoint.activeInHierarchy && !trueUnlocked)
+            waypoint.SetActive(false);
+    }
 
 
     /// <summary>
@@ -246,6 +282,7 @@ public class Door : MonoBehaviour
 
                         MapLoader.instance.StartRoomEncounter();
 
+
                         // lock door behind player
                         LockDoor();
                         SetDecor();
@@ -271,6 +308,27 @@ public class Door : MonoBehaviour
                         break;
                     }
             }
+        }
+    }
+
+    [SerializeField] private LayerMask groundLayers;
+
+    /// <summary>
+    /// Ground the nodes to the first point of ground below them
+    /// </summary>
+    [Button]
+    public void GroundDoor()
+    {
+        RaycastHit h;
+        if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out h, Mathf.Infinity, groundLayers))
+        {
+            transform.position = h.point;
+        }
+        else
+        {
+            Debug.Log($"Door named {name} does not have any ground to be placed on! " +
+                $"Did you forget to set the groundlayers variable to the ground layer?");
+            return;
         }
     }
 }

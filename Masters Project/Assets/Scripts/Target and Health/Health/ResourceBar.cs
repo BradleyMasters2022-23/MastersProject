@@ -320,6 +320,30 @@ public class ResourceBar
     }
 
     /// <summary>
+    /// Decrement the maximum of this resource bar
+    /// </summary>
+    /// <param name="decrement">Amount to incremenent health by</param>
+    /// <param name="decreaseCurrent">Whether to increase the current by the same amount</param>
+    public void DecreaseMax(float decrement)
+    {
+        _maxAmount -= decrement;
+        // ensure that low health players won't instantly die on removing a crystal that increases max health
+        // done because just allowing them to keep the hp opens up exploits
+        // eg equipping and dequipping the crystal many times in a row to heal
+        if (_currAmount - decrement <= 0)
+        {
+            _currAmount = 1;
+        } else
+        {
+            _currAmount -= decrement;
+        }
+        
+        
+
+        NonRegenStateCheck();
+    }
+
+    /// <summary>
     /// Set the maximum of this resource bar
     /// </summary>
     /// <param name="max">New max to set the resource bar to</param>

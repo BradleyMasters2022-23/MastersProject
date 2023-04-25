@@ -18,6 +18,9 @@ public class DoorProximity : MonoBehaviour
     /// Parent door reference
     /// </summary>
     private Door parent;
+
+    private Door pair;
+
     /// <summary>
     /// Whether the player is in range
     /// </summary>

@@ -33,9 +33,10 @@ public class HallwayLoader : SegmentLoader
         if(fragSpawnerComp!= null )
         {
             fragSpawnerComp.SetSpawnPoint(fragSpawnPoint);
-            fragSpawnerComp.SpawnFragment();
+            fragSpawnerComp.SpawnFragment(transform);
         }
 
+        doorManager.UnlockExit();
         return;
     }
 
@@ -47,10 +48,10 @@ public class HallwayLoader : SegmentLoader
     /// <summary>
     /// When the upgrade is selected, unlock the exit
     /// </summary>
-    public void UpgradeSelected()
-    {
-        doorManager.UnlockExit();
-    }
+    //public void UpgradeSelected()
+    //{
+    //    doorManager.UnlockExit();
+    //}
 
     public override void StartSegment()
     {

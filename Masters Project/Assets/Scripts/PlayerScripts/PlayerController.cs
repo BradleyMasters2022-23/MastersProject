@@ -236,7 +236,25 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         // Initialize controls
+        StartCoroutine(InitializeControls());
+
+        // Get initial references
+        rb = GetComponent<Rigidbody>();
+
+        //animator = GetComponentInChildren<Animator>();
+
+        // If the gravity modifier has not already been applied, apply it now
+        if (Physics.gravity.y >= -10)
+            Physics.gravity *= gravityMultiplier;
+    }
+
+    private IEnumerator InitializeControls()
+    {
+        while (GameManager.controls == null)
+            yield return null;
+
         controller = GameManager.controls;
+
         move = controller.PlayerGameplay.Move;
         move.Enable();
 
@@ -253,14 +271,7 @@ public class PlayerController : MonoBehaviour
         qInput.performed += ActivateQAbility;
         qInput.Enable();
 
-        // Get initial references
-        rb = GetComponent<Rigidbody>();
-
-        //animator = GetComponentInChildren<Animator>();
-
-        // If the gravity modifier has not already been applied, apply it now
-        if (Physics.gravity.y >= -10)
-            Physics.gravity *= gravityMultiplier;
+        yield return null;
     }
 
     #endregion
@@ -652,6 +663,16 @@ public class PlayerController : MonoBehaviour
     {
         float temp = maxMoveSpeed.Current * speedMultiplier;
         maxMoveSpeed.ChangeVal(temp);
+    }
+
+    public float GetJumpForce()
+    {
+        return jumpForce;
+    }
+
+    public void SetJumpForce(float force)
+    {
+        jumpForce = force;
     }
 
     #endregion

@@ -82,7 +82,6 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
         syncBuffer.parent = root;
         syncBuffer.localPosition = Vector3.zero;
 
-
         // Get sync points when its initialized
         while (!doorManager.Initialized)
             yield return null;
@@ -105,10 +104,16 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
     /// <summary>
     /// Choose a start point, adjust map accordingly
     /// </summary>
-    public void Sync(Transform syncPoint)
+    public void Sync(Door initialDoor)
     {
+        Door nextDoor = doorManager.GetEntrance();
+
+        // Pair the doors
+        initialDoor.PairDoor(nextDoor);
+        nextDoor.PairDoor(initialDoor);
+
         // select start point, remove from pool
-        startPoint = doorManager.GetEntrance().SyncPoint;
+        startPoint = nextDoor.SyncPoint;
         syncPoints.Remove(startPoint);
 
         // Rotate each other sync point to point in exit direction, link to map
@@ -125,8 +130,8 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
         root.transform.SetParent(syncBuffer, true);
 
         // Sync
-        syncBuffer.position = syncPoint.position;
-        syncBuffer.rotation = syncPoint.rotation;
+        syncBuffer.position = initialDoor.SyncPoint.position;
+        syncBuffer.rotation = initialDoor.SyncPoint.rotation;
 
         // Revert parents post sync
         root.transform.parent = null;
@@ -148,6 +153,12 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
             obj.Randomize();
         }
 
+        CrystalInteract[] crystals = FindObjectsOfType<CrystalInteract>();
+
+        foreach (CrystalInteract crystal in crystals)
+        {
+            crystal.RandomizeCrystal();
+        }
 
         UniqueActivate();
     }
@@ -202,9 +213,9 @@ public abstract class SegmentLoader : MonoBehaviour, SegmentInterface, MapInitia
     /// Choose an exit from the pool
     /// </summary>
     /// <returns>The exit chosen</returns>
-    public Transform GetExit()
+    public Door GetExit()
     {
-        return doorManager.GetExit().SyncPoint;
+        return doorManager.GetExit();
     }
 
     #endregion

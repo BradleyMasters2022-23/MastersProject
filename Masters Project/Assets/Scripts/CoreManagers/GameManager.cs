@@ -181,7 +181,8 @@ public class GameManager : MonoBehaviour
         {
             case States.MAINMENU:
                 {
-                    SceneManager.LoadScene(mainMenuScene);
+                    Time.timeScale = 1f;
+                    LoadToScene(mainMenuScene);
                     menuStack.Clear();
 
                     break;
@@ -196,7 +197,7 @@ public class GameManager : MonoBehaviour
                 {
                     if(SceneManager.GetActiveScene().name != mainHubScene)
                     {
-                        SceneManager.LoadScene(mainHubScene);
+                        LoadToScene(mainHubScene);
                         menuStack.Clear();
                     }
 
@@ -211,7 +212,7 @@ public class GameManager : MonoBehaviour
                 {
                     if(SceneManager.GetActiveScene().name != mainGameplayScene) 
                     {
-                        SceneManager.LoadScene(mainGameplayScene);
+                        LoadToScene(mainGameplayScene);
                         menuStack.Clear();
                     }
                     UnPause();
@@ -324,8 +325,6 @@ public class GameManager : MonoBehaviour
     /// <param name="c"></param>
     public void TogglePause(InputAction.CallbackContext c = default)
     {
-        //Debug.Log("Toggle pause called");
-
         // try pausing
         if (ValidateStateChange(States.PAUSED))
         {
@@ -645,6 +644,23 @@ public class GameManager : MonoBehaviour
         }
 
     }
+
+    #endregion
+
+    #region SceneLoading
+
+    private void LoadToScene(string name)
+    {
+        // if none of the main scenes, dont load. 
+        // Useful for testing scenes and pausing/unpausing
+        if (name != mainMenuScene && name != mainGameplayScene && name != mainHubScene)
+            return;
+
+        menuStack.Clear();
+        controls.UI.Disable();
+        Loader.instance.LoadToScene(name);
+    }
+
 
     #endregion
 }
