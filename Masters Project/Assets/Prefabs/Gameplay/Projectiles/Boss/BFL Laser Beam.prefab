@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2547772607706674082}
   - component: {fileID: 3245179308723112759}
   m_Layer: 18
-  m_Name: BFL Laser Burst
+  m_Name: BFL Laser Beam
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,35 +49,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dealDamage: 1
-  damage: 8
-  playerDamage: 3
-  spawnProjectileOnEnd: 1
-  onEndPrefab: {fileID: 8869874275031778412, guid: 8c1d73e2ca9f0e640946813c21e0dbf4, type: 3}
-  knockback: 1
+  damage: 4
+  playerDamage: 0.5
+  spawnProjectileOnEnd: 0
+  onEndPrefab: {fileID: 0}
+  knockback: 0
   horizontalKnockback: 0
   verticalKnockback: 0
-  playerHorizontalKnockback: 100
-  playerVerticalKnockback: 10
+  playerHorizontalKnockback: 0
+  playerVerticalKnockback: 0
   affectedByTimestop: 1
   shotByPlayer: 0
   hitLayers:
     serializedVersion: 2
-    m_Bits: 524608
+    m_Bits: 2621760
   worldLayers:
     serializedVersion: 2
-    m_Bits: 2621449
+    m_Bits: 2097161
   speed: 0
-  range: 30
+  range: 5
   maxHits: 999
   onActivateSFX: {fileID: 0}
   hitSFX: {fileID: 0}
   onHitVFX: {fileID: 293939513845853792, guid: e5a26414f710b8f4b870ba95ee78b7d5, type: 3}
   attachToOwner: 1
-  laserRadius: 2.5
-  solidInTimestop: 1
+  laserRadius: 0.5
+  solidInTimestop: 0
   col: {fileID: 3245179308723112759}
   originVFX: {fileID: 3498324629708603083}
-  originVFXOffset: 0.75
+  originVFXOffset: 0
   endVFX: {fileID: 1509287378967779681}
   beamLineRenderer: {fileID: 2547772607706674082}
   hitVFXCooldown: 0.2
@@ -135,7 +135,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.47120285
+        value: 0.5165558
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -211,6 +211,22 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 18
       objectReference: {fileID: 0}
+    - target: {fileID: 504115671093805062, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 504115671093805062, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 504115671093805062, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 504115671093805062, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1204595940896723542, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
       propertyPath: looping
       value: 1
@@ -234,6 +250,18 @@ PrefabInstance:
     - target: {fileID: 2106199265513670319, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2106199265513670319, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2106199265513670319, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2106199265513670319, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2106199265513670319, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -274,6 +302,26 @@ PrefabInstance:
     - target: {fileID: 2106199265513670319, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2106199265513670319, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3182056145802864917, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3182056145802864917, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3182056145802864917, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3182056145802864917, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
