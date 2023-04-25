@@ -161,6 +161,11 @@ public class TimeManager : MonoBehaviour
     /// </summary>
     private ScaledTimer emptiedDelayTimer;
 
+    /// <summary>
+    /// Whether or not the player is in a regen field
+    /// </summary>
+    public bool inRegenField;
+
     #endregion
 
     #region Time System Observer
@@ -561,7 +566,7 @@ public class TimeManager : MonoBehaviour
         if (currSlowGauge + amount >= maxGauge)
         {
             currSlowGauge = maxGauge;
-            //ChangeState(TimeGaugeState.IDLE);
+            ChangeState(TimeGaugeState.IDLE);
         }
         else
         {

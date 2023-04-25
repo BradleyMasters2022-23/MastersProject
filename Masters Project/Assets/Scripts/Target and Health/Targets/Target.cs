@@ -69,6 +69,8 @@ public abstract class Target : MonoBehaviour
     [Tooltip("If enabled, this target can not take damage until the shield is destroyed")]
     [SerializeField] protected ShieldTarget invincibilityShield;
 
+    private ScaledTimer shieldDestroyIFrames;
+
     // The manger controlling buffs and debuffs for this target
     //private EffectManager _effectManager;
 
@@ -104,6 +106,9 @@ public abstract class Target : MonoBehaviour
         {
             KillTarget();
         }
+
+        if (invincibilityShield != null)
+            shieldDestroyIFrames = new ScaledTimer(0.1f);
     }
 
     // Placeholder, needs to take in 'TargetableEffect' figure out whether to send this data to the health manager or effect manager
