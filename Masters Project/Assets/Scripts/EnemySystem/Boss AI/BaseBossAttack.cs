@@ -171,7 +171,11 @@ public abstract class BaseBossAttack : MonoBehaviour, TimeObserver
 
         // Destroy all fired projectiles
         foreach (var attack in spawnedProjectiles.ToArray())
-            attack?.Inturrupt();
+        {
+            if(attack != null)
+                attack.Inturrupt();
+        }
+            
 
         spawnedProjectiles.Clear();
         spawnedProjectiles.TrimExcess();

@@ -89,9 +89,15 @@ public class BossTarget : Target
 
     #region Phase management
 
+    [TableList(CellPadding = 3)]
+    [PropertySpace(SpaceAfter = 10, SpaceBefore = 5)]
+    [SerializeField] private BossEvent standardPhaseChangeEvents;
+
     [SerializeField] private BossEvent[] phaseChangeEvents;
     private int phaseIndex = -1;
 
+    [TableList(CellPadding = 3)]
+    [PropertySpace(SpaceAfter = 10, SpaceBefore = 5)]
     [SerializeField] private BossEvent onDeathEvents;
 
     /// <summary>
@@ -127,7 +133,12 @@ public class BossTarget : Target
         // If there is a phase left, transition to it
         if(phaseIndex < phaseChangeEvents.Length)
         {
-            TimedEvent[] events = phaseChangeEvents[phaseIndex].OnTriggerEvent;
+            // perform standard events
+            TimedEvent[] events = standardPhaseChangeEvents.OnTriggerEvent;
+            yield return StartCoroutine(ExecuteEvents(events));
+
+            // perform special changes
+            events = phaseChangeEvents[phaseIndex].OnTriggerEvent;
             yield return StartCoroutine("ExecuteEvents", events);
         }
 

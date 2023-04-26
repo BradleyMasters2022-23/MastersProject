@@ -9,6 +9,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
+
+[System.Serializable]
+public struct ShieldFlickerData
+{
+    public bool flicker;
+
+    [HideIf("@this.flicker == false")]
+    public float[] downtimeIntervals;
+    [HideIf("@this.flicker == false")]
+    public float[] uptimeIntervals;
+}
 
 public class ShieldGenerator : MonoBehaviour
 {
@@ -25,6 +37,10 @@ public class ShieldGenerator : MonoBehaviour
     [Tooltip("Indicators that play when the shield is enabled")]
     [SerializeField] private IIndicator[] onEnableIndicator;
 
+    [SerializeField] private ShieldFlickerData[] flickerPhaseData;
+
+    private ShieldFlickerData currProfile;
+
     /// <summary>
     /// Whether the shield is currently active
     /// </summary>
@@ -35,9 +51,12 @@ public class ShieldGenerator : MonoBehaviour
     /// </summary>
     private Coroutine currentRoutine;
 
+    private Coroutine flickerRoutine;
+
     private void Awake()
     {
         active = true;
+        currProfile = flickerPhaseData[0];
     }
 
     /// <summary>
@@ -51,9 +70,10 @@ public class ShieldGenerator : MonoBehaviour
             {
                 StopCoroutine(currentRoutine);
             }
+            active = false;
 
             Debug.Log("Calling to disable shield");
-            currentRoutine = StartCoroutine(DisableShield());
+            flickerRoutine = StartCoroutine(ShieldFlicker());
         }
         else if(!AllButtonsTriggered() && !active && maintainButtonActivation)
         {
@@ -92,7 +112,7 @@ public class ShieldGenerator : MonoBehaviour
         // more stuff can be used here
         
         shield.SetActive(true);
-        active = true;
+        //active = true;
         currentRoutine= null;
         yield return null;
     }
@@ -108,8 +128,61 @@ public class ShieldGenerator : MonoBehaviour
         // more stuff can be used here
 
         shield.SetActive(false);
-        active = false;
+        //active = false;
         currentRoutine = null;
+        yield return null;
+    }
+
+    private IEnumerator ShieldFlicker()
+    {
+        // If set to flicker, than flicker between intervals and loop
+        if(currProfile.flicker)
+        {
+            // Get max index, which is the smallest size of the current data
+            int maxIndex;
+            if (currProfile.uptimeIntervals.Length <= currProfile.downtimeIntervals.Length)
+                maxIndex = currProfile.uptimeIntervals.Length;
+            else
+                maxIndex = currProfile.downtimeIntervals.Length;
+
+            // get starting index 
+            int flickerIndex = 0;
+
+            float downtime;
+            float uptime;
+
+            ScaledTimer timer = new ScaledTimer(0);
+
+            while(true)
+            {
+                // Get current timing
+                downtime = currProfile.downtimeIntervals[flickerIndex];
+                uptime = currProfile.uptimeIntervals[flickerIndex];
+
+                // start with downtime for responsiveness
+                yield return StartCoroutine(DisableShield());
+                timer.ResetTimer(downtime);
+                yield return new WaitUntil(timer.TimerDone);
+
+                yield return StartCoroutine(EnableShield());
+                timer.ResetTimer(uptime);
+                yield return new WaitUntil(timer.TimerDone);
+
+                // Increment. If max is reached, then wrap around
+                flickerIndex++;
+                if (flickerIndex >= maxIndex)
+                    flickerIndex = 0;
+
+                yield return null;
+            }
+        }
+        else // If no flicker, just turn it off
+        {
+            yield return StartCoroutine(DisableShield());
+        }
+
+        flickerRoutine = null;
+
         yield return null;
     }
 
@@ -118,11 +191,21 @@ public class ShieldGenerator : MonoBehaviour
     /// </summary>
     public void ResetShield()
     {
-        if(currentRoutine!=null)
-            StopCoroutine(currentRoutine);
+        //if(currentRoutine!=null)
+        //    StopCoroutine(currentRoutine);
 
+        //if (flickerRoutine != null)
+        //    StopCoroutine(flickerRoutine);
+
+        StopAllCoroutines();
+        active = true;
         currentRoutine = StartCoroutine(EnableShield());
         foreach(var button in allButtons)
             button.ResetButton();
+    }
+
+    public void SetPhaseData(int phase)
+    {
+        currProfile = flickerPhaseData[phase];
     }
 }
