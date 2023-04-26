@@ -11,16 +11,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-public class TimeRegenField : MonoBehaviour
+public class TimeRegenField : TooltipHolder
 {
     [Header("Gameplay")]
+    [Tooltip("How much time given to the player every second they're in the field")]
     [SerializeField] private float timePerSecond;
+    /// <summary>
+    /// Reference to the time gauge
+    /// </summary>
     private TimeManager timeGauge;
 
-    [Header("Alert Text")]
-    private WarningText warningText;
+    [Header("Communication")]
+    [Tooltip("Warning text displayed upon entering the field")]
     [SerializeField, TextArea] string enterText;
+    [Tooltip("Warning text displayed upon exiting the field")]
     [SerializeField, TextArea] string exitText;
+    /// <summary>
+    /// Reference to the warning text controller
+    /// </summary>
+    private WarningText warningText;
+
+    
 
     private void Awake()
     {
@@ -47,16 +58,25 @@ public class TimeRegenField : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        // Dont do anything if not the player
+        if (!other.CompareTag("Player")) return;
+
         if(WarningTextInit())
         {
             warningText.Play(enterText, false);
         }
+
+        if (tooltip != null)
+            SubmitTooltip();
 
         timeGauge.inRegenField = true;
     }
 
     private void OnTriggerExit(Collider other)
     {
+        // Dont do anything if not the player
+        if (!other.CompareTag("Player")) return;
+
         if (WarningTextInit())
         {
             warningText.Play(exitText, false);
@@ -64,6 +84,4 @@ public class TimeRegenField : MonoBehaviour
 
         timeGauge.inRegenField = false;
     }
-
-    
 }

@@ -446,7 +446,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""87ec9ecc-79d0-4c22-8fd0-c0e58bef2a32"",
                     ""path"": ""<Keyboard>/equals"",
-                    ""interactions"": ""Hold(duration=3)"",
+                    ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""GodCheat"",
@@ -500,7 +500,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""a50be1b9-78e4-4df5-a400-c2521e28e84a"",
-                    ""path"": ""<NimbusGamepadHid>/buttonNorth"",
+                    ""path"": ""<Keyboard>/y"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

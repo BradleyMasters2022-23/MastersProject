@@ -13,6 +13,7 @@ using TMPro;
 using Sirenix.OdinInspector;
 using UnityEngine.InputSystem;
 using UnityEngine.Events;
+using Masters.UI;
 
 public class TooltipManager : MonoBehaviour
 {
@@ -56,9 +57,6 @@ public class TooltipManager : MonoBehaviour
         // hide tooltip on load
         HideTooltip();
 
-        
-        
-
         // make it 8 for simplicity. The queue shouldnt be used often if at all
         //tooltipQueue = new Queue<TooltipSO>(8);
     }
@@ -97,8 +95,12 @@ public class TooltipManager : MonoBehaviour
     private void LoadTooltip(TooltipSO data)
     {
         currentTooltip = data;
-        titleTextbox.text = data.titleText;
-        descriptionTextbox.text = data.tooltipText;
+
+        StartCoroutine(titleTextbox.SlowTextLoad(data.titleText, 0.02f));
+        StartCoroutine(descriptionTextbox.SlowTextLoad(data.tooltipText, 0.01f));
+
+        //titleTextbox.text = data.titleText;
+        //descriptionTextbox.text = data.tooltipText;
 
         // display tooltip after being loaded
         DisplayTooltip();
@@ -116,6 +118,9 @@ public class TooltipManager : MonoBehaviour
             currentTooltip= null;
             titleTextbox.text = "";
             descriptionTextbox.text = "";
+
+            StartCoroutine(titleTextbox.SlowTextUnload(0.005f));
+            StartCoroutine(descriptionTextbox.SlowTextUnload(0.005f));
 
             // hide tooltip after being loaded
             HideTooltip();
@@ -183,7 +188,6 @@ public class TooltipManager : MonoBehaviour
     /// <param name="c"></param>
     private void DismissCurrentTooltip(InputAction.CallbackContext c)
     {
-        Debug.Log("Dismiss called");
         if (currentTooltip != null)
             UnloadTooltip(currentTooltip);
     }

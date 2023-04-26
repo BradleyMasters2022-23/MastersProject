@@ -2,7 +2,7 @@
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 26th, 2022
- * Last Edited - October 26th, 2022 by Ben Schuster
+ * Last Edited - April 26th, 2022 by Ben Schuster
  * Description - Observe player time and update timeBar
  * ================================================================================================
  */
@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class TimeGagueVisual : MonoBehaviour
+public class TimeGaugeUI : MonoBehaviour
 {
     /// <summary>
     /// Player to track time of
@@ -62,7 +62,7 @@ public class TimeGagueVisual : MonoBehaviour
             timeBar.value = time.CurrSlowGauge;
 
         // Determine conditions for flashing
-        flashing = (timeBar.value == timeBar.maxValue) || time.inRegenField;
+        flashing = (timeBar.value == timeBar.maxValue) || (time.inRegenField && time.CurrState != TimeManager.TimeGaugeState.SLOWING);
 
         // If flashing, enable the image (if not already done) and update flash
         if(flashing)
