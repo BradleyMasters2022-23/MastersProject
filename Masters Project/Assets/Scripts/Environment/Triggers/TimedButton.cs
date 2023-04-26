@@ -7,19 +7,18 @@ public class TimedButton : MonoBehaviour, ITriggerable
     [Header("Gameplay")]
 
     [SerializeField] private float activeDuration;
-
     [SerializeField] private bool affectedByTimestop = true;
 
     private ScaledTimer timer;
-
     private bool activated;
+
+    private bool locked;
 
     [SerializeField] private Trigger targetTrigger;
 
     [Header("Indicators")]
 
     [SerializeField] private IIndicator[] activatedIndicators;
-
     [SerializeField] private IIndicator[] deactivatedIndicators;
 
     private void Awake()
@@ -78,6 +77,9 @@ public class TimedButton : MonoBehaviour, ITriggerable
     /// </summary>
     public void Trigger()
     {
+        // Don't do anything while locked
+        if (locked) return;
+
         if(timer == null)
             timer = new ScaledTimer(activeDuration, affectedByTimestop);
         else
@@ -120,5 +122,16 @@ public class TimedButton : MonoBehaviour, ITriggerable
         timer = null;
         activated = false;
         DeactivatedEffects();
+    }
+
+    public void SetLock(bool locked)
+    {
+        this.locked = locked;
+
+        if(locked)
+        {
+            activated = false;
+            DeactivatedEffects();
+        }
     }
 }

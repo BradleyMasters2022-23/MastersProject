@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using System.Linq;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public abstract class BaseBossAttack : MonoBehaviour, TimeObserver
 {

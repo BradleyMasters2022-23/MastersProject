@@ -46,13 +46,6 @@ public class ShieldGenerator : MonoBehaviour
     /// </summary>
     private bool active;
 
-    /// <summary>
-    /// Tracker for current transition coroutine
-    /// </summary>
-    private Coroutine currentRoutine;
-
-    private Coroutine flickerRoutine;
-
     private void Awake()
     {
         active = true;
@@ -66,23 +59,15 @@ public class ShieldGenerator : MonoBehaviour
     {
         if(AllButtonsTriggered() && active)
         {
-            if(currentRoutine!= null)
-            {
-                StopCoroutine(currentRoutine);
-            }
             active = false;
 
-            Debug.Log("Calling to disable shield");
-            flickerRoutine = StartCoroutine(ShieldFlicker());
+            //Debug.Log("Calling to disable shield");
+            StartCoroutine(ShieldFlicker());
         }
         else if(!AllButtonsTriggered() && !active && maintainButtonActivation)
         {
-            if (currentRoutine != null)
-            {
-                StopCoroutine(currentRoutine);
-            }
 
-            currentRoutine = StartCoroutine(EnableShield());
+            StartCoroutine(EnableShield());
         }
     }
 
@@ -110,10 +95,8 @@ public class ShieldGenerator : MonoBehaviour
         Indicators.SetIndicators(onEnableIndicator, true);
 
         // more stuff can be used here
-        
+
         shield.SetActive(true);
-        //active = true;
-        currentRoutine= null;
         yield return null;
     }
 
@@ -128,11 +111,13 @@ public class ShieldGenerator : MonoBehaviour
         // more stuff can be used here
 
         shield.SetActive(false);
-        //active = false;
-        currentRoutine = null;
         yield return null;
     }
 
+    /// <summary>
+    /// Flicker the shield on and off at set intervals
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator ShieldFlicker()
     {
         // If set to flicker, than flicker between intervals and loop
@@ -181,8 +166,6 @@ public class ShieldGenerator : MonoBehaviour
             yield return StartCoroutine(DisableShield());
         }
 
-        flickerRoutine = null;
-
         yield return null;
     }
 
@@ -191,21 +174,33 @@ public class ShieldGenerator : MonoBehaviour
     /// </summary>
     public void ResetShield()
     {
-        //if(currentRoutine!=null)
-        //    StopCoroutine(currentRoutine);
-
-        //if (flickerRoutine != null)
-        //    StopCoroutine(flickerRoutine);
-
         StopAllCoroutines();
         active = true;
-        currentRoutine = StartCoroutine(EnableShield());
+
+        StartCoroutine(EnableShield());
+
         foreach(var button in allButtons)
             button.ResetButton();
     }
 
+    /// <summary>
+    /// Change the flicker data
+    /// </summary>
+    /// <param name="phase">Phase index to use</param>
     public void SetPhaseData(int phase)
     {
         currProfile = flickerPhaseData[phase];
+    }
+
+    public void LockGenerators()
+    {
+        foreach (var button in allButtons)
+            button.SetLock(true);
+    }
+
+    public void UnlockGenerators()
+    {
+        foreach (var button in allButtons)
+            button.SetLock(false);
     }
 }

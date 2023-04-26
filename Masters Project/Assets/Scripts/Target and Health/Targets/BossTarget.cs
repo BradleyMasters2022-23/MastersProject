@@ -127,6 +127,8 @@ public class BossTarget : Target
     /// <returns></returns>
     protected IEnumerator Transition()
     {
+        _healthManager.ToggleGodmode(true);
+
         // increment to next phase 
         phaseIndex++;
 
@@ -141,6 +143,8 @@ public class BossTarget : Target
             events = phaseChangeEvents[phaseIndex].OnTriggerEvent;
             yield return StartCoroutine("ExecuteEvents", events);
         }
+
+        _healthManager.ToggleGodmode(false);
 
         yield return null;
     }

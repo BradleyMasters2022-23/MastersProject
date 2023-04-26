@@ -336,7 +336,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2507586965067347795
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1119,7 +1119,7 @@ RectTransform:
   m_Children:
   - {fileID: 2287082977188328654}
   m_Father: {fileID: 2287082978113143078}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1515,7 +1515,7 @@ GameObject:
   - component: {fileID: 2287082977259735537}
   - component: {fileID: 2287082977259735542}
   m_Layer: 21
-  m_Name: Shield Button
+  m_Name: Shield Gen LEFT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1671,7 +1671,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activeDuration: 3
   affectedByTimestop: 1
-  targetTrigger: {fileID: 0}
+  targetTrigger: {fileID: 2287082977259735537}
   activatedIndicators:
   - {fileID: 2287082977870625974}
   deactivatedIndicators:
@@ -2329,7 +2329,7 @@ GameObject:
   - component: {fileID: 2287082977676951768}
   - component: {fileID: 2287082977676951769}
   m_Layer: 21
-  m_Name: Shield Button (2)
+  m_Name: Shield Gen RIGHT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2485,7 +2485,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activeDuration: 3
   affectedByTimestop: 1
-  targetTrigger: {fileID: 0}
+  targetTrigger: {fileID: 2287082977676951768}
   activatedIndicators:
   - {fileID: 2287082977370558482}
   deactivatedIndicators:
@@ -2954,8 +2954,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7392599404777841242}
   - {fileID: 2287082976717219902}
+  - {fileID: 7392599404777841242}
   - {fileID: 2287082976657556322}
   - {fileID: 4230978485056936363}
   - {fileID: 4230978484881483974}
@@ -3083,7 +3083,7 @@ GameObject:
   - component: {fileID: 2287082978162276748}
   - component: {fileID: 2287082978162276749}
   m_Layer: 21
-  m_Name: Shield Button (1)
+  m_Name: Shield Gen CENTER
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3239,7 +3239,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   activeDuration: 3
   affectedByTimestop: 1
-  targetTrigger: {fileID: 0}
+  targetTrigger: {fileID: 2287082978162276748}
   activatedIndicators:
   - {fileID: 2287082977816043191}
   deactivatedIndicators:
@@ -4548,7 +4548,7 @@ Transform:
   - {fileID: 2897330106522853020}
   - {fileID: 4117246182343482962}
   m_Father: {fileID: 2287082978113143078}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &7221284326075282848
 Rigidbody:
@@ -4602,6 +4602,22 @@ MonoBehaviour:
     - action:
         m_PersistentCalls:
           m_Calls:
+          - m_Target: {fileID: 4230978485056936360}
+            m_TargetAssemblyTypeName: ShieldGenerator, Assembly-CSharp
+            m_MethodName: LockGenerators
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+      executeTime: 0
+    - action:
+        m_PersistentCalls:
+          m_Calls:
           - m_Target: {fileID: 2287082977212787951}
             m_TargetAssemblyTypeName: BossLaserAttack, Assembly-CSharp
             m_MethodName: Inturrupt
@@ -4642,7 +4658,7 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
-      executeTime: 0
+      executeTime: 1.5
   phaseChangeEvents:
   - stageName: Stage 1 (START)
     OnTriggerEvent:
@@ -4681,6 +4697,30 @@ MonoBehaviour:
             m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
             m_MethodName: SetActive
             m_Mode: 6
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 4230978485056936360}
+            m_TargetAssemblyTypeName: ShieldGenerator, Assembly-CSharp
+            m_MethodName: ResetShield
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 4230978485056936360}
+            m_TargetAssemblyTypeName: ShieldGenerator, Assembly-CSharp
+            m_MethodName: UnlockGenerators
+            m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
               m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4771,6 +4811,18 @@ MonoBehaviour:
               m_ObjectArgument: {fileID: 0}
               m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
               m_IntArgument: 1
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+          - m_Target: {fileID: 4230978485056936360}
+            m_TargetAssemblyTypeName: ShieldGenerator, Assembly-CSharp
+            m_MethodName: UnlockGenerators
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
               m_FloatArgument: 0
               m_StringArgument: 
               m_BoolArgument: 0
@@ -4897,6 +4949,18 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 1
             m_CallState: 2
+          - m_Target: {fileID: 4230978485056936360}
+            m_TargetAssemblyTypeName: ShieldGenerator, Assembly-CSharp
+            m_MethodName: UnlockGenerators
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
       executeTime: 1
   onDeathEvents:
     stageName: On Death Event
@@ -4904,6 +4968,18 @@ MonoBehaviour:
     - action:
         m_PersistentCalls:
           m_Calls:
+          - m_Target: {fileID: 4230978485056936360}
+            m_TargetAssemblyTypeName: ShieldGenerator, Assembly-CSharp
+            m_MethodName: LockGenerators
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
           - m_Target: {fileID: 4230978485056936360}
             m_TargetAssemblyTypeName: ShieldGenerator, Assembly-CSharp
             m_MethodName: ResetShield

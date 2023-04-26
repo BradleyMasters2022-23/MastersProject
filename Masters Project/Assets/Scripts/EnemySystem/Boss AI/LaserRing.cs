@@ -1,3 +1,11 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - April 11, 2022
+ * Last Edited - April 11, 2022 by Ben Schuster
+ * Description - A ring of lasers that rotates and fires a number of lasers
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
