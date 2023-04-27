@@ -21,6 +21,8 @@ public class TimedButton : MonoBehaviour, ITriggerable
     [SerializeField] private IIndicator[] activatedIndicators;
     [SerializeField] private IIndicator[] deactivatedIndicators;
 
+    private Target host;
+
     private void Awake()
     {
         if(targetTrigger == null)
@@ -37,6 +39,8 @@ public class TimedButton : MonoBehaviour, ITriggerable
         activated = false;
         Indicators.SetIndicators(activatedIndicators, false);
         Indicators.SetIndicators(deactivatedIndicators, true);
+
+        host = GetComponent<Target>();
     }
 
     private void OnEnable()
@@ -122,6 +126,7 @@ public class TimedButton : MonoBehaviour, ITriggerable
         timer = null;
         activated = false;
         DeactivatedEffects();
+        host.ResetTarget();
     }
 
     public void SetLock(bool locked)

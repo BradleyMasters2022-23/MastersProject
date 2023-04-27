@@ -56,13 +56,6 @@ public class BossTarget : Target
     /// </summary>
     private Coroutine delayedRoutine;
 
-    protected override void Awake()
-    {
-        base.Awake();
-        // this is for testing, remove later
-        StartBoss();
-    }
-
     protected override void KillTarget()
     {
         if (delayedRoutine != null)
