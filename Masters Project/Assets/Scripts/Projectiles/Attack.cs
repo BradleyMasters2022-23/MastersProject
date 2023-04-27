@@ -56,7 +56,7 @@ public class TeamDamage
     }
 }
 
-public abstract class Attack : MonoBehaviour
+public abstract class Attack : TimeAffectedEntity
 {
     [Header("===== Core Info =====")]
 
@@ -85,9 +85,6 @@ public abstract class Attack : MonoBehaviour
     [SerializeField] private float playerHorizontalKnockback;
     [HideIf("@this.knockback == false")]
     [SerializeField] private float playerVerticalKnockback;
-
-    [Space(5)]
-    [SerializeField] protected bool affectedByTimestop;
 
     /// <summary>
     /// Keep track of hit targets

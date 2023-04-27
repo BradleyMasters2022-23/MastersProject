@@ -10,9 +10,7 @@ using Masters.AI;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
-using static Unity.VisualScripting.Member;
 
 public enum AttackState
 {
@@ -31,6 +29,8 @@ public abstract class AttackTarget : MonoBehaviour
 
     //[Tooltip("Whether or not the animator is responsible for this attack system")]
     //[SerializeField] protected bool animationControlled;
+
+    [SerializeField] private Transform rotationSource;
 
     /// <summary>
     /// animator for this enemy
@@ -83,6 +83,14 @@ public abstract class AttackTarget : MonoBehaviour
 
     protected AudioSource source;
 
+    #region Timestop Stuff
+
+    protected bool affected;
+    protected float timeScale;
+    protected float deltaTime;
+
+    #endregion
+
     #region Timer Variables
 
     protected ScaledTimer attackTracker;
@@ -94,15 +102,29 @@ public abstract class AttackTarget : MonoBehaviour
     protected virtual void Awake()
     {
         manager = GetComponent<EnemyManager>();
+        affected = manager.GetAfflicted();
         source = GetComponent<AudioSource>();
-        attackTracker = new ScaledTimer(attackCoolown);
-        indicatorTracker = new ScaledTimer(indicatorDuration);
-        finishTracker = new ScaledTimer(finishDuration);
+        attackTracker = new ScaledTimer(attackCoolown, false);
+        indicatorTracker = new ScaledTimer(indicatorDuration, false);
+        finishTracker = new ScaledTimer(finishDuration, false);
 
         if (lineOfSightOrigin == null)
             lineOfSightOrigin = transform;
 
         currentAttackState = AttackState.Ready;
+
+        UpdateTime();
+    }
+
+    protected virtual void UpdateTime()
+    {
+        affected = manager.GetAfflicted();
+        timeScale = manager.GetTimescale();
+        deltaTime = manager.GetDeltatime();
+
+        attackTracker?.SetModifier(timeScale);
+        indicatorTracker?.SetModifier(timeScale);
+        finishTracker?.SetModifier(timeScale);
     }
 
     private void OnDisable()
@@ -126,7 +148,7 @@ public abstract class AttackTarget : MonoBehaviour
         target = t;
     }
 
-    public bool CanDoAttack()
+    public virtual bool CanDoAttack()
     {
         bool attackReq = 
             currentAttackState== AttackState.Ready &&
@@ -138,10 +160,12 @@ public abstract class AttackTarget : MonoBehaviour
 
     private void FixedUpdate()
     {
+        UpdateTime();
+
         StateUpdateFunctionality();
 
         if(manager != null) 
-            rotationSpeed = TimeManager.WorldTimeScale * manager.currentMoveStates.rotationSpeed;
+            rotationSpeed = timeScale * manager.currentMoveStates.rotationSpeed;
 
         // this is for testing
         if(autoLoopAttack && currentAttackState == AttackState.Ready)
@@ -237,20 +261,12 @@ public abstract class AttackTarget : MonoBehaviour
         // Enable indicator stuff here
         ShowIndicator();
 
-        int c = 0;
-
         // Wait
         indicatorTracker.ResetTimer();
         while(!indicatorTracker.TimerDone())
         {
             // Do things while waiting (spin indicator VFX?)
 
-            c++;
-            if (c >= 10000)
-            {
-                Debug.Log("attack indicator infinite stuck");
-                yield break;
-            }
             yield return null;
         }
 
@@ -310,19 +326,13 @@ public abstract class AttackTarget : MonoBehaviour
     {
         // Enable delay stuff here
         ShowAttackDone();
-        int c = 0;
+        
         // Wait
         finishTracker.ResetTimer();
         while (!finishTracker.TimerDone())
         {
             // Do things while waiting (spin indicator VFX?)
 
-            c++;
-            if (c >= 10000)
-            {
-                Debug.Log("Finished attack stuck infinite stuck");
-                yield break;
-            }
             yield return null;
         }
 
@@ -372,14 +382,14 @@ public abstract class AttackTarget : MonoBehaviour
 
         // rotate towards them, clamped
         Quaternion rot = Quaternion.LookRotation(direction);
-        float nextYAng = Mathf.Clamp(Mathf.DeltaAngle(gameObject.transform.rotation.eulerAngles.y, rot.eulerAngles.y),
-            -rotationSpeed, rotationSpeed) * TimeManager.WorldTimeScale;
-        float nextXAng = Mathf.Clamp(Mathf.DeltaAngle(gameObject.transform.rotation.eulerAngles.x, rot.eulerAngles.x),
-            -rotationSpeed, rotationSpeed) * TimeManager.WorldTimeScale;
+        float nextYAng = Mathf.Clamp(Mathf.DeltaAngle(rotationSource.rotation.eulerAngles.y, rot.eulerAngles.y),
+            -rotationSpeed, rotationSpeed) * timeScale;
+        float nextXAng = Mathf.Clamp(Mathf.DeltaAngle(rotationSource.rotation.eulerAngles.x, rot.eulerAngles.x),
+            -rotationSpeed, rotationSpeed) * timeScale;
 
         transform.rotation = Quaternion.Euler(
-            gameObject.transform.rotation.eulerAngles.x + nextXAng,
-            gameObject.transform.rotation.eulerAngles.y + nextYAng,
+            rotationSource.rotation.eulerAngles.x + nextXAng,
+            rotationSource.rotation.eulerAngles.y + nextYAng,
             0);
     }
 }

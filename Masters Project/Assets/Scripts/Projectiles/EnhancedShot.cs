@@ -40,7 +40,7 @@ public class EnhancedShot : Projectile
 
     private void Update()
     {
-        if (TimeManager.WorldTimeScale == 0 && lineRenderer.GetPosition(0) != transform.position)
+        if (Timescale == 0 && lineRenderer.GetPosition(0) != transform.position)
             lineRenderer.SetPosition(0, lineRenderer.transform.position);
 
         if(lineRenderer.enabled && lineLifeTracker.TimerDone())

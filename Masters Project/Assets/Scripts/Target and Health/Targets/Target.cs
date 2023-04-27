@@ -266,6 +266,7 @@ public abstract class Target : MonoBehaviour
         // Calculate force vector, draw for debug reasons
         Vector3 forceVector = (_center.position - origin).normalized * force;
         forceVector += Vector3.up * verticalForce;
+        forceVector *= knockbackModifier;
         // Clamp max knockback
         if(forceVector.magnitude > maxKnockback)
             forceVector= forceVector.normalized * maxKnockback;
@@ -273,7 +274,7 @@ public abstract class Target : MonoBehaviour
 
         // Zero current velocity, apply new force
         _rb.velocity= Vector3.zero;
-        _rb.AddForce(forceVector * knockbackModifier, ForceMode.Impulse);
+        _rb.AddForce(forceVector, ForceMode.Impulse);
     }
 
     public virtual void Knockback(TeamDamage data, Vector3 origin, float multiplier = 1)

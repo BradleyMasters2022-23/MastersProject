@@ -22,7 +22,7 @@ public struct MovementStates
     public float rotationSpeed;
     public float acceleration;
 }
-public class EnemyManager : MonoBehaviour
+public class EnemyManager : TimeAffectedEntity
 {
     #region Core Variables
 
@@ -46,7 +46,6 @@ public class EnemyManager : MonoBehaviour
     private NavMeshAgent agent;
     private PlayerController player;
     private AudioSource audioSource;
-
 
     [SerializeField] private LookAtTarget lookBehavior;
 
@@ -111,7 +110,7 @@ public class EnemyManager : MonoBehaviour
     /// <summary>
     /// Initialize variables
     /// </summary>
-    private void Awake()
+    protected virtual void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         if (agent != null)
@@ -157,11 +156,11 @@ public class EnemyManager : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        activateTracker = new ScaledTimer(activateDelay);
+        activateTracker = new ScaledTimer(activateDelay, Affected);
 
-        lineOfSightTracker = new ScaledTimer(noLineOfSightDelay);
+        lineOfSightTracker = new ScaledTimer(noLineOfSightDelay, Affected);
 
-        stateChangeCDTracker = new ScaledTimer(postChaseCD);
+        stateChangeCDTracker = new ScaledTimer(postChaseCD, Affected);
 
         player = FindObjectOfType<PlayerController>();
 
@@ -213,7 +212,7 @@ public class EnemyManager : MonoBehaviour
     /// Routine to gain some bonus functionality
     /// </summary>
     /// <returns></returns>
-    private IEnumerator MainAIController()
+    protected virtual IEnumerator MainAIController()
     {
         WaitForFixedUpdate tick = new WaitForFixedUpdate();
 
@@ -379,18 +378,8 @@ public class EnemyManager : MonoBehaviour
         // mainAttack.enabled = true;
         mainAttack.Attack(player.transform);
 
-        int c = 0;
-
         while (mainAttack.currentAttackState != AttackState.Cooldown)
         {
-            c++;
-            if (c >= 1000)
-            {
-                Debug.LogError($"Attack detected to get stuck!!!");
-                break;
-            }
-
-            yield return null;
             yield return tick;
         }
 
@@ -471,5 +460,18 @@ public class EnemyManager : MonoBehaviour
 
         //Debug.Log("Setting profile to " + characterMovementStates[i].name);
         currentMoveStates = characterMovementStates[i];
+    }
+
+    public bool GetAfflicted()
+    {
+        return Affected;
+    }
+    public float GetTimescale()
+    {
+        return Timescale;
+    }
+    public float GetDeltatime()
+    {
+        return DeltaTime;
     }
 }

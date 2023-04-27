@@ -1,20 +1,15 @@
-/* 
- * ================================================================================================
- * Author - Ben Schuster
- * Date Created - December 6, 2022
- * Last Edited - December 6, 2022 by Ben Schuster
- * Description - Concrete attack behavior for shooting at a given target
- * ================================================================================================
- */
+using Masters.AI;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Masters.AI;
 
-public class SimpleShoot : AttackTarget
+public class BossShoot : BossAttack
 {
     [Header("=== Ranged Attack Data ===")]
+
+    [Tooltip("Rotation override")]
+    private Transform rotationOverride;
 
     [Tooltip("The projectile prefab to use")]
     public GameObject projectile;
@@ -30,8 +25,6 @@ public class SimpleShoot : AttackTarget
     [Space(10)]
     [Tooltip("What is the minimim and maximum strength for leading shots")]
     [SerializeField] private Vector2 leadStrength;
-    [Tooltip("In a frontal cone, how infront of the enemy does the player need to be to apply lead to shots")]
-    [SerializeField] private float leadConeRadius;
 
     [Space(10)]
     [Tooltip("What is the range of accuracy for the first shot")]
@@ -42,24 +35,12 @@ public class SimpleShoot : AttackTarget
     [Space(10)]
     [Tooltip("Whether the enemy can rotate to the target while attacking")]
     [SerializeField] private bool rotateDuringAttack;
-    [Tooltip("In a frontal cone, how infront of the enemy does player need to be to follow")]
-    [HideIf("@this.rotateDuringAttack == false")]
-    [SerializeField] private float attackTrackConeRange;
-
-    [Tooltip("In a frontal cone, how infront of the enemy does player need to be to follow during indicator")]
-    [HideIf("@this.rotateDuringIndication == false")]
-    [SerializeField] private float indicatorTrackConeRange;
-    [Tooltip("When lost target, how long does it stay looking in a direction before reaquiring player." +
-        "Set larger to indicator duration to prevent them from reaquiring completely." +
-        "Stun ends early if player reenters the cone.")]
-    [HideIf("@this.rotateDuringIndication == false")]
-    [SerializeField] private float indicatorStunnedDuration;
 
     [Header("=== Visuals and Sounds ===")]
 
     [Tooltip("The object holding the VFX for player indicator")]
     [SerializeField, AssetsOnly] private GameObject indicatorVFXPrefab;
-    [SerializeField] private float indicatorScale = 1; 
+    [SerializeField] private float indicatorScale = 1;
     [Tooltip("VFX that plays on each shoot point when a projectile is fired")]
     [SerializeField, AssetsOnly] private GameObject shootVFXPrefab;
     [SerializeField] private float shootVFXScale = 1;
@@ -76,15 +57,6 @@ public class SimpleShoot : AttackTarget
     /// Internal tracker for the time between each shot
     /// </summary>
     private ScaledTimer shotTimer;
-    /// <summary>
-    /// Internal tracker for the time enemy is stunned during indicator phase
-    /// </summary>
-    private ScaledTimer indicatorStunTracker;
-
-    /// <summary>
-    /// whether the enemy is currently stunned in indicator state
-    /// </summary>
-    [SerializeField] private bool indicatorStunned = false;
 
     private float averageLead;
 
@@ -96,7 +68,7 @@ public class SimpleShoot : AttackTarget
         base.Awake();
 
         // Spawn in indicator and set scale, but then disable until use
-        if (indicatorVFXPrefab!= null )
+        if (indicatorVFXPrefab != null)
         {
             indicators = new GameObject[shootPoints.Length];
             for (int i = 0; i < shootPoints.Length; i++)
@@ -114,7 +86,6 @@ public class SimpleShoot : AttackTarget
             }
         }
 
-        indicatorStunTracker = new ScaledTimer(indicatorStunnedDuration, false);
         averageLead = (leadStrength.x + leadStrength.y) / 2;
         attackReady = true;
     }
@@ -122,7 +93,6 @@ public class SimpleShoot : AttackTarget
     protected override void UpdateTime()
     {
         base.UpdateTime();
-        indicatorStunTracker?.SetModifier(timeScale);
         shotTimer?.SetModifier(timeScale);
     }
 
@@ -130,12 +100,12 @@ public class SimpleShoot : AttackTarget
     {
         shotTimer = new ScaledTimer(delayBetweenShots, false);
 
-        for(int i = 0; i < numOfShots; i++)
+        for (int i = 0; i < numOfShots; i++)
         {
             // Apply first shot accuracy instead
-            if(i == 0)
+            if (i == 0)
             {
-                Shoot(target, 
+                Shoot(target,
                     firstShotAccuracy.x, firstShotAccuracy.y);
             }
             else
@@ -149,7 +119,7 @@ public class SimpleShoot : AttackTarget
                 break;
 
             shotTimer.ResetTimer();
-            while(!shotTimer.TimerDone())
+            while (!shotTimer.TimerDone())
             {
 
                 yield return null;
@@ -160,46 +130,21 @@ public class SimpleShoot : AttackTarget
     protected override void IndicatorUpdateFunctionality()
     {
         // This only tracks rotation. So if don't rotate, just exit
-        if(!rotateDuringIndication)
+        if (!rotateDuringIndication)
         {
             return;
         }
 
-        // if not alreadys stunned...
-        if(!indicatorStunned)
-        {
-            // If in vision, track
-            if(transform.InVisionCone(target, indicatorTrackConeRange))
-            {
-                Vector3 leadPos = GetLeadedPosition(target, averageLead);
-                // reduce lead on Y for just looking
-                leadPos.y = target.position.y;
-                RotateToTarget(leadPos);
-            }
-            // Otherwise, begin stun
-            else
-            {
-                indicatorStunned = true;
-                indicatorStunTracker.ResetTimer();
-            }
-        }
-        // If already stunned...
-        else
-        {
-            // If in vision, return to tracking
-            if (transform.InVisionCone(target, indicatorTrackConeRange)
-                || indicatorStunTracker.TimerDone())
-            {
-                indicatorStunned = false;
-            }
-        }
+        Vector3 leadPos = GetLeadedPosition(target, averageLead);
+        // reduce lead on Y for just looking
+        leadPos.y = target.position.y;
+        RotateToTarget(leadPos);
     }
 
     protected override void DamageUpdateFunctionality()
     {
         // If the target is in vision, keep rotating. Otherwise, stop
-        if(rotateDuringAttack && 
-            transform.InVisionCone(target, attackTrackConeRange))
+        if (rotateDuringAttack)
         {
             Vector3 leadPos = GetLeadedPosition(target, averageLead);
             RotateToTarget(leadPos);
@@ -214,7 +159,7 @@ public class SimpleShoot : AttackTarget
         }
 
         indicatorSFX.PlayClip(transform);
-            
+
         // Tell each one to start
         foreach (GameObject indicator in indicators)
         {
@@ -224,9 +169,7 @@ public class SimpleShoot : AttackTarget
             {
                 par.Play();
             }
-
         }
-        
     }
 
     protected override void HideIndicator()
@@ -260,45 +203,24 @@ public class SimpleShoot : AttackTarget
             GameObject o = Instantiate(projectile, barrel.position, projectile.transform.rotation);
             spawnedProjectiles.Add(o);
 
-            if(shootVFXPrefab!= null)
+            if (shootVFXPrefab != null)
             {
                 GameObject vfx = Instantiate(shootVFXPrefab, barrel);
                 vfx.transform.localPosition = Vector3.zero;
                 vfx.transform.localScale *= shootVFXScale;
             }
         }
-        
+
         Vector3 aimRotation;
 
-        // If target in vision, aim at target first
-        if (transform.InVisionCone(target, leadConeRadius))
-        {
-            //RangeAttack temp = spawnedProjectiles[0].GetComponent<RangeAttack>();
+        float strength = Random.Range(leadStrength.x, leadStrength.y);
+        Vector3 leadPos = GetLeadedPosition(target, strength);
 
-            //// Determine lead strength
-            //float travelTime = (targetPos - transform.position).magnitude / temp.Speed;
-            //float strength = Random.Range(leadStrength.x, leadStrength.y);
-            //Vector3 targetVel = target.GetComponent<Rigidbody>().velocity;
-
-            //targetVel.y = 0;
-
-            //Vector3 leadPos = target.GetComponent<PlayerController>().CenterMass.position
-            //    + (targetVel * travelTime * strength);
-
-            float strength = Random.Range(leadStrength.x, leadStrength.y);
-            Vector3 leadPos = GetLeadedPosition(target.GetComponent<PlayerController>().CenterMass, strength);
-
-            // determined initial rotation
-            aimRotation = Quaternion.LookRotation(leadPos - shootPoints[0].position).eulerAngles;
-        }
-        else
-        {
-            // If target not in vision, then just aim forwards
-            aimRotation = Quaternion.LookRotation(transform.forward).eulerAngles;
-        }
+        // determined initial rotation
+        aimRotation = Quaternion.LookRotation(leadPos - shootPoints[0].position).eulerAngles;
 
         aimRotation = ApplySpread(aimRotation, minSpread, maxSpread);
-        
+
         // Aim shot at target position, activate
         foreach (GameObject shot in spawnedProjectiles)
         {
@@ -332,10 +254,8 @@ public class SimpleShoot : AttackTarget
     {
         if (strength == 0)
         {
-            // Debug.Log("No lead strenght, setting to target position at: " + target.position);
             return target.position;
         }
-            
 
         RangeAttack temp = projectile.GetComponent<RangeAttack>();
 
@@ -343,7 +263,7 @@ public class SimpleShoot : AttackTarget
         float travelTime = (target.position - transform.position).magnitude / (temp.Speed);
         Vector3 targetVel = target.root.GetComponent<Rigidbody>().velocity;
 
-        targetVel.y = 0;
+        //targetVel.y = 0;
 
         Vector3 leadPos = target.position + (targetVel * travelTime * strength);
 

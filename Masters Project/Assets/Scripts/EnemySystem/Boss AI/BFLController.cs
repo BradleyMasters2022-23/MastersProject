@@ -27,7 +27,7 @@ public class BFLController : MonoBehaviour
         {
             if(currentAttack.AttackDone())
             {
-                Debug.Log("Attack done");
+                //Debug.Log("Attack done");
                 currentAttack = null;
                 active = false;
                 SetCooldown();
@@ -47,7 +47,7 @@ public class BFLController : MonoBehaviour
     {
         if (CanAttack())
         {
-            Debug.Log("Attacking");
+            //Debug.Log("Attacking");
             active = true;
             currentAttack = attacks.Pull();
             currentAttack.Attack();
@@ -58,6 +58,7 @@ public class BFLController : MonoBehaviour
     {
         currentAttack?.CancelAttack();
         currentAttack = null;
+        active= false;
     }
 
     private void SetCooldown()

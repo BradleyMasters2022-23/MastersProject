@@ -46,7 +46,7 @@ public class RepositionBehavior : BaseEnemyMovement
     protected override void Awake()
     {
         base.Awake();
-        strafeCooldownTracker = new ScaledTimer(Random.Range(repositionCooldown.x, repositionCooldown.y), true);
+        strafeCooldownTracker = new ScaledTimer(Random.Range(repositionCooldown.x, repositionCooldown.y), affected);
         strafeCooldownTracker.ResetTimer();
         
     }

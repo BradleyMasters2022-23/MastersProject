@@ -52,7 +52,7 @@ public class ProjectileAccelerate : Projectile
     public override void Activate()
     {
         if(acceleratingRate < 1)
-            lifetime = new ScaledTimer(projectileLifetime, affectedByTimestop);
+            lifetime = new ScaledTimer(projectileLifetime, Affected);
 
         base.Activate();
     }
@@ -61,10 +61,8 @@ public class ProjectileAccelerate : Projectile
     {
         if (!reachedTarget)
         {
-            if (affectedByTimestop)
-                flyTime += TimeManager.WorldDeltaTime;
-            else
-                flyTime += Time.deltaTime;
+            flyTime += DeltaTime;
+
 
             targetVelocity = transform.forward * speed * Mathf.Pow(acceleratingRate, flyTime);
         }

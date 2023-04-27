@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
-public class AnimationTimeScalar : MonoBehaviour
+public class AnimationTimeScalar : TimeAffectedEntity
 {
     private Animator animator;
 
@@ -14,6 +14,6 @@ public class AnimationTimeScalar : MonoBehaviour
 
     private void Update()
     {
-        animator.SetFloat("time", TimeManager.WorldTimeScale);
+        animator.SetFloat("time", Timescale);
     }
 }

@@ -48,6 +48,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9de5498fec7556746a0e6cb7ca208539, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
   dealDamage: 1
   damage: 8
   playerDamage: 3
@@ -56,13 +58,12 @@ MonoBehaviour:
   knockback: 1
   horizontalKnockback: 0
   verticalKnockback: 0
-  playerHorizontalKnockback: 100
-  playerVerticalKnockback: 10
-  affectedByTimestop: 1
+  playerHorizontalKnockback: 50
+  playerVerticalKnockback: 5
   shotByPlayer: 0
   hitLayers:
     serializedVersion: 2
-    m_Bits: 2621760
+    m_Bits: 2621504
   worldLayers:
     serializedVersion: 2
     m_Bits: 2097161
@@ -74,7 +75,7 @@ MonoBehaviour:
   onHitVFX: {fileID: 293939513845853792, guid: e5a26414f710b8f4b870ba95ee78b7d5, type: 3}
   attachToOwner: 1
   laserRadius: 2.5
-  solidInTimestop: 1
+  solidInTimestop: 0
   col: {fileID: 3245179308723112759}
   originVFX: {fileID: 3498324629708603083}
   originVFXOffset: 0.75

@@ -66,7 +66,7 @@ public class Laser : RangeAttack, TimeObserver
             originVFX.transform.localPosition = Vector3.forward * originVFXOffset;
         }
 
-        durationTracker = new ScaledTimer(range, affectedByTimestop);
+        durationTracker = new ScaledTimer(range, Affected);
         hitVFXCooldownTracker = new ScaledTimer(hitVFXCooldown);
     }
 

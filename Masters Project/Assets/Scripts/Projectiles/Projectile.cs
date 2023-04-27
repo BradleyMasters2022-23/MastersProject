@@ -45,6 +45,8 @@ public class Projectile : RangeAttack
     /// </summary>
     private float originalVisualScale;
 
+    private SphereCollider col;
+
     #endregion
 
     protected override void Awake()
@@ -54,6 +56,7 @@ public class Projectile : RangeAttack
         if (bulletVisual != null)
             originalVisualScale = bulletVisual.localScale.x;
 
+        col = GetComponent<SphereCollider>();
         rb = GetComponent<Rigidbody>();
     }
 
@@ -88,7 +91,7 @@ public class Projectile : RangeAttack
         if (!active)
             return;
 
-        float dist = targetVelocity.magnitude * TimeManager.WorldDeltaTime;
+        float dist = targetVelocity.magnitude * DeltaTime;
 
         // adjust distance to account for edge case
         if (distanceCovered + dist >= range)
@@ -98,7 +101,7 @@ public class Projectile : RangeAttack
 
         // Check for hitting a wall or target
         RaycastHit target;
-        if (Physics.SphereCast(transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, dist, hitLayers))
+        if (Physics.SphereCast(transform.position, col.radius, transform.forward, out target, dist, hitLayers))
         {
             Hit(target.point, target.normal);
             ApplyDamage(target.collider.transform, target.point);
@@ -113,16 +116,12 @@ public class Projectile : RangeAttack
         // Update visuals for flying
         ScaleOverDistance();
 
-        // Update velocity with world timescale
-        if (affectedByTimestop)
-            rb.velocity = targetVelocity * TimeManager.WorldTimeScale;
-        else
-            rb.velocity = targetVelocity;
+        rb.velocity = targetVelocity * Timescale;
     }
 
     protected override bool CheckLife()
     {
-        distanceCovered += targetVelocity.magnitude * TimeManager.WorldDeltaTime;
+        distanceCovered += targetVelocity.magnitude * DeltaTime;
 
         return distanceCovered >= range;
     }
