@@ -224,6 +224,7 @@ MonoBehaviour:
   _targetThreat: 40
   _unkillable: 0
   immuneToKnockback: 0
+  knockbackModifier: 1
   maxKnockback: 18
   invincibilityShield: {fileID: 0}
   _deathVFX: {fileID: 7428150280865193490, guid: 6e221f18ca47d5547a8bd26d21fd46a8, type: 3}
@@ -269,6 +270,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 980d6e5cae0c81045a175e37375b35c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
   characterMovementStates:
   - name: default
     moveSpeed: 8
@@ -314,6 +317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentAttackState: 0
+  rotationSource: {fileID: 3157863991490307576}
   attackReady: 1
   attackCoolown: 3
   indicatorDuration: 0.65
@@ -539,6 +543,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentAttackState: 0
+  rotationSource: {fileID: 3157863991490307576}
   attackReady: 0
   attackCoolown: 1
   indicatorDuration: 0.4
@@ -1206,3 +1211,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 384ec51a44cd4064888d3d5eec775d25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
