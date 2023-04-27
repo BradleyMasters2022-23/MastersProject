@@ -30,7 +30,7 @@ public class ScaledTimer
     /// </summary>
     private float timerModifier = 1;
     
-    private float minModifier = 0.1f;
+    private float minModifier = 0;
 
     /// <summary>
     /// Create a new timer with 
@@ -106,6 +106,9 @@ public class ScaledTimer
     /// <returns>Whether or not this timer has finished</returns>
     public bool TimerDone()
     {
+        if (timerModifier <= 0)
+            return false;
+
         if(scaled)
         {
             return (CoreTimeline.instance.ScaledTimeline - startTime) >= (targetTime/ timerModifier);

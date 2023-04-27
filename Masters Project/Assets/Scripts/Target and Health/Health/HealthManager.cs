@@ -60,6 +60,8 @@ public class HealthManager : MonoBehaviour
 
     public UnityAction onDamagedEvent;
 
+    public float timeScale;
+
     public bool Init()
     {
         if(_healthbarData.Length <= 0)
@@ -76,6 +78,7 @@ public class HealthManager : MonoBehaviour
             _healthbars[i].Init(_healthbarData[i]);
         }
 
+        timeScale = 1;
         initialized = true;
         return true;
     }
@@ -102,6 +105,7 @@ public class HealthManager : MonoBehaviour
         // check if any of the resource bars should regenerate
         foreach(ResourceBar bar in _healthbars)
         {
+            bar.SetTimesale(timeScale);
             bar.StateUpdateFunction();
         }
     }

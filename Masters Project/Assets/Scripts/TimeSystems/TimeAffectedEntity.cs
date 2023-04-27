@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 public abstract class TimeAffectedEntity : MonoBehaviour
 {
@@ -11,10 +12,12 @@ public abstract class TimeAffectedEntity : MonoBehaviour
 
     [SerializeField] private float minimumTimescale = 0;
 
+    [SerializeField] protected LayerMask slowFieldLayers;
+
     /// <summary>
     /// The secondary time scale that other abilities can influence
     /// </summary>
-    private int secondaryTimescale = 1;
+    [SerializeField, ReadOnly] private float secondaryTimescale = 1;
 
     /// <summary>
     /// Whether this entity scales with time
@@ -65,5 +68,10 @@ public abstract class TimeAffectedEntity : MonoBehaviour
             else
                 return Time.deltaTime;
         }
+    }
+
+    public void SetSeconaryTimescale(float amt)
+    {
+        secondaryTimescale = amt;
     }
 }

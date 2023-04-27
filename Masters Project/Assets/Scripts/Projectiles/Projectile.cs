@@ -91,6 +91,9 @@ public class Projectile : RangeAttack
         if (!active)
             return;
 
+        if(rb.isKinematic)
+            rb.isKinematic = false;
+
         float dist = targetVelocity.magnitude * DeltaTime;
 
         // adjust distance to account for edge case
@@ -101,7 +104,14 @@ public class Projectile : RangeAttack
 
         // Check for hitting a wall or target
         RaycastHit target;
-        if (Physics.SphereCast(transform.position, col.radius, transform.forward, out target, dist, hitLayers))
+        if(Physics.SphereCast(transform.position, col.radius, transform.forward, out target, dist, slowFieldLayers))
+        {
+            Debug.DrawLine(transform.position, target.point, Color.red, 5f);
+            transform.position = target.point;
+            rb.isKinematic = true;
+            
+        }
+        else if (Physics.SphereCast(transform.position, col.radius, transform.forward, out target, dist, hitLayers))
         {
             Hit(target.point, target.normal);
             ApplyDamage(target.collider.transform, target.point);

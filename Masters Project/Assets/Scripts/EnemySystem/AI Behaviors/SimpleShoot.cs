@@ -113,7 +113,7 @@ public class SimpleShoot : AttackTarget
                 indicators[i].SetActive(false);
             }
         }
-
+        shotTimer = new ScaledTimer(delayBetweenShots, false);
         indicatorStunTracker = new ScaledTimer(indicatorStunnedDuration, false);
         averageLead = (leadStrength.x + leadStrength.y) / 2;
         attackReady = true;
@@ -128,8 +128,6 @@ public class SimpleShoot : AttackTarget
 
     protected override IEnumerator DamageAction()
     {
-        shotTimer = new ScaledTimer(delayBetweenShots, false);
-
         for(int i = 0; i < numOfShots; i++)
         {
             // Apply first shot accuracy instead

@@ -29,7 +29,7 @@ public class DroppableQuantity
 }
 
 [RequireComponent(typeof(HealthManager))]
-public abstract class Target : MonoBehaviour
+public abstract class Target : TimeAffectedEntity
 {
     [Header("Core Target Info")]
 
@@ -111,7 +111,17 @@ public abstract class Target : MonoBehaviour
             shieldDestroyIFrames = new ScaledTimer(0.1f);
     }
 
-    // Placeholder, needs to take in 'TargetableEffect' figure out whether to send this data to the health manager or effect manager
+    private void Update()
+    {
+        // scale health manager and shield manager if it exists
+        _healthManager.timeScale = Timescale;
+        //if(invincibilityShield != null)
+        //{
+        //    invincibilityShield._healthManager.timeScale = Timescale;
+        //}
+    }
+
+
     /// <summary>
     /// Register an effect against this target.
     /// </summary>
