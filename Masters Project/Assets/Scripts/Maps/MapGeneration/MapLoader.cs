@@ -237,7 +237,9 @@ public class MapLoader : MonoBehaviour
         // Activate first room and hallway, deactivate rest
         for (int i = 0; i < 2; i++)
         {
-            yield return StartCoroutine(loadedMap[i].ActivateSegment());
+            // double check range
+            if(i < loadedMap.Count)
+                yield return StartCoroutine(loadedMap[i].ActivateSegment());
         }
         if (!testShowAll)
         {

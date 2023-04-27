@@ -31,7 +31,7 @@ public abstract class AttackTarget : MonoBehaviour
     //[SerializeField] protected bool animationControlled;
 
     [SerializeField] private Transform rotationSource;
-
+    [SerializeField] private bool rotate;
     /// <summary>
     /// animator for this enemy
     /// </summary>
@@ -374,6 +374,9 @@ public abstract class AttackTarget : MonoBehaviour
     /// <param name="modifier">Overrider modifier</param>
     protected virtual void RotateToTarget(Vector3 targetPos)
     {
+        if (!rotate)
+            return;
+
         Vector3 direction;
         direction = ((targetPos) - transform.position);
 
@@ -387,7 +390,7 @@ public abstract class AttackTarget : MonoBehaviour
         float nextXAng = Mathf.Clamp(Mathf.DeltaAngle(rotationSource.rotation.eulerAngles.x, rot.eulerAngles.x),
             -rotationSpeed, rotationSpeed) * timeScale;
 
-        transform.rotation = Quaternion.Euler(
+        rotationSource.rotation = Quaternion.Euler(
             rotationSource.rotation.eulerAngles.x + nextXAng,
             rotationSource.rotation.eulerAngles.y + nextYAng,
             0);

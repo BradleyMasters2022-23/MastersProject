@@ -126,7 +126,11 @@ public class TimedButton : MonoBehaviour, ITriggerable
         timer = null;
         activated = false;
         DeactivatedEffects();
-        host.ResetTarget();
+
+        if(host == null)
+            host = GetComponent<Target>();
+
+        host?.ResetTarget();
     }
 
     public void SetLock(bool locked)
