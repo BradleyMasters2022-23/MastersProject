@@ -19,6 +19,8 @@ public class DummyBar : MonoBehaviour
 
     [SerializeField] private Slider slider;
 
+    [SerializeField] private float startDelay;
+
     public void RegenHealthbar()
     {
         // reset value, enable
@@ -30,9 +32,13 @@ public class DummyBar : MonoBehaviour
 
     private IEnumerator Regen()
     {
-        // Determine increment rate, add until filled
-        ScaledTimer t = new ScaledTimer(regenTime, false);
-        while(slider.value < slider.maxValue)
+        ScaledTimer t = new ScaledTimer(startDelay, false);
+
+        yield return new WaitUntil(t.TimerDone);
+
+        t.ResetTimer(regenTime);
+
+        while (slider.value < slider.maxValue)
         {
             slider.value = t.TimerProgress();
             yield return new WaitForEndOfFrame();
