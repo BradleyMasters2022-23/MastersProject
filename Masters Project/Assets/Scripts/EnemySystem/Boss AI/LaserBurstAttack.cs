@@ -81,4 +81,10 @@ public class LaserBurstAttack : BaseBossAttack
 
         yield return null;
     }
+
+    protected override void DisableIndicators()
+    {
+        Indicators.SetIndicators(firingIndicator, false);
+        Indicators.SetIndicators(aimingIndicator, false);
+    }
 }

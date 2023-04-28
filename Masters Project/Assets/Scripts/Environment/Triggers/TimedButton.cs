@@ -37,8 +37,8 @@ public class TimedButton : MonoBehaviour, ITriggerable
         }
         
         activated = false;
-        Indicators.SetIndicators(activatedIndicators, false);
-        Indicators.SetIndicators(deactivatedIndicators, true);
+        //Indicators.SetIndicators(activatedIndicators, false);
+        //Indicators.SetIndicators(deactivatedIndicators, true);
 
         host = GetComponent<Target>();
     }
@@ -48,6 +48,7 @@ public class TimedButton : MonoBehaviour, ITriggerable
         if(targetTrigger!= null)
         {
             targetTrigger.Register(this);
+            Indicators.SetIndicators(deactivatedIndicators, true);
         }
     }
     private void OnDisable()

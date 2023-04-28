@@ -6,10 +6,7 @@ using UnityEngine;
 
 public class BossShoot : BossAttack
 {
-    [Header("=== Ranged Attack Data ===")]
-
-    [Tooltip("Rotation override")]
-    private Transform rotationOverride;
+    [Header("=== Boss Attack Data  ===")]
 
     [Tooltip("The projectile prefab to use")]
     public GameObject projectile;
@@ -38,9 +35,8 @@ public class BossShoot : BossAttack
 
     [Header("=== Visuals and Sounds ===")]
 
-    [Tooltip("The object holding the VFX for player indicator")]
-    [SerializeField, AssetsOnly] private GameObject indicatorVFXPrefab;
-    [SerializeField] private float indicatorScale = 1;
+    [SerializeField] private IIndicator[] prefireIndicator;
+
     [Tooltip("VFX that plays on each shoot point when a projectile is fired")]
     [SerializeField, AssetsOnly] private GameObject shootVFXPrefab;
     [SerializeField] private float shootVFXScale = 1;
@@ -66,25 +62,6 @@ public class BossShoot : BossAttack
     protected override void Awake()
     {
         base.Awake();
-
-        // Spawn in indicator and set scale, but then disable until use
-        if (indicatorVFXPrefab != null)
-        {
-            indicators = new GameObject[shootPoints.Length];
-            for (int i = 0; i < shootPoints.Length; i++)
-            {
-                indicators[i] = Instantiate(indicatorVFXPrefab, shootPoints[i]);
-                indicators[i].transform.localScale *= indicatorScale;
-
-                for (int j = 0; j < indicators[i].transform.childCount; j++)
-                {
-                    indicators[i].transform.GetChild(j).localScale *= indicatorScale;
-                }
-
-                indicators[i].transform.localPosition = Vector3.zero;
-                indicators[i].SetActive(false);
-            }
-        }
 
         averageLead = (leadStrength.x + leadStrength.y) / 2;
         attackReady = true;
@@ -153,43 +130,12 @@ public class BossShoot : BossAttack
 
     protected override void ShowIndicator()
     {
-        if (indicatorVFXPrefab == null)
-        {
-            return;
-        }
-
-        indicatorSFX.PlayClip(transform);
-
-        // Tell each one to start
-        foreach (GameObject indicator in indicators)
-        {
-            indicator.SetActive(true);
-
-            foreach (ParticleSystem par in indicator.GetComponentsInChildren<ParticleSystem>(true))
-            {
-                par.Play();
-            }
-        }
+        Indicators.SetIndicators(prefireIndicator, true);
     }
 
     protected override void HideIndicator()
     {
-        if (indicatorVFXPrefab == null)
-        {
-            return;
-        }
-
-        // Tell each one to stop
-        foreach (GameObject indicator in indicators)
-        {
-            foreach (ParticleSystem par in indicator.GetComponentsInChildren<ParticleSystem>(true))
-            {
-                par.Stop();
-            }
-
-            indicator.SetActive(false);
-
-        }
+        Indicators.SetIndicators(prefireIndicator, false);
     }
 
     private void Shoot(Transform target, float minSpread, float maxSpread)

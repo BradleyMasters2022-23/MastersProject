@@ -2,8 +2,8 @@
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - February 22nd, 2022
- * Last Edited - February 22nd, 2022 by Ben Schuster
- * Description - Concrete indicator implementation for VFX
+ * Last Edited - April 28, 2022 by Ben Schuster
+ * Description - Concrete indicator implementation for VFX, both normal and legacy
  * ================================================================================================
  */
 using System.Collections;
@@ -16,33 +16,64 @@ public class VFXIndicator : IIndicator
     [SerializeField] private GameObject VFXPrefab;
     [SerializeField] private float scale = 1;
     private VisualEffect vfxSystem;
+    private ParticleSystem[] legacyVFX;
 
     private void Awake()
     {
         // initialize prefab and get reference to visual effect component
         VFXPrefab = Instantiate(VFXPrefab, transform);
         VFXPrefab.transform.localScale *= scale;
-        VFXPrefab.SetActive(false);
+
         vfxSystem = VFXPrefab.GetComponentInChildren<VisualEffect>(true);
         if (vfxSystem != null)
             vfxSystem.Stop();
+
+        legacyVFX = VFXPrefab.GetComponentsInChildren<ParticleSystem>(true);
+        
+        if(legacyVFX.Length > 0)
+        {
+            foreach(var v in legacyVFX)
+            {
+                v?.Stop();
+            }
+        }
+
+        gameObject.SetActive(false);
     }
 
     public override void Activate()
     {
-        if (vfxSystem == null)
-            return;
+        gameObject.SetActive(true);
 
-        VFXPrefab.SetActive(true);
-        vfxSystem.Play();
+        if (vfxSystem != null)
+        {
+            vfxSystem.Play();
+        }
+
+        if(legacyVFX.Length > 0)
+        {
+            foreach (var v in legacyVFX)
+            {
+                v?.Play();
+            }
+        }
     }
 
     public override void Deactivate()
     {
-        if (vfxSystem == null)
-            return;
+        gameObject.SetActive(false);
 
-        VFXPrefab.SetActive(false);
-        vfxSystem.Stop();
+        if (vfxSystem != null)
+        {
+            vfxSystem.Stop();
+        }
+
+        if (legacyVFX.Length > 0)
+        {
+            foreach (var v in legacyVFX)
+            {
+                v?.Stop();
+            }
+        }
     }
 }

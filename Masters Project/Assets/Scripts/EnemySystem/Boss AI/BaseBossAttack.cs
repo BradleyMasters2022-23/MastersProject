@@ -182,6 +182,7 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
         // Stop the current attack routine
         if (currentRoutine != null)
         {
+            DisableIndicators();
             StopCoroutine(currentRoutine);
             currentRoutine = null;
         }
@@ -286,4 +287,6 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
             }
         }
     }
+
+    protected abstract void DisableIndicators();
 }
