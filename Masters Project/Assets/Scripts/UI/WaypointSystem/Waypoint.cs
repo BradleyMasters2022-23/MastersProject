@@ -37,6 +37,10 @@ public class Waypoint : MonoBehaviour
     [Tooltip("Image holding the icon")]
     [SerializeField] Image iconImage;
 
+    [SerializeField] bool showOnScreen = true;
+
+    [SerializeField] private float maxDistFromCenter = 9999f;
+
     [Tooltip("Additional buffer added to the horizontal bounds")]
     [SerializeField] private float horizontalBuffer;
     [Tooltip("Additional buffer added to the vertical bounds")]
@@ -167,6 +171,10 @@ public class Waypoint : MonoBehaviour
         float positionDist = Vector3.Distance(cam.position, target.position);
         bool show = (positionDist <= maxRange) && (positionDist >= minRange);
 
+        // determine if it should display
+        if (!showOnScreen && inBounds)
+            show = false;
+
         // Set view status. If can't show, then dont do anything else to minimize impact
         imageContainer.SetActive(show);
         if (!show) return;
@@ -199,17 +207,31 @@ public class Waypoint : MonoBehaviour
             }
         }
 
-        // Clamp by the bounds, apply position
-        pos.x = Mathf.Clamp(pos.x, horBounds.x, horBounds.y);
-        pos.y = Mathf.Clamp(pos.y, verBounds.x, verBounds.y);
+        if(maxDistFromCenter < horBounds.y || maxDistFromCenter < verBounds.y)
+        {
+            Vector3 center = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+            Debug.DrawLine(Vector3.zero, center, Color.red);
+            Debug.Log("Using max dist");
+            Vector3 test = pos - center;
+
+            pos = center + test.normalized * maxDistFromCenter;
+        }
+        else
+        {
+            Debug.Log("Using borders");
+            // Clamp by the bounds, apply position
+            pos.x = Mathf.Clamp(pos.x, horBounds.x, horBounds.y);
+            pos.y = Mathf.Clamp(pos.y, verBounds.x, verBounds.y);
+        }
+
         t.transform.position = pos;
-        
+
         #endregion
 
         #region ROTATION
 
         // only update rotation if object is out of bounds
-        if(!inBounds)
+        if (!inBounds)
         {
             // recalculate now that its been flipped
             pointDir = (pos - screenCenter);
@@ -249,10 +271,10 @@ public class Waypoint : MonoBehaviour
         screenCenter /= 2;
 
         // Get screen boundaries with radius
-        horBounds.x = t.rect.width / 3 + horizontalBuffer;
+        horBounds.x = t.rect.width / 2 + horizontalBuffer;
         horBounds.y = Screen.width - horBounds.x;
 
-        verBounds.x = t.rect.height / 3 + verticalBuffer;
+        verBounds.x = t.rect.height / 2 + verticalBuffer;
         verBounds.y = Screen.height - verBounds.x;
     }
 
