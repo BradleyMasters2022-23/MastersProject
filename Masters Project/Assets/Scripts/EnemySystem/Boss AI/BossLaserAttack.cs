@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-public class BossLaserAttack : MonoBehaviour
+public class BossLaserAttack : TimeAffectedEntity
 {
     [SerializeField] BFLController phase1Cannon;
     [SerializeField] BFLController phase2Cannon;
@@ -14,11 +14,13 @@ public class BossLaserAttack : MonoBehaviour
 
     private void Awake()
     {
-        tracker = new ScaledTimer(phaseChangeCooldown, true);
+        tracker = new ScaledTimer(phaseChangeCooldown, false);
     }
 
     private void Update()
     {
+        tracker?.SetModifier(Timescale);
+
         if(tracker.TimerDone())
         {
             if (phase1Cannon.isActiveAndEnabled)

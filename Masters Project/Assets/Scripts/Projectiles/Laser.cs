@@ -81,6 +81,9 @@ public class Laser : RangeAttack, TimeObserver
         if (!active)
             return;
 
+        if(Affected)
+            durationTracker?.SetModifier(Timescale);
+
         if (CheckLife())
         {
             End();

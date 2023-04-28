@@ -4,7 +4,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using System.Linq;
 
-public abstract class BaseBossAttack : MonoBehaviour, TimeObserver
+public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
 {
     public enum AttackState
     {
@@ -86,10 +86,25 @@ public abstract class BaseBossAttack : MonoBehaviour, TimeObserver
 
         frame = new WaitForFixedUpdate();
 
-        tracker = new ScaledTimer(0);
-        stunnedTracker = new ScaledTimer(lossTargetStunDuration);
+        tracker = new ScaledTimer(0, Affected);
+        stunnedTracker = new ScaledTimer(lossTargetStunDuration, Affected);
 
         SetRestPosition();
+    }
+
+    private void OnEnable()
+    {
+        SetRestPosition();
+    }
+
+    protected virtual void UpdateTimers()
+    {
+        if(Affected)
+        {
+            //Debug.Log("Setting modifiers to " + Timescale);
+            tracker?.SetModifier(Timescale);
+            stunnedTracker?.SetModifier(Timescale);
+        }
     }
 
     /// <summary>
@@ -98,6 +113,7 @@ public abstract class BaseBossAttack : MonoBehaviour, TimeObserver
     public void SetRestPosition()
     {
         restingPosition = transform.forward * 50;
+        Debug.DrawLine(transform.position, restingPosition, Color.red, 10f);
     }
 
     /// <summary>
@@ -137,7 +153,9 @@ public abstract class BaseBossAttack : MonoBehaviour, TimeObserver
 
     private void Update()
     {
-        if(state == AttackState.Stunned)
+        UpdateTimers();
+
+        if (state == AttackState.Stunned)
         {
             if (stunnedTracker.TimerDone())
                 state = AttackState.Attacking;
@@ -196,7 +214,7 @@ public abstract class BaseBossAttack : MonoBehaviour, TimeObserver
         Quaternion targetRot = Quaternion.LookRotation(targetPos - shootPoint.position);
 
         // Adjust rotation based on timescale
-        float maxRot = rotSpeed * TimeManager.WorldTimeScale * speedModifier;
+        float maxRot = rotSpeed * Timescale * speedModifier;
 
         // Apply rotation with it clamped
         if (maxRot > 0 && state != AttackState.Stunned)
@@ -212,7 +230,7 @@ public abstract class BaseBossAttack : MonoBehaviour, TimeObserver
     protected bool AcquiredTarget(Vector3 targetPos, float accuracy)
     {
         // Don't acquire a target in timestop or stunned
-        if (TimeManager.TimeStopped || state == AttackState.Stunned) return false;
+        if (Timescale <= TimeManager.TimeStopThreshold || state == AttackState.Stunned) return false;
 
         // Calculate DOT product for vision, check
         float dot = Vector3.Dot(shootPoint.forward, (targetPos - shootPoint.position).normalized);

@@ -169,7 +169,6 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     public void BeginEncounter()
     {
-
         if (chosenEncounter == null || spawnPoints.Count <= 0)
         {
             Debug.Log("No encounter or not enough spawnpoints! Unlocking room!");
@@ -259,7 +258,7 @@ public class SpawnManager : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log("Total loops : " + backup);
+        //Debug.Log("Total loops : " + backup);
 
         // End spawning, begin backup check routine
         spawning = false;

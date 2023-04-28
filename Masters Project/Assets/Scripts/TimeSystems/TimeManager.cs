@@ -106,6 +106,11 @@ public class TimeManager : MonoBehaviour
         get { return worldTimeScale <= stoppedThreshold;  }
     }
 
+    public static float TimeStopThreshold
+    {
+        get { return stoppedThreshold; }
+    }
+
     /// <summary>
     /// Time float to track transition lerp
     /// </summary>

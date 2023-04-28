@@ -84,7 +84,6 @@ public class BossTarget : Target
 
     #region Phase management
 
-
     [TabGroup("Standardized Events")]
     [TableList(CellPadding = 3)]
     [SerializeField] private BossEvent standardPhaseChangeEvents;

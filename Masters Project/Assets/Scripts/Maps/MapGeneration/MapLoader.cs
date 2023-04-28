@@ -169,7 +169,7 @@ public class MapLoader : MonoBehaviour
         // Load in the final room, if there is one. Add hallway buffer
         if(finalRoom != null)
         {
-            //mapOrder.Add(SelectHallway());
+            mapOrder.Add(SelectHallway());
             mapOrder.Add(finalRoom);
         }
 
@@ -482,7 +482,7 @@ public class MapLoader : MonoBehaviour
 
     public void EndRoomEncounter()
     {
-        
+        Debug.Log("End room encounter called");
 
         //Debug.Log($"Phew! You won it all good jorb {roomIndex+1}!");
         loadedMap[roomIndex+1].GetComponent<DoorManager>().UnlockExit();

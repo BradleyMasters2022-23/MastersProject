@@ -31,9 +31,11 @@ public class FinalRoomLoader : SegmentLoader
 
     public override void StartSegment()
     {
+        Debug.Log("Starting segment");
         //MapLoader.instance.EndRoomEncounter();
         foreach(var obj in stuffToDisable)
         {
+            Debug.Log($"Disabling {obj.name}");
             obj.SetActive(false);
         }
 

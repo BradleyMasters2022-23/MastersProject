@@ -37,9 +37,11 @@ public class ChaseBeamAttack : BaseBossAttack
             state = AttackState.Attacking;
             TimeManager.instance.Subscribe(this);
 
+            //Debug.Log($"Resetting tracker to : {attackDuration}");
             tracker.ResetTimer(attackDuration);
             while (!tracker.TimerDone())
             {
+                Debug.Log("Tracker progress at " + tracker.TimerProgress());
                 aimPos = target.Center.position;
                 RotateToTarget(aimPos, attackRotationSpeed);
                 yield return frame;
