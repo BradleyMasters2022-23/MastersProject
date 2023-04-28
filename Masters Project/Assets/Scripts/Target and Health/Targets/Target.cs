@@ -69,8 +69,6 @@ public abstract class Target : TimeAffectedEntity, IDamagable
     [Tooltip("If enabled, this target can not take damage until the shield is destroyed")]
     [SerializeField] protected ShieldTarget invincibilityShield;
 
-    private ScaledTimer shieldDestroyIFrames;
-
     // The manger controlling buffs and debuffs for this target
     //private EffectManager _effectManager;
 
@@ -106,19 +104,12 @@ public abstract class Target : TimeAffectedEntity, IDamagable
         {
             KillTarget();
         }
-
-        if (invincibilityShield != null)
-            shieldDestroyIFrames = new ScaledTimer(0.1f);
     }
 
     private void Update()
     {
         // scale health manager and shield manager if it exists
         _healthManager.timeScale = Timescale;
-        //if(invincibilityShield != null)
-        //{
-        //    invincibilityShield._healthManager.timeScale = Timescale;
-        //}
     }
 
 
@@ -183,6 +174,7 @@ public abstract class Target : TimeAffectedEntity, IDamagable
         if (invincibilityShield != null && invincibilityShield.isActiveAndEnabled)
             return false;
 
+
         return !_killed && gameObject.activeInHierarchy;
     }
 
@@ -237,7 +229,10 @@ public abstract class Target : TimeAffectedEntity, IDamagable
         _healthManager.ResetHealth();
 
         if (invincibilityShield != null)
+        {
             invincibilityShield.ResetTarget();
+        }
+            
     }
 
     /// <summary>
