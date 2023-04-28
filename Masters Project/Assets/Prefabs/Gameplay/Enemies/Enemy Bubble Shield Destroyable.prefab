@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 8754009071203413504}
   - component: {fileID: 9020080356677620958}
   - component: {fileID: 286477761370217905}
+  - component: {fileID: 5258893662579111142}
   m_Layer: 19
   m_Name: Enemy Bubble Shield Destroyable
   m_TagString: Shield
@@ -196,14 +197,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b90a392112cbb2742aeda69bd2653874, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
   _center: {fileID: 9020080356677620955}
   _team: 2
   _targetThreat: 0
   _unkillable: 0
   immuneToKnockback: 1
+  knockbackModifier: 1
   maxKnockback: 0
   invincibilityShield: {fileID: 0}
-  shieldDeathImmunity: 0
   _deathVFX: {fileID: 7428150280865193490, guid: 40eba4e47bd3d6e498c0fc508227016b, type: 3}
   damagedSound: {fileID: 0}
   deathSound: {fileID: 0}
@@ -231,6 +238,7 @@ MonoBehaviour:
   _gateHealthbarHealing: 0
   _gatedHealthInvulnerability: 0
   _godMode: 0
+  timeScale: 0
 --- !u!114 &286477761370217905
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -245,3 +253,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _targetShield: {fileID: 9020080356677620958}
   _redTintRenderer: {fileID: 780896976955779119}
+--- !u!114 &5258893662579111142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9020080356677620954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a33c2fc2c1e14b14e906e359abbe50f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  damageMultiplier: 0

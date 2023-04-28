@@ -29,7 +29,7 @@ public class DroppableQuantity
 }
 
 [RequireComponent(typeof(HealthManager))]
-public abstract class Target : TimeAffectedEntity
+public abstract class Target : TimeAffectedEntity, IDamagable
 {
     [Header("Core Target Info")]
 
@@ -333,6 +333,11 @@ public abstract class Target : TimeAffectedEntity
     public bool Killable()
     {
         return !_unkillable;
+    }
+
+    Target IDamagable.Target()
+    {
+        return this;
     }
 
     #endregion

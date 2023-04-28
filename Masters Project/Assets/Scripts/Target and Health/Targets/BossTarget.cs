@@ -49,6 +49,8 @@ public class BossTarget : Target
     /// <summary>
     /// When damaged, how long until its shield reactivates
     /// </summary>
+
+    [PropertySpace(SpaceAfter = 15)]
     [SerializeField] private float damagedReactivateShieldDelay;
 
     /// <summary>
@@ -82,15 +84,17 @@ public class BossTarget : Target
 
     #region Phase management
 
+
+    [TabGroup("Standardized Events")]
     [TableList(CellPadding = 3)]
-    [PropertySpace(SpaceAfter = 10, SpaceBefore = 5)]
     [SerializeField] private BossEvent standardPhaseChangeEvents;
 
+    [TabGroup("Phase Change Events")]
     [SerializeField] private BossEvent[] phaseChangeEvents;
     private int phaseIndex = -1;
 
+    [TabGroup("Death Events")]
     [TableList(CellPadding = 3)]
-    [PropertySpace(SpaceAfter = 10, SpaceBefore = 5)]
     [SerializeField] private BossEvent onDeathEvents;
 
     /// <summary>

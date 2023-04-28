@@ -90,11 +90,11 @@ public abstract class Attack : TimeAffectedEntity
     /// Keep track of hit targets
     /// Track transform roots to ensure it doesnt hit multiple colliders
     /// </summary>
-    protected List<Transform> hitTargets;
+    protected List<Target> hitTargets;
 
     protected virtual void Awake()
     {
-        hitTargets = new List<Transform>();
+        hitTargets = new List<Target>();
     }
 
     /// <summary>
@@ -115,24 +115,13 @@ public abstract class Attack : TimeAffectedEntity
     /// <returns></returns>
     protected virtual bool DealDamage(Transform _targetObj, Vector3 damagePoint)
     {
-        Target target = _targetObj.GetComponent<Target>();
-        Transform parentPointer = _targetObj.parent;
-        while (target == null)
-        {
-            if (parentPointer == null)
-            {
-                return false;
-            }
-            else
-            {
-                target = parentPointer.GetComponent<Target>();
-                parentPointer = parentPointer.parent;
-            }
-        }
+        IDamagable target = _targetObj.GetComponent<IDamagable>();
+        Target targetComp = target?.Target();
 
         // Check if the target can be damaged
-        if (target != null && !hitTargets.Contains(target.transform) && !target.Killed())
+        if (targetComp != null && !hitTargets.Contains(targetComp))
         {
+
             float dmg;
             float horKnockback;
             float verKnockback;
@@ -156,10 +145,10 @@ public abstract class Attack : TimeAffectedEntity
 
             if (knockback && horKnockback + verKnockback > 0)
             {
-                target.Knockback(horKnockback, verKnockback, damagePoint);
+                targetComp.Knockback(horKnockback, verKnockback, damagePoint);
             }
 
-            hitTargets.Add(target.transform.root);
+            hitTargets.Add(targetComp);
 
             return true;
         }

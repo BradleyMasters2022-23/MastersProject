@@ -74,7 +74,7 @@ public class Door : MonoBehaviour
     [SerializeField] private Material disabledColor;
 
     [SerializeField] private GameObject waypoint;
-    [SerializeField, ReadOnly] Door pairedDoor;
+    [SerializeField] Door pairedDoor;
 
     #endregion
 
@@ -309,6 +309,12 @@ public class Door : MonoBehaviour
                     }
             }
         }
+    }
+
+    public void EventLockDoor()
+    {
+        overrideOpen = false;
+        LockDoor();
     }
 
     [SerializeField] private LayerMask groundLayers;

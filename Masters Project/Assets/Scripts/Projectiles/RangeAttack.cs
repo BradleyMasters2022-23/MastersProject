@@ -113,7 +113,7 @@ public abstract class RangeAttack : Attack
         if (hitTargets != null)
             hitTargets.Clear();
         else
-            hitTargets = new List<Transform>();
+            hitTargets = new List<Target>();
 
         onActivateSFX?.PlayClip(transform);
 

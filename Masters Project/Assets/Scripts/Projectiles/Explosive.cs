@@ -191,11 +191,13 @@ public class Explosive : MonoBehaviour
             }
         }
 
+        IDamagable damagable = other.GetComponent<IDamagable>();
+        target = damagable?.Target();
         // continually escelate up for a targetable reference
-        while (!parent.TryGetComponent<Target>(out target) && parent.parent != null)
-        {
-            parent = parent.parent;
-        }
+        //while (!parent.TryGetComponent<Target>(out target) && parent.parent != null)
+        //{
+        //    parent = parent.parent;
+        //}
 
         // if target was already damaged or not marked for team, then
         if (target != null && !damagedTargets.Contains(target))
@@ -211,7 +213,6 @@ public class Explosive : MonoBehaviour
                     damagedTargets.Add(parentTarget);
             }
                 
-
             if (target.CompareTag("Player"))
                 target.RegisterEffect(playerDamage);
             else

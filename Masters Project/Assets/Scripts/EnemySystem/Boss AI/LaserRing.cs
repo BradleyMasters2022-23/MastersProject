@@ -18,7 +18,7 @@ public struct LaserRingSettings
     public float rotationSpeed;
 }
 
-public class LaserRing : MonoBehaviour
+public class LaserRing : TimeAffectedEntity
 {
     [SerializeField] private LaserRingSettings[] settings;
 
@@ -73,6 +73,6 @@ public class LaserRing : MonoBehaviour
     void Update()
     {
         if(active)
-            transform.rotation *= Quaternion.Euler(0, rotationSpeed * TimeManager.WorldTimeScale, 0);
+            transform.rotation *= Quaternion.Euler(0, rotationSpeed * Timescale, 0);
     }
 }
