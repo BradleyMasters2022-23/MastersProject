@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class LineRendererIndicator : IIndicator
 {
-    [SerializeField] private LineRenderer[] lines;
-    [SerializeField] private float maxRange;
-    [SerializeField] private LayerMask hitMask;
+    [SerializeField] protected LineRenderer[] lines;
+    [SerializeField] protected float maxRange;
+    [SerializeField] protected LayerMask hitMask;
 
-    bool active = false;
+    protected bool active = false;
 
     public override void Activate()
     {
@@ -17,10 +17,15 @@ public class LineRendererIndicator : IIndicator
         {
             l.enabled = true;
         }
+
+        if(lines.Length > 0)
+            StartCoroutine(Laser());
     }
 
     public override void Deactivate()
     {
+        StopAllCoroutines();
+
         active= false;
         foreach (var l in lines)
         {
@@ -29,22 +34,25 @@ public class LineRendererIndicator : IIndicator
     }
 
 
-    // Update is called once per frame
-    void Update()
+    // Continuously update laser renderers
+    protected IEnumerator Laser()
     {
-        if (!active || lines.Length <= 0) return;
-
-        // Get max range
-        float dist = maxRange;
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, dist, hitMask))
-            dist = hit.distance;
-
-        // Update positions
-        foreach (var l in lines)
+        while(active)
         {
-            l.SetPosition(0, l.transform.position);
-            l.SetPosition(1, l.transform.position + transform.forward * dist);
+            // Get max range
+            float dist = maxRange;
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, transform.forward, out hit, dist, hitMask))
+                dist = hit.distance;
+
+            // Update positions
+            foreach (var l in lines)
+            {
+                l.SetPosition(0, l.transform.position);
+                l.SetPosition(1, l.transform.position + transform.forward * dist);
+            }
+
+            yield return null;
         }
     }
 }
