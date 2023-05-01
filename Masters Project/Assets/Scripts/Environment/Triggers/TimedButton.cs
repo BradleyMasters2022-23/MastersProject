@@ -18,8 +18,8 @@ public class TimedButton : MonoBehaviour, ITriggerable
 
     [Header("Indicators")]
 
-    [SerializeField] private IIndicator[] activatedIndicators;
-    [SerializeField] private IIndicator[] deactivatedIndicators;
+    [SerializeField] private IIndicator[] generatorDestroyedIndicator;
+    [SerializeField] private IIndicator[] generatorFixedIndicator;
 
     private Target host;
 
@@ -38,7 +38,7 @@ public class TimedButton : MonoBehaviour, ITriggerable
         
         activated = false;
         //Indicators.SetIndicators(activatedIndicators, false);
-        //Indicators.SetIndicators(deactivatedIndicators, true);
+        //Indicators.SetIndicators(generatorFixedIndicator, true);
 
         host = GetComponent<Target>();
     }
@@ -48,7 +48,7 @@ public class TimedButton : MonoBehaviour, ITriggerable
         if(targetTrigger!= null)
         {
             targetTrigger.Register(this);
-            Indicators.SetIndicators(deactivatedIndicators, true);
+            Indicators.SetIndicators(generatorFixedIndicator, true);
         }
     }
     private void OnDisable()
@@ -96,18 +96,18 @@ public class TimedButton : MonoBehaviour, ITriggerable
     /// </summary>
     private void ActivatedEffects()
     {
-        Indicators.SetIndicators(deactivatedIndicators, false);
+        Indicators.SetIndicators(generatorFixedIndicator, false);
 
-        Indicators.SetIndicators(activatedIndicators, true);
+        Indicators.SetIndicators(generatorDestroyedIndicator, true);
     }
     /// <summary>
     /// Disable any active indicators, enable any deactivated indicators
     /// </summary>
     private void DeactivatedEffects()
     {
-        Indicators.SetIndicators(activatedIndicators, false);
+        Indicators.SetIndicators(generatorDestroyedIndicator, false);
 
-        Indicators.SetIndicators(deactivatedIndicators, true);
+        Indicators.SetIndicators(generatorFixedIndicator, true);
     }
 
     /// <summary>
