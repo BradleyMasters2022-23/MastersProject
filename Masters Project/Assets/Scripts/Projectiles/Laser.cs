@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
+using Sirenix.OdinInspector;
 
 public class Laser : RangeAttack, TimeObserver
 {
@@ -36,6 +37,11 @@ public class Laser : RangeAttack, TimeObserver
     [SerializeField] private GameObject endVFX;
     [Tooltip("Reference to the line renderer this laser uses")]
     [SerializeField] private LineRenderer beamLineRenderer;
+    [Tooltip("The VFX of the beam itself")]
+    [SerializeField] private VisualEffect laserVFX;
+    [HideIf("@this.laserVFX == null")]
+    [Tooltip("The keyword for the variable controlling the laser lifetime")]
+    [SerializeField] private string durationKeyword;
 
     [SerializeField] private float hitVFXCooldown;
 
@@ -60,12 +66,19 @@ public class Laser : RangeAttack, TimeObserver
         if (solidInTimestop && col != null)
             TimeManager.instance.Subscribe(this);
 
+        // if VFX exists, reinit with new duration
+        if (laserVFX != null && laserVFX.HasFloat(durationKeyword))
+        {
+            laserVFX.SetFloat(durationKeyword, range);
+            laserVFX.Reinit();
+        }
+
         if (originVFX != null)
         {
             originVFX.SetActive(true);
             originVFX.transform.localPosition = Vector3.forward * originVFXOffset;
         }
-
+        Debug.Log($"Setting duration to : {range}");
         durationTracker = new ScaledTimer(range, Affected);
         hitVFXCooldownTracker = new ScaledTimer(hitVFXCooldown);
     }
