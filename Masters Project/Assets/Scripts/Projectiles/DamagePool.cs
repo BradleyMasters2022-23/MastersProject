@@ -13,8 +13,10 @@ using UnityEngine;
 public class DamagePool : MonoBehaviour
 {
     [SerializeField] protected float lifeDuration;
+    [SerializeField] protected float vanishTime;
     [SerializeField] protected bool affectedByTimestop;
     ScaledTimer lifeTracker;
+    bool vanishing = false;
 
     [SerializeField] protected TeamDamage initialDamageProfiles;
     [SerializeField] protected TeamDamage tickDamageProfiles;
@@ -35,7 +37,28 @@ public class DamagePool : MonoBehaviour
 
     private void Update()
     {
-        if(lifeTracker.TimerDone())
-            Destroy(gameObject);
+        if(!vanishing && lifeTracker.TimerDone())
+        {
+            vanishing = true;
+            StartCoroutine(Vanish());
+        }
+    }
+
+    private IEnumerator Vanish()
+    {
+        // get orignal position and position below current target
+        Vector3 originalPos = transform.position;
+        Vector3 tarPos = transform.position + transform.forward * -2;
+
+        // lerp to target position over vanish time
+        lifeTracker.ResetTimer(vanishTime);
+        while (!lifeTracker.TimerDone())
+        {
+            transform.position = Vector3.Lerp(originalPos, tarPos, lifeTracker.TimerProgress());
+            yield return null;
+        }
+
+        // destroy when over
+        Destroy(gameObject);
     }
 }
