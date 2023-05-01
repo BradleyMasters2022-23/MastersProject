@@ -106,27 +106,34 @@ public class AlertContainer : MonoBehaviour
                 return false;
         }
 
-        // Check if current in view of the camera
-        if(hideWhenInView)
+        // Both of these need a raycast check, so do one for both
+        if (hideWhenInView || hideNoLineOfSight)
         {
-            if(cam.InCamVision(transform.position))
+            bool directLoS = false;
+            RaycastHit h;
+            if (Physics.Raycast(transform.position, (player.position - transform.position), out h, Mathf.Infinity, lineOfSightLayers))
+            {
+                // If it hit the player, then theres a direct line of sight
+                if (h.collider.CompareTag("Player"))
+                    directLoS = true;
+            }
+
+            // Check if theres any line of sight from any direction
+            if (hideNoLineOfSight && !directLoS)
             {
                 return false;
             }
-        }
 
-        // Check if theres any line of sight from any direction
-        if(hideNoLineOfSight)
-        {
-            RaycastHit h;
-            if(Physics.Raycast(transform.position, (player.position - transform.position), out h, Mathf.Infinity, lineOfSightLayers))
-            { 
-                // If it didn't hit the player, then sometimes is blocking line of sight
-                if(!h.collider.CompareTag("Player"))
+            // Check if current in view of the camera
+            if (hideWhenInView)
+            {
+                if (cam.InCamVision(transform.position) && directLoS)
+                {
                     return false;
+                }
             }
         }
-         
+
         // If all conditions passed, return true
         return true;
     }

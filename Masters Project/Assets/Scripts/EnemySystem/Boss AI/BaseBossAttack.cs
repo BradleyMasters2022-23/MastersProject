@@ -92,11 +92,6 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
         SetRestPosition();
     }
 
-    private void OnEnable()
-    {
-        SetRestPosition();
-    }
-
     protected virtual void UpdateTimers()
     {
         if(Affected)

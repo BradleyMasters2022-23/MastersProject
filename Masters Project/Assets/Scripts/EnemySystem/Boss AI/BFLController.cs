@@ -19,6 +19,7 @@ public class BFLController : MonoBehaviour
     private void Start()
     {
         cooldown = new ScaledTimer(0);
+        SetCooldown();
     }
 
     private void Update()

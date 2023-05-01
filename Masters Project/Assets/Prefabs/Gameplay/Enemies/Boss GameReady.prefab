@@ -2044,6 +2044,10 @@ PrefabInstance:
       propertyPath: phase2Cannon
       value: 
       objectReference: {fileID: 2300589712862933623}
+    - target: {fileID: 6713327429234463587, guid: cc39b466a52704a4b9f608e322d989d5, type: 3}
+      propertyPath: phaseChangeCooldown
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8946657770966084955, guid: cc39b466a52704a4b9f608e322d989d5, type: 3}
       propertyPath: m_Name
       value: Boss Entity
@@ -2137,7 +2141,8 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 298956428467697687, guid: bb958456cf3a0734eb3871626fbb879a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bb958456cf3a0734eb3871626fbb879a, type: 3}
 --- !u!1 &1859750070211264485 stripped
 GameObject:
@@ -2222,14 +2227,6 @@ PrefabInstance:
     - target: {fileID: 4820448054149663655, guid: bb958456cf3a0734eb3871626fbb879a, type: 3}
       propertyPath: m_Name
       value: BFL Controller 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4956164134094734901, guid: bb958456cf3a0734eb3871626fbb879a, type: 3}
-      propertyPath: stageCooldowns.Array.data[1].y
-      value: 3.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 4956164134094734901, guid: bb958456cf3a0734eb3871626fbb879a, type: 3}
-      propertyPath: stageCooldowns.Array.data[2].y
-      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bb958456cf3a0734eb3871626fbb879a, type: 3}
