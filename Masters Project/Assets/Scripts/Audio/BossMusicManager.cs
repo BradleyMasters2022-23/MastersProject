@@ -50,7 +50,6 @@ public class BossMusicManager : MonoBehaviour
             case 2:
                 {
                     // start phase 2 music using phase 1's time
-                    Debug.Log($"Starting at timestamp {phase1Music.time}");
                     phase2Music.Play();
                     phase2Music.time = phase1Music.time;
                     StartCoroutine(Transition(phaseInSpeed, phase2Music));
@@ -59,7 +58,6 @@ public class BossMusicManager : MonoBehaviour
             case 3:
                 {
                     // start phase 3 music using phase 1's time
-                    Debug.Log($"Starting at timestamp {phase1Music.time}");
                     phase3Music.Play();
                     phase3Music.time = phase1Music.time;
                     StartCoroutine(Transition(phaseInSpeed, phase3Music));

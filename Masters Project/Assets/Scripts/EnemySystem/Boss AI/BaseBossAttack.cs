@@ -53,6 +53,8 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
 
     [Header("Recovery State")]
 
+    [SerializeField] protected Transform restTarget;
+
     [SerializeField] protected float recoveryDuration;
 
     [SerializeField] protected float recoveryRotationSpeed;
@@ -98,14 +100,6 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
             tracker?.SetModifier(Timescale);
             stunnedTracker?.SetModifier(Timescale);
         }
-    }
-
-    /// <summary>
-    /// Set the rest position to current position
-    /// </summary>
-    public void SetRestPosition()
-    {
-        restingPosition = transform.forward * 50;
     }
 
     /// <summary>
@@ -245,9 +239,9 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
         }
 
         // Return to resting position
-        while (!AcquiredTarget(restingPosition, 1f))
+        while (!AcquiredTarget(restingPosition, 0.99f))
         {
-            RotateToTarget(restingPosition, recoveryRotationSpeed);
+            RotateToTarget(restTarget.position, recoveryRotationSpeed);
             yield return null;
         }
     }
