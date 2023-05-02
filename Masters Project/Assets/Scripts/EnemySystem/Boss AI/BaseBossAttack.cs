@@ -147,6 +147,15 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
     /// </summary>
     public virtual void CancelAttack()
     {
+        // Stop the current attack routine
+        if (currentRoutine != null)
+        {
+            DisableIndicators();
+            StopCoroutine(currentRoutine);
+            currentRoutine = null;
+        }
+        StopAllCoroutines();
+
         StartCoroutine(Cancel());
     }
 
@@ -155,14 +164,6 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
     /// </summary>
     protected virtual IEnumerator Cancel()
     {
-        // Stop the current attack routine
-        if (currentRoutine != null)
-        {
-            DisableIndicators();
-            StopCoroutine(currentRoutine);
-            currentRoutine = null;
-        }
-
         // Destroy all fired projectiles
         foreach (var attack in spawnedProjectiles.ToArray())
         {
@@ -226,11 +227,13 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
             SetTracker(delay);
             yield return new WaitUntil(tracker.TimerDone);
         }
-        ScaledTimer maxTime = new ScaledTimer(3f);
+
+        ScaledTimer maxTime = new ScaledTimer(1.5f);
+        Vector3 rot = transform.localRotation.eulerAngles;
         // Return to resting position
         while (!AcquiredTarget(restingPosition, 0.95f) && !maxTime.TimerDone())
         {
-            RotateToTarget(restTarget.position, recoveryRotationSpeed);
+            transform.localRotation = Quaternion.Euler(Vector3.Lerp(rot, Vector3.zero, maxTime.TimerProgress()));
             yield return null;
         }
     }
