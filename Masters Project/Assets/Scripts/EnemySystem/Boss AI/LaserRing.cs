@@ -31,6 +31,15 @@ public class LaserRing : TimeAffectedEntity
 
     private bool active = false;
 
+    [SerializeField] AudioClipSO powerUpSFX;
+    [SerializeField] AudioClipSO powerDownSFX;
+    private AudioSource source;
+
+    private void Awake()
+    {
+        source = GetComponent<AudioSource>();
+    }
+
     /// <summary>
     /// Activate the laser ring
     /// </summary>
@@ -38,6 +47,8 @@ public class LaserRing : TimeAffectedEntity
     public void Activate(int dataIndex)
     {
         if (dataIndex >= settings.Length) return;
+
+        powerUpSFX.PlayClip(source);
 
         firedLasers = new RangeAttack[settings[dataIndex].numberOfLasers];
         rotationSpeed= settings[dataIndex].rotationSpeed;
@@ -65,6 +76,8 @@ public class LaserRing : TimeAffectedEntity
 
         foreach (RangeAttack laser in firedLasers)
             laser.Inturrupt();
+
+        powerDownSFX.PlayClip(source);
 
         firedLasers = null;
     }

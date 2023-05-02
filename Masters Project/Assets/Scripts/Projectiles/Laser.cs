@@ -48,6 +48,11 @@ public class Laser : RangeAttack, TimeObserver
     [SerializeField] private Color startBeamColor;
     [SerializeField] private Color endBeamColor;
 
+    [Space(3)]
+    [Header("Audio")]
+    [SerializeField] private AudioSource externalSource;
+    [SerializeField] private AudioClipSO ambientLaserSound;
+
     private ScaledTimer hitVFXCooldownTracker;
 
     /// <summary>
@@ -78,7 +83,7 @@ public class Laser : RangeAttack, TimeObserver
             originVFX.SetActive(true);
             originVFX.transform.localPosition = Vector3.forward * originVFXOffset;
         }
-        
+        ambientLaserSound.PlayClip(externalSource);
         durationTracker = new ScaledTimer(range, Affected);
         hitVFXCooldownTracker = new ScaledTimer(hitVFXCooldown);
     }
@@ -99,6 +104,7 @@ public class Laser : RangeAttack, TimeObserver
 
         if (CheckLife())
         {
+            externalSource?.Stop();
             End();
             return;
         }

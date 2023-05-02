@@ -226,9 +226,9 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
             SetTracker(delay);
             yield return new WaitUntil(tracker.TimerDone);
         }
-
+        ScaledTimer maxTime = new ScaledTimer(3f);
         // Return to resting position
-        while (!AcquiredTarget(restingPosition, 0.99f))
+        while (!AcquiredTarget(restingPosition, 0.95f) && !maxTime.TimerDone())
         {
             RotateToTarget(restTarget.position, recoveryRotationSpeed);
             yield return null;
