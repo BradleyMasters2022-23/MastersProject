@@ -9,6 +9,7 @@ public class BossLaserAttack : TimeAffectedEntity
     [SerializeField] BFLController phase2Cannon;
 
     [SerializeField] float phaseChangeCooldown;
+    [SerializeField] float inturruptCooldown;
 
     private ScaledTimer tracker;
 
@@ -43,7 +44,7 @@ public class BossLaserAttack : TimeAffectedEntity
         phase2Cannon?.NewStage(newPhase);
 
 
-        tracker?.ResetTimer();
+        tracker?.ResetTimer(phaseChangeCooldown);
     }
 
     public void Inturrupt()
@@ -56,5 +57,7 @@ public class BossLaserAttack : TimeAffectedEntity
         {
             phase2Cannon?.Inturrupt();
         }
+
+        tracker?.ResetTimer(inturruptCooldown);
     }
 }

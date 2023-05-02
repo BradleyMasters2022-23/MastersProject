@@ -206,7 +206,7 @@ public class BossShoot : BossAttack
         RangeAttack temp = projectile.GetComponent<RangeAttack>();
 
         // Determine lead strength. not perfect but works for now
-        float travelTime = (target.position - transform.position).magnitude / (temp.Speed);
+        float travelTime = (target.position - transform.position).magnitude / (temp.Speed * timeScale);
         Vector3 targetVel = target.root.GetComponent<Rigidbody>().velocity;
 
         //targetVel.y = 0;

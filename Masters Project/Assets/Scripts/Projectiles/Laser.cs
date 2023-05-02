@@ -78,7 +78,7 @@ public class Laser : RangeAttack, TimeObserver
             originVFX.SetActive(true);
             originVFX.transform.localPosition = Vector3.forward * originVFXOffset;
         }
-        Debug.Log($"Setting duration to : {range}");
+        
         durationTracker = new ScaledTimer(range, Affected);
         hitVFXCooldownTracker = new ScaledTimer(hitVFXCooldown);
     }

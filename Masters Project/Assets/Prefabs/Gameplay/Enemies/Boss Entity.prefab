@@ -364,7 +364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VFXPrefab: {fileID: 8183131743095800119, guid: 5cc9edc6864c8bc47acf13efec812593, type: 3}
-  scale: 2
+  scale: 4
 --- !u!1 &2287082976657556326
 GameObject:
   m_ObjectHideFlags: 0
@@ -472,8 +472,8 @@ MonoBehaviour:
     numberOfLasers: 5
     rotationSpeed: 0.2
   - name: Phase 3
-    numberOfLasers: 12
-    rotationSpeed: -0.3
+    numberOfLasers: 9
+    rotationSpeed: -0.25
   laserPrefab: {fileID: 6348129516241413590, guid: 6ded706070da15642907bbf76a81a9ae, type: 3}
   laserDuration: 999
   laserOffset: 0
@@ -2612,6 +2612,7 @@ MonoBehaviour:
   phase1Cannon: {fileID: 0}
   phase2Cannon: {fileID: 0}
   phaseChangeCooldown: 3
+  inturruptCooldown: 0
 --- !u!114 &6283914014403922551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2643,9 +2644,9 @@ MonoBehaviour:
   projectile: {fileID: 4730330725648419445, guid: dcb911f8d81f78c45af36fc091ee6636, type: 3}
   shootPoints:
   - {fileID: 6258999557895173705}
-  numOfShots: 30
-  delayBetweenShots: 0.1
-  leadStrength: {x: 0, y: 1.1}
+  numOfShots: 50
+  delayBetweenShots: 0.075
+  leadStrength: {x: 0.8, y: 1.2}
   firstShotAccuracy: {x: 0, y: 0}
   normalAccuracyRange: {x: 0, y: 2}
   rotateDuringAttack: 1

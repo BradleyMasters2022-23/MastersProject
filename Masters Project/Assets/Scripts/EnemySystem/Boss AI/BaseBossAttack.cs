@@ -266,6 +266,7 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
     public void OnStop()
     {
         originalPosVector = target.Center.position - transform.position;
+        BonusStop();
     }
 
     public void OnResume()
@@ -279,8 +280,18 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
             {
                 state = AttackState.Stunned;
                 stunnedTracker.ResetTimer();
+                BonusResume();
             }
         }
+    }
+
+    protected virtual void BonusStop()
+    {
+        return;
+    }
+    protected virtual void BonusResume()
+    {
+        return;
     }
 
     protected abstract void DisableIndicators();

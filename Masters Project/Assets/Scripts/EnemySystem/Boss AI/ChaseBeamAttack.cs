@@ -7,11 +7,22 @@ public class ChaseBeamAttack : BaseBossAttack
     [Header("Chase Beam Attack")]
 
     [SerializeField] private Transform initialAimPosition;
+
+    [Space(5)]
+
     [SerializeField] private float preFireDuration;
     [SerializeField] private float initialFireDuration;
-    
-
     [SerializeField] private float windupRotationSpeed;
+
+    [Space(5)]
+
+    [SerializeField] private float startingChaseSpeed;
+    [SerializeField] private float maxChaseSpeed;
+    [SerializeField] private float accelerationTime;
+    private ScaledTimer accelerationTracker;
+
+    [Space(5)]
+
     [SerializeField] private IIndicator[] chargingIndicators;
     [SerializeField] private IIndicator[] firingIndicators;
     [SerializeField] private IIndicator[] finishIndicators;
@@ -38,7 +49,6 @@ public class ChaseBeamAttack : BaseBossAttack
             yield return new WaitUntil(tracker.TimerDone);
 
             Indicators.SetIndicators(chargingIndicators, false);
-
             Indicators.SetIndicators(firingIndicators, true);
 
             // Fire laser and initialize
@@ -54,12 +64,17 @@ public class ChaseBeamAttack : BaseBossAttack
             state = AttackState.Attacking;
             TimeManager.instance.Subscribe(this);
 
+            accelerationTracker = new ScaledTimer(accelerationTime);
+
             //Debug.Log($"Resetting tracker to : {attackDuration}");
             tracker.ResetTimer(attackDuration);
             while (!tracker.TimerDone())
             {
+                // Adjust rotation based on acceleration rate
+                float rot = Mathf.Lerp(startingChaseSpeed, maxChaseSpeed, accelerationTracker.TimerProgress());
                 aimPos = target.Center.position;
-                RotateToTarget(aimPos, attackRotationSpeed);
+
+                RotateToTarget(aimPos, rot);
                 yield return frame;
                 yield return null;
             }
@@ -92,5 +107,10 @@ public class ChaseBeamAttack : BaseBossAttack
         Indicators.SetIndicators(chargingIndicators, false);
         Indicators.SetIndicators(firingIndicators, false);
         Indicators.SetIndicators(finishIndicators, false);
+    }
+
+    protected override void BonusResume()
+    {
+        accelerationTracker?.ResetTimer();
     }
 }

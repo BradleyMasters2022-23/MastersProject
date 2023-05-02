@@ -58,14 +58,14 @@ MonoBehaviour:
   secondaryTimescale: 1
   dealDamage: 1
   damage: 8
-  playerDamage: 3
+  playerDamage: 1.35
   spawnProjectileOnEnd: 1
   onEndPrefab: {fileID: 8869874275031778412, guid: 8c1d73e2ca9f0e640946813c21e0dbf4, type: 3}
-  knockback: 1
+  knockback: 0
   horizontalKnockback: 0
   verticalKnockback: 0
   playerHorizontalKnockback: 50
-  playerVerticalKnockback: 5
+  playerVerticalKnockback: 0
   shotByPlayer: 0
   hitLayers:
     serializedVersion: 2
@@ -80,8 +80,8 @@ MonoBehaviour:
   hitSFX: {fileID: 0}
   onHitVFX: {fileID: 293939513845853792, guid: e5a26414f710b8f4b870ba95ee78b7d5, type: 3}
   attachToOwner: 1
-  laserRadius: 2.5
-  solidInTimestop: 0
+  laserRadius: 1
+  solidInTimestop: 1
   col: {fileID: 3245179308723112759}
   originVFX: {fileID: 3210402786296890953}
   originVFXOffset: 0.75
@@ -496,11 +496,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3095404002846626502, guid: f4a32e5e884a0ba48957120b49f6bd71, type: 3}
       propertyPath: m_PropertySheet.m_AnimationCurve.m_Array.Array.data[0].m_Value.m_Curve.Array.data[1].value
-      value: 1.9327223
+      value: 0.9957043
       objectReference: {fileID: 0}
     - target: {fileID: 3095404002846626502, guid: f4a32e5e884a0ba48957120b49f6bd71, type: 3}
       propertyPath: m_PropertySheet.m_AnimationCurve.m_Array.Array.data[0].m_Value.m_Curve.Array.data[2].value
-      value: 1.9690375
+      value: 1.0320195
       objectReference: {fileID: 0}
     - target: {fileID: 3095404002846626502, guid: f4a32e5e884a0ba48957120b49f6bd71, type: 3}
       propertyPath: m_PropertySheet.m_AnimationCurve.m_Array.Array.data[0].m_Value.m_Curve.Array.data[3].value
@@ -532,7 +532,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3095404002846626502, guid: f4a32e5e884a0ba48957120b49f6bd71, type: 3}
       propertyPath: m_PropertySheet.m_AnimationCurve.m_Array.Array.data[0].m_Value.m_Curve.Array.data[1].inSlope
-      value: 63.3889
+      value: 32.21693
       objectReference: {fileID: 0}
     - target: {fileID: 3095404002846626502, guid: f4a32e5e884a0ba48957120b49f6bd71, type: 3}
       propertyPath: m_PropertySheet.m_AnimationCurve.m_Array.Array.data[0].m_Value.m_Curve.Array.data[2].inSlope
@@ -540,7 +540,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3095404002846626502, guid: f4a32e5e884a0ba48957120b49f6bd71, type: 3}
       propertyPath: m_PropertySheet.m_AnimationCurve.m_Array.Array.data[0].m_Value.m_Curve.Array.data[3].inSlope
-      value: -8.00936
+      value: -4.234921
       objectReference: {fileID: 0}
     - target: {fileID: 3095404002846626502, guid: f4a32e5e884a0ba48957120b49f6bd71, type: 3}
       propertyPath: m_PropertySheet.m_AnimationCurve.m_Array.Array.data[1].m_Value.m_Curve.Array.data[0].inSlope
@@ -564,7 +564,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3095404002846626502, guid: f4a32e5e884a0ba48957120b49f6bd71, type: 3}
       propertyPath: m_PropertySheet.m_AnimationCurve.m_Array.Array.data[0].m_Value.m_Curve.Array.data[0].outSlope
-      value: 63.3889
+      value: 32.21693
       objectReference: {fileID: 0}
     - target: {fileID: 3095404002846626502, guid: f4a32e5e884a0ba48957120b49f6bd71, type: 3}
       propertyPath: m_PropertySheet.m_AnimationCurve.m_Array.Array.data[0].m_Value.m_Curve.Array.data[1].inWeight
@@ -580,7 +580,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3095404002846626502, guid: f4a32e5e884a0ba48957120b49f6bd71, type: 3}
       propertyPath: m_PropertySheet.m_AnimationCurve.m_Array.Array.data[0].m_Value.m_Curve.Array.data[2].outSlope
-      value: -8.00936
+      value: -4.234921
       objectReference: {fileID: 0}
     - target: {fileID: 3095404002846626502, guid: f4a32e5e884a0ba48957120b49f6bd71, type: 3}
       propertyPath: m_PropertySheet.m_AnimationCurve.m_Array.Array.data[0].m_Value.m_Curve.Array.data[3].inWeight
@@ -588,7 +588,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3095404002846626502, guid: f4a32e5e884a0ba48957120b49f6bd71, type: 3}
       propertyPath: m_PropertySheet.m_AnimationCurve.m_Array.Array.data[0].m_Value.m_Curve.Array.data[3].outSlope
-      value: -8.00936
+      value: -4.234921
       objectReference: {fileID: 0}
     - target: {fileID: 3095404002846626502, guid: f4a32e5e884a0ba48957120b49f6bd71, type: 3}
       propertyPath: m_PropertySheet.m_AnimationCurve.m_Array.Array.data[1].m_Value.m_Curve.Array.data[0].outSlope
