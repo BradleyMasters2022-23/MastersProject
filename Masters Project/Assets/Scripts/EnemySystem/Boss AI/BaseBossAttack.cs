@@ -88,8 +88,6 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
 
         tracker = new ScaledTimer(0, Affected);
         stunnedTracker = new ScaledTimer(lossTargetStunDuration, Affected);
-
-        SetRestPosition();
     }
 
     protected virtual void UpdateTimers()
@@ -108,7 +106,6 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
     public void SetRestPosition()
     {
         restingPosition = transform.forward * 50;
-        Debug.DrawLine(transform.position, restingPosition, Color.red, 10f);
     }
 
     /// <summary>

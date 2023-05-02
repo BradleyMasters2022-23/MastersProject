@@ -22,6 +22,14 @@ public class BFLController : MonoBehaviour
         SetCooldown();
     }
 
+    public void SetRotations()
+    {
+        foreach(var atk in attacks.weightedList)
+        {
+            atk.option.SetRestPosition();
+        }
+    }
+
     private void Update()
     {
         if(active && currentAttack != null)
