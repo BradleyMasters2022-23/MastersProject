@@ -6,18 +6,21 @@ using Sirenix.OdinInspector;
 public class BFLController : MonoBehaviour
 {
     [SerializeField] private GenericWeightedList<BaseBossAttack> attacks;
-
     [SerializeField] private List<Vector2> stageCooldowns;
-
     [SerializeField, ReadOnly] private int currentStage;
-
     [SerializeField] private bool onCooldown = false;
     [SerializeField] private bool active = false;
     private ScaledTimer cooldown;
     private BaseBossAttack currentAttack;
 
+    [SerializeField] private AudioClipSO powerDownIndicators;
+    [SerializeField] private AudioClipSO powerUpIndicators;
+
+    [SerializeField] private AudioSource source;
+
     private void Start()
     {
+        source = GetComponent<AudioSource>();
         cooldown = new ScaledTimer(0);
         SetCooldown();
     }
@@ -42,6 +45,7 @@ public class BFLController : MonoBehaviour
     public void NewStage(int stageNum)
     {
         currentStage = stageNum;
+        powerUpIndicators.PlayClip(source);
     }
 
     public void ChooseAttack()
@@ -57,6 +61,7 @@ public class BFLController : MonoBehaviour
 
     public void Inturrupt()
     {
+        powerDownIndicators.PlayClip(source);
         currentAttack?.CancelAttack();
         currentAttack = null;
         active= false;

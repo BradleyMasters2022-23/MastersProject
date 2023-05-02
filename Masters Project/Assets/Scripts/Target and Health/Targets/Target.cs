@@ -98,6 +98,8 @@ public abstract class Target : TimeAffectedEntity, IDamagable
     {
         _healthManager = GetComponent<HealthManager>();
         _rb = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
+
         damagedSoundCooldownTracker = new ScaledTimer(damagedSoundCooldown, false);
         // If initialization of health manager fails, destroy itself
         if (_healthManager == null || !_healthManager.Init())

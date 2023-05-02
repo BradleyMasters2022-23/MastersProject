@@ -19,58 +19,43 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
     [Header("Boss Attack")]
 
     [SerializeField, ReadOnly] protected AttackState state;
-
     [SerializeField] protected GameObject projectilePrefab;
-
     [SerializeField] protected Transform shootPoint;
-
     [SerializeField] protected int numberOfAttacks = 1;
-
     protected List<RangeAttack> spawnedProjectiles;
-
     [SerializeField] protected float phaseChangeDuration;
-
-    [SerializeField, Range(0, 1)] protected float lossTargetVisionCone;
-
-    [SerializeField] protected float lossTargetStunDuration;
-
-    [SerializeField] protected bool lossTargetInturruptAttack;
-
     [SerializeField, ReadOnly] protected float speedModifier = 1;
 
     private Vector3 restingPosition;
-
     protected Target target;
-
     protected Rigidbody targetRB;
+    protected AudioSource source;
+
+    [Header("Inturrupt Functionality")]
+
+    [SerializeField, Range(0, 1)] protected float lossTargetVisionCone;
+    [SerializeField] protected float lossTargetStunDuration;
+    [SerializeField] protected bool lossTargetInturruptAttack;
+    [SerializeField] private IIndicator[] inturruptIndicator;
+    [SerializeField] private IIndicator reacquireSFX;
 
     [Header("Attack State")]
 
     [SerializeField] protected float attackRotationSpeed;
-
     [SerializeField] protected float attackDuration;
 
 
     [Header("Recovery State")]
 
     [SerializeField] protected Transform restTarget;
-
     [SerializeField] protected float recoveryDuration;
-
     [SerializeField] protected float recoveryRotationSpeed;
-
     [SerializeField] protected Vector2 cooldownRange;
-
     protected int currentPhase;
-
     protected Coroutine currentRoutine;
-
     protected ScaledTimer tracker;
-
     protected ScaledTimer stunnedTracker;
-
     protected WaitForFixedUpdate frame;
-
     protected Vector3 originalPosVector;
 
     #region Setup
@@ -85,7 +70,7 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
 
         target = FindObjectOfType<PlayerTarget>().GetComponent<PlayerTarget>();
         targetRB = target.gameObject.GetComponent<Rigidbody>();
-
+        source = GetComponent<AudioSource>();
         frame = new WaitForFixedUpdate();
 
         tracker = new ScaledTimer(0, Affected);
@@ -144,7 +129,12 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
         if (state == AttackState.Stunned)
         {
             if (stunnedTracker.TimerDone())
+            {
+                Indicators.SetIndicators(inturruptIndicator, false);
+                reacquireSFX.Activate();
                 state = AttackState.Attacking;
+            }
+                
         }
     }
 
@@ -179,8 +169,7 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
             if(attack != null)
                 attack.Inturrupt();
         }
-            
-
+        
         spawnedProjectiles.Clear();
         spawnedProjectiles.TrimExcess();
 
@@ -271,6 +260,7 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
             {
                 state = AttackState.Stunned;
                 stunnedTracker.ResetTimer();
+                Indicators.SetIndicators(inturruptIndicator, true);
                 BonusResume();
             }
         }
