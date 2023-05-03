@@ -28,6 +28,27 @@ public class FragmentInteract : Interactable
         fragment = frag;
     }
 
+    public void PrepareNote()
+    {
+        // If no override assigned, try to get a random one
+        if(fragment == null)
+        {
+            NoteObject n = AllNotesManager.instance.GetRandomLostNote();
+            if(n != null)
+            {
+                fragment = n.GetRandomLostFragment();
+            }
+        }
+            
+
+        // If it failed to get a new one, destroy it
+        if (fragment == null)
+        {
+            Debug.Log("No fragment found, destroying frag instead");
+            DestroyFrag();
+        }
+    }
+
     public override void OnInteract(PlayerController player)
     {
         if (ui == null) {
@@ -47,19 +68,8 @@ public class FragmentInteract : Interactable
             dataSent = true;
         }
 
-        if(fragment.found)
-        {
-            fragment = AllNotesManager.instance.GetRandomLostNote().GetRandomLostFragment();
-            if(fragment == null)
-            {
-                DestroyFrag();
-                return;
-            }
-        }
-
         ui.OpenScreen();
         PlayerNotesManager.instance.FindFragment(fragment);
-
     }
 
     public Fragment GetFragment()
