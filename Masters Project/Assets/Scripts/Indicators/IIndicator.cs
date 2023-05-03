@@ -35,6 +35,5 @@ public class Indicators
             else
                 indicator.Deactivate();
         }
-        Debug.Log("Finished setting indicators to " + enabled);
     }
 }

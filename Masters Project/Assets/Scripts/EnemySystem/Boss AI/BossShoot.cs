@@ -74,7 +74,11 @@ public class BossShoot : BossAttack
         shotTimer = new ScaledTimer(delayBetweenShots, false);
 
         if (playShootOnce)
-            shootSFX.PlayClip(transform);
+        {
+            //Debug.Log("Playing audio once");
+            shootSFX.PlayClip(source, true);
+        }
+            
 
         for (int i = 0; i < numOfShots; i++)
         {
@@ -176,7 +180,11 @@ public class BossShoot : BossAttack
         }
 
         if(!playShootOnce)
-            shootSFX.PlayClip(transform);
+        {
+            //Debug.Log("Playing shoot more than once");
+            shootSFX.PlayClip(source, true);
+        }
+            
     }
 
     private Vector3 ApplySpread(Vector3 rot, float minSpread, float maxSpread)

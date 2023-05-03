@@ -25,7 +25,7 @@ public class BFLController : MonoBehaviour
 
     private void Start()
     {
-        source = GetComponent<AudioSource>();
+        //source = GetComponent<AudioSource>();
         cooldown = new ScaledTimer(0);
         SetCooldown();
     }
