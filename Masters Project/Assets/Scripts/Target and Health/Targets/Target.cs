@@ -228,7 +228,7 @@ public abstract class Target : TimeAffectedEntity, IDamagable
     public virtual void ResetTarget()
     {
         _killed = false;
-        _healthManager.ResetHealth();
+        _healthManager?.ResetHealth();
 
         if (invincibilityShield != null)
         {

@@ -66,11 +66,11 @@ public class ShieldGenerator : MonoBehaviour
         {
             active = false;
 
-            //Debug.Log("Calling to disable shield");
-            StartCoroutine(ShieldFlicker());
+            StartCoroutine(DisableShield());
         }
         else if(!AllButtonsTriggered() && !active && maintainButtonActivation)
         {
+            active = true;
 
             StartCoroutine(EnableShield());
         }
@@ -85,7 +85,10 @@ public class ShieldGenerator : MonoBehaviour
         foreach(var button in allButtons)
         {
             if (!button.Activated() && button.isActiveAndEnabled)
+            {
                 return false;
+            }
+                
         }
 
         return true;
@@ -208,5 +211,11 @@ public class ShieldGenerator : MonoBehaviour
     {
         foreach (var button in allButtons)
             button.SetLock(false);
+    }
+
+    public void SetButtonsDead()
+    {
+        foreach (var button in allButtons)
+            button.Die();
     }
 }

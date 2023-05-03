@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SummonBFL : MonoBehaviour
+public class SummonObj : MonoBehaviour
 {
     [SerializeField] float summonTime;
     [SerializeField] IIndicator[] summoningIndicators;
-    [SerializeField] GameObject BFL;
+    [SerializeField] GameObject target;
     private ScaledTimer t;
 
     public void Play()
@@ -23,8 +23,7 @@ public class SummonBFL : MonoBehaviour
 
         Indicators.SetIndicators(summoningIndicators, false);
 
-        BFL.SetActive(true);
-        BFL.GetComponent<BFLController>().enabled = true;
+        target.SetActive(true);
         yield return null;
     }
 

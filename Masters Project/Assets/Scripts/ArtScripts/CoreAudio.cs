@@ -29,6 +29,11 @@ public static class CoreAudio
         }
 
         AudioClip chosenClip = data.GetClip();
+        if(chosenClip == null )
+        {
+            return;
+        }
+
 
         // If no destination, create a temporary container
         if (destination == null)
@@ -42,7 +47,8 @@ public static class CoreAudio
 
             if(!data.loop)
             {
-                GameObject.Destroy(container, chosenClip.length);
+                if(container != null)
+                    GameObject.Destroy(container, chosenClip.length);
             }
                 
         }

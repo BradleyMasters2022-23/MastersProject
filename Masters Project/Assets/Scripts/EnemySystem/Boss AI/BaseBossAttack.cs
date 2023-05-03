@@ -154,8 +154,8 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
             StopCoroutine(currentRoutine);
             currentRoutine = null;
         }
-        StopAllCoroutines();
 
+        StopAllCoroutines();
         StartCoroutine(Cancel());
     }
 
@@ -174,10 +174,12 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
         spawnedProjectiles.Clear();
         spawnedProjectiles.TrimExcess();
 
+        //Debug.Log($"{transform.parent.name} Cancel BFL attack called");
         // Tell to return to base after delay
-        yield return StartCoroutine(ReturnToBase(phaseChangeDuration));
+        //yield return StartCoroutine(ReturnToBase(phaseChangeDuration));
 
         state = AttackState.Ready;
+        yield return null;
     }
 
     #endregion
@@ -227,11 +229,18 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
             SetTracker(delay);
             yield return new WaitUntil(tracker.TimerDone);
         }
-
+        
         ScaledTimer maxTime = new ScaledTimer(1.5f);
+
         Vector3 rot = transform.localRotation.eulerAngles;
+        // mod it to prevent it from ALWAYS GOING COUNTERCLOCKWISE
+        if(rot.y > 180)
+        {
+            rot.y -= 360;
+        }
+
         // Return to resting position
-        while (!AcquiredTarget(restingPosition, 0.95f) && !maxTime.TimerDone())
+        while (!maxTime.TimerDone())
         {
             transform.localRotation = Quaternion.Euler(Vector3.Lerp(rot, Vector3.zero, maxTime.TimerProgress()));
             yield return null;
@@ -279,4 +288,31 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
     }
 
     protected abstract void DisableIndicators();
+
+    public void RotateToDisabledState()
+    {
+        StartCoroutine(RotateToDisable());
+    }
+    public void RotateToEnabledState()
+    {
+        //Debug.Log($"{transform.parent.name} Rotate to enabled state called");
+        StartCoroutine(ReturnToBase(0));
+    }
+    protected IEnumerator RotateToDisable()
+    {
+        Vector3 tar = new Vector3(90, 0, 0);
+        ScaledTimer maxTime = new ScaledTimer(1.5f);
+        Vector3 rot = transform.localRotation.eulerAngles;
+        // mod it to prevent it from ALWAYS GOING COUNTERCLOCKWISE
+        if (rot.y > 180)
+        {
+            rot.y -= 360;
+        }
+        // Return to resting position
+        while (!maxTime.TimerDone())
+        {
+            transform.localRotation = Quaternion.Euler(Vector3.Lerp(rot, tar, maxTime.TimerProgress()));
+            yield return null;
+        }
+    }
 }

@@ -1931,6 +1931,18 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
+          - m_Target: {fileID: 5360314283177969870}
+            m_TargetAssemblyTypeName: BossManager, Assembly-CSharp
+            m_MethodName: DisableBoss
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
       executeTime: 1
     - action:
         m_PersistentCalls:
@@ -1967,7 +1979,7 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 1
             m_CallState: 2
-      executeTime: 3
+      executeTime: 4
     - action:
         m_PersistentCalls:
           m_Calls:
@@ -2023,6 +2035,18 @@ MonoBehaviour:
             m_TargetAssemblyTypeName: BossLaserAttack, Assembly-CSharp
             m_MethodName: PhaseChange
             m_Mode: 3
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 5360314283177969870}
+            m_TargetAssemblyTypeName: BossManager, Assembly-CSharp
+            m_MethodName: EnableBoss
+            m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
               m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2145,6 +2169,18 @@ MonoBehaviour:
           - m_Target: {fileID: 0}
             m_TargetAssemblyTypeName: ShieldGenerator, Assembly-CSharp
             m_MethodName: UnlockGenerators
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 5360314283177969870}
+            m_TargetAssemblyTypeName: BossManager, Assembly-CSharp
+            m_MethodName: EnableBoss
             m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
@@ -2317,6 +2353,18 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
+          - m_Target: {fileID: 5360314283177969870}
+            m_TargetAssemblyTypeName: BossManager, Assembly-CSharp
+            m_MethodName: EnableBoss
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
       executeTime: 0
   onDeathEvents:
     stageName: On Death Event
@@ -2440,6 +2488,18 @@ MonoBehaviour:
           - m_Target: {fileID: 2783499131424098863}
             m_TargetAssemblyTypeName: Target, Assembly-CSharp
             m_MethodName: DeathEffects
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+          - m_Target: {fileID: 5360314283177969870}
+            m_TargetAssemblyTypeName: BossManager, Assembly-CSharp
+            m_MethodName: DisableBoss
             m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
@@ -2618,7 +2678,7 @@ MonoBehaviour:
   secondaryTimescale: 1
   phase1Cannon: {fileID: 0}
   phase2Cannon: {fileID: 0}
-  phaseChangeCooldown: 3
+  phaseChangeCooldown: 5
   inturruptCooldown: 0
 --- !u!114 &6283914014403922551
 MonoBehaviour:

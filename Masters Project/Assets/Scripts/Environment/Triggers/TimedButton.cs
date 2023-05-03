@@ -10,9 +10,9 @@ public class TimedButton : MonoBehaviour, ITriggerable
     [SerializeField] private bool affectedByTimestop = true;
 
     private ScaledTimer timer;
-    private bool activated;
+    [SerializeField] private bool activated;
 
-    private bool locked;
+    [SerializeField] private bool locked;
 
     [SerializeField] private Trigger targetTrigger;
 
@@ -21,7 +21,11 @@ public class TimedButton : MonoBehaviour, ITriggerable
     [SerializeField] private IIndicator[] generatorDestroyedIndicator;
     [SerializeField] private IIndicator[] generatorFixedIndicator;
 
+    [SerializeField] private IIndicator[] permDeadIndicators;
+
     private Target host;
+
+    [SerializeField] private SummonObj summonEffect;
 
     private void Awake()
     {
@@ -43,11 +47,19 @@ public class TimedButton : MonoBehaviour, ITriggerable
         host = GetComponent<Target>();
     }
 
+    public void SummonButton()
+    {
+        summonEffect.transform.parent= null;
+        summonEffect.gameObject.SetActive(true);
+        summonEffect.Play();
+    }
+
     private void OnEnable()
     {
-        if(targetTrigger!= null)
+        if(targetTrigger != null)
         {
             targetTrigger.Register(this);
+            
             Indicators.SetIndicators(generatorFixedIndicator, true);
         }
     }
@@ -67,13 +79,15 @@ public class TimedButton : MonoBehaviour, ITriggerable
         if(timer.TimerDone() && activated)
         {
             activated = false;
-            DeactivatedEffects();
+            RepairedIndicators();
         }
         // if the activation timer is running and not set to active, enable activated status
         else if(!timer.TimerDone() && !activated)
         {
             activated = true;
-            ActivatedEffects();
+            DestroyedEffects();
+            
+            //host.ResetTarget();
         }
     }
 
@@ -94,7 +108,7 @@ public class TimedButton : MonoBehaviour, ITriggerable
     /// <summary>
     /// Disable any deactivated indicators, enable any activated indicators
     /// </summary>
-    private void ActivatedEffects()
+    private void DestroyedEffects()
     {
         Indicators.SetIndicators(generatorFixedIndicator, false);
 
@@ -103,7 +117,7 @@ public class TimedButton : MonoBehaviour, ITriggerable
     /// <summary>
     /// Disable any active indicators, enable any deactivated indicators
     /// </summary>
-    private void DeactivatedEffects()
+    private void RepairedIndicators()
     {
         Indicators.SetIndicators(generatorDestroyedIndicator, false);
 
@@ -126,7 +140,7 @@ public class TimedButton : MonoBehaviour, ITriggerable
     {
         timer = null;
         activated = false;
-        DeactivatedEffects();
+        RepairedIndicators();
 
         if(host == null)
             host = GetComponent<Target>();
@@ -141,7 +155,18 @@ public class TimedButton : MonoBehaviour, ITriggerable
         if(locked)
         {
             activated = false;
-            DeactivatedEffects();
+            RepairedIndicators();
         }
+    }
+
+    public void Die()
+    {
+        Indicators.SetIndicators(generatorFixedIndicator, false);
+        Indicators.SetIndicators(generatorDestroyedIndicator, false);
+        Indicators.SetIndicators(permDeadIndicators, true);
+
+
+        this.enabled = false;
+        host.enabled = false;
     }
 }
