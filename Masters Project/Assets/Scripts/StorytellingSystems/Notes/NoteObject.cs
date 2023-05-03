@@ -79,6 +79,11 @@ public class NoteObject : ScriptableObject
       return fragments;
     }
 
+    public List<Fragment> GetAllLostFragments()
+    {
+        return lostFragments;
+    }
+
     /// <summary>
     /// returns a random fragment from lostFragments
     /// </summary>
@@ -86,12 +91,17 @@ public class NoteObject : ScriptableObject
     {
         lostFragments.TrimExcess();
 
-        int randNum = Random.Range(0, lostFragments.Count - 1);
+        int randNum = Random.Range(0, lostFragments.Count);
 
         if (randNum >= lostFragments.Count)
             return null;
         else
-            return lostFragments[randNum];
+        {
+            Fragment frag = lostFragments[randNum];
+            lostFragments.RemoveAt(randNum);
+            return frag;
+        }
+            
     }
 
     /// <summary>

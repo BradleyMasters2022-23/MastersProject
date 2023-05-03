@@ -83,7 +83,7 @@ public class PlayerNotesManager : MonoBehaviour
     public void FindFragment(Fragment fragment)
     {
         fragment.found = true;
-        Debug.Log("Fragment number " + fragment.fragmentID + " of note number " + fragment.noteID + " was collected!");
+        // Debug.Log("Fragment number " + fragment.fragmentID + " of note number " + fragment.noteID + " was collected!");
         UpdateNotes();
     }
 

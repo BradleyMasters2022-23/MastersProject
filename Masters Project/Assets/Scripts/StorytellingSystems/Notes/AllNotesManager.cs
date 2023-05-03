@@ -53,6 +53,7 @@ public class AllNotesManager : MonoBehaviour
 
             if (!note.AllFragmentsFound() && !lostNotes.Contains(note))
             {
+                Debug.Log($"Adding to lost notes {note.name} | {note.GetAllLostFragments().Count}");
                 lostNotes.Add(note);
             }
         }
@@ -65,12 +66,13 @@ public class AllNotesManager : MonoBehaviour
     public NoteObject GetRandomLostNote()
     {
         int ran = Random.Range(0, notes.Count);
-        // Debug.Log($"Lost notes size {lostNotes.Count} | num selected {ran}");
+        //Debug.Log($"Lost notes size {lostNotes.Count} | Random Num {ran}");
+        
         if (lostNotes != null && lostNotes.Count > 0 && ran < lostNotes.Count)
             return lostNotes[ran];
         else
         {
-            Debug.Log("Potential break detected in AllNoteManager, but prevented!");
+            //Debug.Log("Potential break detected in AllNoteManager, but prevented!");
             return null;
         }
             
