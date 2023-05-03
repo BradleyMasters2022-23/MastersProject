@@ -24,6 +24,7 @@ public class BossLaserAttack : TimeAffectedEntity
 
         if(tracker.TimerDone())
         {
+            
             if (phase1Cannon.isActiveAndEnabled)
             {
                 phase1Cannon.ChooseAttack();
@@ -38,7 +39,7 @@ public class BossLaserAttack : TimeAffectedEntity
 
     public void PhaseChange(int newPhase)
     {
-        Inturrupt();
+        //Inturrupt();
 
         phase1Cannon?.NewStage(newPhase);
         phase2Cannon?.NewStage(newPhase);

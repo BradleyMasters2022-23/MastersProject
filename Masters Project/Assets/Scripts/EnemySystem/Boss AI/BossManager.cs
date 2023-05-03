@@ -31,6 +31,8 @@ public class BossManager : TimeAffectedEntity
     /// </summary>
     private BossAttack currAttack;
 
+    private bool disabled;
+
     /// <summary>
     /// Setup for main boss
     /// </summary>
@@ -55,7 +57,7 @@ public class BossManager : TimeAffectedEntity
             cooldownTracker.SetModifier(Timescale);
 
             // Try attacking on cooldown 
-            if(cooldownTracker.TimerDone())
+            if(cooldownTracker.TimerDone() && !disabled)
             {
                 BossAttack chosenAttack = phaseAttacks[currentPhase].Pull();
 
@@ -128,6 +130,19 @@ public class BossManager : TimeAffectedEntity
         currentPhase= phase;
     }
 
+    public void DisableBoss()
+    {
+        disabled = true;
+        if(currAttack!= null)
+        {
+            Debug.Log("Attack found, trying to disable");
+            currAttack.ResetAttack();
+        }
+    }
+    public void EnableBoss()
+    {
+        disabled = false;
+    }
 
     public bool GetAfflicted()
     {
