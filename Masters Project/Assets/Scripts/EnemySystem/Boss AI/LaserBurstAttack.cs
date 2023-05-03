@@ -67,7 +67,8 @@ public class LaserBurstAttack : BaseBossAttack
             yield return new WaitUntil(tracker.TimerDone);
         }
 
-        yield return StartCoroutine(ReturnToBase(recoveryDuration));
+        Debug.Log($"Returning to base on burst {0}");
+        yield return StartCoroutine(ReturnToBase(0));
 
         // Initialize cooldown
         state = AttackState.Cooldown;

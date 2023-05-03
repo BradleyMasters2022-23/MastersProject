@@ -129,6 +129,8 @@ public abstract class AttackTarget : MonoBehaviour
 
     private void OnDisable()
     {
+        if(attackRoutine!= null)
+            StopCoroutine(attackRoutine);
         StopAllCoroutines();
         HideIndicator();
         HideAttackDone();
@@ -138,6 +140,7 @@ public abstract class AttackTarget : MonoBehaviour
 
     public void ResetAttack()
     {
+        //Debug.Log($"Resetting attack on {gameObject.name}");
         OnDisable();
         attackTracker.ResetTimer();
         currentAttackState = AttackState.Cooldown;

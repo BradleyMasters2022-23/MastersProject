@@ -24,13 +24,19 @@ public class DamagePool : MonoBehaviour
     [Tooltip("Time between each tick")]
     [SerializeField] private float tickRate;
 
+    [SerializeField] private AudioClipSO ambientSFX;
     private DamageField targetField;
+    private AudioSource source;
 
     private void Start()
     {
         lifeTracker = new ScaledTimer(lifeDuration, affectedByTimestop);
 
         targetField = GetComponentInChildren<DamageField>();
+        source = GetComponent<AudioSource>();
+
+        ambientSFX.PlayClip(source);
+
         if(targetField != null )
             targetField.InitValues(initialDamageProfiles, tickDamageProfiles, tickRate);
     }

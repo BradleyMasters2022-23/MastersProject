@@ -32,13 +32,16 @@ public class ShieldGenerator : MonoBehaviour
     [Tooltip("Whether or not all buttons must stay active to keep the shield down")]
     [SerializeField] private bool maintainButtonActivation;
 
+    [SerializeField] private AudioClipSO shieldRebootSFX;
+
     [Tooltip("Indicators that play when the shield is disabled")]
-    [SerializeField] private IIndicator[] onDisableIndicator;
+    [SerializeField] private IIndicator[] powerOffIndicators;
     [Tooltip("Indicators that play when the shield is enabled")]
-    [SerializeField] private IIndicator[] onEnableIndicator;
+    [SerializeField] private IIndicator[] powerOnIndicators;
 
     [SerializeField] private ShieldFlickerData[] flickerPhaseData;
 
+    private AudioSource source;
     private ShieldFlickerData currProfile;
 
     /// <summary>
@@ -48,6 +51,8 @@ public class ShieldGenerator : MonoBehaviour
 
     private void Awake()
     {
+        source= GetComponent<AudioSource>();
+
         active = true;
         currProfile = flickerPhaseData[0];
     }
@@ -61,11 +66,11 @@ public class ShieldGenerator : MonoBehaviour
         {
             active = false;
 
-            //Debug.Log("Calling to disable shield");
-            StartCoroutine(ShieldFlicker());
+            StartCoroutine(DisableShield());
         }
         else if(!AllButtonsTriggered() && !active && maintainButtonActivation)
         {
+            active = true;
 
             StartCoroutine(EnableShield());
         }
@@ -80,7 +85,10 @@ public class ShieldGenerator : MonoBehaviour
         foreach(var button in allButtons)
         {
             if (!button.Activated() && button.isActiveAndEnabled)
+            {
                 return false;
+            }
+                
         }
 
         return true;
@@ -92,7 +100,7 @@ public class ShieldGenerator : MonoBehaviour
     /// <returns></returns>
     private IEnumerator EnableShield()
     {
-        Indicators.SetIndicators(onEnableIndicator, true);
+        Indicators.SetIndicators(powerOnIndicators, true);
 
         // more stuff can be used here
 
@@ -106,7 +114,7 @@ public class ShieldGenerator : MonoBehaviour
     /// <returns></returns>
     private IEnumerator DisableShield() 
     {
-        Indicators.SetIndicators(onDisableIndicator, true);
+        Indicators.SetIndicators(powerOffIndicators, true);
 
         // more stuff can be used here
 
@@ -176,9 +184,10 @@ public class ShieldGenerator : MonoBehaviour
     {
         StopAllCoroutines();
         active = true;
+        
+        shieldRebootSFX.PlayClip(source);
 
         StartCoroutine(EnableShield());
-
         foreach(var button in allButtons)
             button.ResetButton();
     }
@@ -202,5 +211,11 @@ public class ShieldGenerator : MonoBehaviour
     {
         foreach (var button in allButtons)
             button.SetLock(false);
+    }
+
+    public void SetButtonsDead()
+    {
+        foreach (var button in allButtons)
+            button.Die();
     }
 }

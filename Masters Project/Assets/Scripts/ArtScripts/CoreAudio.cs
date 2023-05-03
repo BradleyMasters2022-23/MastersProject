@@ -28,7 +28,15 @@ public static class CoreAudio
             return;
         }
 
+        //Debug.Log($"Playing clip{data.name}");
+
         AudioClip chosenClip = data.GetClip();
+        if(chosenClip == null )
+        {
+            return;
+        }
+
+        
 
         // If no destination, create a temporary container
         if (destination == null)
@@ -42,14 +50,20 @@ public static class CoreAudio
 
             if(!data.loop)
             {
-                GameObject.Destroy(container, chosenClip.length);
+                if(container != null)
+                    GameObject.Destroy(container, chosenClip.length);
             }
                 
         }
         else 
         {
-            if(!overlap)
+            //Debug.Log($"Playing {data.name} at {destination.name}");
+            if (!overlap)
+            {
+                //Debug.Log($"Calling source at {destination.gameObject.name} to stop");
                 destination.Stop();
+            }
+                
         }
 
         // Load the destination with the data from the audio SO

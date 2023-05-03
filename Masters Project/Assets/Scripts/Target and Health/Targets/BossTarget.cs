@@ -26,6 +26,8 @@ public struct BossEvent
 {
     [Space(5)]
     public string stageName;
+    public AudioClipSO eventAudio;
+
     [TableList(CellPadding = 3)]
     [PropertySpace(SpaceAfter = 10, SpaceBefore = 5)]
     public TimedEvent[] OnTriggerEvent;
@@ -132,10 +134,12 @@ public class BossTarget : Target
         if(phaseIndex < phaseChangeEvents.Length)
         {
             // perform standard events
+            standardPhaseChangeEvents.eventAudio.PlayClip(audioSource, true);
             TimedEvent[] events = standardPhaseChangeEvents.OnTriggerEvent;
             yield return StartCoroutine(ExecuteEvents(events));
 
             // perform special changes
+            phaseChangeEvents[phaseIndex].eventAudio.PlayClip(audioSource);
             events = phaseChangeEvents[phaseIndex].OnTriggerEvent;
             yield return StartCoroutine("ExecuteEvents", events);
         }

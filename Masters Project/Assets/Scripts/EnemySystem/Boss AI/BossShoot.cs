@@ -42,12 +42,8 @@ public class BossShoot : BossAttack
     [SerializeField] private float shootVFXScale = 1;
 
     [SerializeField] private AudioClipSO indicatorSFX;
+    [SerializeField] private bool playShootOnce;
     [SerializeField] private AudioClipSO shootSFX;
-
-    /// <summary>
-    /// Get the indicator gameobject references
-    /// </summary>
-    private GameObject[] indicators;
 
     /// <summary>
     /// Internal tracker for the time between each shot
@@ -76,6 +72,13 @@ public class BossShoot : BossAttack
     protected override IEnumerator DamageAction()
     {
         shotTimer = new ScaledTimer(delayBetweenShots, false);
+
+        if (playShootOnce)
+        {
+            //Debug.Log("Playing audio once");
+            shootSFX.PlayClip(source, true);
+        }
+            
 
         for (int i = 0; i < numOfShots; i++)
         {
@@ -131,11 +134,13 @@ public class BossShoot : BossAttack
     protected override void ShowIndicator()
     {
         Indicators.SetIndicators(prefireIndicator, true);
+        indicatorSFX.PlayClip(source, false);
     }
 
     protected override void HideIndicator()
     {
         Indicators.SetIndicators(prefireIndicator, false);
+        source.Stop();
     }
 
     private void Shoot(Transform target, float minSpread, float maxSpread)
@@ -174,8 +179,12 @@ public class BossShoot : BossAttack
             shot.GetComponent<RangeAttack>().Activate();
         }
 
-        shootSFX.PlayClip(transform);
-
+        if(!playShootOnce)
+        {
+            //Debug.Log("Playing shoot more than once");
+            shootSFX.PlayClip(source, true);
+        }
+            
     }
 
     private Vector3 ApplySpread(Vector3 rot, float minSpread, float maxSpread)

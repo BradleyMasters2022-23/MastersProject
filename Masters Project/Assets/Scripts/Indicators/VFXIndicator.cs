@@ -68,7 +68,7 @@ public class VFXIndicator : IIndicator
             vfxSystem.Stop();
         }
 
-        if (legacyVFX.Length > 0)
+        if (legacyVFX != null && legacyVFX.Length > 0)
         {
             foreach (var v in legacyVFX)
             {
