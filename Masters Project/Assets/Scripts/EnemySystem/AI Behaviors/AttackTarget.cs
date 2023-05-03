@@ -140,7 +140,7 @@ public abstract class AttackTarget : MonoBehaviour
 
     public void ResetAttack()
     {
-        Debug.Log($"Resetting attack on {gameObject.name}");
+        //Debug.Log($"Resetting attack on {gameObject.name}");
         OnDisable();
         attackTracker.ResetTimer();
         currentAttackState = AttackState.Cooldown;

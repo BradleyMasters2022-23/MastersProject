@@ -15,6 +15,6 @@ public class AudioDebugger : MonoBehaviour
         float time = s.time;
         bool playing = s.isPlaying;
 
-        Debug.Log($"Playing : {playing} | Looping : {loop} | Time : {time}");
+        //Debug.Log($"Playing : {playing} | Looping : {loop} | Time : {time}");
     }
 }
