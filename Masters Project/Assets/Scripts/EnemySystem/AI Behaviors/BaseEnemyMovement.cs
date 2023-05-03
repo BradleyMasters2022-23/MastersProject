@@ -13,7 +13,7 @@ using UnityEngine.AI;
 
 
 
-public abstract class BaseEnemyMovement : MonoBehaviour
+public abstract class BaseEnemyMovement : MonoBehaviour, TimeObserver
 {
     public enum MoveState
     {
@@ -56,6 +56,28 @@ public abstract class BaseEnemyMovement : MonoBehaviour
 
     protected EnemyManager manager;
 
+    #region Time Stuff
+
+    /// <summary>
+    /// Whether this entity is affected by timestop
+    /// </summary>
+    protected bool affected;
+    /// <summary>
+    /// timescale of this entity
+    /// </summary>
+    protected float timeScale;
+    /// <summary>
+    /// deltatime of this entity
+    /// </summary>
+    protected float deltaTime;
+
+    /// <summary>
+    /// Agent enabled state from before timestop was enabled
+    /// </summary>
+    protected bool preStopAgent;
+
+    #endregion
+
     protected virtual void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -63,27 +85,24 @@ public abstract class BaseEnemyMovement : MonoBehaviour
 
         if(manager != null)
         {
-            //defSpeed = manager.currentMoveStates.moveSpeed;
-            //rotationSpeed = manager.currentMoveStates.rotationSpeed;
+            UpdateTime();
         }
 
-        //if(characterMovementStates.Length > 0)
-        //{
-        //    Debug.Log($"Loading move profile of {characterMovementStates[0].name}");
-        //    agent.speed = characterMovementStates[0].moveSpeed;
-        //    rotationSpeed = characterMovementStates[0].rotationSpeed;
-        //    agent.angularSpeed = rotationSpeed;
-        //}
-        
-
-        // defSpeed = agent.speed;
-        // defRot = agent.angularSpeed;
         if(agent!= null)
             agent.updateRotation = false;
     }
 
+    protected void UpdateTime()
+    {
+        affected = manager.GetAfflicted();
+        timeScale = manager.GetTimescale();
+        deltaTime = manager.GetDeltatime();
+    }
+
     protected virtual void FixedUpdate()
     {
+        UpdateTime();
+
         // dont do anything while on standby
         if (state == MoveState.Standby)
         {
@@ -91,8 +110,6 @@ public abstract class BaseEnemyMovement : MonoBehaviour
                 return;
             }
         }
-
-        
 
         StateUpdate();
     }
@@ -102,8 +119,8 @@ public abstract class BaseEnemyMovement : MonoBehaviour
     {
         if (agent != null)
         {
-            agent.speed = TimeManager.WorldTimeScale * manager.currentMoveStates.moveSpeed;
-            agent.angularSpeed = TimeManager.WorldTimeScale * manager.currentMoveStates.rotationSpeed;
+            agent.speed = timeScale * manager.currentMoveStates.moveSpeed;
+            agent.angularSpeed = timeScale * manager.currentMoveStates.rotationSpeed;
             agent.acceleration = manager.currentMoveStates.acceleration;
         }
             
@@ -128,8 +145,6 @@ public abstract class BaseEnemyMovement : MonoBehaviour
                 }
         }
     }
-
-    //public abstract void StartBehavior(Transform t);
 
     /// <summary>
     /// Perform the unique movement function of this behavior
@@ -248,7 +263,7 @@ public abstract class BaseEnemyMovement : MonoBehaviour
         {
             float yOffset = curve.Evaluate(normalizedTime);
             agent.transform.position = Vector3.Lerp(startPos, endPos, normalizedTime) + yOffset * Vector3.up;
-            normalizedTime += TimeManager.WorldDeltaTime / duration;
+            normalizedTime += deltaTime / duration;
 
 
             c++;
@@ -295,7 +310,7 @@ public abstract class BaseEnemyMovement : MonoBehaviour
             }
 
             // Adjust angle for timestop, apply
-            float nextYAng = clampedAngle * TimeManager.WorldTimeScale;
+            float nextYAng = clampedAngle * timeScale;
             transform.rotation = Quaternion.Euler(0, (transform.rotation.eulerAngles.y + nextYAng) % 360, 0);
 
 
@@ -347,7 +362,7 @@ public abstract class BaseEnemyMovement : MonoBehaviour
         }
 
         // Adjust angle for timestop, apply
-        float nextYAng = clampedAngle * TimeManager.WorldTimeScale;
+        float nextYAng = clampedAngle * timeScale;
         transform.rotation = Quaternion.Euler(0, (transform.rotation.eulerAngles.y + nextYAng) % 360, 0);
     }
 
@@ -368,9 +383,16 @@ public abstract class BaseEnemyMovement : MonoBehaviour
         }
     }
 
-    //private void OnDisable()
-    //{
-    //    state = MoveState.Standby;
-    //    lastTargetPos = Vector3.zero;
-    //}
+    
+
+    public void OnStop()
+    {
+        preStopAgent = agent.enabled;
+        agent.enabled = false;
+    }
+
+    public void OnResume()
+    {
+        agent.enabled = preStopAgent;
+    }
 }

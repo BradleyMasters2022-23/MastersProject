@@ -106,6 +106,11 @@ public class TimeManager : MonoBehaviour
         get { return worldTimeScale <= stoppedThreshold;  }
     }
 
+    public static float TimeStopThreshold
+    {
+        get { return stoppedThreshold; }
+    }
+
     /// <summary>
     /// Time float to track transition lerp
     /// </summary>
@@ -160,6 +165,11 @@ public class TimeManager : MonoBehaviour
     /// Timer for tracking emptied delay [EMPTIED state]
     /// </summary>
     private ScaledTimer emptiedDelayTimer;
+
+    /// <summary>
+    /// Whether or not the player is in a regen field
+    /// </summary>
+    public bool inRegenField;
 
     #endregion
 
@@ -561,7 +571,7 @@ public class TimeManager : MonoBehaviour
         if (currSlowGauge + amount >= maxGauge)
         {
             currSlowGauge = maxGauge;
-            //ChangeState(TimeGaugeState.IDLE);
+            ChangeState(TimeGaugeState.IDLE);
         }
         else
         {

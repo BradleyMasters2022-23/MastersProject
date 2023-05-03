@@ -265,6 +265,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8877474355173619778}
   - component: {fileID: 8477986082741360450}
+  - component: {fileID: 8977033884228046358}
   m_Layer: 8
   m_Name: Backpack [WEAK]
   m_TagString: Enemy
@@ -300,6 +301,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.657198, y: 0.7481618, z: 0.1982609}
   m_Center: {x: 0, y: 0.99546444, z: -0.89911824}
+--- !u!114 &8977033884228046358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6309547900755185939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a33c2fc2c1e14b14e906e359abbe50f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 6412768282984835262}
+  damageMultiplier: 4
 --- !u!1 &6621528852895871808
 GameObject:
   m_ObjectHideFlags: 0
@@ -396,11 +411,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58a7794549a027e4dac175e049ecb438, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
   _center: {fileID: 793414667720240907}
   _team: 2
   _targetThreat: 40
   _unkillable: 0
   immuneToKnockback: 0
+  knockbackModifier: 1
   maxKnockback: 10
   invincibilityShield: {fileID: 0}
   _deathVFX: {fileID: 7428150280865193490, guid: a4f29aa8e8157a14283aec722c7c18ab, type: 3}
@@ -434,6 +456,7 @@ MonoBehaviour:
   _gateHealthbarHealing: 0
   _gatedHealthInvulnerability: 0
   _godMode: 0
+  timeScale: 0
 --- !u!114 &2024859369838679369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -446,6 +469,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 980d6e5cae0c81045a175e37375b35c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
   characterMovementStates:
   - name: default
     moveSpeed: 18
@@ -670,6 +699,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentAttackState: 0
+  rotationSource: {fileID: 3157863991490307576}
+  rotate: 1
   attackReady: 0
   attackCoolown: 1
   indicatorDuration: 0.6
@@ -904,6 +935,7 @@ GameObject:
   - component: {fileID: 7123534606254138159}
   - component: {fileID: 4116088007954603430}
   - component: {fileID: 540711410129340013}
+  - component: {fileID: 3528571217261013609}
   m_Layer: 8
   m_Name: Body
   m_TagString: Enemy
@@ -952,6 +984,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.33464584, y: 0.42275476, z: 0.8169944}
   m_Center: {x: 0, y: 0.7898281, z: 0.65155745}
+--- !u!114 &3528571217261013609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8004048564290428822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a33c2fc2c1e14b14e906e359abbe50f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 6412768282984835262}
+  damageMultiplier: 1
 --- !u!1001 &2258626957027117918
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1106,6 +1152,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 384ec51a44cd4064888d3d5eec775d25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
 --- !u!4 &5758858759992369384 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5815223299785157558, guid: 9e582c8281300844aa01f3ff273878dc, type: 3}

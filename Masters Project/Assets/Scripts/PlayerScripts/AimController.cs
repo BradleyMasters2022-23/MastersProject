@@ -30,8 +30,6 @@ public class AimController : MonoBehaviour
     [SerializeField] private Vector2 angleClamp;
     [Tooltip("Primary point the camera looks at and pivots from. Should be around the player's shoulders.")]
     [SerializeField] private Transform cameraLook;
-    [Tooltip("The transform containing all first person visuals")]
-    [SerializeField] private Transform firstPersonVisuals;
 
     [Header("---Game flow---")]
     [Tooltip("Channel that watches the game manager states")]
@@ -51,11 +49,6 @@ public class AimController : MonoBehaviour
     {
         // Initialize aim controls
         StartCoroutine(InitializeControls());
-
-        // move first person visuals to camera
-        // Do this to prevent stuttering 
-        if(firstPersonVisuals != null)
-            firstPersonVisuals.parent = Camera.main.transform;
 
         // Load in settings
         UpdateSettings();

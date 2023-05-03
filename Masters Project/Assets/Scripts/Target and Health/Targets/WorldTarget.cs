@@ -28,6 +28,8 @@ public class WorldTarget : Target
 
     public override void RegisterEffect(float dmg)
     {
+        if (dmg <= 0) return;
+
         if (onDamageTrigger != null)
             onDamageTrigger.Activate();
 
@@ -37,10 +39,5 @@ public class WorldTarget : Target
     public bool IsTriggerRegistered()
     {
         return triggerRegistered;
-    }
-
-    protected override void DestroyObject()
-    {
-        gameObject.SetActive(false);
     }
 }

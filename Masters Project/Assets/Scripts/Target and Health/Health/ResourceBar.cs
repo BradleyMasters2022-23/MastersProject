@@ -44,14 +44,18 @@ public class ResourceBar
 
     private ScaledTimer _regenTracker;
 
+    private float timescale;
+
     public void Init(ResourceBarSO barInfo)
     {
+        timescale = 1;
         _barData = barInfo;
         _type = barInfo._type;
         _maxAmount = barInfo._maxValue;
         _currAmount= _maxAmount;
         _regen = barInfo._regen;
-        _regenRate= barInfo._regenRate;
+        _affectedByTimestop = barInfo._affectedByTimestop;
+        _regenRate = barInfo._regenRate;
         _regenDelay= barInfo._regenDelay;
 
         if (_regen)
@@ -89,6 +93,15 @@ public class ResourceBar
         else
         {
             ChangeState(State.IDLE);
+        }
+    }
+
+    public void SetTimesale(float newScale)
+    {
+        if(_affectedByTimestop)
+        {
+            timescale = newScale;
+            _regenTracker?.SetModifier(timescale);
         }
     }
 
@@ -288,11 +301,15 @@ public class ResourceBar
     private void RegenTick()
     {
         // If not allowed to regen, then exit
-        if (!_regen || (_affectedByTimestop && TimeManager.TimeStopped))
+        if (!_regen)
             return;
 
         // calculate amount to recharge, rounding down. Add to buffer
         float replenishAmount = (_maxAmount / _regenRate) / 50;
+
+        // scale in timestop
+        if (_affectedByTimestop)
+            replenishAmount *= timescale;
 
         // Replenish the gauge, determine if state should change
         Increase(replenishAmount);

@@ -42,8 +42,7 @@ public class Waypoint : MonoBehaviour
     [Tooltip("Additional buffer added to the vertical bounds")]
     [SerializeField] private float verticalBuffer;
 
-    [Tooltip("Offset for displaying directly above the target")]
-    [SerializeField] private float offset;
+    
     /// <summary>
     /// Reference to center of the screen
     /// </summary>
@@ -63,10 +62,15 @@ public class Waypoint : MonoBehaviour
     /// <summary>
     /// Whether or not the target is in camera bounds
     /// </summary>
-    private bool inBounds;
+    [SerializeField] private bool inBounds;
 
+    [Header("Bonus Functionality")]
 
-    [Header("Functionality")]
+    [Tooltip("Offset for displaying directly above the target")]
+    [SerializeField] private float offset;
+
+    [Tooltip("Whether to show the waypoint when the container is on screen")]
+    [SerializeField] bool showOnScreen = true;
 
     [Tooltip("Scale of the tooltip based on player position")]
     [SerializeField] AnimationCurve scaleOverPositionDistance;
@@ -158,6 +162,7 @@ public class Waypoint : MonoBehaviour
         // apply offset first
         Vector3 tarPos = target.position + target.up * offset;
         Vector3 pos = Camera.main.WorldToScreenPoint(tarPos);
+        Vector3 posUnmodded = pos;
         Vector3 pointDir = (pos - screenCenter);
         inBounds = InBounds(pos);
 
@@ -166,6 +171,10 @@ public class Waypoint : MonoBehaviour
         // Determine if this should even display based on range
         float positionDist = Vector3.Distance(cam.position, target.position);
         bool show = (positionDist <= maxRange) && (positionDist >= minRange);
+
+        // determine if it should display
+        if (!showOnScreen && inBounds)
+            show = false;
 
         // Set view status. If can't show, then dont do anything else to minimize impact
         imageContainer.SetActive(show);
@@ -185,6 +194,7 @@ public class Waypoint : MonoBehaviour
         {
             // Flip it so it displays correctly
             pos *= -1;
+            //pos = Quaternion.Euler(new Vector3(0, 180, 0)) * pos;
 
             // Due to flip, it always displays to the cam's left. Use this DOT to determine if
             // the position of it is to the left or right of the cam, and lock the appropriate max (more accurate)
@@ -199,20 +209,30 @@ public class Waypoint : MonoBehaviour
             }
         }
 
-        // Clamp by the bounds, apply position
-        pos.x = Mathf.Clamp(pos.x, horBounds.x, horBounds.y);
-        pos.y = Mathf.Clamp(pos.y, verBounds.x, verBounds.y);
+        if(!inBounds)
+        {
+            // Clamp by the bounds, apply position
+            pos.x = Mathf.Clamp(pos.x, horBounds.x, horBounds.y);
+            pos.y = Mathf.Clamp(pos.y, verBounds.x, verBounds.y);
+        }
+
         t.transform.position = pos;
-        
+
         #endregion
 
         #region ROTATION
 
         // only update rotation if object is out of bounds
-        if(!inBounds)
+        if (!inBounds)
         {
-            // recalculate now that its been flipped
-            pointDir = (pos - screenCenter);
+            // Get new direction based on position
+            pointDir = (posUnmodded - t.position);
+
+            // reflip it if behind
+            if(posUnmodded.z < 0)
+            {
+                pointDir *= -1;
+            }
 
             // dont bother updating rotation if in bounds, as it wont be shown
             // Calculate rotation with ATAN
@@ -249,10 +269,10 @@ public class Waypoint : MonoBehaviour
         screenCenter /= 2;
 
         // Get screen boundaries with radius
-        horBounds.x = t.rect.width / 3 + horizontalBuffer;
+        horBounds.x = (t.rect.width/2) + horizontalBuffer;
         horBounds.y = Screen.width - horBounds.x;
 
-        verBounds.x = t.rect.height / 3 + verticalBuffer;
+        verBounds.x = (t.rect.height / 2) + verticalBuffer;
         verBounds.y = Screen.height - verBounds.x;
     }
 
@@ -263,8 +283,8 @@ public class Waypoint : MonoBehaviour
     /// <returns>Whether the point is in camera bounds</returns>
     private bool InBounds(Vector3 pos)
     {
-        return (pos.x > horBounds.x && pos.x < horBounds.y
-            && pos.y > verBounds.x && pos.y < verBounds.y)
+        return (pos.x > 0 && pos.x < Screen.width
+            && pos.y > 0 && pos.y < Screen.height)
             && pos.z > 0;
     }
 

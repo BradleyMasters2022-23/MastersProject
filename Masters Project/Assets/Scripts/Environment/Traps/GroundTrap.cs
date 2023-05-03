@@ -40,15 +40,8 @@ public class GroundTrap : Trap
     [Tooltip("The collider used for dealing damage")]
     [SerializeField] Collider damageCollider;
 
-    [Tooltip("Initial damage dealt to enemies when first entering trap")]
-    [SerializeField] private float initialDamage;
-    [Tooltip("Continuous damage dealt to enemies on each tick")]
-    [SerializeField] private float tickDamage;
-
-    [Tooltip("Initial damage dealt to player when first entering the trap")]
-    [SerializeField] private float playerInitialDamage;
-    [Tooltip("Continuous damage dealt to player on each tick")]
-    [SerializeField] private float playerTickDamage;
+    [SerializeField] protected TeamDamage initialDamageProfiles;
+    [SerializeField] protected TeamDamage tickDamageProfiles;
 
     [Tooltip("Time between each tick")]
     [SerializeField] private float tickRate;
@@ -69,10 +62,7 @@ public class GroundTrap : Trap
             DamageField damageField = damageCollider.GetComponent<DamageField>();
             if(damageField != null )
             {
-                damageField.InitValues(
-                    initialDamage, tickDamage,
-                    playerInitialDamage, playerTickDamage, 
-                    tickRate);
+                damageField.InitValues(initialDamageProfiles, tickDamageProfiles, tickRate);
             }
 
         }

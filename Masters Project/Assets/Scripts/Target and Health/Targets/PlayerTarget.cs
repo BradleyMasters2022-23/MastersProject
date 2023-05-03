@@ -93,12 +93,12 @@ public class PlayerTarget : Target
 
     public override void Knockback(float force, float verticalForce, Vector3 origin)
     {
-        if (immuneToKnockback)
+        if (immuneToKnockback || (force+verticalForce <= 0))
             return;
 
         // kick the player up a tiny bit to reduce any ground drag
         transform.position += Vector3.up * 0.5f;
-        base.Knockback(force, verticalForce, origin);
+        base.Knockback(force, verticalForce, origin + Vector3.up * 0.5f);
     }
 
     private void OnDisable()

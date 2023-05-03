@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnhancedShot : Projectile
 {
+    [Header("Enhanced Shots")]
 
     [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private float lineDuration;
@@ -19,12 +20,12 @@ public class EnhancedShot : Projectile
         lineRenderer.SetPosition(0, lineRenderer.transform.position);
 
         RaycastHit target;
-        if (Physics.SphereCast(transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, range, targetLayers))
+        if (Physics.SphereCast(transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, range, hitLayers))
         {
             lineRenderer.SetPosition(1, transform.position + transform.forward * target.distance);
 
         }
-        else if (Physics.Raycast(transform.position, transform.forward, out target, range, groundLayer))
+        else if (Physics.Raycast(transform.position, transform.forward, out target, range, worldLayers))
         {
             lineRenderer.SetPosition(1, transform.position + transform.forward * target.distance);
         }
@@ -39,7 +40,7 @@ public class EnhancedShot : Projectile
 
     private void Update()
     {
-        if (TimeManager.WorldTimeScale == 0 && lineRenderer.GetPosition(0) != transform.position)
+        if (Timescale == 0 && lineRenderer.GetPosition(0) != transform.position)
             lineRenderer.SetPosition(0, lineRenderer.transform.position);
 
         if(lineRenderer.enabled && lineLifeTracker.TimerDone())

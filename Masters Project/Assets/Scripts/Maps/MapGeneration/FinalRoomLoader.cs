@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FinalRoomLoader : SegmentLoader
 {
+    [SerializeField] List<GameObject> stuffToDisable;
+
     protected override IEnumerator UniquePoolInitialization()
     {
         // nothing to do yet
@@ -29,7 +31,19 @@ public class FinalRoomLoader : SegmentLoader
 
     public override void StartSegment()
     {
-        MapLoader.instance.EndRoomEncounter();
+        Debug.Log("Starting segment");
+        //MapLoader.instance.EndRoomEncounter();
+        foreach(var obj in stuffToDisable)
+        {
+            Debug.Log($"Disabling {obj.name}");
+            obj.SetActive(false);
+        }
+
         return;
+    }
+
+    public void UnlockDoor()
+    {
+        MapLoader.instance.EndRoomEncounter();
     }
 }

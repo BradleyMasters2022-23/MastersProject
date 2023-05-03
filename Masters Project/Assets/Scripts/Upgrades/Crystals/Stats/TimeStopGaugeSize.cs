@@ -5,7 +5,7 @@ using UnityEngine;
 public class TimeStopGaugeSize : IStat
 {
     private TimeManager time;
-    private TimeGagueVisual timeUI;
+    private TimeGaugeUI timeUI;
     [SerializeField] private float statBase;
     private float baseGauge;
 
@@ -18,7 +18,7 @@ public class TimeStopGaugeSize : IStat
     public override void LoadStat(PlayerController player, int mod)
     {
         time = FindObjectOfType<TimeManager>();
-        timeUI = FindObjectOfType<TimeGagueVisual>();
+        timeUI = FindObjectOfType<TimeGaugeUI>();
         
         float temp = baseGauge * ((float)mod / 10f);
         time.UpgradeSetGaugeMax(time.UpgradeMaxGauge() + temp);
@@ -30,7 +30,7 @@ public class TimeStopGaugeSize : IStat
     public override void UnloadStat(PlayerController player, int mod)
     {
         time = FindObjectOfType<TimeManager>();
-        timeUI = FindObjectOfType<TimeGagueVisual>();
+        timeUI = FindObjectOfType<TimeGaugeUI>();
 
         float temp = baseGauge * ((float)mod / 10f);
         time.UpgradeSetGaugeMax(time.UpgradeMaxGauge() - temp);

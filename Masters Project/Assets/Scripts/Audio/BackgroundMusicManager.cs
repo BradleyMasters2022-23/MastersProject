@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using Mono.Cecil;
 
 public enum Music
 {
@@ -53,8 +54,7 @@ public class BackgroundMusicManager : MonoBehaviour
 
     public void StopMusic()
     {
-        mainMusicSource.Stop();
-        secondaryMusicSource.Stop();
+        StartCoroutine(SlowStop());
     }
 
     /// <summary>
@@ -162,6 +162,32 @@ public class BackgroundMusicManager : MonoBehaviour
         newSource.volume = newOriginalVol;
         oldSource.volume = 0;
         oldSource.Stop();
+
+        yield return null;
+    }
+
+    private IEnumerator SlowStop(float transitionTime = 1f)
+    {
+        // get timer for smooth scaling using its timer progress func
+        ScaledTimer timer = new ScaledTimer(transitionTime, false);
+
+        // get original volume settings to scale
+        float mainVol = mainMusicSource.volume;
+        float secondVol = secondaryMusicSource.volume;
+
+
+        while (!timer.TimerDone())
+        {
+            mainMusicSource.volume = (1 - timer.TimerProgress()) * mainVol;
+            secondaryMusicSource.volume = (1 - timer.TimerProgress()) * secondVol;
+
+            yield return null;
+        }
+
+        mainMusicSource.volume = 0;
+        secondaryMusicSource.volume = 0;
+        mainMusicSource.Stop();
+        secondaryMusicSource.Stop();
 
         yield return null;
     }

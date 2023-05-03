@@ -10,18 +10,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class DamageField : MonoBehaviour
 {
-    [Tooltip("Initial damage dealt to enemies when first entering trap")]
-    [SerializeField] private float initialDamage;
-    [Tooltip("Continuous damage dealt to enemies on each tick")]
-    [SerializeField] private float tickDamage;
+    [SerializeField] protected TeamDamage initialDamageProfiles;
+    [SerializeField] protected TeamDamage tickDamageProfiles;
 
-    [Tooltip("Initial damage dealt to player when first entering the trap")]
-    [SerializeField] private float playerInitialDamage;
-    [Tooltip("Continuous damage dealt to player on each tick")]
-    [SerializeField] private float playerTickDamage;
+    //[Tooltip("Initial damage dealt to enemies when first entering trap")]
+    //[SerializeField] private float initialDamage;
+    //[Tooltip("Continuous damage dealt to enemies on each tick")]
+    //[SerializeField] private float tickDamage;
+
+    //[Tooltip("Initial damage dealt to player when first entering the trap")]
+    //[SerializeField] private float playerInitialDamage;
+    //[Tooltip("Continuous damage dealt to player on each tick")]
+    //[SerializeField] private float playerTickDamage;
 
     [Tooltip("Time between each tick")]
     [SerializeField] private float tickRate;
@@ -35,13 +39,11 @@ public class DamageField : MonoBehaviour
         coll = GetComponent<Collider>();
     }
 
-    public void InitValues(float initDmg, float tkDmg, float pInitDmg, float pTkDmg, float tkR)
+    public void InitValues(TeamDamage initDmgProf, TeamDamage tickDmgProf, float tkR)
     {
-        initialDamage= initDmg;
-        tickDamage= tkDmg;
-        playerInitialDamage= pInitDmg;
-        playerTickDamage = pTkDmg;
-        tickRate= tkR;
+        initialDamageProfiles = initDmgProf;
+        tickDamageProfiles = tickDmgProf;
+        tickRate = tkR;
     }
 
     private void LateUpdate()
@@ -64,16 +66,8 @@ public class DamageField : MonoBehaviour
                 {
                     entity.Value.ResetTimer();
 
-                    if (entity.Key.Team == Team.ENEMY)
-                    {
-                        entity.Key.RegisterEffect(tickDamage);
-                    }
-                    // If player, make it take tick damage in timestop
-                    else if (entity.Key.Team == Team.PLAYER)
-                    {
-                        entity.Key.RegisterEffect(playerTickDamage);
-                        //Debug.Log("Registering player damage tick");
-                    }
+                    entity.Key.RegisterEffect(tickDamageProfiles);
+                    entity.Key.Knockback(tickDamageProfiles, transform.position);
                 }
             }
 
@@ -101,17 +95,18 @@ public class DamageField : MonoBehaviour
             // If not already registered...
             else
             {
+                newTar.RegisterEffect(initialDamageProfiles);
+                newTar.Knockback(initialDamageProfiles, transform.position);
+
                 // If an enemy, make it not take tick damage in timestop
-                if(newTar.Team == Team.ENEMY)
+                if (newTar.Team == Team.ENEMY)
                 {
                     targetEntities.Add(newTar, new ScaledTimer(tickRate, true));
-                    newTar.RegisterEffect(initialDamage);
                 }
                 // If player, make it take tick damage in timestop
                 else if(newTar.Team == Team.PLAYER)
                 {
                     targetEntities.Add(newTar, new ScaledTimer(tickRate, false));
-                    newTar.RegisterEffect(playerInitialDamage);
                 }
             }
         }

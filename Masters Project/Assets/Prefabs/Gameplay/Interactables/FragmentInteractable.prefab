@@ -59,6 +59,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltip: {fileID: 11400000, guid: d0246eda22de64742a623c4390e65be9, type: 2}
+  tooltipDisplayTime: 0
 --- !u!1 &4955004976110838259
 GameObject:
   m_ObjectHideFlags: 0
@@ -71,6 +72,7 @@ GameObject:
   - component: {fileID: -2609048897684541409}
   - component: {fileID: 7985577552963883048}
   - component: {fileID: 7899116210997095121}
+  - component: {fileID: 8521045816218092098}
   m_Layer: 13
   m_Name: FragmentInteractable
   m_TagString: Untagged
@@ -139,6 +141,22 @@ MonoBehaviour:
     maxRange: 8
     minRange: 0
     icon: {fileID: 21300000, guid: 99d1139a0513850468022b6b17cf1816, type: 3}
+--- !u!114 &8521045816218092098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4955004976110838259}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ce18b6b2f95e5e469658681c19225b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minimumRoomNum: 0
+  maximumRoomNum: 999
+  baseStayChance: 65
+  depthChanceModifier: 0
 --- !u!1001 &6792831288183594236
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -214,6 +232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spinSpeed: 0.5
+  spinAxis: 2
 --- !u!4 &643440336783341685 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6244532815689901193, guid: 50081ef2581c2bc4b8645905bb241081, type: 3}

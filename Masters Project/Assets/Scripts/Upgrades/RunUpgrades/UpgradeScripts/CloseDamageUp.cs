@@ -24,15 +24,17 @@ public class CloseDamageUp : IUpgrade {
 
     private void CalculateDamage(Projectile projectile)
     {
-        if ((int)projectile.GetDistanceCovered() <= maxPercentIncrease && projectile.GetShotByPlayer())
-        {
+        // Commented out due to obselete code having issues with new structure
 
-            float damageIncrease = maxPercentIncrease - (projectile.GetDistanceCovered());
-            damageIncrease /= 100;
-            damageIncrease *= (float)baseDamage;
-            damageIncrease += (float)baseDamage;
-            projectile.ChangeDamageTo((int)damageIncrease);
-            damageIncrease = 0;
-        }
+        //if ((int)projectile.GetDistanceCovered() <= maxPercentIncrease && projectile.GetShotByPlayer())
+        //{
+
+        //    float damageIncrease = maxPercentIncrease - (projectile.GetDistanceCovered());
+        //    damageIncrease /= 100;
+        //    damageIncrease *= (float)baseDamage;
+        //    damageIncrease += (float)baseDamage;
+        //    projectile.ChangeDamageTo((int)damageIncrease);
+        //    damageIncrease = 0;
+        //}
     }
 }

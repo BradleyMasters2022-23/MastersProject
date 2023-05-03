@@ -32,8 +32,8 @@ public class LookAtTarget : BaseEnemyMovement
     protected override void Awake()
     {
         base.Awake();
-        stunnedTracker = new ScaledTimer(stunnedDuration);
-        stunnedCooldown= new ScaledTimer(stunCooldown);
+        stunnedTracker = new ScaledTimer(stunnedDuration, affected);
+        stunnedCooldown= new ScaledTimer(stunCooldown, affected);
 
         if (lineOfSightOrigin == null)
             lineOfSightOrigin = transform;

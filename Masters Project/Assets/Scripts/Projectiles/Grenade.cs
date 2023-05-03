@@ -74,7 +74,7 @@ public class Grenade : Throwable
     }
     private void Activate()
     {
-        Instantiate(explosive, transform.position, Quaternion.identity).GetComponent<Explosive>().Detonate();
+        Instantiate(explosive, transform.position, Quaternion.identity).GetComponent<Explosive>()?.Detonate();
         Destroy(gameObject);
         
     }

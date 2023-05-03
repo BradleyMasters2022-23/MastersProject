@@ -14,7 +14,6 @@ using Masters.AI;
 
 public class SimpleShoot : AttackTarget
 {
-
     [Header("=== Ranged Attack Data ===")]
 
     [Tooltip("The projectile prefab to use")]
@@ -97,7 +96,7 @@ public class SimpleShoot : AttackTarget
         base.Awake();
 
         // Spawn in indicator and set scale, but then disable until use
-        if(indicatorVFXPrefab!= null )
+        if (indicatorVFXPrefab!= null )
         {
             indicators = new GameObject[shootPoints.Length];
             for (int i = 0; i < shootPoints.Length; i++)
@@ -105,7 +104,7 @@ public class SimpleShoot : AttackTarget
                 indicators[i] = Instantiate(indicatorVFXPrefab, shootPoints[i]);
                 indicators[i].transform.localScale *= indicatorScale;
 
-                for(int j = 0; j < indicators[i].transform.childCount; j++)
+                for (int j = 0; j < indicators[i].transform.childCount; j++)
                 {
                     indicators[i].transform.GetChild(j).localScale *= indicatorScale;
                 }
@@ -114,16 +113,21 @@ public class SimpleShoot : AttackTarget
                 indicators[i].SetActive(false);
             }
         }
-
-        indicatorStunTracker = new ScaledTimer(indicatorStunnedDuration);
+        shotTimer = new ScaledTimer(delayBetweenShots, false);
+        indicatorStunTracker = new ScaledTimer(indicatorStunnedDuration, false);
         averageLead = (leadStrength.x + leadStrength.y) / 2;
         attackReady = true;
     }
 
+    protected override void UpdateTime()
+    {
+        base.UpdateTime();
+        indicatorStunTracker?.SetModifier(timeScale);
+        shotTimer?.SetModifier(timeScale);
+    }
+
     protected override IEnumerator DamageAction()
     {
-        shotTimer = new ScaledTimer(delayBetweenShots);
-
         for(int i = 0; i < numOfShots; i++)
         {
             // Apply first shot accuracy instead
@@ -142,16 +146,9 @@ public class SimpleShoot : AttackTarget
             if (i == numOfShots - 1)
                 break;
 
-            int c = 0;
             shotTimer.ResetTimer();
             while(!shotTimer.TimerDone())
             {
-                c++;
-                if(c >= 10000)
-                {
-                    Debug.Log("Damage action shot timer stuck in infinite loop");
-                    yield break;
-                }
 
                 yield return null;
             }

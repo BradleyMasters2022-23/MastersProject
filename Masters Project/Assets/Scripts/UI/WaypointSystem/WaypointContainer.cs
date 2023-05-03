@@ -11,47 +11,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaypointContainer : MonoBehaviour
+public class WaypointContainer : GenericWaypointContainer
 {
-    [SerializeField] private Transform targetOverride;
-
-    [SerializeField] private WaypointData displayData;
-
-    private Waypoint wp;
-
     private WaypointManager i;
 
-    private void OnEnable()
+    protected override Waypoint GetWaypoint(Transform targetOverride, WaypointData data)
     {
-        if (WaypointManager.instance == null)
-        {
-            Debug.Log("No waypoint manager found!");
-            Destroy(this);
-            return;
-        }
-        else if(i == null)
+        if (i == null)
         {
             i = WaypointManager.instance;
         }
 
-        // If no override done, use attached transform
-        if (targetOverride == null)
-            targetOverride = transform;
-
-        wp = i.Request(targetOverride, displayData);
+        return i.Request(targetOverride, data);
     }
 
-    private void OnDisable()
+    protected override void ReturnWaypoint()
     {
-        if(wp != null)
-        {
-            i.Return(wp);
-            wp = null;
-        }
-    }
-
-    public WaypointData GetData()
-    {
-        return displayData;
+        i.Return(wp);
     }
 }

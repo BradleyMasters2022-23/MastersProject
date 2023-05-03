@@ -28,7 +28,7 @@ public class ShieldTarget : Target
     {
         base.RegisterEffect(dmg);
 
-        if(ShieldTooltipTrigger.instance != null)
+        if(ShieldTooltipTrigger.instance != null && !_healthManager.God)
             ShieldTooltipTrigger.instance.ShieldHit();
 
     }
@@ -37,7 +37,7 @@ public class ShieldTarget : Target
     {
         gameObject.SetActive(false);
 
-        if (ShieldTooltipTrigger.instance != null)
+        if (ShieldTooltipTrigger.instance != null && !_healthManager.God)
             ShieldTooltipTrigger.instance.ShieldKilled();
     }
 
