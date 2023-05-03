@@ -25,6 +25,7 @@ public class CutsceneManager : MonoBehaviour
 
     [Header("Pausing and Skipping")]
     [SerializeField] private GameObject pauseScreen;
+    [SerializeField] private GameObject settingScreen;
     [SerializeField] private GameObject pausePrompt;
     [SerializeField] private TextMeshProUGUI promptText;
     [SerializeField] private float noteDisplayTime;
@@ -191,6 +192,7 @@ public class CutsceneManager : MonoBehaviour
     public void PauseCutscene()
     {
         Cursor.lockState = CursorLockMode.Confined;
+        settingScreen.SetActive(false);
         pauseScreen.SetActive(true);
         videoPlayer.Pause();
         promptText.enabled = false;
