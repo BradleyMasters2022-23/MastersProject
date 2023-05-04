@@ -11,27 +11,59 @@ using Sirenix.OdinInspector;
 public class CutsceneManager : MonoBehaviour
 {
     [Header("Main Systems")]
+    [Tooltip("Reference to the video player")]
     [SerializeField] private VideoPlayer videoPlayer;
+    [Tooltip("Render image to use")]
     [SerializeField] private RawImage videoRenderImg;
-    [SerializeField, ReadOnly] private VideoClip loadedCutscene;
-    [SerializeField, ReadOnly] private bool playingCutscene;
-    public VideoClip testCutscene;
+    [Tooltip("The loaded video to play")]
+    [SerializeField] private VideoClip loadedCutscene;
+    /// <summary>
+    /// Whether the cutscene is playing
+    /// </summary>
+    private bool playingCutscene;
+    /// <summary>
+    /// Whether or not this cutscene is allowed to play
+    /// Connect to the save system
+    /// </summary>
+    private bool allowedToPlay = true;
 
     [Header("Transitions")]
+    [Tooltip("Image used as the background of the video")]
     [SerializeField] private Image background;
+    [Tooltip("Time it takes to fade into the video")]
     [SerializeField] private float fadeInTime;
+    [Tooltip("Time it takes to fade out of the video")]
     [SerializeField] private float fadeOutTime;
+    [Tooltip("Time it takes to fade out of the video if the video was skipped")]
     [SerializeField] private float skippedFadeOutTime;
 
     [Header("Pausing and Skipping")]
+    [Tooltip("Ref to the pause screen object")]
     [SerializeField] private GameObject pauseScreen;
+    [Tooltip("Ref to the setting screen object")]
     [SerializeField] private GameObject settingScreen;
+    [Tooltip("Ref to the pause prompt box")]
     [SerializeField] private GameObject pausePrompt;
+    [Tooltip("Ref to the prompt saying to skip")]
     [SerializeField] private TextMeshProUGUI promptText;
+    [Tooltip("Time the note remains on screen with no input")]
     [SerializeField] private float noteDisplayTime;
+    /// <summary>
+    /// Routine tracking the fade in and our of the prompt
+    /// </summary>
+    private Coroutine promptFadeRoutine;
+    /// <summary>
+    /// Routine tracking the prompt life
+    /// </summary>
     private Coroutine promptRoutine;
+    /// <summary>
+    /// Scaled timer tracking the prompt life
+    /// </summary>
     private ScaledTimer promptLifeTracker;
 
+    /// <summary>
+    /// Reference to the game controls 
+    /// </summary>
     private GameControls playerControls;
     private InputAction pause;
     private InputAction showHide;
@@ -55,7 +87,9 @@ public class CutsceneManager : MonoBehaviour
 
         // assign audio system
         videoPlayer.SetTargetAudioSource(0, GetComponent<AudioSource>());
-        PrepareCutscene(testCutscene);
+
+        // Prepare the cutscene
+        PrepareCutscene(loadedCutscene);
     }
 
     public void PrepareCutscene(VideoClip newCutscene)
@@ -67,7 +101,8 @@ public class CutsceneManager : MonoBehaviour
 
     public void BeginCutscene()
     {
-        StartCoroutine(PlayCutscene());
+        if(allowedToPlay && loadedCutscene!=null)
+            StartCoroutine(PlayCutscene());
     }
 
     /// <summary>
@@ -109,10 +144,14 @@ public class CutsceneManager : MonoBehaviour
         // Disable on cutscene end stuff
         if (promptRoutine != null)
             StopCoroutine(promptRoutine);
+        if(promptFadeRoutine!=null)
+            StopCoroutine(promptFadeRoutine);
+
         playingCutscene = false;
         promptText.enabled = false;
         videoRenderImg.enabled = false;
-        
+
+        StartCoroutine(FadePrompt(false, 0.3f));
         // By now, video has stopped, close screen
         yield return StartCoroutine(LoadScreen(false, fadeOutTime));
 
@@ -181,7 +220,12 @@ public class CutsceneManager : MonoBehaviour
     private void TogglePause(InputAction.CallbackContext c)
     {
         if(pauseScreen.activeSelf)
-            ResumeCutscene();
+        {
+            if (settingScreen.activeSelf)
+                settingScreen.SetActive(false);
+            else
+                ResumeCutscene();
+        }
         else
             PauseCutscene();
     }
@@ -221,10 +265,11 @@ public class CutsceneManager : MonoBehaviour
     private void ShowPrompt(InputAction.CallbackContext c)
     {
         // dont show if the cutscene is paused or not playing at all
-        if (pauseScreen.activeInHierarchy || !playingCutscene)
+        if (!videoPlayer.isPlaying)
             return;
 
-        StartCoroutine(FadePrompt(true, 1f));
+        if(!promptText.enabled)
+            promptFadeRoutine = StartCoroutine(FadePrompt(true, 1f));
 
         promptLifeTracker.ResetTimer();
         if (promptRoutine == null)
@@ -247,6 +292,7 @@ public class CutsceneManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator FadePrompt(bool active, float dur)
     {
+        Debug.Log($"Fade called for {active}");
         // make visible to start
         promptText.enabled = true;
 
