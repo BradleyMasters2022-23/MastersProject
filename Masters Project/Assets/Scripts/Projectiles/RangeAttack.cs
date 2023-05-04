@@ -71,7 +71,7 @@ public abstract class RangeAttack : Attack
 
         source = GetComponent<AudioSource>();
 
-        damage *= Mathf.FloorToInt(_damageMultiplier);
+        damage *= _damageMultiplier;
         speed *= _speedMultiplier;
         shotByPlayer = _shotByPlayer;
         range = maxRange;

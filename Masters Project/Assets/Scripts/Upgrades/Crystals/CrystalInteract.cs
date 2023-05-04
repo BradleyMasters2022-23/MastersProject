@@ -53,27 +53,27 @@ public class CrystalInteract : Interactable
         switch(crystal.stats[0].GetGroup())
         {
             case IStat.StatGroup.HEALTH:
-                health.GetComponent<Renderer>().sharedMaterial.color = crystal.GetColor();
+                health.GetComponent<Renderer>().material.color = crystal.GetColor();
                 health.SetActive(true);
                 break;
             case IStat.StatGroup.GUN:
-                gun.GetComponent<Renderer>().sharedMaterial.color = crystal.GetColor();
+                gun.GetComponent<Renderer>().material.color = crystal.GetColor();
                 gun.SetActive(true);
                 break;
             case IStat.StatGroup.GRENADE:
-                grenade.GetComponent<Renderer>().sharedMaterial.color = crystal.GetColor();
+                grenade.GetComponent<Renderer>().material.color = crystal.GetColor();
                 grenade.SetActive(true);
                 break;
             case IStat.StatGroup.MOVEMENT:
-                movement.GetComponent<Renderer>().sharedMaterial.color = crystal.GetColor();
+                movement.GetComponent<Renderer>().material.color = crystal.GetColor();
                 movement.SetActive(true);
                 break;
             case IStat.StatGroup.TIMESTOP:
-                time.GetComponent<Renderer>().sharedMaterial.color = crystal.GetColor();
+                time.GetComponent<Renderer>().material.color = crystal.GetColor();
                 time.SetActive(true);
                 break;
             case IStat.StatGroup.SHIELD:
-                shield.GetComponent<Renderer>().sharedMaterial.color = crystal.GetColor();
+                shield.GetComponent<Renderer>().material.color = crystal.GetColor();
                 shield.SetActive(true);
                 break;
         }
