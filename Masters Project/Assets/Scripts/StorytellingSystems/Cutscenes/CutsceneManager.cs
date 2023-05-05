@@ -125,15 +125,15 @@ public class CutsceneManager : MonoBehaviour
         // turn on the screen
         yield return StartCoroutine(LoadScreen(true, fadeInTime));
 
-        // Play the video
-        videoRenderImg.enabled = true;
-        videoPlayer.Play();
-
         playerControls.UI.Disable();
         playerControls.PlayerGameplay.Disable();
         playerControls.Cutscene.Enable();
 
         yield return new WaitForSecondsRealtime(startDelay);
+
+        // Play the video
+        videoRenderImg.enabled = true;
+        videoPlayer.Play();
 
         // Track time only if its playing. Dont if its paused
         float timeElapsed = 0;
