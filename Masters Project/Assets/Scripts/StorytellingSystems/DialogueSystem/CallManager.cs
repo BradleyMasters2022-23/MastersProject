@@ -9,12 +9,16 @@ using UnityEngine.EventSystems;
 public class CallManager : MonoBehaviour
 {
     public List<Conversation> conversations = new List<Conversation>();
-    private List<Conversation> availableConversations = new List<Conversation>();
+    [SerializeField] private List<Conversation> availableConversations = new List<Conversation>();
     public Conversation defaultConversation;
     public static CallManager instance;
 
     public static GameControls controls;
     private InputAction backslash;
+    private InputAction forwardSlash;
+
+    private DialogueSaveData saveData;
+    private const string saveFileName = "conversationSaveData";
 
     private void Awake()
     {
@@ -22,7 +26,11 @@ public class CallManager : MonoBehaviour
         backslash = controls.PlayerGameplay.ResetConversations;
         backslash.performed += ResetCalls;
         backslash.Enable();
-        
+        forwardSlash = controls.PlayerGameplay.IncrementConvs;
+        forwardSlash.performed += IncrementRuns;
+        forwardSlash.Enable();
+
+
         if (instance == null)
         {
             instance = this;
@@ -33,20 +41,27 @@ public class CallManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
-
-        
     }
 
     private void Start()
     {
-        foreach (Conversation conversation in conversations)
-        {
-            conversation.Lock();
-        }
+        // Try to get save data
+        saveData = DataManager.instance.Load<DialogueSaveData>(saveFileName);
+        if (saveData == null)
+            saveData = new DialogueSaveData();
+        //saveData.SeeAllReads();
 
-        conversations[0].Unlock();
-        if(conversations.Count >= 4)
-            conversations[3].Unlock();
+
+        //foreach (Conversation conversation in conversations)
+        //{
+        //    conversation.Lock();
+        //}
+
+        //conversations[0].Unlock();
+        //if(conversations.Count >= 4)
+        //    conversations[3].Unlock();
+
+
         UpdateCalls();
     }
 
@@ -55,10 +70,11 @@ public class CallManager : MonoBehaviour
         // loop through conversations
         foreach(Conversation conversation in conversations.ToList<Conversation>())
         {
-
+            /*
             // check each locked conversation's dependencies. once run counting is implemented that lives here too
             if (conversation.currentState == Conversation.ConversationState.LOCKED)
-            {   if(conversation.dependencies.Length > 0)
+            {
+                if (conversation.dependencies.Length > 0)
                 {
                     foreach (int i in conversation.dependencies)
                     {
@@ -77,18 +93,29 @@ public class CallManager : MonoBehaviour
             }
 
             // check each conversation, add to available conversations if unread
-            if(conversation.currentState == Conversation.ConversationState.UNREAD && !availableConversations.Contains(conversation))
+            if (conversation.currentState == Conversation.ConversationState.UNREAD && !availableConversations.Contains(conversation))
             {
                 availableConversations.Add(conversation);
                 //Debug.Log(conversation.ID + " added to available");
+            }
+            */
+
+            // Check saved data if the dependencies have been satisfied
+            if (saveData.CheckDependencies(conversation) 
+                && !saveData.AlreadyRead(conversation)
+                && !availableConversations.Contains(conversation))
+            {
+                //Debug.Log($"Adding {conversation} to list");
+                availableConversations.Add(conversation);
             }
 
         }
         
         foreach(Conversation conversation in availableConversations.ToList<Conversation>())
         {
-            if(conversation.currentState == Conversation.ConversationState.READ)
+            if(saveData.AlreadyRead(conversation))
             {
+                //Debug.Log($"Removing {conversation} from list bc it was already read");
                 availableConversations.Remove(conversation);
             }
         }
@@ -116,18 +143,44 @@ public class CallManager : MonoBehaviour
 
     public void ResetCalls(InputAction.CallbackContext c = default)
     {
+        // delete save data for conversaitons
+        DataManager.instance.Delete(saveFileName);
+        saveData = new DialogueSaveData();
 
         availableConversations.Clear();
 
-        foreach (Conversation conversation in conversations)
-        {
-            conversation.Lock();
-        }
+        //foreach (Conversation conversation in conversations)
+        //{
+        //    conversation.Lock();
+        //}
 
-        conversations[0].Unlock();
-        if (conversations.Count >= 4)
-            conversations[3].Unlock();
+        //conversations[0].Unlock();
+        //if (conversations.Count >= 4)
+        //    conversations[3].Unlock();
+
         UpdateCalls();
         Debug.Log("Calls Reset");
+    }
+
+    /// <summary>
+    /// Increment the runs of conversations and save
+    /// </summary>
+    public void IncrementRuns(InputAction.CallbackContext c = default)
+    {
+        saveData.IncrementRuns();
+        bool s = DataManager.instance.Save<DialogueSaveData>(saveFileName, saveData);
+        //Debug.Log($"Increment runs saved successfully : {s}");
+    }
+
+    /// <summary>
+    /// Mark a conversation as read
+    /// </summary>
+    /// <param name="c">Conversation to mark as read</param>
+    public void SaveData(Conversation c)
+    {
+        saveData.ConversationRead(c);
+        bool s = DataManager.instance.Save<DialogueSaveData>(saveFileName, saveData);
+        //Debug.Log($"Conversation save successful : {s}");
+        //saveData.SeeAllReads();
     }
 }

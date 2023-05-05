@@ -197,6 +197,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""IncrementConvs"",
+                    ""type"": ""Button"",
+                    ""id"": ""de86a6fd-b25e-464c-991f-de3054b23fe4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -507,6 +516,17 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""Reset"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""798e199a-0ebb-4c3a-98fa-bd2617e35911"",
+                    ""path"": ""<Keyboard>/slash"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""IncrementConvs"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -641,6 +661,28 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""de42847e-b33b-4a92-b67d-f5e735a47c60"",
                     ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Advance"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c093bb85-e2ce-487c-94a7-0e98366908cc"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Advance"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ae8ef400-85fd-4f91-89ba-f100afea69dd"",
+                    ""path"": ""<Keyboard>/enter"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -799,6 +841,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_PlayerGameplay_DamageCheat = m_PlayerGameplay.FindAction("DamageCheat", throwIfNotFound: true);
         m_PlayerGameplay_DismissTooltip = m_PlayerGameplay.FindAction("DismissTooltip", throwIfNotFound: true);
         m_PlayerGameplay_ResetConversations = m_PlayerGameplay.FindAction("ResetConversations", throwIfNotFound: true);
+        m_PlayerGameplay_IncrementConvs = m_PlayerGameplay.FindAction("IncrementConvs", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Mouse = m_UI.FindAction("Mouse", throwIfNotFound: true);
@@ -889,6 +932,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_DamageCheat;
     private readonly InputAction m_PlayerGameplay_DismissTooltip;
     private readonly InputAction m_PlayerGameplay_ResetConversations;
+    private readonly InputAction m_PlayerGameplay_IncrementConvs;
     public struct PlayerGameplayActions
     {
         private @GameControls m_Wrapper;
@@ -912,6 +956,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @DamageCheat => m_Wrapper.m_PlayerGameplay_DamageCheat;
         public InputAction @DismissTooltip => m_Wrapper.m_PlayerGameplay_DismissTooltip;
         public InputAction @ResetConversations => m_Wrapper.m_PlayerGameplay_ResetConversations;
+        public InputAction @IncrementConvs => m_Wrapper.m_PlayerGameplay_IncrementConvs;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -978,6 +1023,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @ResetConversations.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnResetConversations;
                 @ResetConversations.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnResetConversations;
                 @ResetConversations.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnResetConversations;
+                @IncrementConvs.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnIncrementConvs;
+                @IncrementConvs.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnIncrementConvs;
+                @IncrementConvs.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnIncrementConvs;
             }
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -1039,6 +1087,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @ResetConversations.started += instance.OnResetConversations;
                 @ResetConversations.performed += instance.OnResetConversations;
                 @ResetConversations.canceled += instance.OnResetConversations;
+                @IncrementConvs.started += instance.OnIncrementConvs;
+                @IncrementConvs.performed += instance.OnIncrementConvs;
+                @IncrementConvs.canceled += instance.OnIncrementConvs;
             }
         }
     }
@@ -1187,6 +1238,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnDamageCheat(InputAction.CallbackContext context);
         void OnDismissTooltip(InputAction.CallbackContext context);
         void OnResetConversations(InputAction.CallbackContext context);
+        void OnIncrementConvs(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
