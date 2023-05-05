@@ -29,6 +29,9 @@ public class AlertContainer : MonoBehaviour
     [HideIf("@this.distanceFunctionality == false")]
     [Tooltip("Graph determining color over distance")]
     [SerializeField] Gradient colorOverDistance;
+    [HideIf("@this.distanceFunctionality == false")]
+    [Tooltip("Graph determing offset from center over distance")]
+    [SerializeField] AnimationCurve offsetOverDistance;
 
     [HideIf("@this.distanceFunctionality == true")]
     [Tooltip("Color to display")]
@@ -49,6 +52,14 @@ public class AlertContainer : MonoBehaviour
     /// Camera
     /// </summary>
     private CameraShoot cam;
+    /// <summary>
+    /// Distance between container and camera. Calculated once per frame
+    /// </summary>
+    private float dist;
+    /// <summary>
+    /// Ratio for distance calculations
+    /// </summary>
+    private float distRatio;
 
     /// <summary>
     /// Get all references needed
@@ -76,6 +87,9 @@ public class AlertContainer : MonoBehaviour
 
     private void Update()
     {
+        dist = Vector3.Distance(transform.position, player.position);
+        distRatio = (dist - displayDistanceRange.x) / (displayDistanceRange.y - displayDistanceRange.x);
+
         // Set display status. If not active, then exit early
         pointer.gameObject.SetActive(Display());
         if (!pointer.isActiveAndEnabled) return;
@@ -87,6 +101,7 @@ public class AlertContainer : MonoBehaviour
         if(distanceFunctionality)
         {
             pointer.UpdateScale(GetScale());
+            pointer.UpdateOffset(GetOffset());
             pointer.UpdateColor(GetColor());
         }
     }
@@ -101,7 +116,6 @@ public class AlertContainer : MonoBehaviour
         if(distanceFunctionality)
         {
             // Check if within distance range
-            float dist = Vector3.Distance(transform.position, player.position);
             if (dist < displayDistanceRange.x || dist > displayDistanceRange.y)
                 return false;
         }
@@ -146,9 +160,23 @@ public class AlertContainer : MonoBehaviour
     {
         if(distanceFunctionality)
         {
-            float dist = Vector3.Distance(transform.position, player.position);
-            float distRatio = (dist - displayDistanceRange.x) / (displayDistanceRange.y - displayDistanceRange.x);
             return scaleOverDistance.Evaluate(distRatio);
+        }
+        else
+        {
+            return scaleMod;
+        }
+    }
+
+    /// <summary>
+    /// Get the offset for the pointer
+    /// </summary>
+    /// <returns>New offset to use</returns>
+    public float GetOffset()
+    {
+        if (distanceFunctionality)
+        {
+            return offsetOverDistance.Evaluate(distRatio);
         }
         else
         {
@@ -164,8 +192,6 @@ public class AlertContainer : MonoBehaviour
     {
         if (distanceFunctionality)
         {
-            float dist = Vector3.Distance(transform.position, player.position);
-            float distRatio = (dist - displayDistanceRange.x) / (displayDistanceRange.y - displayDistanceRange.x);
             return colorOverDistance.Evaluate(distRatio);
         }
         else

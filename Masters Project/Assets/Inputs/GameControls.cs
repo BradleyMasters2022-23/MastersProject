@@ -649,6 +649,131 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Cutscene"",
+            ""id"": ""2b1f035f-fb43-44da-af60-3dd84a119d74"",
+            ""actions"": [
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""b30a7176-6a96-4165-8e8e-b6d0aafa11c2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Any"",
+                    ""type"": ""Button"",
+                    ""id"": ""8f276b82-006d-4552-9a10-4a9717dfd544"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""e3d48124-c485-456f-8745-67f48e46271e"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""13324b04-ced9-437a-8391-af4c469d0f68"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""840218c1-53fa-446b-9a60-f8d4c70d24a8"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""84e9a4e9-55e1-4518-abf9-2eccef5b9ac0"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7fffb8db-1a20-4e02-8571-997ce58bd93e"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e6e43eb1-a3ee-4f18-8069-5a0a39ef07a2"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3f68bc68-2115-4652-b86d-72b0551434e1"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""afbb1c1a-e017-4585-931c-e30b0af9ee7b"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fa9d1c5f-7ab1-4173-bb25-8034c108303a"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -682,6 +807,10 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         // Dialogue
         m_Dialogue = asset.FindActionMap("Dialogue", throwIfNotFound: true);
         m_Dialogue_Advance = m_Dialogue.FindAction("Advance", throwIfNotFound: true);
+        // Cutscene
+        m_Cutscene = asset.FindActionMap("Cutscene", throwIfNotFound: true);
+        m_Cutscene_Pause = m_Cutscene.FindAction("Pause", throwIfNotFound: true);
+        m_Cutscene_Any = m_Cutscene.FindAction("Any", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -996,6 +1125,47 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         }
     }
     public DialogueActions @Dialogue => new DialogueActions(this);
+
+    // Cutscene
+    private readonly InputActionMap m_Cutscene;
+    private ICutsceneActions m_CutsceneActionsCallbackInterface;
+    private readonly InputAction m_Cutscene_Pause;
+    private readonly InputAction m_Cutscene_Any;
+    public struct CutsceneActions
+    {
+        private @GameControls m_Wrapper;
+        public CutsceneActions(@GameControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Pause => m_Wrapper.m_Cutscene_Pause;
+        public InputAction @Any => m_Wrapper.m_Cutscene_Any;
+        public InputActionMap Get() { return m_Wrapper.m_Cutscene; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CutsceneActions set) { return set.Get(); }
+        public void SetCallbacks(ICutsceneActions instance)
+        {
+            if (m_Wrapper.m_CutsceneActionsCallbackInterface != null)
+            {
+                @Pause.started -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnPause;
+                @Any.started -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnAny;
+                @Any.performed -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnAny;
+                @Any.canceled -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnAny;
+            }
+            m_Wrapper.m_CutsceneActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
+                @Any.started += instance.OnAny;
+                @Any.performed += instance.OnAny;
+                @Any.canceled += instance.OnAny;
+            }
+        }
+    }
+    public CutsceneActions @Cutscene => new CutsceneActions(this);
     public interface IPlayerGameplayActions
     {
         void OnPause(InputAction.CallbackContext context);
@@ -1027,5 +1197,10 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     public interface IDialogueActions
     {
         void OnAdvance(InputAction.CallbackContext context);
+    }
+    public interface ICutsceneActions
+    {
+        void OnPause(InputAction.CallbackContext context);
+        void OnAny(InputAction.CallbackContext context);
     }
 }
