@@ -22,11 +22,13 @@ public class Conversation : ScriptableObject
     public Character penny;
     public Character nonPennyCharacter;
     public int ID;
-    public int[] dependencies;
+    public Conversation[] dependencies;
     // runs after last unlocked dependency OR total runs if no dependencies
     public int runReq;
 
     public bool soloDialogue = false;
+
+
 
     public Line[] lines;
     public enum ConversationState 
@@ -37,6 +39,7 @@ public class Conversation : ScriptableObject
     }
     public ConversationState currentState = ConversationState.LOCKED;
 
+    /*
     public void Read()
     {
         if(currentState != ConversationState.UNREAD && ID >= 0)
@@ -74,4 +77,5 @@ public class Conversation : ScriptableObject
             //Debug.Log("Conversation " + ID + " is already locked");
         }
     }
+    */
 }

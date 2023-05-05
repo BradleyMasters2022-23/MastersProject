@@ -266,7 +266,11 @@ public class MapLoader : MonoBehaviour
             controls.UI.Disable();
             controls.PlayerGameplay.Enable();
         }
-            
+
+        // tell stat manager that a run has begun
+        GlobalStatsManager.data.runsAttempted++;
+        if (CallManager.instance != null)
+            CallManager.instance.IncrementRuns();
 
         yield return null;
     }
