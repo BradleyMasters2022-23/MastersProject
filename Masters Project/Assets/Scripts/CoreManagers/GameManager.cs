@@ -653,8 +653,12 @@ public class GameManager : MonoBehaviour
     {
         // if none of the main scenes, dont load. 
         // Useful for testing scenes and pausing/unpausing
-        if (name != mainMenuScene && name != mainGameplayScene && name != mainHubScene)
+        string currScene = SceneManager.GetActiveScene().name;
+        if (currScene != mainMenuScene && currScene != mainGameplayScene && currScene != mainHubScene)
             return;
+
+        // attempt to save global stats whenver loading
+        GlobalStatsManager.SaveData();
 
         menuStack.Clear();
         controls.UI.Disable();

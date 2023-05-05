@@ -197,6 +197,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""IncrementConvs"",
+                    ""type"": ""Button"",
+                    ""id"": ""de86a6fd-b25e-464c-991f-de3054b23fe4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -507,6 +516,17 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""Reset"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""798e199a-0ebb-4c3a-98fa-bd2617e35911"",
+                    ""path"": ""<Keyboard>/slash"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""IncrementConvs"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -647,6 +667,153 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""Advance"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c093bb85-e2ce-487c-94a7-0e98366908cc"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Advance"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ae8ef400-85fd-4f91-89ba-f100afea69dd"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Advance"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Cutscene"",
+            ""id"": ""2b1f035f-fb43-44da-af60-3dd84a119d74"",
+            ""actions"": [
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""b30a7176-6a96-4165-8e8e-b6d0aafa11c2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Any"",
+                    ""type"": ""Button"",
+                    ""id"": ""8f276b82-006d-4552-9a10-4a9717dfd544"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""e3d48124-c485-456f-8745-67f48e46271e"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""13324b04-ced9-437a-8391-af4c469d0f68"",
+                    ""path"": ""<Gamepad>/start"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""840218c1-53fa-446b-9a60-f8d4c70d24a8"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""84e9a4e9-55e1-4518-abf9-2eccef5b9ac0"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7fffb8db-1a20-4e02-8571-997ce58bd93e"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e6e43eb1-a3ee-4f18-8069-5a0a39ef07a2"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3f68bc68-2115-4652-b86d-72b0551434e1"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""afbb1c1a-e017-4585-931c-e30b0af9ee7b"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fa9d1c5f-7ab1-4173-bb25-8034c108303a"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -674,6 +841,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_PlayerGameplay_DamageCheat = m_PlayerGameplay.FindAction("DamageCheat", throwIfNotFound: true);
         m_PlayerGameplay_DismissTooltip = m_PlayerGameplay.FindAction("DismissTooltip", throwIfNotFound: true);
         m_PlayerGameplay_ResetConversations = m_PlayerGameplay.FindAction("ResetConversations", throwIfNotFound: true);
+        m_PlayerGameplay_IncrementConvs = m_PlayerGameplay.FindAction("IncrementConvs", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Mouse = m_UI.FindAction("Mouse", throwIfNotFound: true);
@@ -682,6 +850,10 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         // Dialogue
         m_Dialogue = asset.FindActionMap("Dialogue", throwIfNotFound: true);
         m_Dialogue_Advance = m_Dialogue.FindAction("Advance", throwIfNotFound: true);
+        // Cutscene
+        m_Cutscene = asset.FindActionMap("Cutscene", throwIfNotFound: true);
+        m_Cutscene_Pause = m_Cutscene.FindAction("Pause", throwIfNotFound: true);
+        m_Cutscene_Any = m_Cutscene.FindAction("Any", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -760,6 +932,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_DamageCheat;
     private readonly InputAction m_PlayerGameplay_DismissTooltip;
     private readonly InputAction m_PlayerGameplay_ResetConversations;
+    private readonly InputAction m_PlayerGameplay_IncrementConvs;
     public struct PlayerGameplayActions
     {
         private @GameControls m_Wrapper;
@@ -783,6 +956,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @DamageCheat => m_Wrapper.m_PlayerGameplay_DamageCheat;
         public InputAction @DismissTooltip => m_Wrapper.m_PlayerGameplay_DismissTooltip;
         public InputAction @ResetConversations => m_Wrapper.m_PlayerGameplay_ResetConversations;
+        public InputAction @IncrementConvs => m_Wrapper.m_PlayerGameplay_IncrementConvs;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -849,6 +1023,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @ResetConversations.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnResetConversations;
                 @ResetConversations.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnResetConversations;
                 @ResetConversations.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnResetConversations;
+                @IncrementConvs.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnIncrementConvs;
+                @IncrementConvs.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnIncrementConvs;
+                @IncrementConvs.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnIncrementConvs;
             }
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -910,6 +1087,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @ResetConversations.started += instance.OnResetConversations;
                 @ResetConversations.performed += instance.OnResetConversations;
                 @ResetConversations.canceled += instance.OnResetConversations;
+                @IncrementConvs.started += instance.OnIncrementConvs;
+                @IncrementConvs.performed += instance.OnIncrementConvs;
+                @IncrementConvs.canceled += instance.OnIncrementConvs;
             }
         }
     }
@@ -996,6 +1176,47 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         }
     }
     public DialogueActions @Dialogue => new DialogueActions(this);
+
+    // Cutscene
+    private readonly InputActionMap m_Cutscene;
+    private ICutsceneActions m_CutsceneActionsCallbackInterface;
+    private readonly InputAction m_Cutscene_Pause;
+    private readonly InputAction m_Cutscene_Any;
+    public struct CutsceneActions
+    {
+        private @GameControls m_Wrapper;
+        public CutsceneActions(@GameControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Pause => m_Wrapper.m_Cutscene_Pause;
+        public InputAction @Any => m_Wrapper.m_Cutscene_Any;
+        public InputActionMap Get() { return m_Wrapper.m_Cutscene; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(CutsceneActions set) { return set.Get(); }
+        public void SetCallbacks(ICutsceneActions instance)
+        {
+            if (m_Wrapper.m_CutsceneActionsCallbackInterface != null)
+            {
+                @Pause.started -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnPause;
+                @Pause.performed -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnPause;
+                @Pause.canceled -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnPause;
+                @Any.started -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnAny;
+                @Any.performed -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnAny;
+                @Any.canceled -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnAny;
+            }
+            m_Wrapper.m_CutsceneActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Pause.started += instance.OnPause;
+                @Pause.performed += instance.OnPause;
+                @Pause.canceled += instance.OnPause;
+                @Any.started += instance.OnAny;
+                @Any.performed += instance.OnAny;
+                @Any.canceled += instance.OnAny;
+            }
+        }
+    }
+    public CutsceneActions @Cutscene => new CutsceneActions(this);
     public interface IPlayerGameplayActions
     {
         void OnPause(InputAction.CallbackContext context);
@@ -1017,6 +1238,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnDamageCheat(InputAction.CallbackContext context);
         void OnDismissTooltip(InputAction.CallbackContext context);
         void OnResetConversations(InputAction.CallbackContext context);
+        void OnIncrementConvs(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
@@ -1027,5 +1249,10 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     public interface IDialogueActions
     {
         void OnAdvance(InputAction.CallbackContext context);
+    }
+    public interface ICutsceneActions
+    {
+        void OnPause(InputAction.CallbackContext context);
+        void OnAny(InputAction.CallbackContext context);
     }
 }

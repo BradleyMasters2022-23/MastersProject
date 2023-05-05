@@ -154,7 +154,7 @@ Transform:
   - {fileID: 772339655}
   - {fileID: 1362091989}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &17959858
 Mesh:
@@ -5172,6 +5172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltip: {fileID: 11400000, guid: 69f45cc6a25ee88458c3cf9c1d96f2b3, type: 2}
+  tooltipDisplayTime: 0
   interact: {fileID: 7112942112689743606}
 --- !u!1001 &355696014
 PrefabInstance:
@@ -5676,7 +5677,7 @@ Transform:
   - {fileID: 330514211}
   - {fileID: 693257102}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &443624759
 PrefabInstance:
@@ -11567,6 +11568,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltip: {fileID: 11400000, guid: e3ddebc3fdefc3e4c8e71846dbf1ce37, type: 2}
+  tooltipDisplayTime: 0
 --- !u!65 &684026011
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -19412,6 +19414,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 384ec51a44cd4064888d3d5eec775d25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
 --- !u!1001 &1924042283
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22476,18 +22484,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5dee3caed31a6c548ad6c888a473f964, type: 3}
---- !u!114 &2727972098726173687
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8395687669063425664}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3649e819e4c27cc42b6a37214fb092ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2762276033056767711
 GameObject:
   m_ObjectHideFlags: 0
@@ -22555,7 +22551,7 @@ GameObject:
   - component: {fileID: 7462146391929563679}
   - component: {fileID: 5044299064066529362}
   - component: {fileID: 1319378403231119361}
-  - component: {fileID: 8449528168573093638}
+  - component: {fileID: 7462146391929563680}
   m_Layer: 8
   m_Name: Bottom
   m_TagString: Untagged
@@ -22993,6 +22989,20 @@ Transform:
   m_Father: {fileID: 3157863990855081144}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7462146391929563680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3180979698707044486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a33c2fc2c1e14b14e906e359abbe50f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 8883192646145632597}
+  damageMultiplier: 1
 --- !u!1 &8395687669063425664
 GameObject:
   m_ObjectHideFlags: 0
@@ -23002,8 +23012,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4513353920899247526}
-  - component: {fileID: 2727972098726173687}
   - component: {fileID: 927205269124128606}
+  - component: {fileID: 8395687669063425665}
   m_Layer: 8
   m_Name: Top [WEAK]
   m_TagString: Untagged
@@ -23011,18 +23021,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &8449528168573093638
+--- !u!114 &8395687669063425665
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3180979698707044486}
+  m_GameObject: {fileID: 8395687669063425664}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3649e819e4c27cc42b6a37214fb092ad, type: 3}
+  m_Script: {fileID: 11500000, guid: a33c2fc2c1e14b14e906e359abbe50f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  target: {fileID: 8883192646145632597}
+  damageMultiplier: 1.2
 --- !u!82 &8452023684136189108
 AudioSource:
   m_ObjectHideFlags: 0
@@ -23138,6 +23150,7 @@ MonoBehaviour:
   _gateHealthbarHealing: 0
   _gatedHealthInvulnerability: 0
   _godMode: 0
+  timeScale: 0
 --- !u!114 &8883192646145632597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23150,11 +23163,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf67b8df4d7f2ea43b3de7cbf2b245b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
   _center: {fileID: 5940177062373747260}
   _team: 3
   _targetThreat: 0
   _unkillable: 0
   immuneToKnockback: 1
+  knockbackModifier: 1
   maxKnockback: 0
   invincibilityShield: {fileID: 0}
   _deathVFX: {fileID: 0}

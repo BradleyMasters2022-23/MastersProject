@@ -199,6 +199,7 @@ public class CrystalSlotScreen : MonoBehaviour
     {
         if(selectedCrystalIndex >= 0)
         {
+            GlobalStatsManager.data.crystalsCollected++;
             crystalManager.LoadCrystal(newCrystal, selectedCrystalIndex);
         }
         caller.BegoneCrystalInteract();
