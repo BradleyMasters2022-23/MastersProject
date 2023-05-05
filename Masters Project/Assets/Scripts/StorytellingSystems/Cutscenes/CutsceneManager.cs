@@ -16,7 +16,7 @@ public class CutsceneManager : MonoBehaviour
     [Tooltip("Render image to use")]
     [SerializeField] private RawImage videoRenderImg;
     [Tooltip("The loaded video to play")]
-    [SerializeField] private VideoClip loadedCutscene;
+    [SerializeField, ReadOnly] private VideoClip loadedCutscene;
     /// <summary>
     /// Whether or not this cutscene is allowed to play
     /// Connect to the save system
@@ -83,9 +83,6 @@ public class CutsceneManager : MonoBehaviour
 
         // assign audio system
         videoPlayer.SetTargetAudioSource(0, GetComponent<AudioSource>());
-
-        // Prepare the cutscene
-        PrepareCutscene(loadedCutscene);
     }
 
     public void PrepareCutscene(VideoClip newCutscene)

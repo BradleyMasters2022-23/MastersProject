@@ -39,7 +39,7 @@ public class GlobalStatsManager : MonoBehaviour
             data = new PlaythroughSaveData();
 
         // only print for testing reaons
-        //data.PrintData();
+        //data?.PrintData();
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public class GlobalStatsManager : MonoBehaviour
         Debug.Log($"global stats save successful: {s}");
         
         // only print for testing reasons
-        //data.PrintData();
+        //data?.PrintData();
     }
 
     /// <summary>

@@ -146,6 +146,7 @@ public class CallManager : MonoBehaviour
         // delete save data for conversaitons
         DataManager.instance.Delete(saveFileName);
         saveData = new DialogueSaveData();
+        saveData.SeeAllReads();
 
         availableConversations.Clear();
 
@@ -167,8 +168,10 @@ public class CallManager : MonoBehaviour
     /// </summary>
     public void IncrementRuns(InputAction.CallbackContext c = default)
     {
+        GlobalStatsManager.data.runsAttempted++;
         saveData.IncrementRuns();
         bool s = DataManager.instance.Save<DialogueSaveData>(saveFileName, saveData);
+        //saveData.SeeAllReads();
         //Debug.Log($"Increment runs saved successfully : {s}");
     }
 
