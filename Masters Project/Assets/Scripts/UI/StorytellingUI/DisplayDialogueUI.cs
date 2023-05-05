@@ -111,7 +111,9 @@ public class DisplayDialogueUI : MonoBehaviour
     {
         if(conversation.ID >= 0)
         {
-            conversation.Read();
+            // mark conversation as read and add to save data
+            //conversation.Read();
+            CallManager.instance.SaveData(conversation);
         }
 
         click.Disable();

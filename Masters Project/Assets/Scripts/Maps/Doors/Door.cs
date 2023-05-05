@@ -17,7 +17,6 @@ using UnityEngine.Rendering;
 
 public class Door : MonoBehaviour
 {
-
     [Tooltip("Sound when door opens")]
     [SerializeField] private AudioClipSO openDoor;
     [Tooltip("Sound when door closes")]
@@ -292,6 +291,8 @@ public class Door : MonoBehaviour
                 case PlayerDoorType.ReturnToHub:
                     {
                         // TODO - go to the 'finished upgrades' stuff instead
+                        GlobalStatsManager.data.runsCompleted++;
+
                         MapLoader.instance.ReturnToHub();
                         //GameManager.instance.ChangeState(GameManager.States.HUB);
                         break;

@@ -1,5 +1,13 @@
+/* ================================================================================================
+ * Author - Ben Schuster   
+ * Date Created - May 4th, 2023
+ * Last Edited - May 4th, 2023 by Ben Schuster
+ * Description - Main system that handles reading and writing data to files
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 using System.IO;
 using System;
@@ -26,7 +34,7 @@ public class JsonDataService : IDataService
         {
             FileStream stream = File.Create(path);
             stream.Close();
-            File.WriteAllText(path, JsonUtility.ToJson(data));
+            File.WriteAllText(path, JsonConvert.SerializeObject(data));
             return true;
         }
         catch(Exception e)
@@ -50,7 +58,7 @@ public class JsonDataService : IDataService
             try
             {
                 string s = File.ReadAllText(path);
-                return JsonUtility.FromJson<T>(s);
+                return JsonConvert.DeserializeObject<T>(s);
             }
             catch (Exception e)
             {

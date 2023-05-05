@@ -18,10 +18,6 @@ public class CutsceneManager : MonoBehaviour
     [Tooltip("The loaded video to play")]
     [SerializeField] private VideoClip loadedCutscene;
     /// <summary>
-    /// Whether the cutscene is playing
-    /// </summary>
-    private bool playingCutscene;
-    /// <summary>
     /// Whether or not this cutscene is allowed to play
     /// Connect to the save system
     /// </summary>
@@ -118,7 +114,6 @@ public class CutsceneManager : MonoBehaviour
         yield return StartCoroutine(LoadScreen(true, fadeInTime));
 
         // Play the video
-        playingCutscene = true;
         videoRenderImg.enabled = true;
         videoPlayer.Play();
 
@@ -147,7 +142,6 @@ public class CutsceneManager : MonoBehaviour
         if(promptFadeRoutine!=null)
             StopCoroutine(promptFadeRoutine);
 
-        playingCutscene = false;
         promptText.enabled = false;
         videoRenderImg.enabled = false;
 
@@ -202,7 +196,6 @@ public class CutsceneManager : MonoBehaviour
         pauseScreen.SetActive(false);
         pausePrompt.SetActive(false);
         videoRenderImg.enabled = false;
-        playingCutscene = false;
         Cursor.lockState= CursorLockMode.Locked;
 
         videoPlayer.Stop();
@@ -292,7 +285,6 @@ public class CutsceneManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator FadePrompt(bool active, float dur)
     {
-        Debug.Log($"Fade called for {active}");
         // make visible to start
         promptText.enabled = true;
 
