@@ -657,6 +657,9 @@ public class GameManager : MonoBehaviour
         if (currScene != mainMenuScene && currScene != mainGameplayScene && currScene != mainHubScene)
             return;
 
+        // attempt to save global stats whenver loading
+        GlobalStatsManager.SaveData();
+
         menuStack.Clear();
         controls.UI.Disable();
         Loader.instance.LoadToScene(name);

@@ -37,8 +37,6 @@ public class HUDCrystalDisplay : MonoBehaviour
 
             yield return new WaitForSeconds(1f);
         }
-
-        yield return null;
     }
 
     /// <summary>
