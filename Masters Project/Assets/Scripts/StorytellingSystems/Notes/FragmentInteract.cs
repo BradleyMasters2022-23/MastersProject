@@ -8,16 +8,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 public class FragmentInteract : Interactable
 {
-    [SerializeField] private Fragment fragment;
+    [HideIf("@this.fragmentOverride != null")]
+    [Tooltip("A note to pull from. Will always pull from this override.")]
+    [SerializeField] private NoteObject noteOverride;
+    [Tooltip("A fragment to use. Takes priority over note override.")]
+    [SerializeField] private Fragment fragmentOverride;
+    [SerializeField, ReadOnly] private Fragment fragment;
+    
+
+
     private NoteFoundUI ui;
     private bool dataSent = false;
 
     private void Awake()
     {
         ui = FindObjectOfType<NoteFoundUI>(true);
+
+        if(fragmentOverride != null || noteOverride!= null)
+        {
+            PrepareNote();
+        }
     }
 
     /// <summary>
@@ -30,11 +44,25 @@ public class FragmentInteract : Interactable
 
     public void PrepareNote()
     {
+        // if the fragment is already assigned, then it was already prepared
+        if (fragment != null)
+            return;
+
         // If no override assigned, try to get a random one
-        if(fragment == null)
+        if(fragmentOverride != null)
+        {
+            fragment = fragmentOverride;
+        }
+        // If no fragment assigned but note assigned, get a random fragment from that note
+        else if(noteOverride != null)
+        {
+            fragment = noteOverride.GetRandomLostFragment();
+        }
+        // Otherwise, pull fronm pool
+        else
         {
             NoteObject n = AllNotesManager.instance.GetRandomLostNote();
-            if(n != null)
+            if (n != null)
             {
                 fragment = n.GetRandomLostFragment();
             }
@@ -58,6 +86,13 @@ public class FragmentInteract : Interactable
         if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
         {
             Debug.Log("Not in a state where the player can interact with this object");
+            return;
+        }
+
+        // make sure theres a fragment to use
+        if (fragment == null)
+        {
+            Destroy(gameObject);
             return;
         }
 
