@@ -46,7 +46,7 @@ public class CutsceneTrigger : MonoBehaviour
     /// </summary>
     public void TryCutscene()
     {
-        if(!playable && CanPlay())
+        if(CanPlay())
         {
             playable = true;
             StartCoroutine(LoadCutscene());
@@ -65,6 +65,8 @@ public class CutsceneTrigger : MonoBehaviour
 
         // Get most recent save data and update it
         saveData = DataManager.instance.Load<CutsceneSaveData>(fileName);
+        if(saveData == null)
+            saveData = new CutsceneSaveData();
         saveData.PlayCutscene(cutscene, onlyPlayOnce);
         DataManager.instance.Save(fileName, saveData);
 

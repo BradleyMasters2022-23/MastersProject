@@ -3,10 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
 
-public class CutsceneSaveData : MonoBehaviour
+public class CutsceneSaveData
 {
-    public List<int> playedCutscenes= new List<int>();
-    public List<int> singlePlayCutscenes= new List<int>();
+    public List<int> playedCutscenes;
+    public List<int> singlePlayCutscenes;
+
+    public CutsceneSaveData()
+    {
+        playedCutscenes = new List<int>();
+        singlePlayCutscenes = new List<int>();
+    }
 
     /// <summary>
     /// Check whether a video has been played once

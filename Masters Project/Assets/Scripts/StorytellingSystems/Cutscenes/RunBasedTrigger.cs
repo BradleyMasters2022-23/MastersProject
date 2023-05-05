@@ -20,6 +20,7 @@ public class RunBasedTrigger : CutsceneTrigger
     /// <returns>Whether the cutscene trigger can be used</returns>
     protected override bool CanPlay()
     {
+        // Debug.Log($"curent runs : {GlobalStatsManager.data.runsAttempted}");
         return base.CanPlay() && GlobalStatsManager.data.runsAttempted >= minRunLength;
     }
 }
