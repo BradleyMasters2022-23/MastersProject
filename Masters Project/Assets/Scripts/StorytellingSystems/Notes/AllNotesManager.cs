@@ -53,11 +53,11 @@ public class AllNotesManager : MonoBehaviour
 
             if (!note.AllFragmentsFound() && !lostNotes.Contains(note))
             {
-                Debug.Log($"Adding to lost notes {note.name} | {note.GetAllLostFragments().Count}");
+                //Debug.Log($"Adding to lost notes {note.name} | {note.GetAllLostFragments().Count}");
                 lostNotes.Add(note);
             }
         }
-        Debug.Log($"Lost notes size {lostNotes.Count}");
+        //Debug.Log($"Lost notes size {lostNotes.Count}");
     }
 
     /// <summary>

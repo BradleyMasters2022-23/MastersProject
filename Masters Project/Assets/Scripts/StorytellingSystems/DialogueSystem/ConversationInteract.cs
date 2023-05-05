@@ -20,6 +20,7 @@ public class ConversationInteract : Interactable
     public delegate void OnInteraction();
     public OnInteraction onStartCall;
 
+
     [SerializeField] private GameObject waypointAnchor;
 
     private void Start()
@@ -45,19 +46,33 @@ public class ConversationInteract : Interactable
         if(waypointAnchor != null)
             waypointAnchor.SetActive(calls.HasAvailable());
 
-        if (calls.HasAvailable() && timer.TimerDone())
+        // if calls are available, flash
+        if(calls.HasAvailable())
         {
-            if(flashRenderer.material.color == Color.red)
+            if (timer.TimerDone())
             {
-                flashRenderer.material.color = original;
-                timer.ResetTimer();
-            }
-            else
-            {
-                flashRenderer.material.color = Color.red;
-                timer.ResetTimer();
+                if (flashRenderer.material.color == Color.red)
+                {
+                    flashRenderer.material.color = original;
+                    timer.ResetTimer();
+                }
+                else
+                {
+                    flashRenderer.material.color = Color.red;
+                    timer.ResetTimer();
+                }
             }
         }
+        // otherwise, revert back to normal
+        else
+        {
+            if (flashRenderer.material.color == Color.red)
+            {
+                flashRenderer.material.color = original;
+            }
+        }
+
+        
     }
 
     public override void OnInteract(PlayerController player)

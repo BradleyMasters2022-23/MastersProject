@@ -57,6 +57,7 @@ public class PlayerTarget : Target
 
     protected override void KillTarget()
     {
+        GlobalStatsManager.data.playerDeaths++;
         GameManager.instance.ChangeState(GameManager.States.GAMEOVER);
     }
 
