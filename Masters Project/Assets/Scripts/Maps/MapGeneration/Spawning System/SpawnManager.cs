@@ -325,7 +325,7 @@ public class SpawnManager : MonoBehaviour
         if (finished)
             return;
 
-        Debug.Log("Wave Finished");
+        //Debug.Log("Wave Finished");
         spawnRoutine = null;
         waveIndex++;
         startDelayTimer.ResetTimer();
@@ -347,7 +347,7 @@ public class SpawnManager : MonoBehaviour
     private void CompleteEncounter()
     {
         finished = true;
-        Debug.Log("Encounter Finished");
+        //Debug.Log("Encounter Finished");
 
         // Play completion sound, if possible
         //sound.PlayClip();
@@ -499,12 +499,12 @@ public class SpawnManager : MonoBehaviour
 
     private void CheatReset(InputAction.CallbackContext c)
     {
-        Debug.Log("Trying to call spawn manager cheat...");
+        //Debug.Log("Trying to call spawn manager cheat...");
 
         if (finished)
             return;
 
-        Debug.Log("Spawn manager cheat can work!");
+        //Debug.Log("Spawn manager cheat can work!");
 
         if (spawnRoutine!= null)
             StopCoroutine(spawnRoutine);

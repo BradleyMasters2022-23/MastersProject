@@ -135,7 +135,7 @@ public class BossManager : TimeAffectedEntity
         disabled = true;
         if(currAttack!= null)
         {
-            Debug.Log("Attack found, trying to disable");
+            //Debug.Log("Attack found, trying to disable");
             currAttack.ResetAttack();
         }
     }
