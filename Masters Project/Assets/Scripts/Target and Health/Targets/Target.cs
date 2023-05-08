@@ -123,15 +123,15 @@ public abstract class Target : TimeAffectedEntity, IDamagable
     {
         if(!AffectedByAttacks()) return;
 
-        if(damagedSoundCooldownTracker != null && damagedSoundCooldownTracker.TimerDone())
-        {
-            damagedSound.PlayClip(_center, audioSource);
-            damagedSoundCooldownTracker.ResetTimer();
-        }
-        
 
         if (!_killed && _healthManager.Damage(dmg))
         {
+            if (damagedSoundCooldownTracker != null && damagedSoundCooldownTracker.TimerDone())
+            {
+                damagedSound.PlayClip(_center, audioSource);
+                damagedSoundCooldownTracker.ResetTimer();
+            }
+
             if (_unkillable)
                 return;
 

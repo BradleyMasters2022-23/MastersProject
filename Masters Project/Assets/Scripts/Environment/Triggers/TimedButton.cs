@@ -73,18 +73,20 @@ public class TimedButton : MonoBehaviour, ITriggerable
 
     private void Update()
     {
-        if (timer == null) return;
+        if (timer == null || locked) return;
 
         // if the activation timer is done and still active, disable activated status
         if(timer.TimerDone() && activated)
         {
             activated = false;
+            host.enabled = true;
             RepairedIndicators();
         }
         // if the activation timer is running and not set to active, enable activated status
         else if(!timer.TimerDone() && !activated)
         {
             activated = true;
+            host.enabled = false;
             DestroyedEffects();
             
             //host.ResetTarget();
@@ -145,16 +147,22 @@ public class TimedButton : MonoBehaviour, ITriggerable
         if(host == null)
             host = GetComponent<Target>();
 
+        host.enabled = true;
         host?.ResetTarget();
     }
 
     public void SetLock(bool locked)
     {
         this.locked = locked;
+        host.enabled = !locked;
 
         if(locked)
         {
             activated = false;
+            DestroyedEffects();
+        }
+        else
+        {
             RepairedIndicators();
         }
     }

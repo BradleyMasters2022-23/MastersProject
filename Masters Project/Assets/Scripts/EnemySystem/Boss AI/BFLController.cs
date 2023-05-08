@@ -23,9 +23,12 @@ public class BFLController : MonoBehaviour
 
     private bool disabled;
 
+    private BFLTarget target;
+
     private void Start()
     {
         //source = GetComponent<AudioSource>();
+        target = GetComponent<BFLTarget>();
         cooldown = new ScaledTimer(0);
         SetCooldown();
     }
@@ -55,6 +58,7 @@ public class BFLController : MonoBehaviour
     {
         currentStage = stageNum;
         powerUpIndicators.PlayClip(source);
+        target.NewPhase();
     }
 
     public void ChooseAttack()
@@ -102,6 +106,8 @@ public class BFLController : MonoBehaviour
         mainUnit.SetActive(false);
         deactivatedUnit.SetActive(true);
         attacks.Pull().RotateToDisabledState();
+
+        target.SetHealthbarStatus(false);
     }
 
     public void EnableBFL()
@@ -110,5 +116,7 @@ public class BFLController : MonoBehaviour
         mainUnit.SetActive(true);
         deactivatedUnit.SetActive(false);
         disabled = false;
+
+        target.SetHealthbarStatus(true);
     }
 }

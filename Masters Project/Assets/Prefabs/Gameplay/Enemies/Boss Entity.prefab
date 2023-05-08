@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 2783499131424098863}
-  damageMultiplier: 1
+  damageMultiplier: 1.1
 --- !u!1 &989357474175177823
 GameObject:
   m_ObjectHideFlags: 0
@@ -491,7 +491,8 @@ GameObject:
   - component: {fileID: 106605510477835730}
   - component: {fileID: 8547172675704753113}
   - component: {fileID: 6127601669469513166}
-  m_Layer: 3
+  - component: {fileID: 920540974315101971}
+  m_Layer: 8
   m_Name: Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -506,12 +507,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3531638558679596493}
   m_LocalRotation: {x: 0.058113277, y: -0.024071286, z: 0.38192523, w: 0.92205024}
-  m_LocalPosition: {x: 0, y: 0.37, z: -0.128}
-  m_LocalScale: {x: 3.395122, y: 3.395122, z: 0.37579826}
+  m_LocalPosition: {x: 0, y: 0.37, z: -0.12800026}
+  m_LocalScale: {x: 3.3951223, y: 3.395122, z: 0.37579829}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 7642158530325035064}
-  m_RootOrder: 8
+  m_Father: {fileID: 853971852978439119}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 7.213, y: 0, z: 45}
 --- !u!33 &106605510477835730
 MeshFilter:
@@ -576,6 +577,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &920540974315101971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3531638558679596493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a33c2fc2c1e14b14e906e359abbe50f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 2783499131424098863}
+  damageMultiplier: 0.5
 --- !u!1 &4695307324438622773
 GameObject:
   m_ObjectHideFlags: 0
@@ -837,7 +852,6 @@ Transform:
   - {fileID: 7979579906626197724}
   - {fileID: 8615670299355032431}
   - {fileID: 172112506710853043}
-  - {fileID: 2039765001294191056}
   m_Father: {fileID: 8557449284817513592}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1490,6 +1504,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8223888264403862397}
+  - {fileID: 2039765001294191056}
   m_Father: {fileID: 8557449284817513592}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1883,33 +1898,9 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
-          - m_Target: {fileID: 0}
-            m_TargetAssemblyTypeName: ShieldGenerator, Assembly-CSharp
-            m_MethodName: ResetShield
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
           - m_Target: {fileID: 5360314283177969870}
             m_TargetAssemblyTypeName: BossManager, Assembly-CSharp
             m_MethodName: Inturrupt
-            m_Mode: 1
-            m_Arguments:
-              m_ObjectArgument: {fileID: 0}
-              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 0
-              m_FloatArgument: 0
-              m_StringArgument: 
-              m_BoolArgument: 0
-            m_CallState: 2
-          - m_Target: {fileID: 0}
-            m_TargetAssemblyTypeName: DummyBar, Assembly-CSharp
-            m_MethodName: RegenHealthbar
             m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
@@ -1931,6 +1922,18 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: BossMusicManager, Assembly-CSharp
+            m_MethodName: IncrementMusic
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
           - m_Target: {fileID: 5360314283177969870}
             m_TargetAssemblyTypeName: BossManager, Assembly-CSharp
             m_MethodName: DisableBoss
@@ -1943,10 +1946,30 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
-      executeTime: 1
-    - action:
-        m_PersistentCalls:
-          m_Calls: []
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: BFLController, Assembly-CSharp
+            m_MethodName: DisableBFL
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: BFLController, Assembly-CSharp
+            m_MethodName: DisableBFL
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
       executeTime: 0
   phaseChangeEvents:
   - stageName: Stage 1 (START)
@@ -1971,6 +1994,30 @@ MonoBehaviour:
             m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
             m_MethodName: SetActive
             m_Mode: 6
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: TimedButton, Assembly-CSharp
+            m_MethodName: SummonButton
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: TimedButton, Assembly-CSharp
+            m_MethodName: SummonButton
+            m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
               m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2056,28 +2103,37 @@ MonoBehaviour:
               m_BoolArgument: 1
             m_CallState: 2
       executeTime: 0
-  - stageName: Stage 2
-    eventAudio: {fileID: 0}
-    OnTriggerEvent:
     - action:
         m_PersistentCalls:
           m_Calls:
-          - m_Target: {fileID: 0}
-            m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-            m_MethodName: SetActive
-            m_Mode: 6
+          - m_Target: {fileID: 5360314283177969870}
+            m_TargetAssemblyTypeName: BossManager, Assembly-CSharp
+            m_MethodName: InitBoss
+            m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
               m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
               m_IntArgument: 0
               m_FloatArgument: 0
               m_StringArgument: 
-              m_BoolArgument: 0
+              m_BoolArgument: 1
             m_CallState: 2
           - m_Target: {fileID: 0}
-            m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-            m_MethodName: SetActive
-            m_Mode: 6
+            m_TargetAssemblyTypeName: ShieldGenerator, Assembly-CSharp
+            m_MethodName: ResetShield
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: ShieldGenerator, Assembly-CSharp
+            m_MethodName: UnlockGenerators
+            m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
               m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2093,12 +2149,83 @@ MonoBehaviour:
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
               m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 6713327429234463587}
+            m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+            m_MethodName: set_enabled
+            m_Mode: 6
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 5360314283177969870}
+            m_TargetAssemblyTypeName: BossManager, Assembly-CSharp
+            m_MethodName: EnableBoss
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+      executeTime: 0
+    - action:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 5360314283177969870}
+            m_TargetAssemblyTypeName: BossManager, Assembly-CSharp
+            m_MethodName: EnableBoss
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: BFLController, Assembly-CSharp
+            m_MethodName: EnableBFL
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+      executeTime: 0
+  - stageName: Stage 2
+    eventAudio: {fileID: 0}
+    OnTriggerEvent:
+    - action:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: BossLaserAttack, Assembly-CSharp
+            m_MethodName: PhaseChange
+            m_Mode: 3
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
               m_IntArgument: 1
               m_FloatArgument: 0
               m_StringArgument: 
               m_BoolArgument: 1
             m_CallState: 2
-          - m_Target: {fileID: 2783499131424098863}
+          - m_Target: {fileID: 0}
             m_TargetAssemblyTypeName: Target, Assembly-CSharp
             m_MethodName: DropAllObjs
             m_Mode: 1
@@ -2110,14 +2237,10 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 1
             m_CallState: 2
-      executeTime: 1
-    - action:
-        m_PersistentCalls:
-          m_Calls:
-          - m_Target: {fileID: 2287082976657556321}
-            m_TargetAssemblyTypeName: LaserRing, Assembly-CSharp
-            m_MethodName: Activate
-            m_Mode: 3
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+            m_MethodName: set_enabled
+            m_Mode: 6
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
               m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2127,21 +2250,25 @@ MonoBehaviour:
               m_BoolArgument: 0
             m_CallState: 2
           - m_Target: {fileID: 0}
-            m_TargetAssemblyTypeName: ShieldGenerator, Assembly-CSharp
-            m_MethodName: SetPhaseData
-            m_Mode: 3
+            m_TargetAssemblyTypeName: BFLController, Assembly-CSharp
+            m_MethodName: DisableBFL
+            m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
               m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-              m_IntArgument: 1
+              m_IntArgument: 0
               m_FloatArgument: 0
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
+      executeTime: 3
+    - action:
+        m_PersistentCalls:
+          m_Calls:
           - m_Target: {fileID: 0}
-            m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-            m_MethodName: SetActive
-            m_Mode: 6
+            m_TargetAssemblyTypeName: TimedButton, Assembly-CSharp
+            m_MethodName: SummonButton
+            m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
               m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2150,11 +2277,11 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 1
             m_CallState: 2
-      executeTime: 1
+      executeTime: 2
     - action:
         m_PersistentCalls:
           m_Calls:
-          - m_Target: {fileID: 5360314283177969870}
+          - m_Target: {fileID: 0}
             m_TargetAssemblyTypeName: BossManager, Assembly-CSharp
             m_MethodName: SetPhase
             m_Mode: 3
@@ -2178,9 +2305,97 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 1
             m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: DummyBar, Assembly-CSharp
+            m_MethodName: RegenHealthbar
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_MethodName: SetActive
+            m_Mode: 6
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+            m_MethodName: SetActive
+            m_Mode: 6
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: LaserRing, Assembly-CSharp
+            m_MethodName: Activate
+            m_Mode: 3
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+      executeTime: 2
+    - action:
+        m_PersistentCalls:
+          m_Calls:
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+            m_MethodName: set_enabled
+            m_Mode: 6
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 1
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: ShieldGenerator, Assembly-CSharp
+            m_MethodName: ResetShield
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 1
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
           - m_Target: {fileID: 5360314283177969870}
             m_TargetAssemblyTypeName: BossManager, Assembly-CSharp
             m_MethodName: EnableBoss
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: BFLController, Assembly-CSharp
+            m_MethodName: EnableBFL
             m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
@@ -2273,7 +2488,7 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 1
             m_CallState: 2
-      executeTime: 1
+      executeTime: 2
     - action:
         m_PersistentCalls:
           m_Calls:
@@ -2313,7 +2528,7 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 1
             m_CallState: 2
-      executeTime: 1
+      executeTime: 2
     - action:
         m_PersistentCalls:
           m_Calls:
@@ -2365,6 +2580,54 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
+          - m_Target: {fileID: 5360314283177969870}
+            m_TargetAssemblyTypeName: BossManager, Assembly-CSharp
+            m_MethodName: EnableBoss
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+          - m_Target: {fileID: 5360314283177969870}
+            m_TargetAssemblyTypeName: BossManager, Assembly-CSharp
+            m_MethodName: EnableBoss
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: BFLController, Assembly-CSharp
+            m_MethodName: EnableBFL
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: BFLController, Assembly-CSharp
+            m_MethodName: EnableBFL
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 1
+            m_CallState: 2
       executeTime: 0
   onDeathEvents:
     stageName: On Death Event
@@ -2373,9 +2636,9 @@ MonoBehaviour:
     - action:
         m_PersistentCalls:
           m_Calls:
-          - m_Target: {fileID: 0}
-            m_TargetAssemblyTypeName: ShieldGenerator, Assembly-CSharp
-            m_MethodName: LockGenerators
+          - m_Target: {fileID: 5360314283177969870}
+            m_TargetAssemblyTypeName: BossManager, Assembly-CSharp
+            m_MethodName: Inturrupt
             m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
@@ -2387,7 +2650,7 @@ MonoBehaviour:
             m_CallState: 2
           - m_Target: {fileID: 0}
             m_TargetAssemblyTypeName: ShieldGenerator, Assembly-CSharp
-            m_MethodName: ResetShield
+            m_MethodName: SetButtonsDead
             m_Mode: 1
             m_Arguments:
               m_ObjectArgument: {fileID: 0}
@@ -2469,7 +2732,7 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
-      executeTime: 1
+      executeTime: 3
     - action:
         m_PersistentCalls:
           m_Calls:
@@ -2509,10 +2772,22 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
-      executeTime: 1
+      executeTime: 3
     - action:
         m_PersistentCalls:
           m_Calls:
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: Sequencer, Assembly-CSharp
+            m_MethodName: BeginSequence
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
           - m_Target: {fileID: 2783499131424098863}
             m_TargetAssemblyTypeName: Target, Assembly-CSharp
             m_MethodName: DeathEffects
@@ -2597,6 +2872,22 @@ MonoBehaviour:
               m_StringArgument: 
               m_BoolArgument: 0
             m_CallState: 2
+          - m_Target: {fileID: 0}
+            m_TargetAssemblyTypeName: FinalRoomLoader, Assembly-CSharp
+            m_MethodName: UnlockDoor
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
+      executeTime: 3
+    - action:
+        m_PersistentCalls:
+          m_Calls: []
       executeTime: 0
 --- !u!114 &3251197300263703213
 MonoBehaviour:
