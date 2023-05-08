@@ -382,7 +382,8 @@ public class TimeManager : MonoBehaviour
                 }
             case TimeGaugeState.SLOWING:
                 {
-                    source?.Stop();
+                    if(source != null)
+                        source.Stop();
                     stopTime.PlayClip(source);
 
                     break;
@@ -396,7 +397,8 @@ public class TimeManager : MonoBehaviour
                     // If entering frozen state, reset timer
                     replenishDelayTimer.ResetTimer();
 
-                    source?.Stop();
+                    if (source != null)
+                        source.Stop();
                     startTime.PlayClip(source);
 
                     break;
@@ -406,7 +408,8 @@ public class TimeManager : MonoBehaviour
                     // If entering emptied state, reset timer
                     emptiedDelayTimer.ResetTimer();
 
-                    source?.Stop();
+                    if (source != null)
+                        source.Stop();
                     startTime.PlayClip(source);
 
                     break;

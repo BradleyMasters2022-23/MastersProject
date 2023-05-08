@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System;
 
 
 public class DataManager : MonoBehaviour
@@ -100,13 +101,23 @@ public class DataManager : MonoBehaviour
     /// Clear all save data
     /// SHOULD ONLY BE CALLED BY ONE THING
     /// </summary>
-    public void ClearSaveData()
+    public bool ClearSaveData()
     {
-        // If the path exists, delete it with all data
-        if (Directory.Exists(Application.persistentDataPath + saveFolderPath))
+        try
         {
-            Directory.Delete(Application.persistentDataPath + saveFolderPath, true);
-            hasSaveData = false;
+            // If the path exists, delete it with all data
+            if (Directory.Exists(Application.persistentDataPath + saveFolderPath))
+            {
+                Directory.Delete(Application.persistentDataPath + saveFolderPath, true);
+                hasSaveData = false;
+            }
+
+            return true;
+        }
+        catch(Exception e)
+        {
+            Debug.Log($"Error occured while clearing save data: {e}");
+            return false;
         }
     }
 
