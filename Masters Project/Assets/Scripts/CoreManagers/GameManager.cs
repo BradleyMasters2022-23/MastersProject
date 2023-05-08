@@ -7,6 +7,7 @@
  * ================================================================================================
  */
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -657,8 +658,17 @@ public class GameManager : MonoBehaviour
         if (currScene != mainMenuScene && currScene != mainGameplayScene && currScene != mainHubScene)
             return;
 
-        // attempt to save global stats whenver loading
-        GlobalStatsManager.SaveData();
+        try
+        {
+            // attempt to save global stats whenver loading
+            if (currScene != mainMenuScene && GlobalStatsManager.Instance != null)
+                GlobalStatsManager.SaveData();
+        }
+        catch(Exception e)
+        {
+            Debug.Log($"Saving stats between scenes has failed. {e}");
+        }
+        
 
         menuStack.Clear();
         controls.UI.Disable();
