@@ -17,6 +17,8 @@ public class TimedButton : TimeAffectedEntity, ITriggerable
 
     [Header("Indicators")]
 
+    [SerializeField] private Animator regenAnimator;
+
     [SerializeField] private IIndicator[] generatorDestroyedIndicator;
     [SerializeField] private IIndicator[] generatorFixedIndicator;
 
@@ -106,6 +108,8 @@ public class TimedButton : TimeAffectedEntity, ITriggerable
             timer = new ScaledTimer(activeDuration, !Affected);
         else
             timer.ResetTimer();
+
+        regenAnimator.SetTrigger("Begin");
     }
 
     /// <summary>
