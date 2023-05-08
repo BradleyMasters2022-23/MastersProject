@@ -16,7 +16,7 @@ public class CutsceneManager : MonoBehaviour
     [Tooltip("Render image to use")]
     [SerializeField] private RawImage videoRenderImg;
     [Tooltip("The loaded video to play")]
-    [SerializeField] private VideoClip loadedCutscene;
+    [SerializeField, ReadOnly] private VideoClip loadedCutscene;
     /// <summary>
     /// Whether or not this cutscene is allowed to play
     /// Connect to the save system
@@ -28,8 +28,12 @@ public class CutsceneManager : MonoBehaviour
     [SerializeField] private Image background;
     [Tooltip("Time it takes to fade into the video")]
     [SerializeField] private float fadeInTime;
+    [Tooltip("The initial delay when fade in finishes before starting")]
+    [SerializeField] private float startDelay;
     [Tooltip("Time it takes to fade out of the video")]
     [SerializeField] private float fadeOutTime;
+    [Tooltip("The initial delay when video finishes and fade out begins")]
+    [SerializeField] private float endDelay;
     [Tooltip("Time it takes to fade out of the video if the video was skipped")]
     [SerializeField] private float skippedFadeOutTime;
 
@@ -78,18 +82,25 @@ public class CutsceneManager : MonoBehaviour
         showHide = playerControls.Cutscene.Any;
         showHide.performed += ShowPrompt;
 
+        playerControls.Cutscene.Disable();
+
         // prepare life tracker
         promptLifeTracker = new ScaledTimer(noteDisplayTime, false);
 
         // assign audio system
         videoPlayer.SetTargetAudioSource(0, GetComponent<AudioSource>());
+    }
 
-        // Prepare the cutscene
-        PrepareCutscene(loadedCutscene);
+    private void OnDisable()
+    {
+        pause.performed -= TogglePause;
+        showHide.performed -= ShowPrompt;
     }
 
     public void PrepareCutscene(VideoClip newCutscene)
     {
+        if (newCutscene == null) return;
+
         loadedCutscene = newCutscene;
         videoPlayer.clip = newCutscene;
         videoPlayer.Prepare();
@@ -109,17 +120,20 @@ public class CutsceneManager : MonoBehaviour
     {
         // Disable pausing just to be safe in big prevention
         playerControls.PlayerGameplay.Pause.Disable();
+        playerControls.PlayerGameplay.Interact.Disable();
 
         // turn on the screen
         yield return StartCoroutine(LoadScreen(true, fadeInTime));
 
-        // Play the video
-        videoRenderImg.enabled = true;
-        videoPlayer.Play();
-
         playerControls.UI.Disable();
         playerControls.PlayerGameplay.Disable();
         playerControls.Cutscene.Enable();
+
+        yield return new WaitForSecondsRealtime(startDelay);
+
+        // Play the video
+        videoRenderImg.enabled = true;
+        videoPlayer.Play();
 
         // Track time only if its playing. Dont if its paused
         float timeElapsed = 0;
@@ -130,11 +144,15 @@ public class CutsceneManager : MonoBehaviour
 
             yield return null;
         }
+
+        yield return new WaitForSecondsRealtime(endDelay);
+
         // Disable cutscene controls and reenable gameplay. 
         // Keep pause disabled to prevent any funky business
         playerControls.Cutscene.Disable();
         playerControls.PlayerGameplay.Enable();
         playerControls.PlayerGameplay.Pause.Disable();
+        playerControls.PlayerGameplay.Interact.Disable();
 
         // Disable on cutscene end stuff
         if (promptRoutine != null)
@@ -151,6 +169,7 @@ public class CutsceneManager : MonoBehaviour
 
         // Disable pausing just to be safe in big prevention
         playerControls.PlayerGameplay.Pause.Enable();
+        playerControls.PlayerGameplay.Interact.Enable();
     }
 
     /// <summary>
@@ -204,6 +223,7 @@ public class CutsceneManager : MonoBehaviour
         
         playerControls.PlayerGameplay.Enable();
         playerControls.PlayerGameplay.Pause.Enable();
+        playerControls.PlayerGameplay.Interact.Enable();
     }
 
     /// <summary>

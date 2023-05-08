@@ -31,6 +31,7 @@ public class DataManager : MonoBehaviour
     /// </summary>
     private const string extension = ".json";
 
+    [HideInInspector] public bool hasSaveData;
 
     private void Awake()
     {
@@ -49,9 +50,10 @@ public class DataManager : MonoBehaviour
         // Check if a folder exists. If not, create a new save data folder
         if (!Directory.Exists(Application.persistentDataPath + saveFolderPath))
         {
-            Debug.Log("No save folder detected, creating one now");
-            Directory.CreateDirectory(Application.persistentDataPath + saveFolderPath);
+            hasSaveData = false;
         }
+        else
+            hasSaveData = true;
     }
 
     /// <summary>
@@ -63,6 +65,14 @@ public class DataManager : MonoBehaviour
     /// <returns>Whether saving was successful</returns>
     public bool Save<T>(string fileName, T data)
     {
+        // Check if a folder exists. If not, create a new save data folder
+        if (!Directory.Exists(Application.persistentDataPath + saveFolderPath))
+        {
+            hasSaveData = true;
+            Directory.CreateDirectory(Application.persistentDataPath + saveFolderPath);
+        }
+
+
         return saver.Save(Application.persistentDataPath + saveFolderPath + fileName + extension, data);
     }
     
@@ -96,10 +106,8 @@ public class DataManager : MonoBehaviour
         if (Directory.Exists(Application.persistentDataPath + saveFolderPath))
         {
             Directory.Delete(Application.persistentDataPath + saveFolderPath, true);
+            hasSaveData = false;
         }
-
-        // Recreate the folder so it still exists 
-        Directory.CreateDirectory(Application.persistentDataPath + saveFolderPath);
     }
 
 }
