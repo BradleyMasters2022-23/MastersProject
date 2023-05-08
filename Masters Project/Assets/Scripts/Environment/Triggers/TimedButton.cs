@@ -2,12 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimedButton : MonoBehaviour, ITriggerable
+public class TimedButton : TimeAffectedEntity, ITriggerable
 {
     [Header("Gameplay")]
 
     [SerializeField] private float activeDuration;
-    [SerializeField] private bool affectedByTimestop = true;
 
     private ScaledTimer timer;
     [SerializeField] private bool activated;
@@ -17,6 +16,8 @@ public class TimedButton : MonoBehaviour, ITriggerable
     [SerializeField] private Trigger targetTrigger;
 
     [Header("Indicators")]
+
+    [SerializeField] private Animator regenAnimator;
 
     [SerializeField] private IIndicator[] generatorDestroyedIndicator;
     [SerializeField] private IIndicator[] generatorFixedIndicator;
@@ -29,7 +30,9 @@ public class TimedButton : MonoBehaviour, ITriggerable
 
     private void Awake()
     {
-        if(targetTrigger == null)
+        host = GetComponent<Target>();
+
+        if (targetTrigger == null)
         {
             targetTrigger = GetComponent<Trigger>();
             if (targetTrigger == null)
@@ -44,7 +47,7 @@ public class TimedButton : MonoBehaviour, ITriggerable
         //Indicators.SetIndicators(activatedIndicators, false);
         //Indicators.SetIndicators(generatorFixedIndicator, true);
 
-        host = GetComponent<Target>();
+        
     }
 
     public void SummonButton()
@@ -73,18 +76,20 @@ public class TimedButton : MonoBehaviour, ITriggerable
 
     private void Update()
     {
-        if (timer == null) return;
+        if (timer == null || locked) return;
 
         // if the activation timer is done and still active, disable activated status
         if(timer.TimerDone() && activated)
         {
             activated = false;
+            host.enabled = true;
             RepairedIndicators();
         }
         // if the activation timer is running and not set to active, enable activated status
         else if(!timer.TimerDone() && !activated)
         {
             activated = true;
+            host.enabled = false;
             DestroyedEffects();
             
             //host.ResetTarget();
@@ -100,9 +105,11 @@ public class TimedButton : MonoBehaviour, ITriggerable
         if (locked) return;
 
         if(timer == null)
-            timer = new ScaledTimer(activeDuration, affectedByTimestop);
+            timer = new ScaledTimer(activeDuration, !Affected);
         else
             timer.ResetTimer();
+
+        regenAnimator.SetTrigger("Begin");
     }
 
     /// <summary>
@@ -145,16 +152,22 @@ public class TimedButton : MonoBehaviour, ITriggerable
         if(host == null)
             host = GetComponent<Target>();
 
+        host.enabled = true;
         host?.ResetTarget();
     }
 
     public void SetLock(bool locked)
     {
         this.locked = locked;
+        host.enabled = !locked;
 
         if(locked)
         {
             activated = false;
+            DestroyedEffects();
+        }
+        else
+        {
             RepairedIndicators();
         }
     }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
-public class SpinObject : MonoBehaviour
+public class SpinObject : TimeAffectedEntity
 {
     public enum Axis
     {
@@ -20,21 +20,23 @@ public class SpinObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        float amt = spinSpeed * Timescale * Time.timeScale;
+
         switch(spinAxis)
         {
             case Axis.Xaxis:
                 {
-                    transform.rotation *= Quaternion.Euler(spinSpeed * TimeManager.WorldTimeScale, 0, 0);
+                    transform.rotation *= Quaternion.Euler(amt, 0, 0);
                     break;
                 }
             case Axis.Zaxis:
                 {
-                    transform.rotation *= Quaternion.Euler(0, 0, spinSpeed * TimeManager.WorldTimeScale);
+                    transform.rotation *= Quaternion.Euler(0, 0, amt);
                     break;
                 }
             case Axis.Yaxis:
                 {
-                    transform.rotation *= Quaternion.Euler(0, spinSpeed * TimeManager.WorldTimeScale, 0);
+                    transform.rotation *= Quaternion.Euler(0, amt, 0);
                     break;
                 }
         }

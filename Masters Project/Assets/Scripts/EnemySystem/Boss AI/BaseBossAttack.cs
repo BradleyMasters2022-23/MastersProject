@@ -33,7 +33,7 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
 
     [Header("Inturrupt Functionality")]
 
-    [SerializeField, Range(0, 1)] protected float lossTargetVisionCone;
+    [SerializeField] protected float lossTargetDistanceRequirement;
     [SerializeField] protected float lossTargetStunDuration;
     [SerializeField] protected bool lossTargetInturruptAttack;
     [SerializeField] private IIndicator[] inturruptIndicator;
@@ -234,10 +234,12 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
 
         Vector3 rot = transform.localRotation.eulerAngles;
         // mod it to prevent it from ALWAYS GOING COUNTERCLOCKWISE
+        if (rot.x > 180)
+            rot.x -= 360;
         if(rot.y > 180)
-        {
             rot.y -= 360;
-        }
+        if (rot.z > 180)
+            rot.z -= 360;
 
         // Return to resting position
         while (!maxTime.TimerDone())
@@ -257,7 +259,7 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
 
     public void OnStop()
     {
-        originalPosVector = target.Center.position - transform.position;
+        originalPosVector = target.Center.position;
         BonusStop();
     }
 
@@ -265,10 +267,9 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
     {
         if(state == AttackState.Attacking)
         {
-            Vector3 currPos = target.Center.position - transform.position;
-            float dot = Vector3.Dot(currPos.normalized, originalPosVector.normalized);
+            float dist = Vector3.Distance(target.Center.position, originalPosVector);
 
-            if(dot < lossTargetVisionCone)
+            if (dist > lossTargetDistanceRequirement)
             {
                 state = AttackState.Stunned;
                 stunnedTracker.ResetTimer();
@@ -304,10 +305,14 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
         ScaledTimer maxTime = new ScaledTimer(1.5f);
         Vector3 rot = transform.localRotation.eulerAngles;
         // mod it to prevent it from ALWAYS GOING COUNTERCLOCKWISE
+        if (rot.x > 180)
+            rot.x -= 360;
         if (rot.y > 180)
-        {
             rot.y -= 360;
-        }
+        if (rot.z > 180)
+            rot.z -= 360;
+
+
         // Return to resting position
         while (!maxTime.TimerDone())
         {

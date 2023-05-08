@@ -10,14 +10,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameObjectMenu : UIMenu
 {
+    [SerializeField] Button backButton;
+
     /// <summary>
     /// Close the current game object. Public so the animator can call it
     /// </summary>
     public override void CloseFunctionality()
     {
         gameObject.SetActive(false);
+
+        if (backButton != null)
+        {
+            // by default, just do this
+            backButton.onClick.Invoke();
+        }
     }
 }
