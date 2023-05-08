@@ -2,12 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimedButton : MonoBehaviour, ITriggerable
+public class TimedButton : TimeAffectedEntity, ITriggerable
 {
     [Header("Gameplay")]
 
     [SerializeField] private float activeDuration;
-    [SerializeField] private bool affectedByTimestop = true;
 
     private ScaledTimer timer;
     [SerializeField] private bool activated;
@@ -29,7 +28,9 @@ public class TimedButton : MonoBehaviour, ITriggerable
 
     private void Awake()
     {
-        if(targetTrigger == null)
+        host = GetComponent<Target>();
+
+        if (targetTrigger == null)
         {
             targetTrigger = GetComponent<Trigger>();
             if (targetTrigger == null)
@@ -44,7 +45,7 @@ public class TimedButton : MonoBehaviour, ITriggerable
         //Indicators.SetIndicators(activatedIndicators, false);
         //Indicators.SetIndicators(generatorFixedIndicator, true);
 
-        host = GetComponent<Target>();
+        
     }
 
     public void SummonButton()
@@ -102,7 +103,7 @@ public class TimedButton : MonoBehaviour, ITriggerable
         if (locked) return;
 
         if(timer == null)
-            timer = new ScaledTimer(activeDuration, affectedByTimestop);
+            timer = new ScaledTimer(activeDuration, !Affected);
         else
             timer.ResetTimer();
     }
