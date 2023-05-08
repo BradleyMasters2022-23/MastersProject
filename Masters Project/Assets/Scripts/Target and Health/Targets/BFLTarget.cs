@@ -18,7 +18,7 @@ public class BFLTarget : Target
     {
         if(recoveryRoutine != null)
         {
-            Debug.Log("New phase called during recovery");
+            //Debug.Log("New phase called during recovery");
             StopCoroutine(recoveryRoutine);
             _healthManager.ResetHealth();
             _healthManager.ToggleGodmode(false);
@@ -31,7 +31,7 @@ public class BFLTarget : Target
     /// </summary>
     protected override void KillTarget()
     {
-        Debug.Log($"{name} has been killed and thus inturrupted");
+        //Debug.Log($"{name} has been killed and thus inturrupted");
 
         _killed = true;
 
@@ -47,7 +47,7 @@ public class BFLTarget : Target
     /// <returns></returns>
     private IEnumerator Recover()
     {
-        Debug.Log("Recovery started");
+        //Debug.Log("Recovery started");
 
         if (recoveryTracker != null)
         {
@@ -58,7 +58,7 @@ public class BFLTarget : Target
 
         yield return new WaitUntil(recoveryTracker.TimerDone);
 
-        Debug.Log("Recovery finished");
+        //Debug.Log("Recovery finished");
 
         _healthManager.ResetHealth();
         _healthManager.ToggleGodmode(false);
