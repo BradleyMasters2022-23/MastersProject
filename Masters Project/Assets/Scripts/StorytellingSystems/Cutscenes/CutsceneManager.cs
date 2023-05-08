@@ -119,6 +119,8 @@ public class CutsceneManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator PlayCutscene()
     {
+        Debug.Log("Begining fade time");
+
         // Disable pausing just to be safe in big prevention
         playerControls.PlayerGameplay.Pause.Disable();
         playerControls.PlayerGameplay.Interact.Disable();
@@ -130,7 +132,11 @@ public class CutsceneManager : MonoBehaviour
         playerControls.PlayerGameplay.Disable();
         playerControls.Cutscene.Enable();
 
+
+
         yield return new WaitForSecondsRealtime(startDelay);
+
+        Debug.Log("Begining play");
 
         // Play the video
         videoRenderImg.enabled = true;
@@ -147,6 +153,8 @@ public class CutsceneManager : MonoBehaviour
         }
 
         yield return new WaitForSecondsRealtime(endDelay);
+
+        Debug.Log("play done, fading out");
 
         // Disable cutscene controls and reenable gameplay. 
         // Keep pause disabled to prevent any funky business
