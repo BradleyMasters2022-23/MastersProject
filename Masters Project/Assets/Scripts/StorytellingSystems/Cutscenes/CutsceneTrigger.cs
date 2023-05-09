@@ -13,7 +13,7 @@ public class CutsceneTrigger : MonoBehaviour
     [Tooltip("Whether or not this cutscene should only be played once per save")]
     [SerializeField] private bool onlyPlayOnce;
     [Tooltip("Whether or not this trigger is playable")]
-    [SerializeField, ReadOnly] private bool playable = true;
+    [SerializeField, ReadOnly] private bool playable = false;
 
     /// <summary>
     /// Reference to video player obj

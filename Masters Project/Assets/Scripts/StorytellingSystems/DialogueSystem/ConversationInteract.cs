@@ -84,7 +84,7 @@ public class ConversationInteract : Interactable
 
         if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
         {
-            Debug.Log("Not in a state where the player can interact with this object");
+            //Debug.Log("Not in a state where the player can interact with this object");
             return;
         }
 

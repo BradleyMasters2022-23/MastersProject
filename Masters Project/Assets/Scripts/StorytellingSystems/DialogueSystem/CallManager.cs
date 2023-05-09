@@ -169,7 +169,7 @@ public class CallManager : MonoBehaviour
     public void IncrementRuns(InputAction.CallbackContext c = default)
     {
         GlobalStatsManager.data.runsAttempted++;
-        saveData.IncrementRuns();
+        saveData?.IncrementRuns();
         bool s = DataManager.instance.Save<DialogueSaveData>(saveFileName, saveData);
         //saveData.SeeAllReads();
         //Debug.Log($"Increment runs saved successfully : {s}");
