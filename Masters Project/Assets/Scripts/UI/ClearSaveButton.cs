@@ -45,7 +45,9 @@ public class ClearSaveButton : MonoBehaviour
 
     private void ClearData()
     {
-        DataManager.instance.ClearSaveData();
-        SetNoSaveData();
+        bool success = DataManager.instance.ClearSaveData();
+        
+        if(success)
+            SetNoSaveData();
     }
 }

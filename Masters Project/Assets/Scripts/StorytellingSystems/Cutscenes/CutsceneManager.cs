@@ -68,9 +68,21 @@ public class CutsceneManager : MonoBehaviour
     private InputAction pause;
     private InputAction showHide;
 
+    [Header("Debug")]
+    [SerializeField, ReadOnly] string status = "standby";
+
     #region Main Player
 
-    private IEnumerator Start()
+    private void Start()
+    {
+        // prepare life tracker
+        promptLifeTracker = new ScaledTimer(noteDisplayTime, false);
+
+        // assign audio system
+        videoPlayer.SetTargetAudioSource(0, GetComponent<AudioSource>());
+    }
+
+    private IEnumerator InitializeControls()
     {
         // wait until the controls are initialized
         yield return new WaitUntil(() => GameManager.controls != null);
@@ -81,16 +93,20 @@ public class CutsceneManager : MonoBehaviour
         pause.performed += TogglePause;
         showHide = playerControls.Cutscene.Any;
         showHide.performed += ShowPrompt;
-
         playerControls.Cutscene.Disable();
-
-        // prepare life tracker
-        promptLifeTracker = new ScaledTimer(noteDisplayTime, false);
-
-        // assign audio system
-        videoPlayer.SetTargetAudioSource(0, GetComponent<AudioSource>());
     }
 
+    /// <summary>
+    /// Initialize controls in enable since manager can be turned off easily
+    /// </summary>
+    private void OnEnable()
+    {
+        StartCoroutine(InitializeControls());
+    }
+
+    /// <summary>
+    /// Remove inputs
+    /// </summary>
     private void OnDisable()
     {
         pause.performed -= TogglePause;
@@ -101,6 +117,7 @@ public class CutsceneManager : MonoBehaviour
     {
         if (newCutscene == null) return;
 
+        status = "Preparing";
         loadedCutscene = newCutscene;
         videoPlayer.clip = newCutscene;
         videoPlayer.Prepare();
@@ -118,6 +135,8 @@ public class CutsceneManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator PlayCutscene()
     {
+        status = "fading in";
+
         // Disable pausing just to be safe in big prevention
         playerControls.PlayerGameplay.Pause.Disable();
         playerControls.PlayerGameplay.Interact.Disable();
@@ -128,8 +147,12 @@ public class CutsceneManager : MonoBehaviour
         playerControls.UI.Disable();
         playerControls.PlayerGameplay.Disable();
         playerControls.Cutscene.Enable();
+        playerControls.Cutscene.Pause.Enable();
+
 
         yield return new WaitForSecondsRealtime(startDelay);
+
+        status = "Playing";
 
         // Play the video
         videoRenderImg.enabled = true;
@@ -146,6 +169,8 @@ public class CutsceneManager : MonoBehaviour
         }
 
         yield return new WaitForSecondsRealtime(endDelay);
+
+        status = "fading out";
 
         // Disable cutscene controls and reenable gameplay. 
         // Keep pause disabled to prevent any funky business
@@ -166,6 +191,8 @@ public class CutsceneManager : MonoBehaviour
         StartCoroutine(FadePrompt(false, 0.3f));
         // By now, video has stopped, close screen
         yield return StartCoroutine(LoadScreen(false, fadeOutTime));
+
+        status = "done";
 
         // Disable pausing just to be safe in big prevention
         playerControls.PlayerGameplay.Pause.Enable();
@@ -232,9 +259,11 @@ public class CutsceneManager : MonoBehaviour
     /// <param name="c">input context</param>
     private void TogglePause(InputAction.CallbackContext c)
     {
-        if(pauseScreen.activeSelf)
+        // Debug.Log("Trying to pause cutscene");
+
+        if(pauseScreen.activeInHierarchy)
         {
-            if (settingScreen.activeSelf)
+            if (settingScreen.activeInHierarchy)
                 settingScreen.SetActive(false);
             else
                 ResumeCutscene();

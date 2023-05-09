@@ -104,7 +104,10 @@ public class AllNotesManager : MonoBehaviour
 
     public NoteObject GetNote(int index)
     {
-        return notes[index];
+        if (notes.Count > index)
+            return notes[index];
+        else
+            return null;
     }
 
     public List<NoteObject> GetNotes()

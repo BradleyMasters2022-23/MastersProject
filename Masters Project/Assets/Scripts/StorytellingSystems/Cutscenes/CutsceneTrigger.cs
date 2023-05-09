@@ -36,7 +36,10 @@ public class CutsceneTrigger : MonoBehaviour
             playable = !saveData.SinglePlayOnly(cutscene);
         else
             playable = true;
+    }
 
+    private void OnEnable()
+    {
         // prepare the cutscene ASAP
         cutscenePlayer.PrepareCutscene(cutscene);
     }
@@ -46,8 +49,10 @@ public class CutsceneTrigger : MonoBehaviour
     /// </summary>
     public void TryCutscene()
     {
+        
         if(CanPlay())
         {
+            Debug.Log($"Trying to play cutscene {cutscene.name}");
             playable = true;
             StartCoroutine(LoadCutscene());
         }
@@ -59,6 +64,8 @@ public class CutsceneTrigger : MonoBehaviour
     /// <returns></returns>
     private IEnumerator LoadCutscene()
     {
+        Debug.Log("Preparing cutscene");
+
         player = cutscenePlayer.GetComponent<VideoPlayer>();
         if (player == null || cutscene == null)
             yield break;
@@ -70,8 +77,12 @@ public class CutsceneTrigger : MonoBehaviour
         saveData.PlayCutscene(cutscene, onlyPlayOnce);
         DataManager.instance.Save(fileName, saveData);
 
+        Debug.Log("Waiting to prepare");
+
         // make sure player is prepared
         yield return new WaitUntil(() => player.isPrepared);
+
+        Debug.Log("Preperation done, starting cutscene");
 
         // Play cutscene
         cutscenePlayer.BeginCutscene();
