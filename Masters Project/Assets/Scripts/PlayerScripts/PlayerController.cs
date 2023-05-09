@@ -141,6 +141,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private UpgradableInt jumps;
     [Tooltip("How high can the player can jump")]
     [SerializeField] private float jumpForce;
+    [Tooltip("Multiplier being used for jump height")]
+    [SerializeField] private UpgradableFloat jumpMultiplier;
     [Tooltip("Cooldown between jumps")]
     [SerializeField] private float jumpCooldown;
     [Tooltip("How long while after falling off a ledge can the player jump")]
@@ -220,6 +222,7 @@ public class PlayerController : MonoBehaviour
         sprintModifier.Initialize();
         airModifier.Initialize();
         jumps.Initialize();
+        jumpMultiplier.Initialize();
 
         // Initialize internal variables
         jumpTimer = new ScaledTimer(jumpCooldown, false);
@@ -611,7 +614,7 @@ public class PlayerController : MonoBehaviour
             rb.velocity = newVelocity;
 
             // Apply vertical velocity
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * jumpForce * jumpMultiplier.Current, ForceMode.Impulse);
 
 
             jumpSound.PlayClip(transform, source, false);
@@ -667,12 +670,13 @@ public class PlayerController : MonoBehaviour
 
     public float GetJumpForce()
     {
-        return jumpForce;
+        return jumpMultiplier.Current;
     }
 
-    public void SetJumpForce(float force)
+    public void SetJumpForce(float newMultiplier)
     {
-        jumpForce = force;
+        //Debug.Log($"Setting new multiplier to {newMultiplier}");
+        jumpMultiplier.ChangeVal(newMultiplier);
     }
 
     #endregion

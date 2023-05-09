@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.UI;
+
 
 public class NoteFoundUI : MonoBehaviour
 {
@@ -33,7 +35,7 @@ public class NoteFoundUI : MonoBehaviour
         caller = f;
 
         // Load in data. Backup error loading
-        if(note != null)
+        if (note != null)
         {
             this.title.text = note.displayName;
         }
