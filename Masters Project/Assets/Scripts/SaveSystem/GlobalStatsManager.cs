@@ -61,4 +61,14 @@ public class GlobalStatsManager : MonoBehaviour
     {
         SaveData();
     }
+
+
+    /// <summary>
+    /// Reset the data with a new object. Do this when data gets cleared
+    /// </summary>
+    public void ResetData()
+    {
+        data = new PlaythroughSaveData();
+        Debug.Log("Global data reset");
+    }
 }

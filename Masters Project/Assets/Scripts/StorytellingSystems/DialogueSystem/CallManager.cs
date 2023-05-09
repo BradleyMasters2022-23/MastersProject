@@ -186,4 +186,10 @@ public class CallManager : MonoBehaviour
         //Debug.Log($"Conversation save successful : {s}");
         //saveData.SeeAllReads();
     }
+
+    public void ResetData()
+    {
+        saveData = new DialogueSaveData();
+        UpdateCalls();
+    }
 }

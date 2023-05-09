@@ -72,6 +72,7 @@ public class AlertContainer : MonoBehaviour
 
         // Spawn and use pointer
         pointer = Instantiate(pointerPrefab.gameObject, AlertUIManager.display).GetComponent<AlertUIPointer>();
+        pointer.gameObject.SetActive(false);
         pointer.UpdateColor(GetColor());
     }
 

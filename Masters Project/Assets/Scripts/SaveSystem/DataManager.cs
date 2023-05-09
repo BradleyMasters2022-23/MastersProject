@@ -109,6 +109,13 @@ public class DataManager : MonoBehaviour
             if (Directory.Exists(Application.persistentDataPath + saveFolderPath))
             {
                 Directory.Delete(Application.persistentDataPath + saveFolderPath, true);
+
+                if(GlobalStatsManager.Instance != null)
+                    GlobalStatsManager.Instance.ResetData();
+
+                if(CallManager.instance != null)
+                    CallManager.instance.ResetData();
+
                 hasSaveData = false;
             }
 

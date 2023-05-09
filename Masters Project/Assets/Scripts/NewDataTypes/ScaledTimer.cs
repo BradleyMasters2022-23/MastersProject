@@ -46,8 +46,7 @@ public class ScaledTimer
         }
         else
         {
-            // TODO - make using non real time value and delta time instead
-            startTime = Time.realtimeSinceStartup;
+            startTime = CoreTimeline.instance.UnscaledTimeline;
         }
 
         targetTime = _targetTime;
@@ -66,7 +65,7 @@ public class ScaledTimer
         }
         else
         {
-            startTime = Time.realtimeSinceStartup;
+            startTime = CoreTimeline.instance.UnscaledTimeline;
         }
 
 
@@ -87,7 +86,7 @@ public class ScaledTimer
         }
         else
         {
-            startTime = Time.realtimeSinceStartup;
+            startTime = CoreTimeline.instance.UnscaledTimeline;
         }
     }
 
@@ -115,7 +114,7 @@ public class ScaledTimer
         }
         else
         {
-            return (Time.realtimeSinceStartup - startTime) >= (targetTime/ timerModifier);
+            return (CoreTimeline.instance.UnscaledTimeline - startTime) >= (targetTime/ timerModifier);
         }
     }
 
@@ -132,7 +131,7 @@ public class ScaledTimer
         }
         else
         {
-            return Mathf.Clamp((Time.realtimeSinceStartup - startTime) / (targetTime/ timerModifier), 0, 1);
+            return Mathf.Clamp((CoreTimeline.instance.UnscaledTimeline - startTime) / (targetTime/ timerModifier), 0, 1);
         }
     }
 
