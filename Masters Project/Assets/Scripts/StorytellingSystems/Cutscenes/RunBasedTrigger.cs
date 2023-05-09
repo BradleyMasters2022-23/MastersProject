@@ -5,7 +5,7 @@ using UnityEngine;
 public class RunBasedTrigger : CutsceneTrigger
 {
     [SerializeField] private int minRunLength;
-
+    
     /// <summary>
     /// Try to play the cutscene ASAP
     /// </summary>
@@ -20,7 +20,7 @@ public class RunBasedTrigger : CutsceneTrigger
     /// <returns>Whether the cutscene trigger can be used</returns>
     protected override bool CanPlay()
     {
-        // Debug.Log($"curent runs : {GlobalStatsManager.data.runsAttempted}");
+        Debug.Log($"curent runs : {GlobalStatsManager.data.runsAttempted}");
         return base.CanPlay() && GlobalStatsManager.data.runsAttempted >= minRunLength;
     }
 }
