@@ -33,7 +33,11 @@ public class CutsceneTrigger : MonoBehaviour
         // If this should only be playable once, check if it was already saved
         // Otherwise, let it play
         if (onlyPlayOnce)
-            playable = !saveData.SinglePlayOnly(cutscene);
+        {
+            bool inSafe = saveData.SinglePlayOnly(cutscene);
+            Debug.Log($"Only play once enabled | In save data {inSafe} | Setting playable to {!inSafe}");
+            playable = !inSafe;
+        }
         else
             playable = true;
     }
@@ -72,12 +76,14 @@ public class CutsceneTrigger : MonoBehaviour
 
         // Get most recent save data and update it
         saveData = DataManager.instance.Load<CutsceneSaveData>(fileName);
+
         if(saveData == null)
             saveData = new CutsceneSaveData();
-        saveData.PlayCutscene(cutscene, onlyPlayOnce);
-        DataManager.instance.Save(fileName, saveData);
 
-        Debug.Log("Waiting to prepare");
+        saveData.PlayCutscene(cutscene, onlyPlayOnce);
+        bool s = DataManager.instance.Save(fileName, saveData);
+
+        Debug.Log($"Cutscene save data success : {s}");
 
         // make sure player is prepared
         yield return new WaitUntil(() => player.isPrepared);
