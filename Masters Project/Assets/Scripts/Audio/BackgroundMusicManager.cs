@@ -34,6 +34,7 @@ public class BackgroundMusicManager : MonoBehaviour
     [SerializeField, Required] private AudioSource secondaryMusicSource;
 
     private Music currentlyLoaded;
+    private Coroutine transitionRoutine;
 
     /// <summary>
     /// Initialize instance
@@ -69,6 +70,9 @@ public class BackgroundMusicManager : MonoBehaviour
             return;
         else
             currentlyLoaded = type;
+
+        if (transitionRoutine != null)
+            StopCoroutine(transitionRoutine);
 
         // Select music
         AudioClipSO chosenMusic;
@@ -129,7 +133,7 @@ public class BackgroundMusicManager : MonoBehaviour
         chosenMusic.PlayClip(newSource);
 
         // transition from old source to new source
-        StartCoroutine(Transition(transitionTime, oldSource, newSource));
+        transitionRoutine = StartCoroutine(Transition(transitionTime, oldSource, newSource));
     }
 
     /// <summary>

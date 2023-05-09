@@ -5,13 +5,13 @@ using UnityEngine.Video;
 
 public class CutsceneSaveData
 {
-    public List<int> playedCutscenes;
-    public List<int> singlePlayCutscenes;
+    public List<string> playedCutscenes;
+    public List<string> singlePlayCutscenes;
 
     public CutsceneSaveData()
     {
-        playedCutscenes = new List<int>();
-        singlePlayCutscenes = new List<int>();
+        playedCutscenes = new List<string>();
+        singlePlayCutscenes = new List<string>();
     }
 
     /// <summary>
@@ -21,7 +21,7 @@ public class CutsceneSaveData
     /// <returns>Whether the video has already been placed once</returns>
     public bool HasCutsceneBeenPlayed(VideoClip v)
     {
-        int c = v.GetHashCode();
+        string c = v.name;
         return playedCutscenes.Contains(c);
     }
     /// <summary>
@@ -31,7 +31,7 @@ public class CutsceneSaveData
     /// <returns>Whether the video has been played and its set to play once</returns>
     public bool SinglePlayOnly(VideoClip v)
     {
-        int c = v.GetHashCode();
+        string c = v.name;
         return singlePlayCutscenes.Contains(c);
     }
 
@@ -43,7 +43,7 @@ public class CutsceneSaveData
     public void PlayCutscene(VideoClip v, bool singlePlay)
     {
         // Add to played cutscenes
-        int c = v.GetHashCode();
+        string c = v.name;
         if(!playedCutscenes.Contains(c))
         {
             playedCutscenes.Add(c);
