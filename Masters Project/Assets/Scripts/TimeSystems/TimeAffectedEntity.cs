@@ -19,6 +19,9 @@ public abstract class TimeAffectedEntity : MonoBehaviour
     /// </summary>
     [SerializeField, ReadOnly] private float secondaryTimescale = 1;
 
+    private float personalTime;
+    private float personalTimerModifier;
+
     /// <summary>
     /// Whether this entity scales with time
     /// </summary>
@@ -26,6 +29,9 @@ public abstract class TimeAffectedEntity : MonoBehaviour
     {
         get { return affectedByTimestop; }
     }
+
+    private List<LocalTimer> timerList;
+
     /// <summary>
     /// Get this entity's timescale
     /// </summary>
@@ -60,7 +66,7 @@ public abstract class TimeAffectedEntity : MonoBehaviour
             // If affected by timestop, return the slowest delta time
             if (affectedByTimestop)
             {
-                // clamp it based on minimum timescale value
+                // Get time based on current timescale
                 return Timescale * Time.deltaTime;
 
             }
@@ -74,4 +80,47 @@ public abstract class TimeAffectedEntity : MonoBehaviour
     {
         secondaryTimescale = amt;
     }
+
+    #region Local Timer Utility
+
+    // These are various shortcut functions to make working with local timers easier
+    // and allows for personal time to remain private.
+
+    // This update to the scaled timer system is necessary for making localized timestop work
+    // as intended. 
+
+    /// <summary>
+    /// Create a new timer, add it to list automatically.
+    /// Helps streamline the process 
+    /// </summary>
+    /// <param name="target">Target time to aim for</param>
+    /// <returns>Newly requested timer</returns>
+    protected LocalTimer GetTimer(float target)
+    {
+        // create the new timer
+        LocalTimer t = new LocalTimer(target);
+
+        // if the list is not created, make one, add it back
+        if(timerList == null)
+            timerList = new List<LocalTimer>();
+
+        timerList.Add(t);
+
+        // return it to caller 
+        return t;
+    }
+
+    protected virtual void FixedUpdate()
+    {
+        if(timerList != null)
+        {
+            foreach (LocalTimer t in timerList)
+            {
+                if (t != null)
+                    t.UpdateTime(DeltaTime);
+            }
+        }
+    }
+
+    #endregion
 }

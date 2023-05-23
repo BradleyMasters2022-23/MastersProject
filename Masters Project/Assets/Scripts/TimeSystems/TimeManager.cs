@@ -382,7 +382,7 @@ public class TimeManager : MonoBehaviour
                 }
             case TimeGaugeState.SLOWING:
                 {
-                    Debug.Log("Playing to slow time");
+                    // Debug.Log("Playing to slow time");
 
                     if(source != null)
                         source.Stop();

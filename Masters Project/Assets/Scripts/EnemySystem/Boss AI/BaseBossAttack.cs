@@ -53,8 +53,8 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
     [SerializeField] protected Vector2 cooldownRange;
     protected int currentPhase;
     protected Coroutine currentRoutine;
-    protected ScaledTimer tracker;
-    protected ScaledTimer stunnedTracker;
+    protected LocalTimer tracker;
+    protected LocalTimer stunnedTracker;
     protected WaitForFixedUpdate frame;
     protected Vector3 originalPosVector;
 
@@ -73,18 +73,8 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
         source = GetComponent<AudioSource>();
         frame = new WaitForFixedUpdate();
 
-        tracker = new ScaledTimer(0, Affected);
-        stunnedTracker = new ScaledTimer(lossTargetStunDuration, Affected);
-    }
-
-    protected virtual void UpdateTimers()
-    {
-        if(Affected)
-        {
-            //Debug.Log("Setting modifiers to " + Timescale);
-            tracker?.SetModifier(Timescale);
-            stunnedTracker?.SetModifier(Timescale);
-        }
+        tracker = GetTimer(0);
+        stunnedTracker = GetTimer(lossTargetStunDuration);
     }
 
     /// <summary>
@@ -124,8 +114,6 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
 
     private void Update()
     {
-        UpdateTimers();
-
         if (state == AttackState.Stunned)
         {
             if (stunnedTracker.TimerDone())
@@ -229,8 +217,8 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
             SetTracker(delay);
             yield return new WaitUntil(tracker.TimerDone);
         }
-        
-        ScaledTimer maxTime = new ScaledTimer(1.5f);
+
+        LocalTimer maxTime = GetTimer(1.5f);
 
         Vector3 rot = transform.localRotation.eulerAngles;
         // mod it to prevent it from ALWAYS GOING COUNTERCLOCKWISE
@@ -302,7 +290,7 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
     protected IEnumerator RotateToDisable()
     {
         Vector3 tar = new Vector3(90, 0, 0);
-        ScaledTimer maxTime = new ScaledTimer(1.5f);
+        LocalTimer maxTime = GetTimer(1.5f);
         Vector3 rot = transform.localRotation.eulerAngles;
         // mod it to prevent it from ALWAYS GOING COUNTERCLOCKWISE
         if (rot.x > 180)
