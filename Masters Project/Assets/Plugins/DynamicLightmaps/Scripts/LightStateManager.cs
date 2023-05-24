@@ -1,12 +1,15 @@
 using DynamicLightmaps;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
-public class Manager : MonoBehaviour
+public class LightStateManager : MonoBehaviour
 {
     [SerializeField] private GameObject[] environments;
     [SerializeField] private LightState[] lightStates;
 
-    private int index = -1;
+    [SerializeField, ReadOnly] private int index = -1;
+    [SerializeField] private bool testing;
+
     private LightState currentState;
     private GameObject currentEnvironment;
 
@@ -21,14 +24,46 @@ public class Manager : MonoBehaviour
         // NOTE IF YOU WANT TO CHANGE THE STATE OF THE LIGHTMAPS AT THE BEGINING OF THE GAME
         // CHANGE IT IN START NOT AWAKE BECAUSE THE LIGHT PROBES IN THE SCENE MIGHT BE NOT INITIALIZED
         NextState();
-        InvokeRepeating("NextState", 2, 4);
+
+        if(testing)
+            InvokeRepeating("NextState", 2, 4);
     }
 
+    /// <summary>
+    /// Iterate to the next state. Used for sequencing between areas and testing
+    /// </summary>
     public void NextState()
     {
         index++;
         if (index >= environments.Length) index = 0;
 
+        UpdateToState();
+    }
+
+    /// <summary>
+    /// Set the state directly
+    /// </summary>
+    /// <param name="i">Index to use</param>
+    public void SetState(int i)
+    {
+        if (i < 0 || i >= environments.Length)
+        {
+            index = Mathf.Clamp(i, 0, environments.Length);
+            Debug.LogError("Requested state is out of bounds. Using closest instead");
+        }
+        else
+        {
+            index = i;
+        }
+
+        UpdateToState();
+    }
+
+    /// <summary>
+    /// Based on the current state, actually apply the new lighting changes 
+    /// </summary>
+    private void UpdateToState()
+    {
         if (currentEnvironment != null) currentEnvironment.SetActive(false);
         currentState = lightStates[index];
         currentEnvironment = environments[index];
