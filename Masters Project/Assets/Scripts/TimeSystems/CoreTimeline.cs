@@ -20,7 +20,7 @@ namespace Masters.TimerSystem
         /// <summary>
         /// The current internal timer, adjusted with timescale. 
         /// </summary>
-        private float scaledTimeline;
+        private float scaledTimeline = 0;
 
         /// <summary>
         /// The current internal timer, adjusted with timescale. 
@@ -28,6 +28,13 @@ namespace Masters.TimerSystem
         public float ScaledTimeline
         {
             get { return scaledTimeline; }
+        }
+
+        private float unscaledTimeline = 0;
+
+        public float UnscaledTimeline
+        {
+            get { return unscaledTimeline; }
         }
 
         /// <summary>
@@ -39,6 +46,7 @@ namespace Masters.TimerSystem
                 Destroy(gameObject);
 
             CoreTimeline.instance = this;
+            unscaledTimeline = 0;
             scaledTimeline = 0;
         }
 
@@ -48,7 +56,8 @@ namespace Masters.TimerSystem
         private void FixedUpdate()
         {
             scaledTimeline += TimeManager.WorldDeltaTime;
-            
+            unscaledTimeline += Time.deltaTime;
+
             if (scaledTimeline == float.MaxValue)
                 Debug.LogError("Timeline reached max float value, what the fuck???");
         }
@@ -59,3 +68,4 @@ namespace Masters.TimerSystem
         }
     }
 }
+

@@ -7,6 +7,7 @@
  * ================================================================================================
  */
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -493,12 +494,12 @@ public class GameManager : MonoBehaviour
         // Check if there are no options available
         if (menuStack.Count <= 0)
         {
-            Debug.Log("[GameManager] Close menu called, but no menu to close!");
+            // Debug.Log("[GameManager] Close menu called, but no menu to close!");
             return;
         }
         else if(!menuStack.Peek().Closable)
         {
-            Debug.Log($"[GameManager] Tried to close the menu {menuStack.Peek().name}, but its marked as permenant!");
+            // Debug.Log($"[GameManager] Tried to close the menu {menuStack.Peek().name}, but its marked as permenant!");
             return;
         }
 
@@ -653,8 +654,21 @@ public class GameManager : MonoBehaviour
     {
         // if none of the main scenes, dont load. 
         // Useful for testing scenes and pausing/unpausing
-        if (name != mainMenuScene && name != mainGameplayScene && name != mainHubScene)
+        string currScene = SceneManager.GetActiveScene().name;
+        if (currScene != mainMenuScene && currScene != mainGameplayScene && currScene != mainHubScene)
             return;
+
+        try
+        {
+            // attempt to save global stats whenver loading
+            if (currScene != mainMenuScene && GlobalStatsManager.Instance != null)
+                GlobalStatsManager.SaveData();
+        }
+        catch(Exception e)
+        {
+            Debug.Log($"Saving stats between scenes has failed. {e}");
+        }
+        
 
         menuStack.Clear();
         controls.UI.Disable();

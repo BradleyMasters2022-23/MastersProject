@@ -104,7 +104,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7710955283797034367, guid: 2d9097f8193fbf24a9309441b0603955, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 7710955283797034367, guid: 2d9097f8193fbf24a9309441b0603955, type: 3}
       propertyPath: m_TagString
@@ -242,13 +242,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf67b8df4d7f2ea43b3de7cbf2b245b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
   _center: {fileID: 1649765919}
   _team: 3
   _targetThreat: 0
   _unkillable: 0
+  immuneToKnockback: 1
+  knockbackModifier: 1
+  maxKnockback: 0
+  invincibilityShield: {fileID: 0}
   _deathVFX: {fileID: 0}
   damagedSound: {fileID: 0}
   deathSound: {fileID: 11400000, guid: 4664370fbacf27841b86016c1bd9cb1f, type: 2}
+  damagedSoundCooldown: 0.5
   dropList:
   - spawnObject: {fileID: 3071240432754548792, guid: 6efff96cc11551441886102089ebdc19, type: 3}
     quantityRange: {x: 4, y: 4}
@@ -270,7 +281,9 @@ MonoBehaviour:
   _damagedInvulnerabilityDuration: 0
   _gateHealthbarDamage: 0
   _gateHealthbarHealing: 0
+  _gatedHealthInvulnerability: 0
   _godMode: 0
+  timeScale: 0
 --- !u!4 &4557141038160369620 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6938077067943911365, guid: 2d9097f8193fbf24a9309441b0603955, type: 3}

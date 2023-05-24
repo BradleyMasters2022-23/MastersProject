@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.UI;
+
 
 public class NoteFoundUI : MonoBehaviour
 {
@@ -11,6 +13,7 @@ public class NoteFoundUI : MonoBehaviour
     InputAction esc;
     private EventSystem eventSystem;
     private Fragment displayFrag;
+    private NoteObject note;
     private FragmentInteract caller;
 
     [Tooltip("Reference to the title textbox")]
@@ -28,10 +31,27 @@ public class NoteFoundUI : MonoBehaviour
     public void LoadFragment(FragmentInteract f)
     {
         displayFrag = f.GetFragment();
+        note = f.GetNote();
         caller = f;
 
-        this.title.text = displayFrag.GetNoteName();
-        this.content.text = displayFrag.content;
+        // Load in data. Backup error loading
+        if (note != null)
+        {
+            this.title.text = note.displayName;
+        }
+        else
+        {
+            this.title.text = "#ERR0R#";
+        }
+        if(f != null)
+        {
+            this.content.text = displayFrag.content;
+        }
+        else
+        {
+            this.content.text = "#ERROR: DATA CORRUPTED#";
+        }
+        
     }
 
     public void OpenScreen()

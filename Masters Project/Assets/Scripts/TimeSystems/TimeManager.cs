@@ -12,7 +12,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Events;
 using System.Collections;
-using UnityEngine.Windows;
+using Sirenix.OdinInspector;
 
 /// <summary>
 /// Manages player-controlled time abilities
@@ -68,7 +68,7 @@ public class TimeManager : MonoBehaviour
     [SerializeField] private AudioClipSO stopTime;
     [Tooltip("Sound if player starts time")]
     [SerializeField] private AudioClipSO startTime;
-    private AudioSource source;
+    [SerializeField, ReadOnly] private AudioSource source;
 
     /// <summary>
     /// Normal time value
@@ -249,8 +249,8 @@ public class TimeManager : MonoBehaviour
     {
         onStateChangeChannel.OnEventRaised -= ToggleInputs;
 
-        if (slowInput.enabled)
-            slowInput.Disable();
+        slowInput.started -= ToggleSlow;
+        slowInput.canceled -= ToggleSlow;
     }
 
     private void FixedUpdate()
@@ -382,7 +382,10 @@ public class TimeManager : MonoBehaviour
                 }
             case TimeGaugeState.SLOWING:
                 {
-                    source.Stop();
+                    Debug.Log("Playing to slow time");
+
+                    if(source != null)
+                        source.Stop();
                     stopTime.PlayClip(source);
 
                     break;
@@ -396,7 +399,8 @@ public class TimeManager : MonoBehaviour
                     // If entering frozen state, reset timer
                     replenishDelayTimer.ResetTimer();
 
-                    source.Stop();
+                    if (source != null)
+                        source.Stop();
                     startTime.PlayClip(source);
 
                     break;
@@ -406,7 +410,10 @@ public class TimeManager : MonoBehaviour
                     // If entering emptied state, reset timer
                     emptiedDelayTimer.ResetTimer();
 
-                    source.Stop();
+                    //Debug.Log("Playing to resume time");
+
+                    if (source != null)
+                        source.Stop();
                     startTime.PlayClip(source);
 
                     break;

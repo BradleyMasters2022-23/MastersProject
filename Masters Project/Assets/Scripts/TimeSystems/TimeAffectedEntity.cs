@@ -36,7 +36,7 @@ public abstract class TimeAffectedEntity : MonoBehaviour
             // If affected by timestop, return the slowest timescale
             if(affectedByTimestop)
             {
-                float t = TimeManager.WorldTimeScale;
+                float t = TimeManager.WorldTimeScale * Time.timeScale;
 
                 // If secondary timescale is slower, use that
                 if (t > secondaryTimescale)

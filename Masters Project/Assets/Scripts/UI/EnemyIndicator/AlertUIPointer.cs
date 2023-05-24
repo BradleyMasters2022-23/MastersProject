@@ -5,10 +5,27 @@ using UnityEngine.UI;
 
 public class AlertUIPointer : MonoBehaviour
 {
+    /// <summary>
+    /// Reference to player cam for distance stuff
+    /// </summary>
     private Transform cam;
+    /// <summary>
+    /// Reference to image holder
+    /// </summary>
     private Image image;
+    /// <summary>
+    /// The initial scale this originally had
+    /// </summary>
     private Vector3 initScale;
-    
+    /// <summary>
+    /// The offset of this pointer
+    /// </summary>
+    private float offset;
+    /// <summary>
+    /// Bounds of the offset
+    /// </summary>
+    private Vector2 offsetBounds = new Vector2(150, 400);
+
     /// <summary>
     /// Initialize references
     /// </summary>
@@ -17,6 +34,7 @@ public class AlertUIPointer : MonoBehaviour
         cam = Camera.main.transform;
         image = GetComponentInChildren<Image>();
         initScale = image.transform.localScale;
+        offset = image.transform.localPosition.y;
     }
 
     /// <summary>
@@ -54,4 +72,16 @@ public class AlertUIPointer : MonoBehaviour
         image.transform.localScale = initScale * s;
     }
 
+    /// <summary>
+    /// Update the offset of this pointer
+    /// </summary>
+    /// <param name="o">New offset to use. Pass in negative value to use default</param>
+    public void UpdateOffset(float o)
+    {
+        if (o <= 0) return;
+
+        Vector3 pos = image.transform.localPosition;
+        pos.y = Mathf.Clamp(o, offsetBounds.x, offsetBounds.y);
+        image.transform.localPosition = pos;
+    }
 }

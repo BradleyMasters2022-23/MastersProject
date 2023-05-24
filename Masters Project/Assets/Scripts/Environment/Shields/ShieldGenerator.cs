@@ -203,12 +203,14 @@ public class ShieldGenerator : MonoBehaviour
 
     public void LockGenerators()
     {
+        Debug.Log("Locking all generators");
         foreach (var button in allButtons)
             button.SetLock(true);
     }
 
     public void UnlockGenerators()
     {
+        Debug.Log("Unlocking all generators");
         foreach (var button in allButtons)
             button.SetLock(false);
     }

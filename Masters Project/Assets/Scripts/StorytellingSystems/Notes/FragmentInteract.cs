@@ -8,16 +8,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 public class FragmentInteract : Interactable
 {
-    [SerializeField] private Fragment fragment;
+    [Tooltip("A note to pull from. Will always pull from this override.")]
+    [SerializeField] private NoteObject noteOverride;
+    [Tooltip("A fragment to use. Takes priority over note override.")]
+    [SerializeField] private Fragment fragmentOverride;
+    [SerializeField, ReadOnly] private Fragment fragment;
+    [SerializeField, ReadOnly] private NoteObject note;
+
+
     private NoteFoundUI ui;
-    private bool dataSent = false;
 
     private void Awake()
     {
         ui = FindObjectOfType<NoteFoundUI>(true);
+
+        if(fragmentOverride != null || noteOverride != null)
+        {
+            PrepareNote();
+        }
     }
 
     /// <summary>
@@ -30,13 +42,29 @@ public class FragmentInteract : Interactable
 
     public void PrepareNote()
     {
+        // if the fragment is already assigned, then it was already prepared
+        if (fragment != null)
+            return;
+
         // If no override assigned, try to get a random one
-        if(fragment == null)
+        if(fragmentOverride != null)
         {
-            NoteObject n = AllNotesManager.instance.GetRandomLostNote();
-            if(n != null)
+            note = noteOverride;
+            fragment = fragmentOverride;
+        }
+        // If no fragment assigned but note assigned, get a random fragment from that note
+        else if(noteOverride != null)
+        {
+            note = noteOverride;
+            fragment = noteOverride.GetRandomLostFragment();
+        }
+        // Otherwise, pull fronm pool
+        else
+        {
+            note = AllNotesManager.instance.GetRandomLostNote();
+            if (note != null)
             {
-                fragment = n.GetRandomLostFragment();
+                fragment = note.GetRandomLostFragment();
             }
         }
             
@@ -61,12 +89,14 @@ public class FragmentInteract : Interactable
             return;
         }
 
-        if (!dataSent)
+        // make sure theres a fragment to use
+        if (fragment == null)
         {
-            ui.LoadFragment(this);
-
-            dataSent = true;
+            Destroy(gameObject);
+            return;
         }
+
+        ui.LoadFragment(this);
 
         ui.OpenScreen();
         PlayerNotesManager.instance.FindFragment(fragment);
@@ -75,6 +105,10 @@ public class FragmentInteract : Interactable
     public Fragment GetFragment()
     {
         return fragment;
+    }
+    public NoteObject GetNote()
+    {
+        return note;
     }
 
     public void DestroyFrag()

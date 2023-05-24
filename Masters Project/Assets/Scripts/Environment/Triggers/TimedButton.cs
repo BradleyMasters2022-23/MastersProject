@@ -2,14 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimedButton : MonoBehaviour, ITriggerable
+public class TimedButton : TimeAffectedEntity, ITriggerable
 {
     [Header("Gameplay")]
 
     [SerializeField] private float activeDuration;
-    [SerializeField] private bool affectedByTimestop = true;
 
-    private ScaledTimer timer;
     [SerializeField] private bool activated;
 
     [SerializeField] private bool locked;
@@ -18,9 +16,14 @@ public class TimedButton : MonoBehaviour, ITriggerable
 
     [Header("Indicators")]
 
+    [Tooltip("Indicators that play when a generator is destroyed")]
     [SerializeField] private IIndicator[] generatorDestroyedIndicator;
+    [Tooltip("Indicators that play when a generator is repaired")]
     [SerializeField] private IIndicator[] generatorFixedIndicator;
 
+    [Tooltip("Indicators that play when a generator is locked")]
+    [SerializeField] private IIndicator[] lockedIndicator;
+    [Tooltip("Indicators that play when a generator is permenately offline")]
     [SerializeField] private IIndicator[] permDeadIndicators;
 
     private Target host;
@@ -29,7 +32,9 @@ public class TimedButton : MonoBehaviour, ITriggerable
 
     private void Awake()
     {
-        if(targetTrigger == null)
+        host = GetComponent<Target>();
+
+        if (targetTrigger == null)
         {
             targetTrigger = GetComponent<Trigger>();
             if (targetTrigger == null)
@@ -44,7 +49,7 @@ public class TimedButton : MonoBehaviour, ITriggerable
         //Indicators.SetIndicators(activatedIndicators, false);
         //Indicators.SetIndicators(generatorFixedIndicator, true);
 
-        host = GetComponent<Target>();
+        
     }
 
     public void SummonButton()
@@ -71,26 +76,6 @@ public class TimedButton : MonoBehaviour, ITriggerable
         }
     }
 
-    private void Update()
-    {
-        if (timer == null) return;
-
-        // if the activation timer is done and still active, disable activated status
-        if(timer.TimerDone() && activated)
-        {
-            activated = false;
-            RepairedIndicators();
-        }
-        // if the activation timer is running and not set to active, enable activated status
-        else if(!timer.TimerDone() && !activated)
-        {
-            activated = true;
-            DestroyedEffects();
-            
-            //host.ResetTarget();
-        }
-    }
-
     /// <summary>
     /// When triggered, reset the current timer
     /// </summary>
@@ -99,10 +84,16 @@ public class TimedButton : MonoBehaviour, ITriggerable
         // Don't do anything while locked
         if (locked) return;
 
-        if(timer == null)
-            timer = new ScaledTimer(activeDuration, affectedByTimestop);
-        else
-            timer.ResetTimer();
+        activated = true;
+
+        DestroyedEffects();
+    }
+
+    private void RepairButton()
+    {
+        activated = false;
+        host.enabled = true;
+        RepairedIndicators();
     }
 
     /// <summary>
@@ -111,7 +102,6 @@ public class TimedButton : MonoBehaviour, ITriggerable
     private void DestroyedEffects()
     {
         Indicators.SetIndicators(generatorFixedIndicator, false);
-
         Indicators.SetIndicators(generatorDestroyedIndicator, true);
     }
     /// <summary>
@@ -119,8 +109,8 @@ public class TimedButton : MonoBehaviour, ITriggerable
     /// </summary>
     private void RepairedIndicators()
     {
+        Debug.Log($"{name} repair indicators called");
         Indicators.SetIndicators(generatorDestroyedIndicator, false);
-
         Indicators.SetIndicators(generatorFixedIndicator, true);
     }
 
@@ -138,25 +128,37 @@ public class TimedButton : MonoBehaviour, ITriggerable
     /// </summary>
     public void ResetButton()
     {
-        timer = null;
-        activated = false;
-        RepairedIndicators();
-
+        StartCoroutine(TryRepair());
+        
         if(host == null)
             host = GetComponent<Target>();
 
         host?.ResetTarget();
     }
 
+    private IEnumerator TryRepair()
+    {
+        yield return new WaitUntil(() => !this.locked);
+        RepairButton();
+    }
+
     public void SetLock(bool locked)
     {
         this.locked = locked;
+        host.enabled = !locked;
+        activated = false;
 
-        if(locked)
+        if (locked)
         {
-            activated = false;
-            RepairedIndicators();
+            Indicators.SetIndicators(generatorDestroyedIndicator, false);
+            Indicators.SetIndicators(generatorFixedIndicator, false);
         }
+        else
+        {
+            Indicators.SetIndicators(generatorFixedIndicator, true);
+        }
+
+        Indicators.SetIndicators(lockedIndicator, locked);
     }
 
     public void Die()
