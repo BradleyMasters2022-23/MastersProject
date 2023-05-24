@@ -33,7 +33,7 @@ Transform:
   - {fileID: 8340717729998719154}
   - {fileID: 5499102511934025359}
   m_Father: {fileID: 370101621820619261}
-  m_RootOrder: 19
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6800948910993974756
 MonoBehaviour:
@@ -111,7 +111,7 @@ Transform:
   - {fileID: 6863519530595659943}
   - {fileID: 4369014680267820450}
   m_Father: {fileID: 370101621820619261}
-  m_RootOrder: 18
+  m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2535544137480834352
 GameObject:
@@ -2203,6 +2203,39 @@ Transform:
   m_Father: {fileID: 3481996972212367807}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5777429954417652184
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5202960882783404486}
+  m_Layer: 0
+  m_Name: Lights
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5202960882783404486
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5777429954417652184}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8839771384301309737}
+  - {fileID: 8839771384575301571}
+  m_Father: {fileID: 370101621820619261}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5803731821174414331
 GameObject:
   m_ObjectHideFlags: 0
@@ -3059,7 +3092,7 @@ Transform:
   - {fileID: 2713542796034866731}
   - {fileID: 6350354007855829050}
   m_Father: {fileID: 370101621820619261}
-  m_RootOrder: 17
+  m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6840208879977534825
 GameObject:
@@ -3104,8 +3137,7 @@ Transform:
   - {fileID: 6433406315416821664}
   - {fileID: 1893302947506025209}
   - {fileID: 9018339782814092063}
-  - {fileID: 8839771384301309737}
-  - {fileID: 8839771384575301571}
+  - {fileID: 5202960882783404486}
   - {fileID: 9018339783517948882}
   - {fileID: 9018339781435914963}
   - {fileID: 5982419212610908319}
@@ -4444,8 +4476,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 370101621820619261}
-  m_RootOrder: 13
+  m_Father: {fileID: 5202960882783404486}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &8839771384301309740
 Light:
@@ -4573,8 +4605,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 370101621820619261}
-  m_RootOrder: 14
+  m_Father: {fileID: 5202960882783404486}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!108 &8839771384575301574
 Light:
@@ -13505,7 +13537,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: db41286623549c94ab8b87b864f5b330, type: 3}
       propertyPath: m_RootOrder
-      value: 15
+      value: 14
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: db41286623549c94ab8b87b864f5b330, type: 3}
       propertyPath: m_LocalScale.x
@@ -13562,6 +13594,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: db41286623549c94ab8b87b864f5b330, type: 3}
       propertyPath: m_Name
       value: Mushroom_03 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4742473837712756890, guid: db41286623549c94ab8b87b864f5b330, type: 3}
+      propertyPath: m_LODs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4742473837712756890, guid: db41286623549c94ab8b87b864f5b330, type: 3}
+      propertyPath: m_LODs.Array.data[0].screenRelativeHeight
+      value: 0.014462377
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db41286623549c94ab8b87b864f5b330, type: 3}
@@ -13653,7 +13693,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: db41286623549c94ab8b87b864f5b330, type: 3}
       propertyPath: m_RootOrder
-      value: 16
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: db41286623549c94ab8b87b864f5b330, type: 3}
       propertyPath: m_LocalScale.x
@@ -13710,6 +13750,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: db41286623549c94ab8b87b864f5b330, type: 3}
       propertyPath: m_Name
       value: Mushroom_03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4742473837712756890, guid: db41286623549c94ab8b87b864f5b330, type: 3}
+      propertyPath: m_LODs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4742473837712756890, guid: db41286623549c94ab8b87b864f5b330, type: 3}
+      propertyPath: m_LODs.Array.data[0].screenRelativeHeight
+      value: 0.013192057
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db41286623549c94ab8b87b864f5b330, type: 3}
