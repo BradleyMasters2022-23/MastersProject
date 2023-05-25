@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.AI;
-using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 public enum LoadState
 {
@@ -516,10 +516,13 @@ public class MapLoader : MonoBehaviour
         // TODO - RESET PLAYER UPGRADES
         Debug.Log($"PUM active : {PlayerUpgradeManager.instance != null}");
 
+        // Destroy crystal manager
         if (CrystalManager.instance != null)
             CrystalManager.instance.DestroyCM();
-        //if (AllUpgradeManager.instance != null)
-        //    AllUpgradeManager.instance.DestroyAUM();
+
+        // Move player out of 'dont destroy' scene so it clears properly on unload
+        if (PlayerTarget.p != null)
+            SceneManager.MoveGameObjectToScene(PlayerTarget.p.gameObject, SceneManager.GetActiveScene());
 
         GameManager.instance.GoToHub();
 
@@ -533,8 +536,23 @@ public class MapLoader : MonoBehaviour
 
     #region Portal Transition Loading
 
-    int portalDepth = -1;
-    string dest = "";
+    [Header("Portal Map Generation")]
+
+    [Tooltip("Current depth of the portal system")]
+    [SerializeField, ReadOnly] int portalDepth = -1;
+    
+    [Tooltip("Reference to the loader the starting room uses")]
+    [SerializeField] RoomInitializer startingRoomInitializer;
+
+    /// <summary>
+    /// Current destination to load to
+    /// </summary>
+    private string dest = "";
+
+    /// <summary>
+    /// Refernce to all portals in the current scene
+    /// </summary>
+    private PortalTrigger[] portals;
 
     /// <summary>
     /// Prepare the order of the run
@@ -543,6 +561,17 @@ public class MapLoader : MonoBehaviour
     private IEnumerator ArrangeMap()
     {
         loadState = LoadState.Loading;
+
+        // Enable loading screen, wait to disable controls
+        loadingScreen.SetActive(true);
+        while (GameManager.controls == null)
+            yield return null;
+        GameControls controls = GameManager.controls;
+        if (controls != null)
+        {
+            controls.Disable();
+        }
+
 
         // === Choose what rooms to use === //
         int c = 0;
@@ -565,13 +594,36 @@ public class MapLoader : MonoBehaviour
 
         // TODO - IF NON COMBAT ROOMS ARE ADDED, INSERT HERE
 
+
         // Load in the final room, if there is one
         if (finalRoom != null)
         {
             mapOrder.Add(finalRoom);
         }
 
-        Debug.Log("[MAPLOADER] Map arrangement prepared, order can be viewed in inspector");
+        // make sure player is set to not despawn between scenes 
+        yield return new WaitUntil(() => PlayerTarget.p != null);
+        DontDestroyOnLoad(PlayerTarget.p);
+
+        // Debug.Log("[MAPLOADER] Map arrangement prepared, order can be viewed in inspector");
+        startingRoomInitializer.Init();
+
+        loadState = LoadState.Done;
+        loadingScreen.SetActive(false);
+
+        yield return new WaitForSecondsRealtime(0.5f);
+        // Wait half a second before reenabling controls
+        if (controls != null)
+        {
+            controls.Enable();
+            controls.UI.Disable();
+            controls.PlayerGameplay.Enable();
+        }
+
+        // tell stat manager that a run has begun
+        GlobalStatsManager.data.runsAttempted++;
+        if (CallManager.instance != null)
+            CallManager.instance.IncrementRuns();
 
         yield return null;
     }
@@ -640,8 +692,6 @@ public class MapLoader : MonoBehaviour
     {
         StartCoroutine(LoadRoomRoutine());
     }
-
-    PortalTrigger[] portals;
 
     /// <summary>
     /// Load to a next room

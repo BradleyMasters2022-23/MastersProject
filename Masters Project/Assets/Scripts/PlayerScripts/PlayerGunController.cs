@@ -152,8 +152,12 @@ public class PlayerGunController : MonoBehaviour
     private void Start()
     {
         // Get reference to camera shoot, initialize
-        shootCam = Camera.main.GetComponent<CameraShoot>();
-        shootCam.Initialize(defaultTarget, hitLayers, minAimRange);
+        if(shootCam == null)
+        {
+            shootCam = Camera.main.GetComponent<CameraShoot>();
+            shootCam.Initialize(defaultTarget, hitLayers, minAimRange);
+        }
+        
     }
 
     private void FixedUpdate()
@@ -266,6 +270,7 @@ public class PlayerGunController : MonoBehaviour
 
     public bool InRange()
     {
+        // Debug.Log("SP : " + (shootPoint != null) + " | SC : " + (shootCam != null));
         float dist = Mathf.Abs(Vector3.Distance(shootPoint.position, shootCam.TargetPos)-0.5f);
         return dist < maxRange || shootCam.inMinRange;
     }
