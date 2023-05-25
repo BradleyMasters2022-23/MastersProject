@@ -40,7 +40,7 @@ public class CrystalInteract : Interactable
         // loads crystal
         if (LinearSpawnManager.instance != null)
         {
-            par = (LinearSpawnManager.instance.GetCombatRoomCount() + 1) * parMod;
+            par = (MapLoader.instance.PortalDepth() + 1) * parMod;
 
         }
 
