@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.VFX;
 
 [RequireComponent((typeof(VisualEffect)))]
-public class VFXTimeScaler : MonoBehaviour
+public class VFXTimeScaler : TimeAffectedEntity
 {
     private VisualEffect effectRef;
     private float lastTimeScale = 1;
@@ -14,7 +14,7 @@ public class VFXTimeScaler : MonoBehaviour
     {
         effectRef= GetComponent<VisualEffect>();
 
-        if (TimeManager.WorldTimeScale <= 0.15f)
+        if (Timescale <= TimeManager.TimeStopThreshold)
             FastForward();
 
     }
@@ -22,12 +22,7 @@ public class VFXTimeScaler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (lastTimeScale != TimeManager.WorldTimeScale)
-        {
-            effectRef.playRate = 1 * TimeManager.WorldTimeScale;
-        }
-
-        lastTimeScale = TimeManager.WorldTimeScale;
+        effectRef.playRate = 1 * Timescale;
     }
 
     private void FastForward()

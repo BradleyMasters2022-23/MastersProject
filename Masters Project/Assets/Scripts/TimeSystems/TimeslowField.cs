@@ -97,10 +97,24 @@ public class TimeslowField : MonoBehaviour
         }
         // Also try to get any direct time affected entities
         TimeAffectedEntity directTarget = tgt.GetComponent<TimeAffectedEntity>();
-        if(directTarget != null)
+        Debug.Log($"Checking objects in root of {tgt.name}");
+        if (directTarget != null)
         {
             directTarget.SetSeconaryTimescale(slowAmount);
             detectedTargets.Add(directTarget);
+
+            
+            TimeAffectedEntity[] targets = directTarget.GetComponentsInChildren<TimeAffectedEntity>();
+
+            foreach (var t in targets)
+            {
+                if (t != null && !detectedTargets.Contains(t))
+                {
+                    //Debug.Log($"registering {t.GetType()}");
+                    t.SetSeconaryTimescale(slowAmount);
+                    detectedTargets.Add(t);
+                }
+            }
         }
         
     }
