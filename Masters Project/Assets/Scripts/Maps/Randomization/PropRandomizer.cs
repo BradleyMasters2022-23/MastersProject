@@ -29,7 +29,7 @@ public class PropRandomizer : MonoBehaviour, IRandomizer
         // Get depth of current run
         if (MapLoader.instance == null)
             return;
-        int depth = MapLoader.instance.RoomDepth();
+        int depth = MapLoader.instance.PortalDepth();
 
         // If outside bounds, always disable
         if(depth < minimumRoomNum || depth > maximumRoomNum)

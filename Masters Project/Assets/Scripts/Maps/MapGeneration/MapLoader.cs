@@ -698,6 +698,8 @@ public class MapLoader : MonoBehaviour
     /// </summary>
     private IEnumerator LoadRoomRoutine()
     {
+        loadingScreen.SetActive(true);
+
         // iterate to next step
         portalDepth++;
 
@@ -736,6 +738,10 @@ public class MapLoader : MonoBehaviour
         {
             rm.Init();
         }
+
+        loadingScreen.SetActive(false);
+
+        navMesh.BuildNavMesh();
     }
 
     public void ActivatePortal()

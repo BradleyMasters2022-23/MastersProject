@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Sirenix.OdinInspector;
 
 public class PortalTrigger : Interactable
 {
@@ -21,7 +22,7 @@ public class PortalTrigger : Interactable
     /// <summary>
     /// Whether the portal is currently usable
     /// </summary>
-    private bool usable = true;
+    [SerializeField, ReadOnly] private bool usable = true;
 
     /// <summary>
     /// When interacted, perform appropriate action
