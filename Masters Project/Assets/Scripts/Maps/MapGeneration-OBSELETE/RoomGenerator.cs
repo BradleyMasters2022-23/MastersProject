@@ -125,7 +125,7 @@ public class RoomGenerator : MonoBehaviour
     {
         RoomGenerator.instance = null;
 
-        GameManager.instance.ChangeState(GameManager.States.HUB);
+        GameManager.instance.GoToHub();
 
         // TODO - RESET PLAYER UPGRADES
         if(PlayerUpgradeManager.instance != null)

@@ -7,6 +7,6 @@ public class LoadToGameplay : MonoBehaviour
     // TODO - link up with the UI screen instead
     public void MoveToGameplay()
     {
-        GameManager.instance.ChangeState(GameManager.States.GAMEPLAY);
+        GameManager.instance.GoToMainGame();
     }
 }

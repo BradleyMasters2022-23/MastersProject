@@ -110,6 +110,7 @@ public class MapLoader : MonoBehaviour
         if(instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -123,7 +124,7 @@ public class MapLoader : MonoBehaviour
         availableHalls = new List<MapSegmentSO>();
 
         navMesh = GetComponent<NavMeshSurface>();
-        StartCoroutine(PrepareMapSegments());
+        StartCoroutine(ArrangeMap());
     }
 
     /// <summary>
@@ -133,9 +134,7 @@ public class MapLoader : MonoBehaviour
     private IEnumerator PrepareMapSegments()
     {
         // Enable loading screen, wait to disable controls
-
         loadingScreen.SetActive(true);
-
         while (GameManager.controls == null)
             yield return null;
         GameControls controls = GameManager.controls;
@@ -274,6 +273,7 @@ public class MapLoader : MonoBehaviour
 
         yield return null;
     }
+
 
     #endregion
 
@@ -508,18 +508,17 @@ public class MapLoader : MonoBehaviour
     {
         instance = null;
 
-        
-
         // TODO - RESET PLAYER UPGRADES
-        Debug.Log($"PUM active : {PlayerUpgradeManager.instance != null} | AUM active : {AllUpgradeManager.instance != null}");
+        Debug.Log($"PUM active : {PlayerUpgradeManager.instance != null}");
 
-        if (PlayerUpgradeManager.instance != null)
-            PlayerUpgradeManager.instance.DestroyPUM();
-        if (AllUpgradeManager.instance != null)
-            AllUpgradeManager.instance.DestroyAUM();
+        if (CrystalManager.instance != null)
+            CrystalManager.instance.DestroyCM();
+        //if (AllUpgradeManager.instance != null)
+        //    AllUpgradeManager.instance.DestroyAUM();
 
-        GameManager.instance.ChangeState(GameManager.States.HUB);
+        GameManager.instance.GoToHub();
 
+        instance = null;
         Destroy(gameObject);
     }
 
@@ -527,10 +526,195 @@ public class MapLoader : MonoBehaviour
     #endregion
 
 
+    #region Portal Transition Loading
+
+    int portalDepth = 0;
+    string dest = "";
+
+    /// <summary>
+    /// Prepare the order of the run
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator ArrangeMap()
+    {
+        loadState = LoadState.Loading;
+
+        // === Choose what rooms to use === //
+        int c = 0;
+        int backup = 0;
+        while (c < maxFloorLength)
+        {
+            // Add new room, iterate next step
+            mapOrder.Add(SelectRoomNew());
+            c++;
+
+            backup++;
+            if (backup > 1000)
+            {
+                Debug.LogError("MapLoader loop to build the room list is in an infinite loop!");
+                Debug.Break();
+                break;
+            }
+            yield return new WaitForFixedUpdate();
+        }
+
+        // TODO - IF NON COMBAT ROOMS ARE ADDED, INSERT HERE
+
+        // Load in the final room, if there is one
+        if (finalRoom != null)
+        {
+            mapOrder.Add(finalRoom);
+        }
+
+        Debug.Log("[MAPLOADER] Map arrangement prepared, order can be viewed in inspector");
+
+        yield return null;
+    }
+
+    /// <summary>
+    /// Select a new room, auto managing containers. 
+    /// Only difference is this doesn't account for hallways
+    /// </summary>
+    /// <returns>A new room to use</returns>
+    private MapSegmentSO SelectRoomNew()
+    {
+        // If out of rooms, repopulate the pool
+        if (availableRooms.Count <= 0)
+        {
+            availableRooms = new List<MapSegmentSO>(allRooms);
+        }
+
+        // populate all potential rooms allowed to be used here
+        List<MapSegmentSO> allUsableRooms = new List<MapSegmentSO>();
+        foreach (MapSegmentSO option in availableRooms)
+        {
+            if (option.WithinDifficulty(mapOrder.Count))
+            {
+                allUsableRooms.Add(option);
+            }
+        }
+
+        // if no usable rooms available after first attempt, allow all rooms ignoring difficulty
+        if (allUsableRooms.Count <= 0)
+        {
+            foreach (MapSegmentSO option in availableRooms)
+            {
+                allUsableRooms.Add(option);
+            }
+        }
+
+        // if still empty, just stop the play session because something broke or no rooms passed in
+        if (allUsableRooms.Count <= 0)
+        {
+            Debug.LogError("[MapLoader] LOADING ERROR! Cannot find any rooms to build with!");
+            Debug.Break();
+            return null;
+        }
+
+        // Get the next room segment trying to ignore dupes
+        MapSegmentSO selectedObject;
+        // remove the previous room (if there is one) from the selection pool
+        if (allUsableRooms.Count > 1 && mapOrder.Count > 0 && allUsableRooms.Contains(mapOrder[mapOrder.Count - 1]))
+        {
+            allUsableRooms.Remove(mapOrder[mapOrder.Count - 1]);
+        }
+
+        selectedObject = allUsableRooms[Random.Range(0, allUsableRooms.Count)];
+
+        // Remove from current pool
+        availableRooms.Remove(selectedObject);
+
+        // Return new room
+        return selectedObject;
+    }
+
+    /// <summary>
+    /// Loadd to the next level
+    /// </summary>
+    public void NextMainPortal()
+    {
+        StartCoroutine(LoadRoomRoutine());
+    }
+
+    /// <summary>
+    /// Load to a next room
+    /// </summary>
+    private IEnumerator LoadRoomRoutine()
+    {
+        // iterate to next step
+        portalDepth++;
+
+        // If out of rooms, then return to hub
+        if (portalDepth >= mapOrder.Count)
+        {
+            Debug.Log("Depth matches end, returning to hub");
+            ReturnToHub();
+            yield break;
+        }
+        // Otherwise, get the next map and load to that scene. Wait for load to finish
+        else
+        {
+            dest = mapOrder[portalDepth].sceneName;
+            Debug.Log("Trying to go to " + dest);
+            yield return GameManager.instance.LoadToScene(dest);
+        }
+
+        // Once loading finishes, teleport player to a spawnpoint
+        MovePlayerToSpawn();
+    }
+
+    /// <summary>
+    /// Get current portal depth
+    /// </summary>
+    /// <returns>current portal depth, adjusted for top-level reading</returns>
+    public int PortalDepth()
+    {
+        return portalDepth+1;
+    }
+
+    /// <summary>
+    /// Choose a spawnpoint to teleport the player to
+    /// </summary>
+    public void MovePlayerToSpawn()
+    {
+        Transform p = PlayerTarget.p.transform;
+
+        GameObject[] positions = GameObject.FindGameObjectsWithTag("ExitPoint");
+
+        Vector3 dest;
+        Quaternion destRot;
+
+        if(positions.Length <= 0)
+        {
+            Debug.LogError("[MAPLOADER] Tried to move player to spawn, but there are no spawn points set!");
+            dest = Vector3.zero;
+            destRot = Quaternion.identity;
+            return;
+        }
+        else if(positions.Length == 1)
+        {
+            dest = positions[0].transform.position;
+            destRot = positions[0].transform.rotation;
+        }
+        else
+        {
+            int i = Random.Range(0, positions.Length);
+            dest = positions[i].transform.position;
+            destRot = positions[i].transform.rotation;
+        }
+
+        p.position = dest;
+        p.rotation = destRot;
+    }
+
+    #endregion
+
     public int RoomDepth()
     {
         return (roomIndex+1)/2;
     }
+
+    
 
     #region Utility - Debug
 

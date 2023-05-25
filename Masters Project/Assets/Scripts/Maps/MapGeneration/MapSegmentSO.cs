@@ -21,6 +21,9 @@ public class MapSegmentSO : ScriptableObject
     [PropertySpace(0, 8), AssetsOnly, PreviewField( Alignment = ObjectFieldAlignment.Center, Height = 200)]
     public GameObject segmentPrefab;
 
+    [Tooltip("Name of the scene this level has")]
+    public string sceneName;
+
     [ShowIf("@this.segmentType == MapSegmentType.Room")]
     [Tooltip("The minimum difficulty level this room can be used in")]
     public int minDifficulty = 0;
