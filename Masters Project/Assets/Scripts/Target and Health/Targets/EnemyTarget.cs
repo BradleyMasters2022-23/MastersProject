@@ -135,6 +135,8 @@ public class EnemyTarget : Target, TimeObserver
     /// </summary>
     private void DisableAI()
     {
+        Debug.Log("Disable AI called");
+
         Inturrupt();
 
         _rb.isKinematic = false;
@@ -150,6 +152,8 @@ public class EnemyTarget : Target, TimeObserver
     /// </summary>
     private void EnableAI()
     {
+        Debug.Log("Enable AI called");
+
         _rb.isKinematic = true;
         _rb.useGravity = false;
 
