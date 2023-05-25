@@ -68,9 +68,6 @@ public class CutsceneManager : MonoBehaviour
     private InputAction pause;
     private InputAction showHide;
 
-    [Header("Debug")]
-    [SerializeField, ReadOnly] string status = "standby";
-
     #region Main Player
 
     private void Start()
@@ -117,7 +114,6 @@ public class CutsceneManager : MonoBehaviour
     {
         if (newCutscene == null) return;
 
-        status = "Preparing";
         loadedCutscene = newCutscene;
         videoPlayer.clip = newCutscene;
         videoPlayer.Prepare();
@@ -135,8 +131,6 @@ public class CutsceneManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator PlayCutscene()
     {
-        status = "fading in";
-
         // Disable pausing just to be safe in big prevention
         playerControls.PlayerGameplay.Pause.Disable();
         playerControls.PlayerGameplay.Interact.Disable();
@@ -151,8 +145,6 @@ public class CutsceneManager : MonoBehaviour
 
 
         yield return new WaitForSecondsRealtime(startDelay);
-
-        status = "Playing";
 
         // Play the video
         videoRenderImg.enabled = true;
@@ -169,8 +161,6 @@ public class CutsceneManager : MonoBehaviour
         }
 
         yield return new WaitForSecondsRealtime(endDelay);
-
-        status = "fading out";
 
         // Disable cutscene controls and reenable gameplay. 
         // Keep pause disabled to prevent any funky business
@@ -191,8 +181,6 @@ public class CutsceneManager : MonoBehaviour
         StartCoroutine(FadePrompt(false, 0.3f));
         // By now, video has stopped, close screen
         yield return StartCoroutine(LoadScreen(false, fadeOutTime));
-
-        status = "done";
 
         // Disable pausing just to be safe in big prevention
         playerControls.PlayerGameplay.Pause.Enable();

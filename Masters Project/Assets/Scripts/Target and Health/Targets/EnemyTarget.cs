@@ -88,7 +88,9 @@ public class EnemyTarget : Target, TimeObserver
 
         try
         {
-            knockbackRoutine = StartCoroutine(KnockbackDuration(minKnockbackDuration));
+            if(!inKnockbackState)
+                knockbackRoutine = StartCoroutine(KnockbackDuration(minKnockbackDuration));
+
             base.Knockback(force, verticalForce, origin);
         }
         catch { }
@@ -179,7 +181,7 @@ public class EnemyTarget : Target, TimeObserver
     /// <summary>
     /// When time is stopped (called by TimeManager), store velocity and freeze
     /// </summary>
-    public void OnStop()
+    public override void OnStop()
     {
         if (_rb != null)
         {
@@ -187,18 +189,21 @@ public class EnemyTarget : Target, TimeObserver
             _rb.isKinematic = true;
         }
 
+        base.OnStop();
     }
 
     /// <summary>
     /// When time resumes (called by TimeManager), reapply velocity 
     /// </summary>
-    public void OnResume()
+    public override void OnResume()
     {
         if (inKnockbackState && !immuneToKnockback && _rb != null)
         {
             _rb.isKinematic = false;
             _rb.velocity = storedVelocity;
         }
+
+        base.OnResume();
     }
 
     #endregion
@@ -265,7 +270,7 @@ public class EnemyTarget : Target, TimeObserver
     /// <summary>
     /// Get reference to the debug kill cheat
     /// </summary>
-    private void OnEnable()
+    protected override void OnEnable()
     {
         if(controls == null)
         {
@@ -281,16 +286,16 @@ public class EnemyTarget : Target, TimeObserver
             endEncounter.Enable();
         }
 
-        TimeManager.instance.Subscribe(this);
+        base.OnEnable();
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
         // remove cheat to prevent bugs
         if(endEncounter != null)
             endEncounter.performed -= DebugKill;
 
-        TimeManager.instance.UnSubscribe(this);
+        base.OnDisable();
     }
 
     /// <summary>

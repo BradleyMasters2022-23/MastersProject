@@ -9,7 +9,6 @@ public abstract class TimeAffectedEntity : MonoBehaviour
 
     [Tooltip("Whether this entity is affected by timestop")]
     [SerializeField] private bool affectedByTimestop = true;
-
     [SerializeField] private float minimumTimescale = 0;
 
     [SerializeField] protected LayerMask slowFieldLayers;
@@ -23,11 +22,27 @@ public abstract class TimeAffectedEntity : MonoBehaviour
     private float personalTimerModifier;
 
     /// <summary>
+    /// Array of all time observed objects in this entity
+    /// </summary>
+    private TimeObserver[] observers;
+    /// <summary>
+    /// Whether or not this entity is already slowed
+    /// </summary>
+    protected bool slowed = false;
+
+    /// <summary>
     /// Whether this entity scales with time
     /// </summary>
     protected bool Affected
     {
         get { return affectedByTimestop; }
+    }
+    /// <summary>
+    /// Whether this entity is currently being slowed already
+    /// </summary>
+    public bool Slowed
+    {
+        get { return Timescale <= TimeManager.TimeStopThreshold; }
     }
 
     private List<LocalTimer> timerList;
@@ -118,6 +133,33 @@ public abstract class TimeAffectedEntity : MonoBehaviour
             {
                 if (t != null)
                     t.UpdateTime(DeltaTime);
+            }
+        }
+        
+        // If observers not yet acquired, do so now
+        if(observers == null)
+        {
+            observers = GetComponentsInChildren<TimeObserver>();
+        }
+
+        // if there are observers...
+        if(observers.Length> 0)
+        {
+            // If this is the first frame of being slowed, perform relevant actions
+            if (!slowed && Slowed)
+            {
+                slowed = true;
+
+                foreach (var o in observers)
+                    o.OnStop();
+            }
+            // If this is the first frame of not being slowed, perform relevant actions
+            else if (slowed && !Slowed)
+            {
+                slowed = false;
+
+                foreach(var o in observers)
+                    o.OnResume();
             }
         }
     }

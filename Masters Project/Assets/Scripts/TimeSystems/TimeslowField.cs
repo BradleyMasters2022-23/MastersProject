@@ -1,7 +1,16 @@
+/* 
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - May 25th, 2022
+ * Last Edited - May 25, 2022 by Ben Schuster
+ * Description - A field that makes every entity within its field slow or stop
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
 
 public class TimeslowField : MonoBehaviour
 {
@@ -13,10 +22,16 @@ public class TimeslowField : MonoBehaviour
 
     private List<TimeAffectedEntity> detectedTargets;
 
+    [Header("Comunication")]
+    [SerializeField] Slider durationDisplay;
+    [SerializeField] IIndicator[] activationIndicators;
+
     private void Start()
     {
         t = new ScaledTimer(duration, true);
         detectedTargets = new List<TimeAffectedEntity>();
+        
+        Indicators.SetIndicators(activationIndicators, true);
     }
 
     /// <summary>
@@ -24,6 +39,12 @@ public class TimeslowField : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        // Update the timer
+        if(durationDisplay != null)
+        {
+            durationDisplay.value = 1 - t.TimerProgress();
+        }
+
         if (t != null &&  t.TimerDone())
         {
             foreach(var t in detectedTargets.ToArray())
@@ -61,7 +82,7 @@ public class TimeslowField : MonoBehaviour
         TargetHitbox indirectTarget = tgt.GetComponent<TargetHitbox>();
         if (indirectTarget != null)
         {
-            Debug.Log($"Checking objects in root of {indirectTarget.Target().name}");
+            //Debug.Log($"Checking objects in root of {indirectTarget.Target().name}");
             TimeAffectedEntity[] targets = indirectTarget.Target().GetComponentsInChildren<TimeAffectedEntity>();
 
             foreach (var t in targets)
