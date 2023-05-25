@@ -114,11 +114,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
     /// <summary>
-    /// Last health of the player. Outdated, but keeping for backup
-    /// </summary>
-    [HideInInspector] public int lastPlayerHealth;
-
-    /// <summary>
     /// Initialize internal systems
     /// </summary>
     private void Start()
@@ -182,9 +177,7 @@ public class GameManager : MonoBehaviour
         {
             case States.MAINMENU:
                 {
-                    Time.timeScale = 1f;
-                    LoadToScene(mainMenuScene);
-                    menuStack.Clear();
+                    UnPause();
 
                     break;
                 }
@@ -196,26 +189,13 @@ public class GameManager : MonoBehaviour
                 }
             case States.HUB:
                 {
-                    if(SceneManager.GetActiveScene().name != mainHubScene)
-                    {
-                        LoadToScene(mainHubScene);
-                        menuStack.Clear();
-                    }
-
-                    // Reset player health in hub
-                    lastPlayerHealth = 0;
-
                     UnPause();
 
                     break;
                 }
             case States.GAMEPLAY:
                 {
-                    if(SceneManager.GetActiveScene().name != mainGameplayScene) 
-                    {
-                        LoadToScene(mainGameplayScene);
-                        menuStack.Clear();
-                    }
+                    
                     UnPause();
 
                     break;
@@ -231,7 +211,6 @@ public class GameManager : MonoBehaviour
                     Pause();
 
                     onGameOverChannel.RaiseEvent();
-
 
                     break;
                 }
@@ -650,13 +629,31 @@ public class GameManager : MonoBehaviour
 
     #region SceneLoading
 
-    private void LoadToScene(string name)
+    public void GoToHub()
+    {
+        LoadToScene(mainHubScene);
+        ChangeState(States.HUB);
+    }
+
+    public void GoToMainMenu()
+    {
+        LoadToScene(mainMenuScene);
+        ChangeState(States.MAINMENU);
+    }
+
+    public void GoToMainGame()
+    {
+        LoadToScene(mainGameplayScene);
+        ChangeState(States.GAMEPLAY);
+    }
+
+    public Coroutine LoadToScene(string name)
     {
         // if none of the main scenes, dont load. 
         // Useful for testing scenes and pausing/unpausing
         string currScene = SceneManager.GetActiveScene().name;
-        if (currScene != mainMenuScene && currScene != mainGameplayScene && currScene != mainHubScene)
-            return;
+        //if (currScene != mainMenuScene && currScene != mainGameplayScene && currScene != mainHubScene)
+        //    return;
 
         try
         {
@@ -668,12 +665,13 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log($"Saving stats between scenes has failed. {e}");
         }
-        
 
+        UnPause();
         menuStack.Clear();
         controls.UI.Disable();
-        Loader.instance.LoadToScene(name);
+        return Loader.instance.LoadToScene(name);
     }
+
 
 
     #endregion

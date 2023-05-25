@@ -70,7 +70,7 @@ public class LayoutRandomizer : MonoBehaviour, IRandomizer
         // Get depth of current run
         if (!testing && MapLoader.instance != null)
         {
-            depth = MapLoader.instance.RoomDepth();
+            depth = MapLoader.instance.PortalDepth();
         }
 
         // Determine which rooms can be used

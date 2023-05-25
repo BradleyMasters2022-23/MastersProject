@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Loader : MonoBehaviour
 {
     public static Loader instance;
-
+    public static bool loading;
     private GameControls c;
 
     [SerializeField] private GameObject mainFrame;
@@ -27,16 +27,18 @@ public class Loader : MonoBehaviour
         }
     }
 
-    public void LoadToScene(string name)
+    public Coroutine LoadToScene(string name)
     {
         // dont load to a scene already loaded
-        if (name == SceneManager.GetActiveScene().name) return;
+        if (name == SceneManager.GetActiveScene().name) return null;
 
-        StartCoroutine(LoadSceneAsync(name));
+        return StartCoroutine(LoadSceneAsync(name));
     }
 
     private IEnumerator LoadSceneAsync(string name)
     {
+        loading = true;
+
         c = GameManager.controls;
 
         if (c != null)
@@ -61,5 +63,8 @@ public class Loader : MonoBehaviour
             c.UI.Disable();
             c.PlayerGameplay.Enable();
         }
+        Time.timeScale = 1f;
+
+        loading = false;
     }
 }

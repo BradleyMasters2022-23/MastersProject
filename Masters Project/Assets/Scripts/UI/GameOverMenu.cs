@@ -88,7 +88,7 @@ public class GameOverMenu : MonoBehaviour
 
     public void ReturnToMainMenu()
     {
-        GameManager.instance.ChangeState(GameManager.States.MAINMENU);
+        GameManager.instance.GoToMainMenu();
     }
 
 }

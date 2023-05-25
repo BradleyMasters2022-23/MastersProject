@@ -17,6 +17,6 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        GameManager.instance.ChangeState(GameManager.States.HUB);
+        GameManager.instance.GoToHub();
     }
 }
