@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.AI;
-using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 public enum LoadState
 {
@@ -516,10 +516,13 @@ public class MapLoader : MonoBehaviour
         // TODO - RESET PLAYER UPGRADES
         Debug.Log($"PUM active : {PlayerUpgradeManager.instance != null}");
 
+        // Destroy crystal manager
         if (CrystalManager.instance != null)
             CrystalManager.instance.DestroyCM();
-        //if (AllUpgradeManager.instance != null)
-        //    AllUpgradeManager.instance.DestroyAUM();
+
+        // Move player out of 'dont destroy' scene so it clears properly on unload
+        if (PlayerTarget.p != null)
+            SceneManager.MoveGameObjectToScene(PlayerTarget.p.gameObject, SceneManager.GetActiveScene());
 
         GameManager.instance.GoToHub();
 
@@ -571,7 +574,11 @@ public class MapLoader : MonoBehaviour
             mapOrder.Add(finalRoom);
         }
 
-        Debug.Log("[MAPLOADER] Map arrangement prepared, order can be viewed in inspector");
+        // make sure player is set to not despawn between scenes 
+        yield return new WaitUntil(() => PlayerTarget.p != null);
+        DontDestroyOnLoad(PlayerTarget.p);
+
+        // Debug.Log("[MAPLOADER] Map arrangement prepared, order can be viewed in inspector");
 
         yield return null;
     }

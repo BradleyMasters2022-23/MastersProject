@@ -65,18 +65,18 @@ public class PlayerTarget : Target
     {
         godMode = !godMode;
 
-        if(_healthManager != null)
+        if (_healthManager != null)
             _healthManager.ToggleGodmode(godMode);
 
-        if(godCheatNotification != null)
+        if (godCheatNotification != null)
             godCheatNotification.SetActive(godMode);
 
-        if(timestop != null)
+        if (timestop != null)
         {
             timestop.SetCheatMode(godMode);
         }
 
-        if(grenadeAbility != null)
+        if (grenadeAbility != null)
         {
             grenadeAbility.CheatMode(godMode);
         }
@@ -94,7 +94,7 @@ public class PlayerTarget : Target
 
     public override void Knockback(float force, float verticalForce, Vector3 origin)
     {
-        if (immuneToKnockback || (force+verticalForce <= 0))
+        if (immuneToKnockback || (force + verticalForce <= 0))
             return;
 
         // kick the player up a tiny bit to reduce any ground drag
@@ -104,9 +104,12 @@ public class PlayerTarget : Target
 
     private void OnDisable()
     {
-        godCheat.performed -= ToggleGodmode;
-        healCheat.performed -= CheatHeal;
-        damageCheat.performed -= CheatDamage;
-        p = null;
+        if (p == this)
+        {
+            godCheat.performed -= ToggleGodmode;
+            healCheat.performed -= CheatHeal;
+            damageCheat.performed -= CheatDamage;
+            p = null;
+        }
     }
 }
