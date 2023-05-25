@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public enum LoadState
 {
@@ -489,15 +490,19 @@ public class MapLoader : MonoBehaviour
         Debug.Log("End room encounter called");
 
         //Debug.Log($"Phew! You won it all good jorb {roomIndex+1}!");
-        loadedMap[roomIndex+1].GetComponent<DoorManager>().UnlockExit();
+        //loadedMap[roomIndex+1].GetComponent<DoorManager>().UnlockExit();
 
-        if (mapOrder[roomIndex+1].segmentType == MapSegmentSO.MapSegmentType.Room
-            && LinearSpawnManager.instance != null)
-        {
-            WarningText.instance.Play("ANOMALY SUBSIDED, ROOM UNLOCKED", false);
-            LinearSpawnManager.instance.IncrementDifficulty();
-        }
-            
+        //if (mapOrder[roomIndex+1].segmentType == MapSegmentSO.MapSegmentType.Room
+        //    && LinearSpawnManager.instance != null)
+        //{
+        //    WarningText.instance.Play("ANOMALY SUBSIDED, ROOM UNLOCKED", false);
+        //    LinearSpawnManager.instance.IncrementDifficulty();
+        //}
+
+        WarningText.instance.Play("ANOMALY SUBSIDED, ROOM UNLOCKED", false);
+        LinearSpawnManager.instance.IncrementDifficulty();
+
+        ActivatePortal();
 
     }
 
@@ -528,7 +533,7 @@ public class MapLoader : MonoBehaviour
 
     #region Portal Transition Loading
 
-    int portalDepth = 0;
+    int portalDepth = -1;
     string dest = "";
 
     /// <summary>
@@ -636,6 +641,8 @@ public class MapLoader : MonoBehaviour
         StartCoroutine(LoadRoomRoutine());
     }
 
+    PortalTrigger[] portals;
+
     /// <summary>
     /// Load to a next room
     /// </summary>
@@ -655,12 +662,54 @@ public class MapLoader : MonoBehaviour
         else
         {
             dest = mapOrder[portalDepth].sceneName;
-            Debug.Log("Trying to go to " + dest);
             yield return GameManager.instance.LoadToScene(dest);
         }
 
         // Once loading finishes, teleport player to a spawnpoint
         MovePlayerToSpawn();
+
+        // turn off each portal
+        portals = FindObjectsOfType<PortalTrigger>();
+        foreach(PortalTrigger p in portals)
+        {
+            p.gameObject.SetActive(false);
+        }
+        //Debug.Log("Load room routine done");
+
+        // Initialize the room
+        RoomInitializer rm = FindObjectOfType<RoomInitializer>();
+        if(rm == null)
+        {
+            Debug.LogError("[MAPLOADER] While loading to new map, no room initializer was found!");
+        }
+        else
+        {
+            rm.Init();
+        }
+    }
+
+    public void ActivatePortal()
+    {
+        PortalTrigger p;
+
+        if (portals.Length <= 0)
+        {
+            Debug.LogError("[MAPLOADER] Tried to select an exit portal, but none found!");
+            Debug.Break();
+            return;
+        }
+        else if (portals.Length == 1)
+        {
+            p = portals[0];
+        }
+        else
+        {
+            // for now choose one at random. Improve later
+            int i = Random.Range(0, portals.Length);
+            p = portals[i];
+        }
+
+        p.SummonPortal();
     }
 
     /// <summary>
@@ -687,8 +736,6 @@ public class MapLoader : MonoBehaviour
         if(positions.Length <= 0)
         {
             Debug.LogError("[MAPLOADER] Tried to move player to spawn, but there are no spawn points set!");
-            dest = Vector3.zero;
-            destRot = Quaternion.identity;
             return;
         }
         else if(positions.Length == 1)

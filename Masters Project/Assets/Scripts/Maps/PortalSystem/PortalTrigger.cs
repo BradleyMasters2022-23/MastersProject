@@ -43,6 +43,8 @@ public class PortalTrigger : Interactable
     /// </summary>
     public void SummonPortal()
     {
+        gameObject.SetActive(true);
+
         // enable collider
         col.enabled = true;
         col.isTrigger = false;

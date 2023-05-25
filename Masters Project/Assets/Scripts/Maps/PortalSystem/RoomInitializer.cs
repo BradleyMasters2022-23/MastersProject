@@ -5,12 +5,16 @@ using UnityEngine.Events;
 
 public class RoomInitializer : MonoBehaviour
 {
+    [Header("Core Loading")]
+
     [Tooltip("All objects that should be randomized on load")]
     [SerializeField] GameObject[] randomizedObjs;
-
+    [Tooltip("Any other events that should happen on load")]
     [SerializeField] UnityEvent onInitializeEvents;
 
-    private void Start()
+    [SerializeField] bool automaticallyEnd;
+
+    public virtual void Init()
     {
         // Tell randomized objects to initiate randomization
         if(randomizedObjs != null)
@@ -39,5 +43,10 @@ public class RoomInitializer : MonoBehaviour
         }
 
         onInitializeEvents.Invoke();
+
+        if(automaticallyEnd)
+        {
+            MapLoader.instance.ActivatePortal();
+        }
     }
 }
