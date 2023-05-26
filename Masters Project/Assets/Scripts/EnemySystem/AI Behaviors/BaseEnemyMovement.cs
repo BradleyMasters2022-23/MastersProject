@@ -13,7 +13,7 @@ using UnityEngine.AI;
 
 
 
-public abstract class BaseEnemyMovement : MonoBehaviour, TimeObserver
+public abstract class BaseEnemyMovement : MonoBehaviour
 {
     public enum MoveState
     {
@@ -385,14 +385,14 @@ public abstract class BaseEnemyMovement : MonoBehaviour, TimeObserver
 
     
 
-    public void OnStop()
-    {
-        preStopAgent = agent.enabled;
-        agent.enabled = false;
-    }
+    //public void OnStop()
+    //{
+    //    preStopAgent = agent.enabled;
+    //    agent.enabled = false;
+    //}
 
-    public void OnResume()
-    {
-        agent.enabled = preStopAgent;
-    }
+    //public void OnResume()
+    //{
+    //    agent.enabled = preStopAgent;
+    //}
 }
