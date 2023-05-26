@@ -538,11 +538,18 @@ public class MapLoader : MonoBehaviour
 
     [Header("Portal Map Generation")]
 
+    [SerializeField] Vector2Int randomSecretRoomRange;
+    [SerializeField, ReadOnly] int chosenSecretRoomIndex;
+
     [Tooltip("Current depth of the portal system")]
     [SerializeField, ReadOnly] int portalDepth = -1;
     
     [Tooltip("Reference to the loader the starting room uses")]
     [SerializeField] RoomInitializer startingRoomInitializer;
+
+    [SerializeField] MapSegmentSO[] secretRoomOptions;
+
+    [SerializeField] MapSegmentSO preBossNeutralRoom;
 
     /// <summary>
     /// Current destination to load to
@@ -592,8 +599,8 @@ public class MapLoader : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
 
-        // TODO - IF NON COMBAT ROOMS ARE ADDED, INSERT HERE
-
+        // Choose which room to 'add' the secret room to
+        chosenSecretRoomIndex = Random.Range(randomSecretRoomRange.x, randomSecretRoomRange.y);
 
         // Load in the final room, if there is one
         if (finalRoom != null)
@@ -739,9 +746,15 @@ public class MapLoader : MonoBehaviour
             rm.Init();
         }
 
-        loadingScreen.SetActive(false);
+        if(portalDepth == chosenSecretRoomIndex)
+        {
+            // Todo - actually implement this
+            Debug.Log("Secret room chosen, initializing it");
+        }
 
         navMesh.BuildNavMesh();
+
+        loadingScreen.SetActive(false);
     }
 
     public void ActivatePortal()
