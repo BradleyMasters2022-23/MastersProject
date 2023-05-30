@@ -109,7 +109,7 @@ public class TimedButton : TimeAffectedEntity, ITriggerable
     /// </summary>
     private void RepairedIndicators()
     {
-        Debug.Log($"{name} repair indicators called");
+        // Debug.Log($"{name} repair indicators called");
         Indicators.SetIndicators(generatorDestroyedIndicator, false);
         Indicators.SetIndicators(generatorFixedIndicator, true);
     }

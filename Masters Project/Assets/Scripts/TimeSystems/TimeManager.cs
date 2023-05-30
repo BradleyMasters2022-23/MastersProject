@@ -357,7 +357,7 @@ public class TimeManager : MonoBehaviour
                     // If timer is up, begin recharging
                     if (emptiedDelayTimer.TimerDone())
                     {
-                        ChangeState(TimeGaugeState.RECHARGING);
+                        ChangeState(TimeGaugeState.FROZEN);
                     }
 
                     break;
@@ -372,7 +372,7 @@ public class TimeManager : MonoBehaviour
     /// <param name="_newState">The new state to move to</param>
     private void ChangeState(TimeGaugeState _newState)
     {
-        //Debug.Log("[TimeManager] Switching from "  + currentState + " to " + _newState);
+        // Debug.Log("[TimeManager] Switching from "  + currentState + " to " + _newState);
 
         switch (_newState)
         {
@@ -382,7 +382,7 @@ public class TimeManager : MonoBehaviour
                 }
             case TimeGaugeState.SLOWING:
                 {
-                    Debug.Log("Playing to slow time");
+                    // Debug.Log("Playing to slow time");
 
                     if(source != null)
                         source.Stop();
@@ -397,7 +397,7 @@ public class TimeManager : MonoBehaviour
             case TimeGaugeState.FROZEN:
                 {
                     // If entering frozen state, reset timer
-                    replenishDelayTimer.ResetTimer();
+                    replenishDelayTimer.ResetTimer(replenishDelay.Current);
 
                     if (source != null)
                         source.Stop();

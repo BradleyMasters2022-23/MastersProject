@@ -29,7 +29,7 @@ public class DroppableQuantity
 }
 
 [RequireComponent(typeof(HealthManager))]
-public abstract class Target : TimeAffectedEntity, IDamagable
+public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
 {
     [Header("Core Target Info")]
 
@@ -64,7 +64,11 @@ public abstract class Target : TimeAffectedEntity, IDamagable
     [SerializeField] protected float knockbackModifier = 1f;
     [ShowIf("@this.immuneToKnockback == false")]
     [SerializeField] protected float maxKnockback;
-    
+
+    /// <summary>
+    /// Any knockback stored during timestop
+    /// </summary>
+    protected Vector3 storedKnockback;
 
     [Tooltip("If enabled, this target can not take damage until the shield is destroyed")]
     [SerializeField] protected ShieldTarget invincibilityShield;
@@ -268,20 +272,29 @@ public abstract class Target : TimeAffectedEntity, IDamagable
         if (immuneToKnockback || _rb == null || _rb.isKinematic || (force + verticalForce <= 0))
             return;
 
-        // Debug.DrawLine(_center.position, origin, Color.blue, 3f);
-
         // Calculate force vector, draw for debug reasons
         Vector3 forceVector = (_center.position - origin).normalized * force;
         forceVector += Vector3.up * verticalForce;
         forceVector *= knockbackModifier;
         // Clamp max knockback
-        if(forceVector.magnitude > maxKnockback)
-            forceVector= forceVector.normalized * maxKnockback;
+        if (forceVector.magnitude > maxKnockback)
+            forceVector = forceVector.normalized * maxKnockback;
         //Debug.DrawRay(origin, forceVector, Color.red, 3f);
 
-        // Zero current velocity, apply new force
-        _rb.velocity= Vector3.zero;
-        _rb.AddForce(forceVector, ForceMode.Impulse);
+        // If currently frozen, store knockback but dont apply it
+        if (Affected && Slowed)
+        {
+            storedKnockback += forceVector;
+        }
+        // Otherwise, directly apply it
+        else
+        {
+            // Zero current velocity, apply new force
+            _rb.velocity = Vector3.zero;
+            //_rb.AddForce(forceVector, ForceMode.Impulse);
+            //_rb.AddTorque(Vector3.left * 50f, ForceMode.Impulse);
+            _rb.AddForceAtPosition(forceVector, _center.position, ForceMode.Impulse);
+        }
     }
 
     public virtual void Knockback(TeamDamage data, Vector3 origin, float multiplier = 1)
@@ -337,5 +350,31 @@ public abstract class Target : TimeAffectedEntity, IDamagable
         return this;
     }
 
+
+
     #endregion
+
+    public virtual void OnStop()
+    {
+        storedKnockback = Vector3.zero;
+    }
+
+    public virtual void OnResume()
+    {
+        if(storedKnockback.magnitude > 0)
+        {
+            _rb.velocity = Vector3.zero;
+            _rb.AddForce(storedKnockback, ForceMode.Impulse);
+        }
+    }
+
+    protected virtual void OnEnable()
+    {
+        //TimeManager.instance.Subscribe(this);
+    }
+
+    protected virtual void OnDisable()
+    {
+        //TimeManager.instance.UnSubscribe(this);
+    }
 }

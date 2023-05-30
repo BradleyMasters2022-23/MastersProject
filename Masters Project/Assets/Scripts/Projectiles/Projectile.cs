@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-public class Projectile : RangeAttack
+public class Projectile : RangeAttack, TimeObserver
 {
     #region Variables
 
@@ -61,8 +61,10 @@ public class Projectile : RangeAttack
     }
 
     // Update is called once per frame
-    protected virtual void FixedUpdate()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
+
         // Fly through the air
         Fly();
 
@@ -74,6 +76,7 @@ public class Projectile : RangeAttack
                 Instantiate(fadeVFX, transform.position, transform.rotation);
             }
 
+            TimeManager.instance.UnSubscribe(this);
             End();
         }
     }
@@ -82,6 +85,8 @@ public class Projectile : RangeAttack
     {
         if (bulletVisual != null)
             bulletVisual.localScale = new Vector3(originalVisualScale, originalVisualScale, originalVisualScale);
+
+        TimeManager.instance.Subscribe(this);
 
         targetVelocity = transform.forward * speed;
     }
@@ -138,6 +143,7 @@ public class Projectile : RangeAttack
 
     public override void Inturrupt()
     {
+        TimeManager.instance.UnSubscribe(this);
         End();
     }
 
@@ -146,11 +152,24 @@ public class Projectile : RangeAttack
     /// </summary>
     private void ScaleOverDistance()
     {
-        if (scaleOverDistance != null && bulletVisual != null)
+        if (scaleOverDistance != null && bulletVisual != null && Timescale > TimeManager.TimeStopThreshold)
         {
             float newScale = scaleOverDistance.Evaluate(distanceCovered / range) * originalVisualScale;
 
             bulletVisual.localScale = new Vector3(newScale, newScale, newScale);
         }
+    }
+
+    public void OnStop()
+    {
+        if(scaleOverDistance != null && bulletVisual != null)
+        {
+            bulletVisual.localScale = Vector3.one * originalVisualScale;
+        }
+    }
+
+    public void OnResume()
+    {
+        return;
     }
 }
