@@ -12,7 +12,7 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
 
-public class TimeslowField : MonoBehaviour
+public class TimeslowField : MonoBehaviour, TimeInfluencer
 {
     [SerializeField] private float duration;
     [SerializeField] private float slowAmount;
@@ -61,7 +61,7 @@ public class TimeslowField : MonoBehaviour
     /// <param name="other">Collider to register</param>
     private void OnTriggerEnter(Collider other)
     {
-        RegisterTgt(other);
+         RegisterTgt(other);
     }
     /// <summary>
     /// When anything exits trigger, unslow it
@@ -69,7 +69,7 @@ public class TimeslowField : MonoBehaviour
     /// <param name="other">collider to unregister </param>
     private void OnTriggerExit(Collider other)
     {
-        UnregisterTgt(other);
+         UnregisterTgt(other);
     }
 
     /// <summary>
@@ -90,17 +90,18 @@ public class TimeslowField : MonoBehaviour
                 if (t != null && !detectedTargets.Contains(t))
                 {
                     //Debug.Log($"registering {t.GetType()}");
-                    t.SetSeconaryTimescale(slowAmount);
+                    t.SecondarySubscribe(this);
                     detectedTargets.Add(t);
                 }
             }
         }
+        
         // Also try to get any direct time affected entities
         TimeAffectedEntity directTarget = tgt.GetComponent<TimeAffectedEntity>();
-        Debug.Log($"Checking objects in root of {tgt.name}");
+        //Debug.Log($"Checking objects in root of {tgt.name}");
         if (directTarget != null)
         {
-            directTarget.SetSeconaryTimescale(slowAmount);
+            directTarget.SecondarySubscribe(this);
             detectedTargets.Add(directTarget);
 
             
@@ -111,7 +112,7 @@ public class TimeslowField : MonoBehaviour
                 if (t != null && !detectedTargets.Contains(t))
                 {
                     //Debug.Log($"registering {t.GetType()}");
-                    t.SetSeconaryTimescale(slowAmount);
+                    t.SecondarySubscribe(this);
                     detectedTargets.Add(t);
                 }
             }
@@ -127,7 +128,7 @@ public class TimeslowField : MonoBehaviour
     {
         if (tgt != null && detectedTargets.Contains(tgt))
         {
-            tgt.SetSeconaryTimescale(1);
+            tgt.SecondaryUnsubscribe(this);
             detectedTargets.Remove(tgt);
         }
     }
@@ -143,9 +144,14 @@ public class TimeslowField : MonoBehaviour
         {
             if (t != null && detectedTargets.Contains(t))
             {
-                t.SetSeconaryTimescale(slowAmount);
+                t.SecondaryUnsubscribe(this);
                 detectedTargets.Add(t);
             }
         }
+    }
+
+    public float GetScale()
+    {
+        return slowAmount;
     }
 }

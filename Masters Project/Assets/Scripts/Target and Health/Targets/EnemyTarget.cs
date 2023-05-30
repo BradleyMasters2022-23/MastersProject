@@ -70,10 +70,13 @@ public class EnemyTarget : Target, TimeObserver
     [SerializeField] private LayerMask groundMask;
     private float groundDist;
 
+    [SerializeField] private float onGroundTime = 1f;
+
     private bool inKnockbackState;
     private Vector3 storedVelocity;
 
     private Coroutine knockbackRoutine;
+    private LocalTimer knockdownTracker;
 
     /// <summary>
     /// Apply knockback, set up AI
@@ -107,9 +110,13 @@ public class EnemyTarget : Target, TimeObserver
 
         DisableAI();
 
+        if (knockdownTracker == null)
+            knockdownTracker = GetTimer(dur);
+        else
+            knockdownTracker.ResetTimer(dur);
+
         // start minimum knockback duration while enemy lifts up
-        ScaledTimer tracker = new ScaledTimer(dur);
-        yield return new WaitUntil(() => tracker.TimerDone());
+        yield return new WaitUntil(knockdownTracker.TimerDone);
 
         // Wait until enemy returns to ground
         while (true)
@@ -125,6 +132,22 @@ public class EnemyTarget : Target, TimeObserver
             yield return null;
         }
 
+        knockdownTracker.ResetTimer(onGroundTime);
+        yield return new WaitUntil(knockdownTracker.TimerDone);
+
+        // rotate back upright
+        //_rb.constraints = RigidbodyConstraints.FreezeAll;
+        //knockdownTracker.ResetTimer(0.3f);
+
+        //Vector3 ogRot = transform.rotation.eulerAngles;
+        //Vector3 rot = transform.rotation.eulerAngles;
+        //while (!knockdownTracker.TimerDone())
+        //{
+        //    rot.x = Mathf.LerpAngle(ogRot.x, 0, knockdownTracker.TimerProgress());
+        //    rot.z = Mathf.LerpAngle(ogRot.z, 0, knockdownTracker.TimerProgress());
+        //    transform.rotation = Quaternion.Euler(rot);
+        //    yield return null;
+        //}
 
         EnableAI();
         inKnockbackState = false;
@@ -135,11 +158,12 @@ public class EnemyTarget : Target, TimeObserver
     /// </summary>
     private void DisableAI()
     {
-        Debug.Log("Disable AI called");
+        //Debug.Log("Disable AI called");
 
         Inturrupt();
 
-        _rb.isKinematic = false;
+        //_rb.isKinematic = false;
+        _rb.constraints = RigidbodyConstraints.None;
         _rb.useGravity = true;
 
         if (_managerRef != null)
@@ -152,9 +176,11 @@ public class EnemyTarget : Target, TimeObserver
     /// </summary>
     private void EnableAI()
     {
-        Debug.Log("Enable AI called");
+        //Debug.Log("Enable AI called");
 
-        _rb.isKinematic = true;
+        //_rb.isKinematic = true;
+        transform.rotation = Quaternion.identity;
+        _rb.constraints = RigidbodyConstraints.FreezeAll;
         _rb.useGravity = false;
 
         if (_managerRef != null)
@@ -178,7 +204,7 @@ public class EnemyTarget : Target, TimeObserver
     /// <returns></returns>
     private bool LandedOnGround()
     {
-        Debug.DrawLine(_center.position, _center.position + Vector3.down * groundDist, Color.yellow);
+        // Debug.DrawLine(_center.position, _center.position + Vector3.down * groundDist, Color.yellow);
         return Physics.Raycast(_center.position, Vector3.down, groundDist, groundMask);
     }
 
@@ -190,7 +216,9 @@ public class EnemyTarget : Target, TimeObserver
         if (_rb != null)
         {
             storedVelocity = _rb.velocity;
-            _rb.isKinematic = true;
+            //_rb.isKinematic = true;
+            // Freeze the constraints so it stops rotating
+            _rb.constraints = RigidbodyConstraints.FreezeAll;
         }
 
         base.OnStop();
@@ -203,8 +231,10 @@ public class EnemyTarget : Target, TimeObserver
     {
         if (inKnockbackState && !immuneToKnockback && _rb != null)
         {
-            _rb.isKinematic = false;
-            _rb.velocity = storedVelocity;
+            //_rb.isKinematic = false;
+            _rb.constraints = RigidbodyConstraints.None;
+            //_rb.velocity = storedVelocity;
+            _rb.AddForceAtPosition(storedVelocity, _center.position, ForceMode.Impulse);
         }
 
         base.OnResume();

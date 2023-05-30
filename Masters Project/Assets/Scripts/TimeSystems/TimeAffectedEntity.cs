@@ -18,8 +18,7 @@ public abstract class TimeAffectedEntity : MonoBehaviour
     /// </summary>
     [SerializeField, ReadOnly] private float secondaryTimescale = 1;
 
-    private float personalTime;
-    private float personalTimerModifier;
+    [SerializeField, ReadOnly] private List<TimeInfluencer> timeInfluencers = new List<TimeInfluencer>();
 
     /// <summary>
     /// Array of all time observed objects in this entity
@@ -57,11 +56,15 @@ public abstract class TimeAffectedEntity : MonoBehaviour
             // If affected by timestop, return the slowest timescale
             if(affectedByTimestop)
             {
+                // get world timescale
                 float t = TimeManager.WorldTimeScale * Time.timeScale;
 
                 // If secondary timescale is slower, use that
                 if (t > secondaryTimescale)
+                {
                     t = secondaryTimescale;
+                }
+                    
 
                 // clamp it based on minimum timescale value
                 return Mathf.Clamp(t, minimumTimescale, 1);
@@ -91,10 +94,79 @@ public abstract class TimeAffectedEntity : MonoBehaviour
         }
     }
 
-    public void SetSeconaryTimescale(float amt)
+    #region Time Influencers
+
+    /// <summary>
+    /// Get the current secondary timescale
+    /// </summary>
+    /// <returns>Current value of the secondary time scale</returns>
+    private float SecondaryTimescale()
     {
-        secondaryTimescale = amt;
+        float min = 1;
+
+        // Go through each influencer to get the lowest value
+        int i = 0;
+        foreach(var entity in timeInfluencers.ToArray())
+        {
+            // Null check. Remove if null
+            if (entity == null)
+            {
+                timeInfluencers.RemoveAt(i);
+                i++;
+                continue;
+            }
+
+            // Get the current value
+            float v = entity.GetScale();
+
+            // if the lowest value, then just return it outright
+            if (v == 0)
+            {
+                return 0;
+            }
+            // Otherwise, check if its the new min
+            else if(v < min)
+            {
+                min = v;
+            }
+                
+            // iterate index. Used for null checking
+            i++;
+        }
+
+        // return min
+        return min;
     }
+
+    /// <summary>
+    /// Subscribe a secondary timescale to this entity
+    /// </summary>
+    /// <param name="i">Influencer to add</param>
+    public void SecondarySubscribe(TimeInfluencer i)
+    {
+        if (timeInfluencers == null)
+            timeInfluencers = new List<TimeInfluencer>();
+
+        if (!timeInfluencers.Contains(i))
+        {
+            timeInfluencers.Add(i);
+            secondaryTimescale = SecondaryTimescale();
+        }
+    }
+    /// <summary>
+    /// Unsubscribe a secondary timescale to this entity
+    /// </summary>
+    /// <param name="i">Influencer to remove</param>
+    public void SecondaryUnsubscribe(TimeInfluencer i)
+    {
+        if (timeInfluencers != null && timeInfluencers.Contains(i))
+        {
+            timeInfluencers.Remove(i);
+            secondaryTimescale = SecondaryTimescale();
+        }
+    }
+
+    #endregion
 
     #region Local Timer Utility
 

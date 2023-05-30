@@ -281,7 +281,6 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
             forceVector = forceVector.normalized * maxKnockback;
         //Debug.DrawRay(origin, forceVector, Color.red, 3f);
 
-
         // If currently frozen, store knockback but dont apply it
         if (Affected && Slowed)
         {
@@ -292,7 +291,9 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
         {
             // Zero current velocity, apply new force
             _rb.velocity = Vector3.zero;
-            _rb.AddForce(forceVector, ForceMode.Impulse);
+            //_rb.AddForce(forceVector, ForceMode.Impulse);
+            //_rb.AddTorque(Vector3.left * 50f, ForceMode.Impulse);
+            _rb.AddForceAtPosition(forceVector, _center.position, ForceMode.Impulse);
         }
     }
 
@@ -369,11 +370,11 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
 
     protected virtual void OnEnable()
     {
-        TimeManager.instance.Subscribe(this);
+        //TimeManager.instance.Subscribe(this);
     }
 
     protected virtual void OnDisable()
     {
-        TimeManager.instance.UnSubscribe(this);
+        //TimeManager.instance.UnSubscribe(this);
     }
 }
