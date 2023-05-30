@@ -79,6 +79,8 @@ public class TimeslowField : MonoBehaviour, TimeInfluencer
     private void RegisterTgt(Collider tgt)
     {
         // Get the main target hitbox, get all time effected objects there
+        //Debug.Log("Attempting to register " + tgt.name);
+
         TargetHitbox indirectTarget = tgt.GetComponent<TargetHitbox>();
         if (indirectTarget != null)
         {
@@ -98,7 +100,6 @@ public class TimeslowField : MonoBehaviour, TimeInfluencer
         
         // Also try to get any direct time affected entities
         TimeAffectedEntity directTarget = tgt.GetComponent<TimeAffectedEntity>();
-        //Debug.Log($"Checking objects in root of {tgt.name}");
         if (directTarget != null)
         {
             directTarget.SecondarySubscribe(this);
