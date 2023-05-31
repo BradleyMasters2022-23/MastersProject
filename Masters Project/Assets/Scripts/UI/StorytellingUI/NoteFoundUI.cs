@@ -66,7 +66,7 @@ public class NoteFoundUI : MonoBehaviour
             caller.DestroyFrag();
         }
         caller = null;
-        gameObject.SetActive(false);
+        GameManager.instance.CloseTopMenu();
     }
 
 }
