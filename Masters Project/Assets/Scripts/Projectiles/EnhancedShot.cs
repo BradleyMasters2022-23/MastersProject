@@ -22,12 +22,12 @@ public class EnhancedShot : Projectile
         RaycastHit target;
         if (Physics.SphereCast(transform.position, GetComponent<SphereCollider>().radius, transform.forward, out target, range, hitLayers))
         {
-            lineRenderer.SetPosition(1, transform.position + transform.forward * target.distance);
+            lineRenderer.SetPosition(1, target.point);
 
         }
         else if (Physics.Raycast(transform.position, transform.forward, out target, range, worldLayers))
         {
-            lineRenderer.SetPosition(1, transform.position + transform.forward * target.distance);
+            lineRenderer.SetPosition(1, target.point);
         }
         else
         {
