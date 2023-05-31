@@ -197,9 +197,9 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 112
+  m_Constraints: 126
   m_CollisionDetection: 1
 --- !u!195 &6878320425555973780
 NavMeshAgent:
@@ -247,7 +247,7 @@ MonoBehaviour:
   _unkillable: 0
   immuneToKnockback: 0
   knockbackModifier: 1
-  maxKnockback: 18
+  maxKnockback: 13
   invincibilityShield: {fileID: 0}
   _deathVFX: {fileID: 7428150280865193490, guid: 6e221f18ca47d5547a8bd26d21fd46a8, type: 3}
   damagedSound: {fileID: 11400000, guid: 4ba21dac44b2634469d022e7027035df, type: 2}
@@ -261,6 +261,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 8
+  onGroundTime: 0.6
 --- !u!114 &8883192647120031764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -596,8 +597,8 @@ MonoBehaviour:
   firstShotAccuracy: {x: 1, y: 2}
   normalAccuracyRange: {x: 0, y: 3}
   rotateDuringAttack: 1
-  attackTrackConeRange: 50
-  indicatorTrackConeRange: 50
+  attackTrackConeRange: 90
+  indicatorTrackConeRange: 180
   indicatorStunnedDuration: 0.6
   indicatorVFXPrefab: {fileID: 1951622810807663121, guid: a04acf81b5a5f4d4da0e20f8401f414a, type: 3}
   indicatorScale: 1

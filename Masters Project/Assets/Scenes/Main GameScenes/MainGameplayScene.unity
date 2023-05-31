@@ -2912,18 +2912,25 @@ MonoBehaviour:
   allHallways:
   - {fileID: 11400000, guid: 02deddac36089e748bc18afe50987b36, type: 2}
   allRooms:
-  - {fileID: 11400000, guid: 025fffdb77dbc2c4587259fb6a255c22, type: 2}
-  - {fileID: 11400000, guid: cba29e13c711ac4418d7501c19271c2e, type: 2}
-  - {fileID: 11400000, guid: 4d27fbc15b898e94988f9a7d9b02f726, type: 2}
-  maxFloorLength: 3
+  - {fileID: 11400000, guid: 0436c2bf71856d647b879bcd7d9ddf7c, type: 2}
+  - {fileID: 11400000, guid: 7a5db319ca7703c4294ec9b7b8aa2893, type: 2}
+  - {fileID: 11400000, guid: d4390de0e403f0249806044f042fec9f, type: 2}
+  - {fileID: 11400000, guid: af3305ec36847af4a9fcd14f160aed54, type: 2}
+  - {fileID: 11400000, guid: 1f2bba738b59016419c08665fac556d3, type: 2}
+  - {fileID: 11400000, guid: aa06d15994c7c5d4293fafaa078608c9, type: 2}
+  maxFloorLength: 5
   startingRoom: {fileID: 104001230849174804}
   finalRoom: {fileID: 11400000, guid: f6c93bfd392810d4c9bf44ea41ced234, type: 2}
   mapOrder: []
   roomIndex: 0
   testShowAll: 0
   loadingScreen: {fileID: 4030847779780281997}
+  randomSecretRoomRange: {x: 1, y: 4}
+  chosenSecretRoomIndex: 0
   portalDepth: -1
   startingRoomInitializer: {fileID: 4335015768302266234}
+  secretRoomOptions: []
+  preBossNeutralRoom: {fileID: 0}
 --- !u!4 &1507639252
 Transform:
   m_ObjectHideFlags: 0
@@ -4820,6 +4827,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4335015768302266233}
     m_Modifications:
+    - target: {fileID: 6049075035026933214, guid: 88b809d66702358468eb2a72af84c927, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8200428784670616731, guid: 88b809d66702358468eb2a72af84c927, type: 3}
       propertyPath: m_LocalRotation.w
       value: 0
@@ -4888,9 +4899,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8200428784903921718, guid: 88b809d66702358468eb2a72af84c927, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200428784903921719, guid: 88b809d66702358468eb2a72af84c927, type: 3}
+      propertyPath: type
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200428784903921719, guid: 88b809d66702358468eb2a72af84c927, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8200428784903921719, guid: 88b809d66702358468eb2a72af84c927, type: 3}
       propertyPath: overrideOpen
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8200428784903921719, guid: 88b809d66702358468eb2a72af84c927, type: 3}
       propertyPath: groundLayers.m_Bits
@@ -4899,6 +4922,10 @@ PrefabInstance:
     - target: {fileID: 8883932922796840754, guid: 88b809d66702358468eb2a72af84c927, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9078091731006959273, guid: 88b809d66702358468eb2a72af84c927, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88b809d66702358468eb2a72af84c927, type: 3}

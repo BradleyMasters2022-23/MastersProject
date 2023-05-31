@@ -70,10 +70,13 @@ public class EnemyTarget : Target, TimeObserver
     [SerializeField] private LayerMask groundMask;
     private float groundDist;
 
+    [SerializeField] private float onGroundTime = 1f;
+
     private bool inKnockbackState;
     private Vector3 storedVelocity;
 
     private Coroutine knockbackRoutine;
+    private LocalTimer knockdownTracker;
 
     /// <summary>
     /// Apply knockback, set up AI
@@ -88,7 +91,9 @@ public class EnemyTarget : Target, TimeObserver
 
         try
         {
-            knockbackRoutine = StartCoroutine(KnockbackDuration(minKnockbackDuration));
+            if(!inKnockbackState)
+                knockbackRoutine = StartCoroutine(KnockbackDuration(minKnockbackDuration));
+
             base.Knockback(force, verticalForce, origin);
         }
         catch { }
@@ -105,9 +110,13 @@ public class EnemyTarget : Target, TimeObserver
 
         DisableAI();
 
+        if (knockdownTracker == null)
+            knockdownTracker = GetTimer(dur);
+        else
+            knockdownTracker.ResetTimer(dur);
+
         // start minimum knockback duration while enemy lifts up
-        ScaledTimer tracker = new ScaledTimer(dur);
-        yield return new WaitUntil(() => tracker.TimerDone());
+        yield return new WaitUntil(knockdownTracker.TimerDone);
 
         // Wait until enemy returns to ground
         while (true)
@@ -123,6 +132,22 @@ public class EnemyTarget : Target, TimeObserver
             yield return null;
         }
 
+        knockdownTracker.ResetTimer(onGroundTime);
+        yield return new WaitUntil(knockdownTracker.TimerDone);
+
+        // rotate back upright
+        //_rb.constraints = RigidbodyConstraints.FreezeAll;
+        //knockdownTracker.ResetTimer(0.3f);
+
+        //Vector3 ogRot = transform.rotation.eulerAngles;
+        //Vector3 rot = transform.rotation.eulerAngles;
+        //while (!knockdownTracker.TimerDone())
+        //{
+        //    rot.x = Mathf.LerpAngle(ogRot.x, 0, knockdownTracker.TimerProgress());
+        //    rot.z = Mathf.LerpAngle(ogRot.z, 0, knockdownTracker.TimerProgress());
+        //    transform.rotation = Quaternion.Euler(rot);
+        //    yield return null;
+        //}
 
         EnableAI();
         inKnockbackState = false;
@@ -133,9 +158,12 @@ public class EnemyTarget : Target, TimeObserver
     /// </summary>
     private void DisableAI()
     {
+        //Debug.Log("Disable AI called");
+
         Inturrupt();
 
-        _rb.isKinematic = false;
+        //_rb.isKinematic = false;
+        _rb.constraints = RigidbodyConstraints.None;
         _rb.useGravity = true;
 
         if (_managerRef != null)
@@ -148,7 +176,11 @@ public class EnemyTarget : Target, TimeObserver
     /// </summary>
     private void EnableAI()
     {
-        _rb.isKinematic = true;
+        //Debug.Log("Enable AI called");
+
+        //_rb.isKinematic = true;
+        transform.rotation = Quaternion.identity;
+        _rb.constraints = RigidbodyConstraints.FreezeAll;
         _rb.useGravity = false;
 
         if (_managerRef != null)
@@ -172,33 +204,40 @@ public class EnemyTarget : Target, TimeObserver
     /// <returns></returns>
     private bool LandedOnGround()
     {
-        Debug.DrawLine(_center.position, _center.position + Vector3.down * groundDist, Color.yellow);
+        // Debug.DrawLine(_center.position, _center.position + Vector3.down * groundDist, Color.yellow);
         return Physics.Raycast(_center.position, Vector3.down, groundDist, groundMask);
     }
 
     /// <summary>
     /// When time is stopped (called by TimeManager), store velocity and freeze
     /// </summary>
-    public void OnStop()
+    public override void OnStop()
     {
         if (_rb != null)
         {
             storedVelocity = _rb.velocity;
-            _rb.isKinematic = true;
+            //_rb.isKinematic = true;
+            // Freeze the constraints so it stops rotating
+            _rb.constraints = RigidbodyConstraints.FreezeAll;
         }
 
+        base.OnStop();
     }
 
     /// <summary>
     /// When time resumes (called by TimeManager), reapply velocity 
     /// </summary>
-    public void OnResume()
+    public override void OnResume()
     {
         if (inKnockbackState && !immuneToKnockback && _rb != null)
         {
-            _rb.isKinematic = false;
-            _rb.velocity = storedVelocity;
+            //_rb.isKinematic = false;
+            _rb.constraints = RigidbodyConstraints.None;
+            //_rb.velocity = storedVelocity;
+            _rb.AddForceAtPosition(storedVelocity, _center.position, ForceMode.Impulse);
         }
+
+        base.OnResume();
     }
 
     #endregion
@@ -265,7 +304,7 @@ public class EnemyTarget : Target, TimeObserver
     /// <summary>
     /// Get reference to the debug kill cheat
     /// </summary>
-    private void OnEnable()
+    protected override void OnEnable()
     {
         if(controls == null)
         {
@@ -281,16 +320,16 @@ public class EnemyTarget : Target, TimeObserver
             endEncounter.Enable();
         }
 
-        TimeManager.instance.Subscribe(this);
+        base.OnEnable();
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
         // remove cheat to prevent bugs
         if(endEncounter != null)
             endEncounter.performed -= DebugKill;
 
-        TimeManager.instance.UnSubscribe(this);
+        base.OnDisable();
     }
 
     /// <summary>

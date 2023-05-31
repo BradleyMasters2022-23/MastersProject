@@ -372,7 +372,7 @@ MonoBehaviour:
   _targetThreat: 25
   _unkillable: 0
   immuneToKnockback: 0
-  knockbackModifier: 1
+  knockbackModifier: 0.8
   maxKnockback: 18
   invincibilityShield: {fileID: 0}
   _deathVFX: {fileID: 7428150280865193490, guid: 52202a5140c1c0a438fae66d4b85c181, type: 3}
@@ -387,6 +387,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 9
+  onGroundTime: 1
 --- !u!114 &7659091947077932698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -774,9 +775,9 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 1
-  m_Constraints: 112
+  m_Constraints: 126
   m_CollisionDetection: 1
 --- !u!1 &2580865049525067999
 GameObject:
