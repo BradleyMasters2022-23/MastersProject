@@ -33,18 +33,21 @@ public class CrystalManager : MonoBehaviour
 
     private PlayerController player;
 
+    [Tooltip("Reference to the crystal select screen UI")]
+    [SerializeField] private CrystalSlotScreen crystalSelectUI;
+
     private void Start()
     {
-        //if(instance == null)
-        //{
-        //    instance = this;
-        //    DontDestroyOnLoad(this.gameObject);
-        //}
-        //else
-        //{
-        //    Destroy(this.gameObject);
-        //}
-        instance = this;
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+        //instance = this;
 
         equippedCrystals = new Crystal[crystalSlots];
         player = FindObjectOfType<PlayerController>();
@@ -173,5 +176,14 @@ public class CrystalManager : MonoBehaviour
     public string NegativeTextHex()
     {
         return ColorUtility.ToHtmlStringRGBA(negativeTextColor);
+    }
+
+    /// <summary>
+    /// Get the current crystal slot screen in use
+    /// </summary>
+    /// <returns>The current crystal slot screen</returns>
+    public CrystalSlotScreen GetCurrentScreen()
+    {
+        return crystalSelectUI;
     }
 }

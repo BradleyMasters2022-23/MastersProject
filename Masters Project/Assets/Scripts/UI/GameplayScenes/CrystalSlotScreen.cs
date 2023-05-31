@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
-using static System.Net.Mime.MediaTypeNames;
 
 public class CrystalSlotScreen : MonoBehaviour
 {
