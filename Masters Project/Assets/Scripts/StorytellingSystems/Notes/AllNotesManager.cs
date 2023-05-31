@@ -26,6 +26,9 @@ public class AllNotesManager : MonoBehaviour
     /// </summary>
     public static AllNotesManager instance;
 
+    [SerializeField] private NoteFoundUI noteFoundUI;
+
+
     /// <summary>
     /// sets up the manager
     /// </summary>
@@ -113,5 +116,10 @@ public class AllNotesManager : MonoBehaviour
     public List<NoteObject> GetNotes()
     {
         return notes;
+    }
+
+    public NoteFoundUI GetUI()
+    {
+        return noteFoundUI;
     }
 }

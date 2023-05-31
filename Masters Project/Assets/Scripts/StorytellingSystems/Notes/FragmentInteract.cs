@@ -19,12 +19,9 @@ public class FragmentInteract : Interactable
     [SerializeField, ReadOnly] private Fragment fragment;
     [SerializeField, ReadOnly] private NoteObject note;
 
-
-    private NoteFoundUI ui;
-
     private void Awake()
     {
-        ui = FindObjectOfType<NoteFoundUI>(true);
+        Debug.Log("Trying to awake fragment interact");
 
         if(fragmentOverride != null || noteOverride != null)
         {
@@ -79,10 +76,6 @@ public class FragmentInteract : Interactable
 
     public override void OnInteract(PlayerController player)
     {
-        if (ui == null) {
-            Debug.Log("No UI found.");
-        }
-
         if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
         {
             Debug.Log("Not in a state where the player can interact with this object");
@@ -96,9 +89,9 @@ public class FragmentInteract : Interactable
             return;
         }
 
-        ui.LoadFragment(this);
+        AllNotesManager.instance.GetUI().LoadFragment(this);
+        AllNotesManager.instance.GetUI().OpenScreen();
 
-        ui.OpenScreen();
         PlayerNotesManager.instance.FindFragment(fragment);
     }
 
