@@ -21,7 +21,7 @@ public class FragmentInteract : Interactable
 
     private void Awake()
     {
-        Debug.Log("Trying to awake fragment interact");
+        // Debug.Log("Trying to awake fragment interact");
 
         if(fragmentOverride != null || noteOverride != null)
         {
@@ -43,17 +43,29 @@ public class FragmentInteract : Interactable
         if (fragment != null)
             return;
 
-        // If no override assigned, try to get a random one
+        // If fragment override assigned, apply them both
         if(fragmentOverride != null)
         {
             note = noteOverride;
             fragment = fragmentOverride;
+
         }
         // If no fragment assigned but note assigned, get a random fragment from that note
         else if(noteOverride != null)
         {
             note = noteOverride;
-            fragment = noteOverride.GetRandomLostFragment();
+
+            // If the override note is already complete, destroy fragment
+            // can be changed later to give repeats?
+            if (AllNotesManager.instance.CheckNoteComplete(noteOverride))
+            {
+                DestroyFrag();
+                return;
+            }
+            else
+            {
+                fragment = noteOverride.GetRandomLostFragment();
+            }
         }
         // Otherwise, pull fronm pool
         else
@@ -76,6 +88,8 @@ public class FragmentInteract : Interactable
 
     public override void OnInteract(PlayerController player)
     {
+        NoteFoundUI ui = FindObjectOfType<NoteFoundUI>(true);
+
         if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
         {
             Debug.Log("Not in a state where the player can interact with this object");
@@ -89,10 +103,10 @@ public class FragmentInteract : Interactable
             return;
         }
 
-        AllNotesManager.instance.GetUI().LoadFragment(this);
-        AllNotesManager.instance.GetUI().OpenScreen();
+        ui.LoadFragment(this);
+        ui.OpenScreen();
 
-        PlayerNotesManager.instance.FindFragment(fragment);
+        AllNotesManager.instance.FragmentFound(fragment);
     }
 
     public Fragment GetFragment()

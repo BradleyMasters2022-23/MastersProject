@@ -27,7 +27,7 @@ public class FullNoteCompiler : MonoBehaviour
 
         for (int i = 0; i < allFrags.Count; i++)
         {
-            if (allFrags[i].found)
+            if (note.FragmentFound(allFrags[i]))
             {
                 noteData.text += allFrags[i].content;
                 collected++;
