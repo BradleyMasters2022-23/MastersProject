@@ -49,7 +49,11 @@ public class LayoutRandomizer : MonoBehaviour, IRandomizer
     [Tooltip("The current run depth. Must be set manually in testing but automatically set otherwise.")]
     [SerializeField] private int depth;
 
-    private void Start()
+    protected int chosenIndex = -1;
+
+    protected bool randomized = false;
+
+    protected virtual void Start()
     {
         // disable layouts to begin with
         foreach(Layout layout in layouts)
@@ -92,10 +96,14 @@ public class LayoutRandomizer : MonoBehaviour, IRandomizer
 
         // If no usable layouts, exit
         if (usableLayouts.Count <= 0)
+        {
+            chosenIndex = -1;
             return;
+        }
         // if only one usable layout, just set it active and skip randomization calculations
         else if (usableLayouts.Count == 1)
         {
+            chosenIndex = 0;
             usableLayouts[0].layoutRoot.SetActive(true);
             return;
         }
@@ -106,6 +114,8 @@ public class LayoutRandomizer : MonoBehaviour, IRandomizer
         {
             odds[i] = (float)usableLayouts[i].ModdedWeight(depth) / totalWeight;
         }
+
+        randomized = true;
 
         // determine which outcome based on chance
         float ran = Random.Range(0f, 1f);
@@ -118,6 +128,7 @@ public class LayoutRandomizer : MonoBehaviour, IRandomizer
             // If temp is greater than ran, then select this item and activate it
             if(temp >= ran)
             {
+                chosenIndex = i;
                 usableLayouts[i].layoutRoot.SetActive(true);
                 return;
             }

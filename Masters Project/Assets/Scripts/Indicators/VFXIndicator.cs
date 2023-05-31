@@ -20,6 +20,9 @@ public class VFXIndicator : IIndicator
 
     private void Awake()
     {
+        if (VFXPrefab == null)
+            return;
+
         // initialize prefab and get reference to visual effect component
         VFXPrefab = Instantiate(VFXPrefab, transform);
         VFXPrefab.transform.localScale *= scale;
@@ -43,6 +46,9 @@ public class VFXIndicator : IIndicator
 
     public override void Activate()
     {
+        if (VFXPrefab == null)
+            return;
+
         gameObject.SetActive(true);
 
         if (vfxSystem != null)
@@ -61,6 +67,9 @@ public class VFXIndicator : IIndicator
 
     public override void Deactivate()
     {
+        if (VFXPrefab == null)
+            return;
+
         gameObject.SetActive(false);
 
         if (vfxSystem != null)

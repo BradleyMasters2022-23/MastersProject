@@ -94,8 +94,10 @@ public class Laser : RangeAttack, TimeObserver
             TimeManager.instance.UnSubscribe(this);
     }
 
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
+
         if (!active)
             return;
 

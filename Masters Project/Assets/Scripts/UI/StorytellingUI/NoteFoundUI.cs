@@ -9,8 +9,6 @@ using UnityEngine.UI;
 
 public class NoteFoundUI : MonoBehaviour
 {
-    GameControls c;
-    InputAction esc;
     private EventSystem eventSystem;
     private Fragment displayFrag;
     private NoteObject note;
@@ -20,13 +18,6 @@ public class NoteFoundUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI title;
     [Tooltip("Reference to the description textbox")]
     [SerializeField] private TextMeshProUGUI content;
-
-    private void Awake()
-    {
-        c = new GameControls();
-        esc = c.PlayerGameplay.Pause;
-        esc.performed += CloseScreen;
-    }
 
     public void LoadFragment(FragmentInteract f)
     {
@@ -63,17 +54,8 @@ public class NoteFoundUI : MonoBehaviour
 
         GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
         gameObject.SetActive(true);
-        esc.Enable();
     }
 
-    /// <summary>
-    /// Close the screen, change state. For input system
-    /// </summary>
-    /// <param name="c"></param>
-    private void CloseScreen(InputAction.CallbackContext c)
-    {
-        CloseScreen();
-    }
     /// <summary>
     /// Close the screen, change state
     /// </summary>
@@ -84,8 +66,7 @@ public class NoteFoundUI : MonoBehaviour
             caller.DestroyFrag();
         }
         caller = null;
-        esc.Disable();
-        gameObject.SetActive(false);
+        GameManager.instance.CloseTopMenu();
     }
 
 }

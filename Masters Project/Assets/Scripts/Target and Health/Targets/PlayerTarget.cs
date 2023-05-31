@@ -102,14 +102,13 @@ public class PlayerTarget : Target
         base.Knockback(force, verticalForce, origin + Vector3.up * 0.5f);
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
-        if (p == this)
-        {
-            godCheat.performed -= ToggleGodmode;
-            healCheat.performed -= CheatHeal;
-            damageCheat.performed -= CheatDamage;
-            p = null;
-        }
+        base.OnDisable();
+
+        godCheat.performed -= ToggleGodmode;
+        healCheat.performed -= CheatHeal;
+        damageCheat.performed -= CheatDamage;
+        p = null;
     }
 }

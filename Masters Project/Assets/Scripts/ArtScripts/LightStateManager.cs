@@ -1,32 +1,41 @@
 using DynamicLightmaps;
 using UnityEngine;
+using System.Collections;
 using Sirenix.OdinInspector;
 
-public class LightStateManager : MonoBehaviour
+public class LightStateManager : LayoutRandomizer
 {
-    [SerializeField] private GameObject[] environments;
+    [Tooltip("All light states that ")]
     [SerializeField] private LightState[] lightStates;
 
     [SerializeField, ReadOnly] private int index = -1;
-    [SerializeField] private bool testing;
+    [SerializeField] private bool testingLight;
 
     private LightState currentState;
-    private GameObject currentEnvironment;
 
-    private void Awake()
+    protected override void Start()
     {
-        if (environments.Length != lightStates.Length)
-            throw new System.Exception("Environment and Light States Mismatch");
-    }
+        base.Start();
 
-    private void Start()
-    {
         // NOTE IF YOU WANT TO CHANGE THE STATE OF THE LIGHTMAPS AT THE BEGINING OF THE GAME
         // CHANGE IT IN START NOT AWAKE BECAUSE THE LIGHT PROBES IN THE SCENE MIGHT BE NOT INITIALIZED
         NextState();
 
-        if(testing)
+        if(testingLight)
             InvokeRepeating("NextState", 2, 4);
+        else
+            StartCoroutine(ApplyLightState());
+    }
+
+    private IEnumerator ApplyLightState()
+    {
+        // wait until the state has been randomized
+        yield return new WaitUntil(() => randomized);
+
+        // apply lighting based on the final choice
+        SetState(chosenIndex);
+
+        yield return null;
     }
 
     /// <summary>
@@ -35,7 +44,7 @@ public class LightStateManager : MonoBehaviour
     public void NextState()
     {
         index++;
-        if (index >= environments.Length) index = 0;
+        if (index >= lightStates.Length) index = 0;
 
         UpdateToState();
     }
@@ -46,9 +55,9 @@ public class LightStateManager : MonoBehaviour
     /// <param name="i">Index to use</param>
     public void SetState(int i)
     {
-        if (i < 0 || i >= environments.Length)
+        if (i < 0 || i >= lightStates.Length)
         {
-            index = Mathf.Clamp(i, 0, environments.Length);
+            index = Mathf.Clamp(i, 0, lightStates.Length);
             Debug.LogError("Requested state is out of bounds. Using closest instead");
         }
         else
@@ -64,11 +73,9 @@ public class LightStateManager : MonoBehaviour
     /// </summary>
     private void UpdateToState()
     {
-        if (currentEnvironment != null) currentEnvironment.SetActive(false);
+        //if (currentEnvironment != null) currentEnvironment.SetActive(false);
+        
         currentState = lightStates[index];
-        currentEnvironment = environments[index];
-
-        currentEnvironment.SetActive(true);
         currentState.UpdateLightMapsSettings();
     }
 }

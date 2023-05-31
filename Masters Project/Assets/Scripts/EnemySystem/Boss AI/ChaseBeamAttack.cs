@@ -19,7 +19,7 @@ public class ChaseBeamAttack : BaseBossAttack
     [SerializeField] private float startingChaseSpeed;
     [SerializeField] private float maxChaseSpeed;
     [SerializeField] private float accelerationTime;
-    private ScaledTimer accelerationTracker;
+    private LocalTimer accelerationTracker;
 
     [Space(5)]
 
@@ -64,7 +64,7 @@ public class ChaseBeamAttack : BaseBossAttack
             state = AttackState.Attacking;
             TimeManager.instance.Subscribe(this);
 
-            accelerationTracker = new ScaledTimer(accelerationTime);
+            accelerationTracker = GetTimer(accelerationTime);
 
             //Debug.Log($"Resetting tracker to : {attackDuration}");
             tracker.ResetTimer(attackDuration);
