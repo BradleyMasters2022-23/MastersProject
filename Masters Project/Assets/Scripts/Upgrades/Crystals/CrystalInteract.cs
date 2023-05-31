@@ -9,8 +9,6 @@ public class CrystalInteract : Interactable
     private Crystal crystal;
     private int par;
 
-    private CrystalSlotScreen ui;
-
     [SerializeField] private GameObject health;
     [SerializeField] private GameObject gun;
     [SerializeField] private GameObject time;
@@ -23,9 +21,10 @@ public class CrystalInteract : Interactable
     [Tooltip("Par multiplier. Increases overall stats of a crystal. MUST be at least 1.")]
     [SerializeField] private int parMod = 1;
 
+    private CrystalManager crystalManagerInstance;
+
     private void Awake()
     {
-        ui = FindObjectOfType<CrystalSlotScreen>(true);
         shapes = new GameObject[6];
         shapes[0] = health;
         shapes[1] = gun;
@@ -37,6 +36,10 @@ public class CrystalInteract : Interactable
 
     public void RandomizeCrystal()
     {
+        if(crystalManagerInstance == null)
+            crystalManagerInstance = CrystalManager.instance;
+
+
         // loads crystal
         if (LinearSpawnManager.instance != null)
         {
@@ -44,9 +47,9 @@ public class CrystalInteract : Interactable
 
         }
 
-        if (CrystalManager.instance != null && crystal == null)
+        if (crystalManagerInstance != null && crystal == null)
         {
-            crystal = CrystalManager.instance.GenerateCrystal(par);
+            crystal = crystalManagerInstance.GenerateCrystal(par);
 
         }
 
@@ -92,7 +95,7 @@ public class CrystalInteract : Interactable
             RandomizeCrystal();
         }
 
-        ui.OpenScreen(this);
+        crystalManagerInstance.GetCurrentScreen().OpenScreen(this);
     }
 
     public Crystal GetCrystal()
