@@ -38,11 +38,10 @@ public class FullNoteCompiler : MonoBehaviour
                 noteData.text += noNoteFiller;
                 noteData.text += "<br><br>";
             }
-
-            
         }
 
         fragmentCounter.text = collected.ToString() + " / " + allFrags.Count + " fragments found";
+
     }
 
     private void OnDisable()

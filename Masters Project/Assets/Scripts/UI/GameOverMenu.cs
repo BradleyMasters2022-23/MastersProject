@@ -67,12 +67,6 @@ public class GameOverMenu : MonoBehaviour
         Application.Quit();
     }
 
-    
-    public void LoadToHubOldSystem()
-    {
-        RoomGenerator.instance.ReturnToHub();
-    }
-
     /// <summary>
     /// Request the ability to return to hub
     /// </summary>
@@ -81,13 +75,21 @@ public class GameOverMenu : MonoBehaviour
         FindObjectOfType<ConfirmationBox>(true).RequestConfirmation(LoadToHubNewSystem);
     }
 
+    /// <summary>
+    /// Return to the hub, using the new system 
+    /// </summary>
     public void LoadToHubNewSystem()
     {
-        MapLoader.instance.ReturnToHub();
+        MapLoader.instance.ClearRunData();
+        GameManager.instance.GoToHub();
     }
 
+    /// <summary>
+    /// return to the main menu
+    /// </summary>
     public void ReturnToMainMenu()
     {
+        MapLoader.instance.ClearRunData();
         GameManager.instance.GoToMainMenu();
     }
 

@@ -19,6 +19,8 @@ public class FragmentInteract : Interactable
     [SerializeField, ReadOnly] private Fragment fragment;
     [SerializeField, ReadOnly] private NoteObject note;
 
+    [SerializeField, ReadOnly] private NoteFoundUI ui;
+
     private void Awake()
     {
         // Debug.Log("Trying to awake fragment interact");
@@ -53,17 +55,20 @@ public class FragmentInteract : Interactable
         // If no fragment assigned but note assigned, get a random fragment from that note
         else if(noteOverride != null)
         {
+            Debug.Log("Checking logic for note override");
             note = noteOverride;
 
             // If the override note is already complete, destroy fragment
             // can be changed later to give repeats?
             if (AllNotesManager.instance.CheckNoteComplete(noteOverride))
             {
+                Debug.Log("Note set to complete, trying to get fragment");
                 DestroyFrag();
                 return;
             }
             else
             {
+                Debug.Log("Trying to get lost fragment from overriden note");
                 fragment = noteOverride.GetRandomLostFragment();
             }
         }
@@ -84,12 +89,13 @@ public class FragmentInteract : Interactable
             Debug.Log("No fragment found, destroying frag instead");
             DestroyFrag();
         }
+
+        // get the one thats combined with player object ensure we get the instanced one
+        ui = PlayerTarget.p.GetComponentInChildren<NoteFoundUI>(true);
     }
 
     public override void OnInteract(PlayerController player)
     {
-        NoteFoundUI ui = FindObjectOfType<NoteFoundUI>(true);
-
         if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
         {
             Debug.Log("Not in a state where the player can interact with this object");
