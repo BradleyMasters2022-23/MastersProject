@@ -59,7 +59,7 @@ public class GameOverMenu : MonoBehaviour
     /// </summary>
     public void RequestQuitGame()
     {
-        FindObjectOfType<ConfirmationBox>(true).RequestConfirmation(QuitGame);
+        PlayerTarget.p.GetComponentInChildren<ConfirmationBox>(true).RequestConfirmation(QuitGame);
     }
 
     public void QuitGame()
@@ -72,7 +72,7 @@ public class GameOverMenu : MonoBehaviour
     /// </summary>
     public void RequestHUBReturn()
     {
-        FindObjectOfType<ConfirmationBox>(true).RequestConfirmation(LoadToHubNewSystem);
+        PlayerTarget.p.GetComponentInChildren<ConfirmationBox>(true).RequestConfirmation(LoadToHubNewSystem);
     }
 
     /// <summary>
@@ -80,8 +80,14 @@ public class GameOverMenu : MonoBehaviour
     /// </summary>
     public void LoadToHubNewSystem()
     {
+        Debug.Log("Going to hub");
         MapLoader.instance.ClearRunData();
         GameManager.instance.GoToHub();
+    }
+
+    public void RequestMainMenuReturn()
+    {
+        PlayerTarget.p.GetComponentInChildren<ConfirmationBox>(true).RequestConfirmation(LoadToHubNewSystem);
     }
 
     /// <summary>
@@ -89,6 +95,7 @@ public class GameOverMenu : MonoBehaviour
     /// </summary>
     public void ReturnToMainMenu()
     {
+        Debug.Log("Going to main menu");
         MapLoader.instance.ClearRunData();
         GameManager.instance.GoToMainMenu();
     }
