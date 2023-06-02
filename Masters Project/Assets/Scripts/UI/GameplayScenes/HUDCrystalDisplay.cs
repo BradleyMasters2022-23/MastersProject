@@ -24,6 +24,10 @@ public class HUDCrystalDisplay : MonoBehaviour
 
         while(true)
         {
+            // if the manager gets deleted, then stop
+            if (manager == null)
+                yield break;
+
             for(int i = 0; i < displays.Length; i++)
             {
                 if (i > manager.MaxSlots())

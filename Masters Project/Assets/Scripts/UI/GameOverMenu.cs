@@ -80,7 +80,7 @@ public class GameOverMenu : MonoBehaviour
     /// </summary>
     public void LoadToHubNewSystem()
     {
-        Debug.Log("Going to hub");
+        // Debug.Log("Going to hub");
         MapLoader.instance.ClearRunData();
         GameManager.instance.GoToHub();
     }
@@ -95,7 +95,7 @@ public class GameOverMenu : MonoBehaviour
     /// </summary>
     public void ReturnToMainMenu()
     {
-        Debug.Log("Going to main menu");
+        // Debug.Log("Going to main menu");
         MapLoader.instance.ClearRunData();
         GameManager.instance.GoToMainMenu();
     }

@@ -106,7 +106,7 @@ public class LinearSpawnManager : MonoBehaviour
         Dictionary<EnemySO, int> waveData = new Dictionary<EnemySO, int>();
 
         // Get the budget on the wave based on combat room count
-        int budget = difficulty.GetBudget(combatRoomCount, globalDepthScalingBuff);
+        int budget = difficulty.GetBudget(MapLoader.instance.PortalDepth(), globalDepthScalingBuff);
         // Debug.Log($"Budget for wave is : {budget}");
 
         // Create buffer lists, useful to reduce iterations later

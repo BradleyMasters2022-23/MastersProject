@@ -13,7 +13,12 @@ public class MineEnemyProjectile : ProjectileAccelerate
     /// <param name="target"></param>
     protected override bool DealDamage(Transform _targetObj)
     {
-        targetManager.RegisterEffect(999);
+        // only detonate if it impacted with a damagable entity
+        if(_targetObj.GetComponent<IDamagable>() != null)
+        {
+            targetManager.RegisterEffect(999);
+        }    
+
         return true;
     }
 

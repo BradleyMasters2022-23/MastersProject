@@ -512,6 +512,7 @@ public class MapLoader : MonoBehaviour
     public void ReturnToHub()
     {
         GameManager.instance.GoToHub();
+        ClearRunData();
     }
 
     /// <summary>
