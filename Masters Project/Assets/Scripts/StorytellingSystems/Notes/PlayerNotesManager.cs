@@ -1,8 +1,9 @@
 /* ================================================================================================
  * Author - Soma Hannon
  * Date Created - October 21, 2022
- * Last Edited - October 31, 2022 by Soma Hannon
+ * Last Edited - May 5th, 2022 by Ben Schuster
  * Description - Handles player's collected note objects.
+ * OBSELETE - Functionality moved over to AllNoteManager and NoteSaveData
  * ================================================================================================
  */
 using System.Collections;
@@ -11,6 +12,7 @@ using UnityEngine;
 
 public class PlayerNotesManager : MonoBehaviour
 {
+    /*
   /// <summary>
   /// notes player has completed
   /// </summary>
@@ -91,8 +93,9 @@ public class PlayerNotesManager : MonoBehaviour
     /// Get currently collected player notes
     /// </summary>
     /// <returns></returns>
-    public List<NoteObject> GetCollectedNotes()
-    {
-        return playerNotes;
-    }
+    //public List<NoteObject> GetCollectedNotes()
+    //{
+    //    return playerNotes;
+    //}
+    */
 }

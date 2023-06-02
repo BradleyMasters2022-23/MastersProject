@@ -121,7 +121,6 @@ public abstract class Attack : TimeAffectedEntity
         // Check if the target can be damaged
         if (targetComp != null && !hitTargets.Contains(targetComp))
         {
-
             float dmg;
             float horKnockback;
             float verKnockback;

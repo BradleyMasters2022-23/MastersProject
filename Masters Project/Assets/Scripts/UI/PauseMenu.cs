@@ -22,11 +22,8 @@ public class PauseMenu : MonoBehaviour
     {
         controls = new GameControls();
         
-
         reset = controls.PlayerGameplay.Reset;
         reset.Enable();
-
-        
     }
 
     /// <summary>

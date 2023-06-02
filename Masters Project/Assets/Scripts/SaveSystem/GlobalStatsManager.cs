@@ -48,7 +48,7 @@ public class GlobalStatsManager : MonoBehaviour
     public static void SaveData()
     {
         bool s = DataManager.instance.Save<PlaythroughSaveData>(fileName, data);
-        Debug.Log($"global stats save successful: {s}");
+        //Debug.Log($"global stats save successful: {s}");
         
         // only print for testing reasons
         //data?.PrintData();
@@ -69,6 +69,6 @@ public class GlobalStatsManager : MonoBehaviour
     public void ResetData()
     {
         data = new PlaythroughSaveData();
-        Debug.Log("Global data reset");
+        //Debug.Log("Global data reset");
     }
 }

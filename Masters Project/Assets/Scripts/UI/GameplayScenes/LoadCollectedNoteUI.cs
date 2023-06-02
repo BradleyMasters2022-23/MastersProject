@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class LoadCollectedNoteUI : MonoBehaviour
 {
-    private List<NoteObject> collectedNotes;
+    [SerializeField] private List<NoteObject> collectedNotes;
 
     [SerializeField] private UnpackNoteUI[] options;
 
@@ -13,8 +13,8 @@ public class LoadCollectedNoteUI : MonoBehaviour
 
     private void OnEnable()
     {
-        if (PlayerNotesManager.instance != null)
-            collectedNotes = new List<NoteObject>(PlayerNotesManager.instance.GetCollectedNotes());
+        if (AllNotesManager.instance != null)
+            collectedNotes = new List<NoteObject>(AllNotesManager.instance.GetCollectedNotes());
         else
             collectedNotes = new List<NoteObject>();
 

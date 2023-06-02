@@ -32,7 +32,7 @@ public class RoomInitializer : MonoBehaviour
         FragmentInteract[] allFragments = FindObjectsOfType<FragmentInteract>();
         foreach (FragmentInteract fragment in allFragments)
         {
-            Debug.Log("Initializing obj of " + fragment.name);
+            // Debug.Log("Initializing obj of " + fragment.name);
             fragment.PrepareNote();
         }
 

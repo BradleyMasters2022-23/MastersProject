@@ -507,15 +507,19 @@ public class MapLoader : MonoBehaviour
     }
 
     /// <summary>
-    /// Return to the hub world and reset upgrades
+    /// Return to the hub world and reset run data 
     /// </summary>
     public void ReturnToHub()
     {
-        instance = null;
+        GameManager.instance.GoToHub();
+        ClearRunData();
+    }
 
-        // TODO - RESET PLAYER UPGRADES
-        Debug.Log($"PUM active : {PlayerUpgradeManager.instance != null}");
-
+    /// <summary>
+    /// Reset the current run data
+    /// </summary>
+    public void ClearRunData()
+    {
         // Destroy crystal manager
         if (CrystalManager.instance != null)
             CrystalManager.instance.DestroyCM();
@@ -524,12 +528,10 @@ public class MapLoader : MonoBehaviour
         if (PlayerTarget.p != null)
             SceneManager.MoveGameObjectToScene(PlayerTarget.p.gameObject, SceneManager.GetActiveScene());
 
-        GameManager.instance.GoToHub();
-
         instance = null;
         Destroy(gameObject);
-    }
 
+    }
 
     #endregion
 

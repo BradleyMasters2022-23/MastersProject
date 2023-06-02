@@ -21,9 +21,10 @@ public class UnpackNoteUI : MonoBehaviour
         List<Fragment> allFrags = new List<Fragment>(note.GetFragments());
         int collected = 0;
 
+        // loop through each fragment and check if its been found
         for(int i = 0; i < allFrags.Count; i++)
         {
-            if (allFrags[i].found)
+            if (note.FragmentFound(allFrags[i]))
                 collected++;
         }
 

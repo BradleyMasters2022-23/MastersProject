@@ -43,8 +43,7 @@ public class CrystalInteract : Interactable
         // loads crystal
         if (LinearSpawnManager.instance != null)
         {
-            par = (MapLoader.instance.PortalDepth() + 1) * parMod;
-
+            par = (MapLoader.instance.PortalDepth()+1) * parMod;
         }
 
         if (crystalManagerInstance != null && crystal == null)
@@ -86,7 +85,7 @@ public class CrystalInteract : Interactable
     {
         if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
         {
-            Debug.Log("Not in a state where the player can interact with ths object");
+            // Debug.Log("Not in a state where the player can interact with ths object");
             return;
         }
 
