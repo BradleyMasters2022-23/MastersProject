@@ -22,24 +22,10 @@ public enum LoadState
 
 public class MapLoader : MonoBehaviour
 {
-    public enum States
-    {
-        Preparing,
-        Start,
-        Room, 
-        Hallway,
-        Final
-    }
-
     /// <summary>
     /// Reference to this loader
     /// </summary>
     public static MapLoader instance;
-
-    /// <summary>
-    /// Current state of the loader
-    /// </summary>
-    //private States currState;
 
     private LoadState loadState;
 
@@ -55,16 +41,16 @@ public class MapLoader : MonoBehaviour
 
     #region Initialization Variables 
 
-    [Tooltip("Hallways that can be used"), AssetsOnly]
-    [SerializeField] private List<MapSegmentSO> allHallways;
+    //[Tooltip("Hallways that can be used"), AssetsOnly]
+    //[SerializeField] private List<MapSegmentSO> allHallways;
     [Tooltip("Rooms that can be used"), AssetsOnly]
     [SerializeField] private List<MapSegmentSO> allRooms;
 
     [Tooltip("How many rooms to complete before loading ")]
     [SerializeField] private int maxFloorLength;
 
-    [Tooltip("Root of the starting room"), SceneObjectsOnly, Required]
-    [SerializeField] private GameObject startingRoom;
+    //[Tooltip("Root of the starting room"), SceneObjectsOnly, Required]
+    //[SerializeField] private GameObject startingRoom;
 
     [Tooltip("Final boss room"), AssetsOnly]
     [SerializeField] private MapSegmentSO finalRoom;
@@ -73,24 +59,22 @@ public class MapLoader : MonoBehaviour
 
     #region Big Map Variables
 
-    [Header("=== Big Map Variables ===")]
-
     [Tooltip("The current order of maps to be played. Randomized at runtime")]
     [SerializeField, ReadOnly, HideInEditorMode] private List<MapSegmentSO> mapOrder;
     /// <summary>
     /// All segments loaded into the scene, in order
     /// </summary>
-    private List<SegmentLoader> loadedMap;
+    //private List<SegmentLoader> loadedMap;
     
     private List<MapSegmentSO> availableRooms;
-    private List<MapSegmentSO> availableHalls;
+    //private List<MapSegmentSO> availableHalls;
 
     /// <summary>
     /// Current index for looking through rooms
     /// </summary>
-    [SerializeField] private int roomIndex;
+    // [SerializeField] private int roomIndex;
 
-    [SerializeField] private bool testShowAll;
+    // [SerializeField] private bool testShowAll;
 
     #endregion
 
@@ -119,15 +103,66 @@ public class MapLoader : MonoBehaviour
             return;
         }
         mapOrder = new List<MapSegmentSO>();
-        loadedMap = new List<SegmentLoader>();
+        // loadedMap = new List<SegmentLoader>();
 
         availableRooms = new List<MapSegmentSO>();
-        availableHalls = new List<MapSegmentSO>();
+        // availableHalls = new List<MapSegmentSO>();
 
         navMesh = GetComponent<NavMeshSurface>();
         StartCoroutine(ArrangeMap());
     }
 
+    #endregion
+
+    public void EndRoomEncounter()
+    {
+        Debug.Log("End room encounter called");
+
+        //Debug.Log($"Phew! You won it all good jorb {roomIndex+1}!");
+        //loadedMap[roomIndex+1].GetComponent<DoorManager>().UnlockExit();
+
+        //if (mapOrder[roomIndex+1].segmentType == MapSegmentSO.MapSegmentType.Room
+        //    && LinearSpawnManager.instance != null)
+        //{
+        //    WarningText.instance.Play("ANOMALY SUBSIDED, ROOM UNLOCKED", false);
+        //    LinearSpawnManager.instance.IncrementDifficulty();
+        //}
+
+        WarningText.instance.Play("ANOMALY SUBSIDED, ROOM UNLOCKED", false);
+        LinearSpawnManager.instance.IncrementDifficulty();
+
+        ActivatePortal();
+    }
+
+    /// <summary>
+    /// Return to the hub world and reset run data 
+    /// </summary>
+    public void ReturnToHub()
+    {
+        GameManager.instance.GoToHub();
+        ClearRunData();
+    }
+
+    /// <summary>
+    /// Reset the current run data
+    /// </summary>
+    public void ClearRunData()
+    {
+        // Destroy crystal manager
+        if (CrystalManager.instance != null)
+            CrystalManager.instance.DestroyCM();
+
+        // Move player out of 'dont destroy' scene so it clears properly on unload
+        if (PlayerTarget.p != null)
+            SceneManager.MoveGameObjectToScene(PlayerTarget.p.gameObject, SceneManager.GetActiveScene());
+
+        instance = null;
+        Destroy(gameObject);
+    }
+
+    #region Old Large Map
+
+    /*
     /// <summary>
     /// Initialize the entire map
     /// </summary>
@@ -274,11 +309,6 @@ public class MapLoader : MonoBehaviour
 
         yield return null;
     }
-
-
-    #endregion
-
-    #region Selection Functions
 
     /// <summary>
     /// Get the next segment based on the last segment in the list
@@ -430,10 +460,6 @@ public class MapLoader : MonoBehaviour
         return selectedObject;
     }
 
-    #endregion
-
-    #region Room Incremenation
-
     public void UpdateLoadedSegments()
     {
         loadState = LoadState.Loading;
@@ -474,7 +500,7 @@ public class MapLoader : MonoBehaviour
         loadState = LoadState.Done;
         yield return null;
     }
-
+    
     private void PrepareNavmesh()
     {
         navMesh.BuildNavMesh();
@@ -485,56 +511,31 @@ public class MapLoader : MonoBehaviour
         loadedMap[roomIndex+1].StartSegment();
     }
 
-    public void EndRoomEncounter()
-    {
-        Debug.Log("End room encounter called");
-
-        //Debug.Log($"Phew! You won it all good jorb {roomIndex+1}!");
-        //loadedMap[roomIndex+1].GetComponent<DoorManager>().UnlockExit();
-
-        //if (mapOrder[roomIndex+1].segmentType == MapSegmentSO.MapSegmentType.Room
-        //    && LinearSpawnManager.instance != null)
-        //{
-        //    WarningText.instance.Play("ANOMALY SUBSIDED, ROOM UNLOCKED", false);
-        //    LinearSpawnManager.instance.IncrementDifficulty();
-        //}
-
-        WarningText.instance.Play("ANOMALY SUBSIDED, ROOM UNLOCKED", false);
-        LinearSpawnManager.instance.IncrementDifficulty();
-
-        ActivatePortal();
-
-    }
-
     /// <summary>
-    /// Return to the hub world and reset run data 
+    /// Continuely load the rooms. Debug only to help test in inspector
     /// </summary>
-    public void ReturnToHub()
+    /// <returns></returns>
+    private IEnumerator ContinueLoad()
     {
-        GameManager.instance.GoToHub();
-        ClearRunData();
+        while (roomIndex < loadedMap.Count)
+        {
+            UpdateLoadedSegments();
+
+
+            yield return new WaitForSecondsRealtime(3f);
+
+            yield return null;
+        }
+        yield return null;
     }
 
-    /// <summary>
-    /// Reset the current run data
-    /// </summary>
-    public void ClearRunData()
+    public int RoomDepth()
     {
-        // Destroy crystal manager
-        if (CrystalManager.instance != null)
-            CrystalManager.instance.DestroyCM();
-
-        // Move player out of 'dont destroy' scene so it clears properly on unload
-        if (PlayerTarget.p != null)
-            SceneManager.MoveGameObjectToScene(PlayerTarget.p.gameObject, SceneManager.GetActiveScene());
-
-        instance = null;
-        Destroy(gameObject);
-
+        return (roomIndex+1)/2;
     }
+    */
 
     #endregion
-
 
     #region Portal Transition Loading
 
@@ -827,37 +828,8 @@ public class MapLoader : MonoBehaviour
 
     #endregion
 
-    public int RoomDepth()
-    {
-        return (roomIndex+1)/2;
-    }
-
-    
-
-    #region Utility - Debug
-
-    /// <summary>
-    /// Continuely load the rooms. Debug only to help test in inspector
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator ContinueLoad()
-    {
-        while (roomIndex < loadedMap.Count)
-        {
-            UpdateLoadedSegments();
-
-
-            yield return new WaitForSecondsRealtime(3f);
-
-            yield return null;
-        }
-        yield return null;
-    }
-
     private void OnDestroy()
     {
         instance = null;
     }
-
-    #endregion
 }
