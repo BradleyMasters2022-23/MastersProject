@@ -24,10 +24,13 @@ public class MapSegmentSO : ScriptableObject
     [Tooltip("Name of the scene this level has")]
     public string sceneName;
 
-    //[ShowIf("@this.segmentType == MapSegmentType.Room")]
+    [Tooltip("Does this room have a depth requirement")]
+    public bool depthRequirement = true;
+
+    [ShowIf("@this.depthRequirement")]
     [Tooltip("The minimum difficulty level this room can be used in")]
     public int minDifficulty = 0;
-    //[ShowIf("@this.segmentType == MapSegmentType.Room")]
+    [ShowIf("@this.depthRequirement")]
     [Tooltip("The maximum difficulty level this room can be used in")]
     public int maxDifficulty = 999;
 
@@ -42,6 +45,6 @@ public class MapSegmentSO : ScriptableObject
     /// <returns>whether this room can be used given the current difficulty</returns>
     public bool WithinDifficulty(int difficulty)
     {
-        return (difficulty <= maxDifficulty && difficulty >= minDifficulty);
+        return !depthRequirement || (difficulty <= maxDifficulty && difficulty >= minDifficulty);
     }
 }

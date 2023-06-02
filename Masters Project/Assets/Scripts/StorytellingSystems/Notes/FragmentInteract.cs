@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-public class FragmentInteract : Interactable
+public class FragmentInteract : MonoBehaviour, Interactable
 {
     [Tooltip("A note to pull from. Will always pull from this override.")]
     [SerializeField] private NoteObject noteOverride;
@@ -94,7 +94,7 @@ public class FragmentInteract : Interactable
         ui = PlayerTarget.p.GetComponentInChildren<NoteFoundUI>(true);
     }
 
-    public override void OnInteract(PlayerController player)
+    public void OnInteract(PlayerController player)
     {
         if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
         {

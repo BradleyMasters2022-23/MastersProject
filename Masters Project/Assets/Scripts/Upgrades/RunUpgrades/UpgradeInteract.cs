@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class UpgradeInteract : Interactable 
+public class UpgradeInteract : MonoBehaviour, Interactable
 {
     [Tooltip("How many options do we want to give the player?")]
     [SerializeField] private int numOfChoices = 3;
@@ -27,7 +27,7 @@ public class UpgradeInteract : Interactable
         ui = FindObjectOfType<SelectUpgradeUI>(true);
     }
 
-    public override void OnInteract(PlayerController player) 
+    public void OnInteract(PlayerController player) 
     {
         // Make sure player is in gameplay or hub state to prevent multi clicking
         if(GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)

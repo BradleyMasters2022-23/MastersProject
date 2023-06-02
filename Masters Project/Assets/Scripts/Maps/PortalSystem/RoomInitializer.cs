@@ -1,3 +1,11 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - May 26, 2023
+ * Last Edited - May 26, 2023 by Ben Schuster
+ * Description - Initializer for rooms using portal system
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

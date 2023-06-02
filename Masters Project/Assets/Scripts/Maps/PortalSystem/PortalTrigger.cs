@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using Sirenix.OdinInspector;
 
-public class PortalTrigger : Interactable
+public class PortalTrigger : MonoBehaviour, Interactable
 {
     [SerializeField] private Collider col;
 
@@ -19,6 +19,9 @@ public class PortalTrigger : Interactable
     [Tooltip("Indicators that play when the portal is interacted with")]
     [SerializeField] IIndicator[] interactIndicators;
 
+    [Tooltip("Point to teleport to if gone to")]
+    [SerializeField] private Transform exitPoint;
+
     /// <summary>
     /// Whether the portal is currently usable
     /// </summary>
@@ -28,7 +31,7 @@ public class PortalTrigger : Interactable
     /// When interacted, perform appropriate action
     /// </summary>
     /// <param name="player">The player reference</param>
-    public override void OnInteract(PlayerController player)
+    public void OnInteract(PlayerController player)
     {
         // make sure it can only be used once
         if(usable)
@@ -77,5 +80,21 @@ public class PortalTrigger : Interactable
             MapLoader.instance.NextMainPortal();
         else
             Debug.LogError("{name} tried going to next room but couldn't find a MapLoader!");
+    }
+
+    /// <summary>
+    /// Teleport to this portal's exit point
+    /// </summary>
+    public void TeleportToPortal()
+    {
+        if(exitPoint == null)
+        {
+            Debug.LogError($"{name} was told to teleport player to it, but no exit point set!");
+            return;
+        }
+
+        Transform player = PlayerTarget.p.transform;
+        player.transform.position = exitPoint.position;
+        player.transform.rotation = exitPoint.rotation;
     }
 }

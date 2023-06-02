@@ -4,7 +4,7 @@ using UnityEngine;
 
 // TODO: make it possible to create one of these with an existing crystal,
 // so players can drop and pick up their crystals
-public class CrystalInteract : Interactable
+public class CrystalInteract : MonoBehaviour, Interactable
 {
     private Crystal crystal;
     private int par;
@@ -81,7 +81,7 @@ public class CrystalInteract : Interactable
         }
     }
 
-    public override void OnInteract(PlayerController player)
+    public void OnInteract(PlayerController player)
     {
         if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
         {
