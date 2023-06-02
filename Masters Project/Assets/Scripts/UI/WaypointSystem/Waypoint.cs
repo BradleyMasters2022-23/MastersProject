@@ -36,6 +36,8 @@ public class Waypoint : MonoBehaviour
     [SerializeField] RectTransform pointerImg;
     [Tooltip("Image holding the icon")]
     [SerializeField] Image iconImage;
+    [Tooltip("Distance from player before displaying the actual icon image")]
+    [SerializeField] float iconDisplayRange = 999f;
 
     [Tooltip("Additional buffer added to the horizontal bounds")]
     [SerializeField] private float horizontalBuffer;
@@ -179,6 +181,9 @@ public class Waypoint : MonoBehaviour
         // Set view status. If can't show, then dont do anything else to minimize impact
         imageContainer.SetActive(show);
         if (!show) return;
+
+        // set icon active only if in bounds AND in range
+        iconImage.enabled = (inBounds && positionDist <= iconDisplayRange);
 
         float distRatio = (positionDist-minRange) / (maxRange-minRange);
 

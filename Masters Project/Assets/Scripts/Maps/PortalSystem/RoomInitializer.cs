@@ -22,6 +22,10 @@ public class RoomInitializer : MonoBehaviour
 
     [SerializeField] bool automaticallyEnd;
 
+    [SerializeField] private GenericWeightedList<PortalTrigger> exitPortalList;
+
+    [SerializeField] private GenericWeightedList<CorruptedProp> corruptedProps;
+
     public virtual void Init()
     {
         // Tell randomized objects to initiate randomization
@@ -57,5 +61,27 @@ public class RoomInitializer : MonoBehaviour
         {
             MapLoader.instance.ActivatePortal();
         }
+    }
+
+    /// <summary>
+    /// Choose a random secret prop to initialize
+    /// </summary>
+    public void ChooseRandomSecretProp()
+    {
+        CorruptedProp prop = corruptedProps.Pull();
+        if(prop != null)
+        {
+            prop.gameObject.SetActive(true);
+            prop.Init();
+        }
+    }
+
+    /// <summary>
+    /// Get one of the exit portals
+    /// </summary>
+    /// <returns></returns>
+    public PortalTrigger GetExitPortal()
+    {
+        return exitPortalList.Pull();
     }
 }

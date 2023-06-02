@@ -9,24 +9,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
+
 
 public class SecretPortalInstance : MonoBehaviour
 {
     [Tooltip("Portal within the level that leads to the secret room")]
     [SerializeField] private PortalTrigger secretPortalRef;
 
-    private PortalTrigger secretRoomPortal;
+    [SerializeField, ReadOnly] private PortalTrigger secretRoomPortal;
 
     /// <summary>
     /// If there is a secret room loaded, then initialize and link with it\
     /// </summary>
-    private void Start()
+    public void Init()
     {
-        if(SecretRoomInitializer.instance != null)
-        {
-            SecretRoomInitializer.instance.Init();
-            LinkToSecretRoom(SecretRoomInitializer.instance);
-        }
+        StartCoroutine(WaitToLoad());
+    }
+    /// <summary>
+    /// Wait for the initializer to instantiate before starting
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator WaitToLoad()
+    {
+        yield return new WaitUntil(() => SecretRoomInitializer.instance != null);
+
+        SecretRoomInitializer.instance.Init();
+        LinkToSecretRoom(SecretRoomInitializer.instance);
+        secretPortalRef.gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -50,6 +60,7 @@ public class SecretPortalInstance : MonoBehaviour
     /// </summary>
     public void GoToSecretRoom()
     {
+        Debug.Log("Going to secret room");
         secretRoomPortal.TeleportToPortal();
     }
 

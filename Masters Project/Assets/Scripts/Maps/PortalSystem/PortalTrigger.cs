@@ -1,3 +1,11 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - May 23rd, 2022
+ * Last Edited - May 23rd, 2022 by Ben Schuster
+ * Description - Portals that perform an action on interact
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,7 +34,7 @@ public class PortalTrigger : MonoBehaviour, Interactable
     /// Whether the portal is currently usable
     /// </summary>
     [SerializeField, ReadOnly] private bool usable = true;
-
+    [SerializeField] private bool onlyUseOnce = true;
     /// <summary>
     /// When interacted, perform appropriate action
     /// </summary>
@@ -36,9 +44,14 @@ public class PortalTrigger : MonoBehaviour, Interactable
         // make sure it can only be used once
         if(usable)
         {
-            usable = false;
             Indicators.SetIndicators(interactIndicators, true);
             onInteract.Invoke();
+
+            if (onlyUseOnce)
+            {
+                usable = false;
+                DismissPortal();
+            }
         }
     }
 

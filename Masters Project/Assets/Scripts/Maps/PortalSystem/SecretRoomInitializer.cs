@@ -9,6 +9,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 public class SecretRoomInitializer : RoomInitializer
 {
@@ -32,6 +33,7 @@ public class SecretRoomInitializer : RoomInitializer
             Destroy(this);
             return;
         }
+        Debug.Log("Secret room instance initialized");
     }
 
     private void OnDisable()
@@ -42,7 +44,7 @@ public class SecretRoomInitializer : RoomInitializer
     /// <summary>
     /// The portal to return to when leaving
     /// </summary>
-    private PortalTrigger returnPortal;
+    [SerializeField, ReadOnly] private PortalTrigger returnPortal;
 
     /// <summary>
     /// Link this secret room to a return portal

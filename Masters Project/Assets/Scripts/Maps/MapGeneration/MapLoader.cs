@@ -13,6 +13,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public enum LoadState
 {
@@ -64,6 +65,11 @@ public class MapLoader : MonoBehaviour
     /// </summary>
     private NavMeshSurface navMesh;
 
+    /// <summary>
+    /// Actions to be executed when an encounter is complete
+    /// </summary>
+    private UnityEvent onEncounterComplete;
+
     #endregion
 
     #region Big Map Variables
@@ -105,6 +111,11 @@ public class MapLoader : MonoBehaviour
     /// Refernce to all portals in the current scene
     /// </summary>
     private PortalTrigger[] portals;
+
+    /// <summary>
+    /// The current room manager
+    /// </summary>
+    private RoomInitializer currentRoom;
 
     #endregion
 
@@ -308,6 +319,8 @@ public class MapLoader : MonoBehaviour
     {
         loadingScreen.SetActive(true);
 
+        onEncounterComplete?.RemoveAllListeners();
+
         // iterate to next step
         portalDepth++;
 
@@ -328,30 +341,25 @@ public class MapLoader : MonoBehaviour
         // Once loading finishes, teleport player to a spawnpoint
         MovePlayerToSpawn();
 
-        // turn off each portal
-        portals = FindObjectsOfType<PortalTrigger>();
-        foreach (PortalTrigger p in portals)
-        {
-            p.gameObject.SetActive(false);
-        }
-        //Debug.Log("Load room routine done");
-
         // Initialize the room
-        RoomInitializer rm = FindObjectOfType<RoomInitializer>();
-        if (rm == null)
+        currentRoom = FindObjectOfType<RoomInitializer>();
+        if (currentRoom == null)
         {
             Debug.LogError("[MAPLOADER] While loading to new map, no room initializer was found!");
         }
         else
         {
-            rm.Init();
+            currentRoom.Init();
         }
 
+        // If at secret room depth, load that too
         if (portalDepth == chosenSecretRoomIndex)
         {
-            // Todo - actually implement this
+            currentRoom.ChooseRandomSecretProp();
             Debug.Log("Secret room chosen, initializing it");
             yield return StartCoroutine(LoadSecretRoom());
+
+            FindObjectOfType<SecretPortalInstance>(true).Init();
         }
 
         navMesh.BuildNavMesh();
@@ -361,23 +369,13 @@ public class MapLoader : MonoBehaviour
 
     public void ActivatePortal()
     {
-        PortalTrigger p;
+        PortalTrigger p = currentRoom.GetExitPortal();
 
-        if (portals.Length <= 0)
+        if (p == null)
         {
             Debug.LogError("[MAPLOADER] Tried to select an exit portal, but none found!");
             Debug.Break();
             return;
-        }
-        else if (portals.Length == 1)
-        {
-            p = portals[0];
-        }
-        else
-        {
-            // for now choose one at random. Improve later
-            int i = Random.Range(0, portals.Length);
-            p = portals[i];
         }
 
         p.SummonPortal();
@@ -437,6 +435,8 @@ public class MapLoader : MonoBehaviour
         WarningText.instance.Play("ANOMALY SUBSIDED, ROOM UNLOCKED", false);
         LinearSpawnManager.instance.IncrementDifficulty();
 
+        onEncounterComplete?.Invoke();
+
         ActivatePortal();
     }
 
@@ -464,6 +464,18 @@ public class MapLoader : MonoBehaviour
 
         instance = null;
         Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// Register an action to be performed on encounter complete
+    /// </summary>
+    /// <param name="a">New action to subscribe</param>
+    public void RegisterOnEncounterComplete(UnityAction a)
+    {
+        if (onEncounterComplete == null)
+            onEncounterComplete = new UnityEvent();
+
+        onEncounterComplete.AddListener(a);
     }
 
     #endregion
