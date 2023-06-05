@@ -22,7 +22,7 @@ public class VFXTimeScaler : TimeAffectedEntity, IPoolable
     public float fastForwardTime = 0.5f;
 
     [Tooltip("How long does this VFX last")]
-    public float lifetime;
+    public float lifetime = 1;
 
     /// <summary>
     /// Reference tracking lifetime
@@ -32,6 +32,8 @@ public class VFXTimeScaler : TimeAffectedEntity, IPoolable
     /// Whether or not this VFX is playing
     /// </summary>
     private bool playing;
+
+    public bool keepReserved = false;
 
     private void Awake()
     {
@@ -50,6 +52,10 @@ public class VFXTimeScaler : TimeAffectedEntity, IPoolable
     {
         // Update playrate based on timescale
         effectRef.playRate = 1 * Timescale;
+
+        // If set to reserved, then this is being managed by another entity
+        if (keepReserved)
+            return;
 
         // When life ends, stop spawning VFX
         if (playing && lifeTimer.TimerDone())
