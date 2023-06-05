@@ -79,7 +79,7 @@ public class Projectile : RangeAttack, TimeObserver, IPoolable
                 Instantiate(fadeVFX, transform.position, transform.rotation);
             }
 
-            //TimeManager.instance.UnSubscribe(this);
+            TimeManager.instance.UnSubscribe(this);
             End();
         }
     }
@@ -89,7 +89,7 @@ public class Projectile : RangeAttack, TimeObserver, IPoolable
         if (bulletVisual != null)
             bulletVisual.localScale = new Vector3(originalVisualScale, originalVisualScale, originalVisualScale);
 
-        //TimeManager.instance.Subscribe(this);
+        TimeManager.instance.Subscribe(this);
 
         targetVelocity = transform.forward * speed;
     }
@@ -146,7 +146,7 @@ public class Projectile : RangeAttack, TimeObserver, IPoolable
 
     public override void Inturrupt()
     {
-        //TimeManager.instance.UnSubscribe(this);
+        TimeManager.instance.UnSubscribe(this);
         End();
     }
 
@@ -194,7 +194,9 @@ public class Projectile : RangeAttack, TimeObserver, IPoolable
         if(trail != null)
             trail.Clear();
     }
-
+    /// <summary>
+    /// What happens when this projectile is returned to the pool
+    /// </summary>
     public virtual void PoolPush()
     {
         active = false;
