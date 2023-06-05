@@ -249,19 +249,40 @@ public class SimpleShoot : AttackTarget
 
     private void Shoot(Transform target, float minSpread, float maxSpread)
     {
-        Vector3 targetPos = target.position;
-
         // Spawn projectile for each barrel
         List<GameObject> spawnedProjectiles = new List<GameObject>();
         foreach (Transform barrel in shootPoints)
         {
-            GameObject o = Instantiate(projectile, barrel.position, projectile.transform.rotation);
+            // Try getting and setting bullet via pooler 
+            GameObject o;
+            if (ProjectilePooler.instance != null && ProjectilePooler.instance.HasPool(projectile))
+            {
+                o = ProjectilePooler.instance.GetProjectile(projectile);
+                o.transform.position = barrel.position;
+                o.transform.rotation = barrel.rotation;
+            }
+            // If that fails, just spawn it normally
+            else
+            {
+                o = Instantiate(projectile, barrel.position, projectile.transform.rotation);
+            }
+            
             spawnedProjectiles.Add(o);
 
-            if(shootVFXPrefab!= null)
+            if(shootVFXPrefab != null)
             {
-                GameObject vfx = Instantiate(shootVFXPrefab, barrel);
-                vfx.transform.localPosition = Vector3.zero;
+                GameObject vfx;
+                if (VFXPooler.instance != null && VFXPooler.instance.HasPool(shootVFXPrefab))
+                {
+                    vfx = VFXPooler.instance.GetVFX(shootVFXPrefab);
+                    vfx.transform.position = barrel.position;
+                    vfx.transform.rotation = barrel.rotation;
+                }
+                else
+                {
+                    vfx = Instantiate(shootVFXPrefab, barrel.position, barrel.rotation);
+                }
+
                 vfx.transform.localScale *= shootVFXScale;
             }
         }

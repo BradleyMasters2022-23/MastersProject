@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7428150280865193491}
-  - component: {fileID: 5996393837800712599}
   - component: {fileID: 4552541332384632895}
   - component: {fileID: 3346125190911049606}
+  - component: {fileID: -8289629726387147129}
   m_Layer: 0
   m_Name: Vfx_Enemy_DeathExplosion_Ranged
   m_TagString: Untagged
@@ -35,19 +35,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5996393837800712599
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7428150280865193490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24a025df64953f34d9f4b267c557a9f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  time: 200
 --- !u!2083052967 &4552541332384632895
 VisualEffect:
   m_ObjectHideFlags: 0
@@ -125,6 +112,26 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &-8289629726387147129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7428150280865193490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 331ac01e693182d4cb57d2d61e11ff1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
+  fastForwardTime: 0.15
+  lifetime: 2
 --- !u!1 &7428150281643535732
 GameObject:
   m_ObjectHideFlags: 0
@@ -136,7 +143,6 @@ GameObject:
   - component: {fileID: 7428150281643535735}
   - component: {fileID: 7428150281643535734}
   - component: {fileID: 7428150281643535733}
-  - component: {fileID: 133153605786528660}
   m_Layer: 0
   m_Name: VFX Explosion
   m_TagString: Untagged
@@ -266,16 +272,3 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &133153605786528660
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7428150281643535732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 331ac01e693182d4cb57d2d61e11ff1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fastForwardTime: 0.1

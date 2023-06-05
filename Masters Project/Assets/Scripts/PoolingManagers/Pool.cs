@@ -12,12 +12,17 @@ using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
 
+[System.Serializable]
 public class Pool
 {
     /// <summary>
     /// Primary key for this pool
     /// </summary>
     private GameObject key;
+    /// <summary>
+    /// Hashcode of the key object
+    /// </summary>
+    private int keyID;
     /// <summary>
     /// Queue of current objects in pool
     /// </summary>
@@ -34,7 +39,10 @@ public class Pool
     /// Increment rate to increase size by when pool is empty
     /// </summary>
     private int incrementRate;
-
+    /// <summary>
+    /// Whether this pool recycles the oldest object at max
+    /// </summary>
+    private bool recycle;
     /// <summary>
     /// Root gameobject to store pooled objects under
     /// </summary>
@@ -48,13 +56,15 @@ public class Pool
     /// <param name="maxSize">max size of this pool</param>
     /// <param name="incrementRate">increment rate for this pool</param>
     /// <param name="container">root to store pooled objects under</param>
-    public Pool(GameObject key, int size, int maxSize, int incrementRate, Transform container)
+    public Pool(GameObject key, int size, int maxSize, int incrementRate, bool recycle, Transform container)
     {
         // prepare variables
         this.key = key;
+        this.keyID = key.name.GetHashCode();
         this.size = size;
         this.maxSize = maxSize;
         this.incrementRate = incrementRate;
+        this.recycle = recycle;
         this.container = container;
 
         // create pool queue, populate to requested size
@@ -76,12 +86,9 @@ public class Pool
         }
 
         // populate buffer with current size size
-        GameObject spawnBuffer;
         for (int i = 0; i < size; i++)
         {
-            spawnBuffer = MonoBehaviour.Instantiate(key, container);
-            spawnBuffer.SetActive(false);
-            currentPool.Enqueue(spawnBuffer);
+            Spawn();
         }
     }
 
@@ -106,13 +113,10 @@ public class Pool
         // increase size, clamp it
         int newSize = Mathf.Clamp(size + incrementRate, 0, maxSize);
 
-        // fill queue with the new amount of objects
-        GameObject spawnBuffer;
+        // fill queue with the new amount of objects. Keep same name for hashcode reasons
         for (int i = 0; i < (newSize - size); i++)
         {
-            spawnBuffer = MonoBehaviour.Instantiate(key);
-            spawnBuffer.SetActive(false);
-            currentPool.Enqueue(spawnBuffer);
+            Spawn();
         }
 
         // update size, return one of the new objects
@@ -122,19 +126,48 @@ public class Pool
     }
 
     /// <summary>
+    /// Actually spawn the object into the pool
+    /// </summary>
+    private void Spawn()
+    {
+        GameObject spawnBuffer;
+        spawnBuffer = MonoBehaviour.Instantiate(key, container);
+        spawnBuffer.SetActive(false);
+        spawnBuffer.GetComponent<IPoolable>().PoolInit();
+        spawnBuffer.name = key.name;
+        currentPool.Enqueue(spawnBuffer);
+    }
+
+    /// <summary>
     /// Pull an object from the pool 
     /// </summary>
     /// <returns>A pooled object. If null, the pool is maxed.</returns>
     public GameObject Pull()
     {
+        GameObject o;
+        // Get an object from the pool
         if (currentPool.Count > 0)
         {
-            return currentPool.Dequeue();
+            o = currentPool.Dequeue();
         }
+        // Otherwise extend the pool
         else
         {
-            return ExtendPool();
+            o = ExtendPool();
         }
+
+        // If set to recycle, make sure to reset it just incase.
+        // Add to end of pool queue
+        if (recycle)
+        {
+            o.GetComponent<IPoolable>().PoolPush();
+            currentPool.Enqueue(o);
+        }
+
+        o.GetComponent<IPoolable>().PoolPull();
+        o.SetActive(true);
+
+        return o;
     }
 
     /// <summary>
@@ -151,16 +184,21 @@ public class Pool
 
         // add object back to queue
         objectRef.transform.localPosition= Vector3.zero;
+        objectRef.GetComponent<IPoolable>().PoolPush();
         objectRef.SetActive(false);
-        currentPool.Enqueue(objectRef);
+        
+        // Recycled pools should already have this in it
+        // so double check 
+        if(!currentPool.Contains(objectRef))
+            currentPool.Enqueue(objectRef);
     }
 
     /// <summary>
     /// The key for this pool
     /// </summary>
-    /// <returns>Key for this pool</returns>
-    public GameObject Key()
+    /// <returns>Key for this pool as a hashcode of the name</returns>
+    public int Key()
     {
-        return key;
+        return keyID;
     }
 }

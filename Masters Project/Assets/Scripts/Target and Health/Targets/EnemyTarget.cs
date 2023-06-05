@@ -13,7 +13,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.AI;
 
-public class EnemyTarget : Target, TimeObserver
+public class EnemyTarget : Target, TimeObserver, IPoolable
 {
     /// <summary>
     /// Get necessary data for knockback stuff
@@ -48,7 +48,7 @@ public class EnemyTarget : Target, TimeObserver
     protected override void DestroyObject()
     {
         if (EnemyPooler.instance != null)
-            EnemyPooler.instance.Return(enemyData, gameObject);
+            EnemyPooler.instance.Return(gameObject);
         else
             Destroy(gameObject);
     }
@@ -248,27 +248,27 @@ public class EnemyTarget : Target, TimeObserver
     /// </summary>
     private EnemySO enemyData;
 
+    public void PoolInit()
+    {
+        //Awake();
+    }
+
     /// <summary>
     /// Return this object to its pool
     /// </summary>
-    public void ReturnToPool()
+    public void PoolPush()
     {
         ResetTarget();
-
         gameObject.SetActive(false);
     }
 
     /// <summary>
     /// Retrieve from pool
     /// </summary>
-    public void PullFromPool(EnemySO data)
+    public void PoolPull()
     {
-        if (enemyData == null)
-            enemyData = data;
-
         // TODO - get data from difficulty scaler
-
-        _healthManager.Heal(9990f);
+        _healthManager.Heal(9999f);
     }
 
     /// <summary>

@@ -1,0 +1,102 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1826737247520261648
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1826737247520261742}
+  - component: {fileID: 1826737247520261743}
+  m_Layer: 0
+  m_Name: ProjectilePooler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1826737247520261742
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826737247520261648}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -23.4713, y: 4.7083325, z: -8.912613}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1826737247520261743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826737247520261648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69037c0acd5e344478505675c16ae2c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectilePools:
+  - prefab: {fileID: 8727397786430278917, guid: 2d7acdce40227f14f958278db894727c, type: 3}
+    size: 10
+    maxSize: 50
+    incrementRate: 10
+    recycleOldest: 0
+  - prefab: {fileID: 8727397786430278917, guid: 28050c439aeee544782969d47740fbc7, type: 3}
+    size: 20
+    maxSize: 100
+    incrementRate: 20
+    recycleOldest: 0
+  - prefab: {fileID: 8727397786430278917, guid: 72ddf08186379004e8a2d2b56de45efb, type: 3}
+    size: 50
+    maxSize: 250
+    incrementRate: 50
+    recycleOldest: 0
+  - prefab: {fileID: 8727397786430278917, guid: 406069cb0a402f342af7f980f4ed2f6c, type: 3}
+    size: 25
+    maxSize: 100
+    incrementRate: 25
+    recycleOldest: 0
+  - prefab: {fileID: 8727397786430278917, guid: 49a17882dae18734b9cd46a217b5dbf8, type: 3}
+    size: 20
+    maxSize: 50
+    incrementRate: 10
+    recycleOldest: 0
+  - prefab: {fileID: 4730330725648419445, guid: da8fbe537a132c04fb690a95af9b1b35, type: 3}
+    size: 30
+    maxSize: 120
+    incrementRate: 30
+    recycleOldest: 0
+  - prefab: {fileID: 4730330725648419445, guid: dcb911f8d81f78c45af36fc091ee6636, type: 3}
+    size: 30
+    maxSize: 30
+    incrementRate: 0
+    recycleOldest: 0
+  - prefab: {fileID: 8727397786430278917, guid: b14737358aa0fdb44aff22428b427497, type: 3}
+    size: 150
+    maxSize: 150
+    incrementRate: 0
+    recycleOldest: 0
+  - prefab: {fileID: 3071240432754548792, guid: 2001e4aa90ac76a47866171fcaafdf7f, type: 3}
+    size: 30
+    maxSize: 50
+    incrementRate: 10
+    recycleOldest: 0
+  - prefab: {fileID: 3071240432754548792, guid: 6efff96cc11551441886102089ebdc19, type: 3}
+    size: 15
+    maxSize: 30
+    incrementRate: 5
+    recycleOldest: 0
+  - prefab: {fileID: 3071240432754548792, guid: 97a60d67e4614554c8c11e70672f7cd2, type: 3}
+    size: 15
+    maxSize: 30
+    incrementRate: 5
+    recycleOldest: 0

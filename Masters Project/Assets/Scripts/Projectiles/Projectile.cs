@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-public class Projectile : RangeAttack, TimeObserver
+public class Projectile : RangeAttack, TimeObserver, IPoolable
 {
     #region Variables
 
@@ -29,6 +29,8 @@ public class Projectile : RangeAttack, TimeObserver
     /// Distance covered over time
     /// </summary>
     private float distanceCovered;
+
+    private TrailRenderer trail;
 
     [Header("Distance Scaling")]
 
@@ -56,6 +58,7 @@ public class Projectile : RangeAttack, TimeObserver
         if (bulletVisual != null)
             originalVisualScale = bulletVisual.localScale.x;
 
+        trail = GetComponentInChildren<TrailRenderer>();
         col = GetComponent<SphereCollider>();
         rb = GetComponent<Rigidbody>();
     }
@@ -76,7 +79,7 @@ public class Projectile : RangeAttack, TimeObserver
                 Instantiate(fadeVFX, transform.position, transform.rotation);
             }
 
-            TimeManager.instance.UnSubscribe(this);
+            //TimeManager.instance.UnSubscribe(this);
             End();
         }
     }
@@ -86,7 +89,7 @@ public class Projectile : RangeAttack, TimeObserver
         if (bulletVisual != null)
             bulletVisual.localScale = new Vector3(originalVisualScale, originalVisualScale, originalVisualScale);
 
-        TimeManager.instance.Subscribe(this);
+        //TimeManager.instance.Subscribe(this);
 
         targetVelocity = transform.forward * speed;
     }
@@ -143,7 +146,7 @@ public class Projectile : RangeAttack, TimeObserver
 
     public override void Inturrupt()
     {
-        TimeManager.instance.UnSubscribe(this);
+        //TimeManager.instance.UnSubscribe(this);
         End();
     }
 
@@ -171,5 +174,35 @@ public class Projectile : RangeAttack, TimeObserver
     public void OnResume()
     {
         return;
+    }
+
+    /// <summary>
+    /// Initialize the bullet when its first spawned
+    /// </summary>
+    public virtual void PoolInit()
+    {
+        // initialization handled by awake
+        return;
+    }
+
+    /// <summary>
+    /// What happens when this projectile is pulled from the pool
+    /// </summary>
+    public virtual void PoolPull()
+    {
+        // Automatically taken care of by the activate func
+        if(trail != null)
+            trail.Clear();
+    }
+
+    public virtual void PoolPush()
+    {
+        active = false;
+
+        distanceCovered = 0;
+        hitTargets.Clear();
+
+        if(bulletVisual!= null)
+            bulletVisual.localScale = Vector3.one * originalVisualScale;
     }
 }

@@ -374,7 +374,7 @@ public abstract class BaseEnemyMovement : MonoBehaviour
 
         if(Physics.Raycast(transform.position+Vector3.up, dir, out hit, dir.magnitude, collisionLayers))
         {
-            Debug.Log($"{name} hit detected at {hit.collider.name}!");
+            //Debug.Log($"{name} hit detected at {hit.collider.name}!");
             return true;
         }
         else

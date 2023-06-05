@@ -6,13 +6,7 @@
  * Description - Manages the behavior of a pickup orb
  * ================================================================================================
  */
-using JetBrains.Annotations;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static Cinemachine.DocumentationSortingAttribute;
-using UnityEngine.Rendering;
 
 public abstract class PickupOrb : MonoBehaviour
 {
@@ -61,7 +55,7 @@ public abstract class PickupOrb : MonoBehaviour
     [SerializeField] protected Collider realCollider;
 
     [Tooltip("Sound when orb is collected")]
-    [SerializeField] private AudioClipSO OrbCollect;
+    [SerializeField] protected AudioClipSO OrbCollect;
 
     private AudioSource source;
 
@@ -233,7 +227,7 @@ public abstract class PickupOrb : MonoBehaviour
         {
             OnPickup();
 
-            OrbCollect.PlayClip(transform);
+            
         }
     }
 

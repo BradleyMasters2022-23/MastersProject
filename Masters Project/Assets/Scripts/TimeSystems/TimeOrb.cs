@@ -78,6 +78,7 @@ public class TimeOrb : PickupOrb
     {
         if(playerTime.AddGauge(refillAmount))
         {
+            OrbCollect.PlayClip(transform);
             Destroy(gameObject);
         }
     }

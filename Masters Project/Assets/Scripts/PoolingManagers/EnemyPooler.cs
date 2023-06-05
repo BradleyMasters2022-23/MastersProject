@@ -31,10 +31,10 @@ public class EnemyPooler : MonoBehaviour
 
     /// <summary>
     /// Dictionary for enemies : 
-    /// Key : Enemy data SO
+    /// Key : Hashcode of enemy name
     /// Value : Pool of instanced enemies
     /// </summary>
-    private Dictionary<EnemySO, Pool> pool;
+    private Dictionary<int, Pool> pool;
 
     private void Awake()
     {
@@ -55,13 +55,13 @@ public class EnemyPooler : MonoBehaviour
     /// </summary>
     protected void Init()
     {
-        pool = new Dictionary<EnemySO, Pool>();
+        pool = new Dictionary<int, Pool>();
 
         // Create a new pool for each option
         foreach (EnemyPool p in enemyPools)
         {
-            pool.Add(p.enemy, 
-                new Pool(p.enemy.enemyPrefab, p.poolSize, p.maxSize, p.incrementRate, transform));
+            pool.Add(p.enemy.enemyPrefab.name.GetHashCode(), 
+                new Pool(p.enemy.enemyPrefab, p.poolSize, p.maxSize, p.incrementRate, false, transform));
         }
     }
 
@@ -70,19 +70,20 @@ public class EnemyPooler : MonoBehaviour
     /// </summary>
     /// <param name="enemyRequest">Type of enemy to request</param>
     /// <returns>Instanced version of the requested enemy, as a game object</returns>
-    public GameObject RequestEnemy(EnemySO enemyRequest)
+    public GameObject RequestEnemy(GameObject enemyPrefab)
     {
-        if (pool.ContainsKey(enemyRequest))
+        int enemyID = enemyPrefab.name.GetHashCode();
+        if (pool.ContainsKey(enemyID))
         {
-            GameObject enemy = pool[enemyRequest].Pull();
+            GameObject enemy = pool[enemyID].Pull();
             enemy.transform.parent = null;
-            enemy.GetComponent<EnemyTarget>().PullFromPool(enemyRequest);
+            //enemy.GetComponent<EnemyTarget>().PullFromPool(enemyRequest);
             // TODO - any unique enemy functionality here like stat scaling
             return enemy;
         }
         else
         {
-            Debug.Log($"[EnemyPooler] Pool of enemy {enemyRequest} does not exist!");
+            Debug.Log($"[EnemyPooler] Pool of enemy {enemyPrefab.name} does not exist!");
             return null;
         }
     }
@@ -93,16 +94,18 @@ public class EnemyPooler : MonoBehaviour
     /// <param name="type">Type of enemy to use (its key)</param>
     /// <param name="enemyReturn">Reference to instanced enemy to return</param>
     /// <returns>Whether or not the enemy was returned to the pool</returns>
-    public bool Return(EnemySO type, GameObject enemyReturn)
+    public bool Return(GameObject enemyReturn)
     {
-        if (type == null || enemyReturn == null)
+        if (enemyReturn == null)
             return false;
 
-        if(pool.ContainsKey(type))
+        int enemyID = enemyReturn.name.GetHashCode();
+
+        if(pool.ContainsKey(enemyID))
         {
             // do other funcs when being returned
-            enemyReturn.GetComponent<EnemyTarget>().ReturnToPool();
-            pool[type].Return(enemyReturn);
+            //enemyReturn.GetComponent<EnemyTarget>().ReturnToPool();
+            pool[enemyID].Return(enemyReturn);
             enemyReturn.transform.parent = transform;
             return true;
         }

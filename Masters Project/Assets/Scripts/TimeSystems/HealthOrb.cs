@@ -84,6 +84,7 @@ public class HealthOrb : PickupOrb
     {
         if(playerHealth.Heal(refillAmount, BarType.Health))
         {
+            OrbCollect.PlayClip(transform);
             Destroy(gameObject);
         }
     }

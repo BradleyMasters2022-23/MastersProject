@@ -7,6 +7,10 @@ public class TargetHitbox : MonoBehaviour, IDamagable
     [SerializeField] Target target;
     [SerializeField] float damageMultiplier = 1;
 
+
+    [Header("Impact VFX")]
+    [SerializeField] private GameObject impactVFX;
+
     private void Awake()
     {
         if (target == null)
@@ -17,6 +21,20 @@ public class TargetHitbox : MonoBehaviour, IDamagable
         }
     }
 
+    public void ImpactEffect(Vector3 point)
+    {
+        if (impactVFX == null) return;
+
+        
+        // Spawn it at the point of impact, look away from center
+        GameObject vfxInstance = VFXPooler.instance.GetVFX(impactVFX);
+        if(vfxInstance == null)
+        {
+            vfxInstance = Instantiate(impactVFX);
+        }
+        vfxInstance.transform.position = point;
+        vfxInstance.transform.LookAt(point + (point - transform.position));
+    }
 
     /// <summary>
     /// Register an effect to the main target, applying any modifier
