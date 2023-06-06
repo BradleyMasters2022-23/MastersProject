@@ -42,7 +42,8 @@ public class VFXTimeScaler : TimeAffectedEntity, IPoolable
         effectRef.Play();
         playing = true;
 
-        lifeTimer = GetTimer(lifetime);
+        if(!keepReserved)
+            lifeTimer = GetTimer(lifetime);
     }
 
     /// <summary>
