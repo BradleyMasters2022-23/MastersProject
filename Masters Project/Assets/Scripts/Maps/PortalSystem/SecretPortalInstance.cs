@@ -22,8 +22,9 @@ public class SecretPortalInstance : MonoBehaviour
     /// <summary>
     /// If there is a secret room loaded, then initialize and link with it\
     /// </summary>
-    public void Init()
+    public void Init(PortalTrigger portal)
     {
+        secretPortalRef = portal;
         StartCoroutine(WaitToLoad());
     }
     /// <summary>
@@ -36,7 +37,8 @@ public class SecretPortalInstance : MonoBehaviour
 
         SecretRoomInitializer.instance.Init();
         LinkToSecretRoom(SecretRoomInitializer.instance);
-        secretPortalRef.gameObject.SetActive(false);
+        secretPortalRef.DismissPortal();
+        secretRoomPortal.SummonPortal();
     }
 
     /// <summary>
@@ -61,6 +63,7 @@ public class SecretPortalInstance : MonoBehaviour
     public void GoToSecretRoom()
     {
         Debug.Log("Going to secret room");
+        
         secretRoomPortal.TeleportToPortal();
     }
 

@@ -41,7 +41,7 @@ public struct Layout
 public class LayoutRandomizer : MonoBehaviour, IRandomizer
 {
     [Tooltip("All potential layouts. Organize the rarest options at the top.")]
-    [SerializeField] private Layout[] layouts;
+    [SerializeField] protected Layout[] layouts;
 
     [Tooltip("Enable if you are testing without the maploader present.")]
     [SerializeField] private bool testing;
@@ -69,7 +69,7 @@ public class LayoutRandomizer : MonoBehaviour, IRandomizer
     /// <summary>
     /// Randomly select a layout based on what can be used and weights
     /// </summary>
-    public void Randomize()
+    public virtual void Randomize()
     {
         // Get depth of current run
         if (!testing && MapLoader.instance != null)

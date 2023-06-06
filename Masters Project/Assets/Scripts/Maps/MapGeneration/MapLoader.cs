@@ -356,10 +356,9 @@ public class MapLoader : MonoBehaviour
         if (portalDepth == chosenSecretRoomIndex)
         {
             currentRoom.ChooseRandomSecretProp();
-            Debug.Log("Secret room chosen, initializing it");
             yield return StartCoroutine(LoadSecretRoom());
 
-            FindObjectOfType<SecretPortalInstance>(true).Init();
+            //FindObjectOfType<SecretPortalInstance>(true).Init();
         }
 
         navMesh.BuildNavMesh();

@@ -24,7 +24,7 @@ public class RoomInitializer : MonoBehaviour
 
     [SerializeField] private GenericWeightedList<PortalTrigger> exitPortalList;
 
-    [SerializeField] private GenericWeightedList<CorruptedProp> corruptedProps;
+    [SerializeField] private SecretPortalRandomizer corruptedProps;
 
     public virtual void Init()
     {
@@ -68,11 +68,10 @@ public class RoomInitializer : MonoBehaviour
     /// </summary>
     public void ChooseRandomSecretProp()
     {
-        CorruptedProp prop = corruptedProps.Pull();
-        if(prop != null)
+        if(corruptedProps != null)
         {
-            prop.gameObject.SetActive(true);
-            prop.Init();
+            Debug.Log("Trying to randomize secret stuff");
+            corruptedProps.Randomize();
         }
     }
 

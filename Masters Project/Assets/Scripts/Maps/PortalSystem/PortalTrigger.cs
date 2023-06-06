@@ -98,7 +98,6 @@ public class PortalTrigger : MonoBehaviour, Interactable
         // make sure it can only be used once
         if(usable)
         {
-            usable = false;
             Indicators.SetIndicators(interactIndicators, true);
             onInteract.Invoke();
         }
@@ -133,6 +132,7 @@ public class PortalTrigger : MonoBehaviour, Interactable
 
         Indicators.SetIndicators(interactIndicators, false);
         Indicators.SetIndicators(vanishIndicators, true);
+        gameObject.SetActive(false);
     }
 
     /// <summary>
@@ -148,6 +148,8 @@ public class PortalTrigger : MonoBehaviour, Interactable
 
     public void TeleportToPortal()
     {
+        // Debug.Log($"Player : {playerRef != null} | Exit point : {exitPoint !=  null}");
+
         playerRef.position = exitPoint.position;
         playerRef.rotation = exitPoint.rotation;
     }
