@@ -12,10 +12,12 @@ using UnityEngine;
 using UnityEngine.Events;
 using Sirenix.OdinInspector;
 
-public class PortalTrigger : Interactable
+public class PortalTrigger : MonoBehaviour, Interactable
 {
     [Header("Setup")]
 
+    [Tooltip("The point to teleport to")]
+    [SerializeField] private Transform exitPoint;
     [Tooltip("Reference to the collider used for interaction")]
     [SerializeField] private Collider col;
     [Tooltip("Whether this portal should summon immediately")]
@@ -25,7 +27,6 @@ public class PortalTrigger : Interactable
     [Tooltip("Events to execute on interact")]
     [SerializeField] private UnityEvent onInteract;
     
-
     [Header("VFX/SFX Indicators")]
 
     [Tooltip("Indicators that play when the portal is summoned")]
@@ -92,7 +93,7 @@ public class PortalTrigger : Interactable
     /// When interacted, perform appropriate action
     /// </summary>
     /// <param name="player">The player reference</param>
-    public override void OnInteract(PlayerController player)
+    public void OnInteract(PlayerController player)
     {
         // make sure it can only be used once
         if(usable)
@@ -143,5 +144,11 @@ public class PortalTrigger : Interactable
             MapLoader.instance.NextMainPortal();
         else
             Debug.LogError($"{name} tried going to next room but couldn't find a MapLoader!");
+    }
+
+    public void TeleportToPortal()
+    {
+        playerRef.position = exitPoint.position;
+        playerRef.rotation = exitPoint.rotation;
     }
 }
