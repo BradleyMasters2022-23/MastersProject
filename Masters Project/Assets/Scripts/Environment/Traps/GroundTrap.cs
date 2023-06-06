@@ -46,6 +46,8 @@ public class GroundTrap : Trap
     [Tooltip("Time between each tick")]
     [SerializeField] private float tickRate;
 
+    LocalTimer delay;
+
     /// <summary>
     /// Get any references for trap and make sure core items are enabled
     /// </summary>
@@ -96,7 +98,12 @@ public class GroundTrap : Trap
 
         // Initiate the activation delay
         Indicators.SetIndicators(onTriggerIndicators, true);
-        ScaledTimer delay = new ScaledTimer(activationDelay);
+
+        if (delay == null)
+            delay = GetTimer(activationDelay);
+        else
+            delay.ResetTimer(activationDelay);
+
         while (!delay.TimerDone())
             yield return null;
         Indicators.SetIndicators(onTriggerIndicators, false);
