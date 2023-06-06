@@ -35,6 +35,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6659945107635102311}
+  - {fileID: 4397360735864997313}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -114,6 +115,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   col: {fileID: 1519268578421383784}
+  instantlyOpen: 0
+  usable: 1
   onInteract:
     m_PersistentCalls:
       m_Calls:
@@ -132,7 +135,103 @@ MonoBehaviour:
   summonIndicators: []
   vanishIndicators: []
   interactIndicators: []
-  usable: 1
+  horizontalScaleOverDistance:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.017723083
+      value: 1.1024666
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.49117118
+      value: 0.9941232
+      inSlope: -0.04238472
+      outSlope: -0.04238472
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.2710643
+      value: 0.9808426
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 2.3606668
+      value: 1.0637083
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 3.2767708
+      value: 0.9640812
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 4.378501
+      value: 1.0253944
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 5.9028373
+      value: 0.9736595
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 6.824529
+      value: 1.0368652
+      inSlope: -0.0044243946
+      outSlope: -0.0044243946
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 7.5
+      value: 1
+      inSlope: -0.028492276
+      outSlope: -0.028492276
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 12
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  portalScaleObject: {fileID: 1141231269699188775}
 --- !u!114 &8299125135871710621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,12 +256,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8ed886af6042224491c3491de4c6483, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetOverride: {fileID: 3634936689351453331}
+  targetOverride: {fileID: 4397360735864997313}
   displayData:
     displayColor: {r: 0.4312646, g: 0.990566, b: 0.2560519, a: 1}
     maxRange: 50
     minRange: 0
     icon: {fileID: 21300000, guid: 99d1139a0513850468022b6b17cf1816, type: 3}
+--- !u!1 &7375549800756667702
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4397360735864997313}
+  m_Layer: 0
+  m_Name: WaypointContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4397360735864997313
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7375549800756667702}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.13, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3634936689351453331}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1786548070058307132
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -292,6 +422,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1a9f2b5f3e0242e43b27c1d6ab4c3f00, type: 3}
+--- !u!4 &1141231269699188775 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1665610350654969371, guid: 1a9f2b5f3e0242e43b27c1d6ab4c3f00, type: 3}
+  m_PrefabInstance: {fileID: 1786548070058307132}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6659945107635102311 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4947196266683354203, guid: 1a9f2b5f3e0242e43b27c1d6ab4c3f00, type: 3}

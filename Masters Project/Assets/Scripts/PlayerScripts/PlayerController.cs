@@ -10,7 +10,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEngine.UI.Image;
 
 public class PlayerController : MonoBehaviour
 {
@@ -26,8 +25,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("---Game Flow---")]
     [SerializeField] private ChannelGMStates onStateChangeChannel;
-
-    public static PlayerController instance;
 
     /// <summary>
     /// Current state of the player
@@ -693,8 +690,6 @@ public class PlayerController : MonoBehaviour
         sprint.started -= ToggleSprint;
         sprint.canceled -= ToggleSprint;
         qInput.performed-= ActivateQAbility;
-
-        instance = null;
     }
 
     #endregion
