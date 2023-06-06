@@ -1,9 +1,9 @@
 /*
  * ================================================================================================
  * Author - Ben Schuster
- * Date Created - May 23rd, 2022
- * Last Edited - May 23rd, 2022 by Ben Schuster
- * Description - Portals that perform an action on interact
+ * Date Created - June 1st, 2022
+ * Last Edited - June 6th, 2022 by Ben Schuster
+ * Description - Trigger for the portals that can teleport the player
  * ================================================================================================
  */
 using System.Collections;
@@ -12,46 +12,94 @@ using UnityEngine;
 using UnityEngine.Events;
 using Sirenix.OdinInspector;
 
-public class PortalTrigger : MonoBehaviour, Interactable
+public class PortalTrigger : Interactable
 {
-    [SerializeField] private Collider col;
+    [Header("Setup")]
 
+    [Tooltip("Reference to the collider used for interaction")]
+    [SerializeField] private Collider col;
+    [Tooltip("Whether this portal should summon immediately")]
+    [SerializeField] private bool instantlyOpen;
+    [Tooltip("Whether this portal is currently usable")]
+    [SerializeField, ReadOnly] private bool usable = true;
+    [Tooltip("Events to execute on interact")]
     [SerializeField] private UnityEvent onInteract;
+    
+
+    [Header("VFX/SFX Indicators")]
 
     [Tooltip("Indicators that play when the portal is summoned")]
     [SerializeField] IIndicator[] summonIndicators;
-
     [Tooltip("Indicators that play when the portal vanishes")]
     [SerializeField] IIndicator[] vanishIndicators;
-
     [Tooltip("Indicators that play when the portal is interacted with")]
     [SerializeField] IIndicator[] interactIndicators;
 
-    [Tooltip("Point to teleport to if gone to")]
-    [SerializeField] private Transform exitPoint;
+    [Header("Scaling over Distance")]
+    
+    [Tooltip("Scale of the X and Z axis over distance")]
+    [SerializeField] private AnimationCurve horizontalScaleOverDistance;
+    [Tooltip("Transform of the portal that sacles over distance")]
+    [SerializeField] private Transform portalScaleObject;
+    /// <summary>
+    /// Reference to the player transform
+    /// </summary>
+    private Transform playerRef;
+    /// <summary>
+    /// Current scale modifier
+    /// </summary>
+    private Vector3 horScale;
 
     /// <summary>
-    /// Whether the portal is currently usable
+    /// If set to instantly open, do it
     /// </summary>
-    [SerializeField, ReadOnly] private bool usable = true;
-    [SerializeField] private bool onlyUseOnce = true;
+    private void Awake()
+    {
+        horScale = portalScaleObject.localScale;
+
+        if (instantlyOpen)
+            SummonPortal();
+        else
+            DismissPortal();
+    }
+
+    private void Update()
+    {
+        // Continually update the scale of the shard based on player distance
+        HandleSquish();
+    }
+
+    /// <summary>
+    /// Modify the X and Z scales based on distance
+    /// </summary>
+    private void HandleSquish()
+    {
+        // Get the player reference if not already acquired
+        if (playerRef == null)
+            playerRef = PlayerTarget.p.transform;
+
+        // If properly set up, update the scale based on the current distance to the player
+        if (portalScaleObject != null)
+        {
+            float dist = Vector3.Distance(transform.position, playerRef.position);
+            horScale.x = horizontalScaleOverDistance.Evaluate(dist);
+            horScale.z = horizontalScaleOverDistance.Evaluate(dist);
+            portalScaleObject.localScale = horScale;
+        }
+    }
+
     /// <summary>
     /// When interacted, perform appropriate action
     /// </summary>
     /// <param name="player">The player reference</param>
-    public void OnInteract(PlayerController player)
+    public override void OnInteract(PlayerController player)
     {
         // make sure it can only be used once
         if(usable)
         {
+            usable = false;
             Indicators.SetIndicators(interactIndicators, true);
             onInteract.Invoke();
-
-            if (onlyUseOnce)
-            {
-                usable = false;
-                DismissPortal();
-            }
         }
     }
 
@@ -60,7 +108,9 @@ public class PortalTrigger : MonoBehaviour, Interactable
     /// </summary>
     public void SummonPortal()
     {
+        // Get reference for the scale, enable it
         gameObject.SetActive(true);
+        horScale = portalScaleObject.localScale;
 
         // enable collider
         col.enabled = true;
@@ -69,7 +119,7 @@ public class PortalTrigger : MonoBehaviour, Interactable
         // make sure it can be used
         usable = true;
 
-        // DO other artsy things here like sync up animation or start VFX
+        // DO other artsy things here like sync up animation or start VFX 
         Indicators.SetIndicators(summonIndicators, true);
     }
 
@@ -92,22 +142,6 @@ public class PortalTrigger : MonoBehaviour, Interactable
         if (MapLoader.instance != null)
             MapLoader.instance.NextMainPortal();
         else
-            Debug.LogError("{name} tried going to next room but couldn't find a MapLoader!");
-    }
-
-    /// <summary>
-    /// Teleport to this portal's exit point
-    /// </summary>
-    public void TeleportToPortal()
-    {
-        if(exitPoint == null)
-        {
-            Debug.LogError($"{name} was told to teleport player to it, but no exit point set!");
-            return;
-        }
-
-        Transform player = PlayerTarget.p.transform;
-        player.transform.position = exitPoint.position;
-        player.transform.rotation = exitPoint.rotation;
+            Debug.LogError($"{name} tried going to next room but couldn't find a MapLoader!");
     }
 }
