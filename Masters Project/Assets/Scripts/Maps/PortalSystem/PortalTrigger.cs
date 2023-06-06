@@ -51,6 +51,8 @@ public class PortalTrigger : MonoBehaviour, Interactable
     /// </summary>
     private Vector3 horScale;
 
+    private SecretPortalInstance secretRef;
+
     /// <summary>
     /// If set to instantly open, do it
     /// </summary>
@@ -152,5 +154,14 @@ public class PortalTrigger : MonoBehaviour, Interactable
 
         playerRef.position = exitPoint.position;
         playerRef.rotation = exitPoint.rotation;
+    }
+
+    public void AssignSecretRef(SecretPortalInstance s)
+    {
+        secretRef = s;
+    }
+    public void GoToSecretRoom()
+    {
+        secretRef?.GoToSecretRoom();
     }
 }

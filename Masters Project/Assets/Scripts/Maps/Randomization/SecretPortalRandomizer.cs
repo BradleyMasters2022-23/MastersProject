@@ -20,6 +20,7 @@ public class SecretPortalRandomizer : LayoutRandomizer
         if (selectedPortal != null)
         {
             initializer.Init(selectedPortal);
+            selectedPortal.AssignSecretRef(initializer);
             selectedProp.Init();
         }
         else
