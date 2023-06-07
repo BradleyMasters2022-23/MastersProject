@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 6059694608719368090}
   - component: {fileID: 5783038534857439811}
   - component: {fileID: 7251199925355554288}
-  m_Layer: 0
+  - component: {fileID: 1555956730653547986}
+  m_Layer: 7
   m_Name: TrailRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -75,7 +76,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.25
+  m_Time: 0.12
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -84,7 +85,7 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.7828579
+        value: 0.62901115
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -162,6 +163,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be66c8bccf0de47409ec68ebffd3e181, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!135 &1555956730653547986
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2227837464164598194}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5270099
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3071240432754548792
 GameObject:
   m_ObjectHideFlags: 0
@@ -177,7 +191,6 @@ GameObject:
   - component: {fileID: 2551133878448879965}
   - component: {fileID: 362847238882995153}
   - component: {fileID: 8657110956391530870}
-  - component: {fileID: 3806014747134079180}
   m_Layer: 13
   m_Name: Big TimeOrb
   m_TagString: Untagged
@@ -293,23 +306,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
+  currState: 0
   dropVelocityRange: {x: 12, y: 17}
   dropXAngleRange: {x: 70, y: 85}
-  floatHeightRange: {x: 0.2, y: 0.65}
+  floatHeightRange: {x: 0.4, y: 0.65}
   groundMask:
     serializedVersion: 2
     m_Bits: 2057
-  pickupRadius: 1
   chaseRadius: 13.5
   chaseSpeed: 22
-  realCollider: {fileID: 3806014747134079180}
+  realCollider: {fileID: 6739573261697533126}
   OrbCollect: {fileID: 11400000, guid: a3e01f5f3e14cc94e8532864e3536f16, type: 2}
+  pickupWhileSlowing: 0
   startDespawnTime: 4
   despawnTime: 4.5
   despawnTimeAffectedByTimestop: 1
   despawnAnimationScaling: 8
   refillAmount: 1
-  pickupWhileSlowing: 0
 --- !u!95 &8657110956391530870
 Animator:
   serializedVersion: 4
@@ -330,16 +348,3 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!135 &3806014747134079180
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3071240432754548792}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.3
-  m_Center: {x: 0, y: 0, z: 0}

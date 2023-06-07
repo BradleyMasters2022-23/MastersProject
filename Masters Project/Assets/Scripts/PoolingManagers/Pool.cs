@@ -133,9 +133,19 @@ public class Pool
         GameObject spawnBuffer;
         spawnBuffer = MonoBehaviour.Instantiate(key, container);
         spawnBuffer.SetActive(false);
-        spawnBuffer.GetComponent<IPoolable>().PoolInit();
-        spawnBuffer.name = key.name;
-        currentPool.Enqueue(spawnBuffer);
+        IPoolable poolRef = spawnBuffer.GetComponent<IPoolable>();
+        
+        if(poolRef != null)
+        {
+            poolRef.PoolInit();
+            spawnBuffer.name = key.name;
+            currentPool.Enqueue(spawnBuffer);
+        }
+        else
+        {
+            Debug.Log($"Error trying to initialize {key.name} in pool, excluding from pool");
+            return;
+        }
     }
 
     /// <summary>

@@ -258,8 +258,19 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
         for (int i = 0; i < spawnAmount; i++)
         {
             // Spawn objects, apply rotation and velocity
-            if (transform != null)
-                Instantiate(orb, _center.position, Quaternion.identity);
+            if (_center != null)
+            {
+                if(ProjectilePooler.instance.HasPool(orb))
+                {
+                    GameObject t = ProjectilePooler.instance.GetProjectile(orb);
+                    t.transform.position = _center.position;
+                }
+                else
+                {
+                    Instantiate(orb, _center.position, Quaternion.identity);
+                }
+            }
+                
         }
     }
 

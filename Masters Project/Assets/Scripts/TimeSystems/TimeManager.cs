@@ -171,6 +171,8 @@ public class TimeManager : MonoBehaviour
     /// </summary>
     public bool inRegenField;
 
+    private List<TimeOrb> timeOrbBuffer = new List<TimeOrb>();
+
     #endregion
 
     #region Time System Observer
@@ -632,7 +634,7 @@ public class TimeManager : MonoBehaviour
 
     public bool IsFull()
     {
-        return currSlowGauge >= (slowDuration.Current * FixedUpdateCalls);
+        return BufferFull();
     }
 
     /// <summary>
@@ -651,4 +653,31 @@ public class TimeManager : MonoBehaviour
             slowInput.Disable();
         }
     }
+
+    #region Time Buffer 
+
+    public void AddToBuffer(TimeOrb orb)
+    {
+        if(!timeOrbBuffer.Contains(orb))
+            timeOrbBuffer.Add(orb);
+    }
+
+    public void RemoveFromBuffer(TimeOrb orb)
+    {
+        if (timeOrbBuffer.Contains(orb))
+            timeOrbBuffer.Remove(orb);
+    }
+
+    private bool BufferFull()
+    {
+        float healingPot = 0;
+        foreach (TimeOrb o in timeOrbBuffer.ToArray())
+        {
+            healingPot += o.GetAmt();
+        }
+
+        return (currSlowGauge + healingPot) >= (slowDuration.Current * FixedUpdateCalls);
+    }
+
+    #endregion
 }

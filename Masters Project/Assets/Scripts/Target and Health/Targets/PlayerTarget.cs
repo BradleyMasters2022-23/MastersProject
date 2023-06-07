@@ -98,7 +98,7 @@ public class PlayerTarget : Target
             return;
 
         // kick the player up a tiny bit to reduce any ground drag
-        transform.position += Vector3.up * 0.5f;
+        transform.position += Vector3.up * 0.25f;
         base.Knockback(force, verticalForce, origin + Vector3.up * 0.5f);
     }
 

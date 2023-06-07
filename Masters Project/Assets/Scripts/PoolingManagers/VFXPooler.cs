@@ -104,7 +104,12 @@ public class VFXPooler : MonoBehaviour
             return true;
         }
         else
+        {
+            // if not in pool, just destroy it
+            Destroy(vfxInstance);
             return false;
+        }
+            
     }
 
     public bool HasPool(GameObject check)
