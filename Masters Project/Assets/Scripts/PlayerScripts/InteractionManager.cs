@@ -14,10 +14,17 @@ public class InteractionManager : MonoBehaviour
     [SerializeField] private LayerMask detectableLayer;
 
     private void Awake() {
-        controller = new GameControls();
+        StartCoroutine(InitializeControls());
+    }
+
+    private IEnumerator InitializeControls()
+    {
+        yield return new WaitUntil(() => GameManager.controls != null);
+
+        controller = GameManager.controls;
         interact = controller.PlayerGameplay.Interact;
-        interact.Enable();
         interact.performed += Interact;
+        interact.Enable();
     }
 
     private void Start()
