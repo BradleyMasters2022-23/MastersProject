@@ -75,13 +75,13 @@ public class EnemyPooler : MonoBehaviour
         int enemyID = enemyPrefab.name.GetHashCode();
         if (pool.ContainsKey(enemyID))
         {
-            GameObject enemy = pool[enemyRequest].Pull();
-            if(enemy == null)
+            GameObject enemy = pool[enemyID].Pull();
+            if (enemy == null)
             {
-                Debug.Log($"ERROR! Enemy from pool was null while requesting {enemyRequest.name}");
+                Debug.Log($"ERROR! Enemy from pool was null while requesting {enemyPrefab.name}");
                 return null;
             }    
-            GameObject enemy = pool[enemyID].Pull();
+            
             enemy.transform.parent = null;
             //enemy.GetComponent<EnemyTarget>().PullFromPool(enemyRequest);
             // TODO - any unique enemy functionality here like stat scaling

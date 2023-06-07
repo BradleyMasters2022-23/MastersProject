@@ -177,7 +177,7 @@ public abstract class RangeAttack : Attack
             Instantiate(onEndPrefab, transform.position, transform.rotation);
 
         // try returning to pool
-        if (ProjectilePooler.instance != null)
+        if (ProjectilePooler.instance != null && ProjectilePooler.instance.HasPool(gameObject))
             ProjectilePooler.instance.ReturnProjectile(gameObject);
         else
             Destroy(gameObject);
