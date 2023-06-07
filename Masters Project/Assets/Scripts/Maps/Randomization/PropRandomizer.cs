@@ -31,8 +31,8 @@ public class PropRandomizer : MonoBehaviour, IRandomizer
             return;
         int depth = MapLoader.instance.PortalDepth();
 
-        // If outside bounds, always disable
-        if(depth < minimumRoomNum || depth > maximumRoomNum)
+        // If outside bounds that were set, always disable
+        if((minimumRoomNum != maximumRoomNum) && (depth < minimumRoomNum || depth > maximumRoomNum))
         {
             gameObject.SetActive(false);
             return;
