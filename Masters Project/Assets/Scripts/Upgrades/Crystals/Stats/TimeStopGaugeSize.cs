@@ -7,22 +7,16 @@ public class TimeStopGaugeSize : IStat
     private TimeManager time;
     private TimeGaugeUI timeUI;
     [SerializeField] private float statBase;
-    private float baseGauge;
-
-    private void Start()
-    {
-        time = FindObjectOfType<TimeManager>();
-        baseGauge = time.MaxGauge();
-    }
+    private const int FixedUpdateCalls = 50;
 
     public override void LoadStat(PlayerController player, int mod)
     {
         time = FindObjectOfType<TimeManager>();
         timeUI = FindObjectOfType<TimeGaugeUI>();
         
-        float temp = baseGauge * ((float)mod / 10f);
+        float temp = time.GetBaseMax() * ((float)mod / 10f);
         time.UpgradeSetGaugeMax(time.UpgradeMaxGauge() + temp);
-        time.AddGauge(temp);
+        time.AddGauge(temp * FixedUpdateCalls);
         timeUI.ResetMaxValue();
         
     }
@@ -32,9 +26,9 @@ public class TimeStopGaugeSize : IStat
         time = FindObjectOfType<TimeManager>();
         timeUI = FindObjectOfType<TimeGaugeUI>();
 
-        float temp = baseGauge * ((float)mod / 10f);
+        float temp = time.GetBaseMax() * ((float)mod / 10f);
         time.UpgradeSetGaugeMax(time.UpgradeMaxGauge() - temp);
-        time.AddGauge(-1 * temp);
+        time.AddGauge(-1 * temp * FixedUpdateCalls);
         timeUI.ResetMaxValue();
         
     }
