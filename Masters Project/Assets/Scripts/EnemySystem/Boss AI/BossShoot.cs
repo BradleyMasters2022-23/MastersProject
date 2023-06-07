@@ -151,7 +151,16 @@ public class BossShoot : BossAttack
         List<GameObject> spawnedProjectiles = new List<GameObject>();
         foreach (Transform barrel in shootPoints)
         {
-            GameObject o = Instantiate(projectile, barrel.position, projectile.transform.rotation);
+            GameObject o;
+            if (ProjectilePooler.instance.HasPool(projectile))
+            {
+                o = ProjectilePooler.instance.GetProjectile(projectile);
+                o.transform.position = barrel.position;
+            }
+                
+            else
+                o = Instantiate(projectile, barrel.position, projectile.transform.rotation);
+            
             spawnedProjectiles.Add(o);
 
             if (shootVFXPrefab != null)
