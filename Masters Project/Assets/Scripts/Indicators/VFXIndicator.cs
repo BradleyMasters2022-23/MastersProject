@@ -16,7 +16,7 @@ public class VFXIndicator : IIndicator
     [SerializeField] private GameObject VFXPrefab;
     [SerializeField] private float scale = 1;
     private VisualEffect vfxSystem;
-    private ParticleSystem[] legacyVFX;
+    private ParticleSystem[] legacyVFX = new ParticleSystem[3];
 
     private void Awake()
     {

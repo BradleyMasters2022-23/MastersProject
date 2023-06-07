@@ -384,11 +384,12 @@ public class MapLoader : MonoBehaviour
         if (p == null)
         {
             Debug.LogError("[MAPLOADER] Tried to select an exit portal, but none found!");
-            Debug.Break();
             return;
         }
-
-        p.SummonPortal();
+        else
+        {
+            p.SummonPortal();
+        }
     }
 
     /// <summary>

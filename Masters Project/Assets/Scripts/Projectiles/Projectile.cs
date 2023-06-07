@@ -114,10 +114,8 @@ public class Projectile : RangeAttack, TimeObserver, IPoolable
         RaycastHit target;
         if(Physics.SphereCast(transform.position, col.radius, transform.forward, out target, dist, slowFieldLayers))
         {
-            Debug.DrawLine(transform.position, target.point, Color.red, 5f);
             transform.position = target.point;
             rb.isKinematic = true;
-            
         }
         else if (Physics.SphereCast(transform.position, col.radius, transform.forward, out target, dist, hitLayers))
         {
