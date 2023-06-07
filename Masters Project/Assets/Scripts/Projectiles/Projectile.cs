@@ -182,6 +182,9 @@ public class Projectile : RangeAttack, TimeObserver, IPoolable
     public virtual void PoolInit()
     {
         // initialization handled by awake
+        originalDamage = damage;
+        originalSpeed = speed;
+
         return;
     }
 
@@ -200,6 +203,9 @@ public class Projectile : RangeAttack, TimeObserver, IPoolable
     public virtual void PoolPush()
     {
         active = false;
+
+        damage = originalDamage;
+        speed = originalSpeed;
 
         distanceCovered = 0;
         hitTargets.Clear();

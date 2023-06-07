@@ -163,6 +163,8 @@ MonoBehaviour:
     m_Bits: 0
   secondaryTimescale: 1
   fastForwardTime: 0.5
+  lifetime: 1
+  keepReserved: 0
 --- !u!1 &9190282065216066553
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,7 +195,7 @@ Transform:
   m_GameObject: {fileID: 9190282065216066553}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -9.92, y: 0, z: 0.02}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3553049559610357100}
@@ -261,7 +263,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 6
+  m_Radius: 8
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &9190282065216066548
 MonoBehaviour:
@@ -285,9 +287,9 @@ MonoBehaviour:
   explosionSound: {fileID: 11400000, guid: 737ecf3f1baa2f54f86d7d7d335b802e, type: 2}
   affectedByTimestop: 1
   solidInTimetop: 0
-  damage: 200
-  playerDamage: 20
-  explosiveRadius: 9
+  damage: 300
+  playerDamage: 30
+  explosiveRadius: 8
   damageDuration: 0.01
   horizontalForce: 250
   verticalForce: 50

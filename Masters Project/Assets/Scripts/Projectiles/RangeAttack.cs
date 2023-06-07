@@ -58,6 +58,9 @@ public abstract class RangeAttack : Attack
     [Tooltip("Visual effect that plays when hitting anything")]
     [SerializeField] protected GameObject onHitVFX;
 
+    protected float originalDamage;
+    protected float originalSpeed;
+
     #endregion
 
     /// <summary>
