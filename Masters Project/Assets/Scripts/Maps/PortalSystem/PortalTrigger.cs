@@ -51,7 +51,14 @@ public class PortalTrigger : MonoBehaviour, Interactable
     /// </summary>
     private Vector3 horScale;
 
+    /// <summary>
+    /// reference to the secret portal
+    /// </summary>
     private SecretPortalInstance secretRef;
+    /// <summary>
+    /// cooldown tracker for interaction
+    /// </summary>
+    private ScaledTimer interactionCooldown;
 
     /// <summary>
     /// If set to instantly open, do it
@@ -59,7 +66,7 @@ public class PortalTrigger : MonoBehaviour, Interactable
     private void Awake()
     {
         horScale = portalScaleObject.localScale;
-
+        
         if (instantlyOpen)
             SummonPortal();
         else
@@ -98,8 +105,9 @@ public class PortalTrigger : MonoBehaviour, Interactable
     public void OnInteract(PlayerController player)
     {
         // make sure it can only be used once
-        if(usable)
+        if(usable && interactionCooldown.TimerDone())
         {
+            interactionCooldown.ResetTimer(3f);
             Indicators.SetIndicators(interactIndicators, true);
             onInteract.Invoke();
         }
@@ -110,6 +118,8 @@ public class PortalTrigger : MonoBehaviour, Interactable
     /// </summary>
     public void SummonPortal()
     {
+        interactionCooldown = new ScaledTimer(0, false);
+
         // Get reference for the scale, enable it
         gameObject.SetActive(true);
         horScale = portalScaleObject.localScale;
