@@ -29,13 +29,16 @@ public class RoomInitializer : MonoBehaviour
     /// </summary>
     public virtual void Init()
     {
-        // get all props in the randomized root, randomize them
-        IRandomizer[] randomizedObjs = randomizedRoot.GetComponentsInChildren<IRandomizer>(true);
-        if(randomizedObjs != null)
+        if(randomizedRoot != null)
         {
-            foreach (var obj in randomizedObjs)
+            // get all props in the randomized root, randomize them
+            IRandomizer[] randomizedObjs = randomizedRoot.GetComponentsInChildren<IRandomizer>(true);
+            if (randomizedObjs != null)
             {
-                obj.Randomize();
+                foreach (var obj in randomizedObjs)
+                {
+                    obj.Randomize();
+                }
             }
         }
         
