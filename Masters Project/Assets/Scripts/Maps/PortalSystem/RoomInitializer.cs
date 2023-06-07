@@ -1,3 +1,11 @@
+/*
+ * ================================================================================================
+ * Author - Ben Schuster
+ * Date Created - May 26, 2023
+ * Last Edited - May 26, 2023 by Ben Schuster
+ * Description - Initializer for rooms using portal system
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,26 +16,32 @@ public class RoomInitializer : MonoBehaviour
     [Header("Core Loading")]
 
     [Tooltip("All objects that should be randomized on load")]
-    [SerializeField] GameObject[] randomizedObjs;
-    [Tooltip("Any other events that should happen on load")]
-    [SerializeField] UnityEvent onInitializeEvents;
+    [SerializeField] GameObject randomizedRoot;
 
     [SerializeField] bool automaticallyEnd;
 
+    [SerializeField] private GenericWeightedList<PortalTrigger> exitPortalList;
+
+    [SerializeField] private SecretPortalRandomizer corruptedProps;
+
+    /// <summary>
+    /// Initialize any objects in the world
+    /// </summary>
     public virtual void Init()
     {
-        // Tell randomized objects to initiate randomization
-        if(randomizedObjs != null)
+        if(randomizedRoot != null)
         {
-            foreach (GameObject obj in randomizedObjs)
+            // get all props in the randomized root, randomize them
+            IRandomizer[] randomizedObjs = randomizedRoot.GetComponentsInChildren<IRandomizer>(true);
+            if (randomizedObjs != null)
             {
-                IRandomizer t = obj.GetComponent<IRandomizer>();
-                if (t != null)
-                    t.Randomize();
+                foreach (var obj in randomizedObjs)
+                {
+                    obj.Randomize();
+                }
             }
         }
         
-
         // Get all fragments, tell them to initialize
         FragmentInteract[] allFragments = FindObjectsOfType<FragmentInteract>();
         foreach (FragmentInteract fragment in allFragments)
@@ -43,11 +57,29 @@ public class RoomInitializer : MonoBehaviour
             crystal.RandomizeCrystal();
         }
 
-        onInitializeEvents.Invoke();
-
         if(automaticallyEnd)
         {
             MapLoader.instance.ActivatePortal();
         }
+    }
+
+    /// <summary>
+    /// Choose a random secret prop to initialize
+    /// </summary>
+    public void ChooseRandomSecretProp()
+    {
+        if(corruptedProps != null)
+        {
+            corruptedProps.Randomize();
+        }
+    }
+
+    /// <summary>
+    /// Get one of the exit portals
+    /// </summary>
+    /// <returns></returns>
+    public PortalTrigger GetExitPortal()
+    {
+        return exitPortalList.Pull();
     }
 }

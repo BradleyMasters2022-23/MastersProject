@@ -49,7 +49,7 @@ public class GameOverMenu : MonoBehaviour
 
             if(roomDepthCounter != null && MapLoader.instance != null)
             {
-                roomDepthCounter.text = "Room Number : " + (MapLoader.instance.RoomDepth()+1);
+                roomDepthCounter.text = "Room Number : " + (MapLoader.instance.PortalDepth()+1);
             }
         }
     }

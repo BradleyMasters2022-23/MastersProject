@@ -272,6 +272,14 @@ public class SpawnPoint : MonoBehaviour
     private IEnumerator SpawnEnemy(EnemySO enemy, SpawnTriggerField sendTo = null)
     {
         // immediately spawn the enemy, but disable it temporarily
+        lastSpawnedEnemy = EnemyPooler.instance.RequestEnemy(enemy);
+        // just in it fails, return it
+        if(lastSpawnedEnemy == null)
+        {
+            spawnManager.ReturnEnemy(enemy);
+            yield break;
+        }
+
         lastSpawnedEnemy = EnemyPooler.instance.RequestEnemy(enemy.enemyPrefab);
         lastSpawnedEnemy.transform.position = transform.position;
         

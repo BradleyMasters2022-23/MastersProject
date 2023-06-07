@@ -301,7 +301,8 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
     {
         TeamDmgProfile profile = data.GetTeam(_team);
 
-        if(profile != null)
+        // apply knockback if there is any
+        if(profile != null && (profile.horizontalKnockback + profile.verticalKnockback > 0))
         {
             Knockback(profile.horizontalKnockback * multiplier, profile.verticalKnockback * multiplier, origin);
         }
