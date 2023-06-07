@@ -317,9 +317,14 @@ public class MapLoader : MonoBehaviour
     /// </summary>
     private IEnumerator LoadRoomRoutine()
     {
+        // disable to prevent any new inputs
+        GameManager.controls.Disable();
+
         loadingScreen.SetActive(true);
 
         onEncounterComplete?.RemoveAllListeners();
+
+        Debug.Log("Load room routine called");
 
         // iterate to next step
         portalDepth++;
@@ -364,6 +369,7 @@ public class MapLoader : MonoBehaviour
         navMesh.BuildNavMesh();
 
         loadingScreen.SetActive(false);
+        GameManager.controls.PlayerGameplay.Enable();
     }
 
     public void ActivatePortal()
