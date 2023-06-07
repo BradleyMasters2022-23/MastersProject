@@ -268,7 +268,7 @@ public class Door : MonoBehaviour
                 case PlayerDoorType.Open:
                     {
                         //Debug.Log("Player detected entering open hallway door, loading next segment!");
-                        MapLoader.instance.UpdateLoadedSegments();
+                        //MapLoader.instance.UpdateLoadedSegments();
 
                         LockDoor();
 
@@ -279,7 +279,7 @@ public class Door : MonoBehaviour
                         //Debug.Log("Player detected entering a room! Telling it to activate!");
                         // Call system to activate room
 
-                        MapLoader.instance.StartRoomEncounter();
+                        //MapLoader.instance.StartRoomEncounter();
 
 
                         // lock door behind player

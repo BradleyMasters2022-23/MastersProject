@@ -29,7 +29,7 @@ public class UIEnemyPointer : MonoBehaviour
     void Awake()
     {
         initialized = false;
-        player = FindObjectOfType<PlayerController>(true).transform;
+        player = PlayerTarget.p.transform;
         t = GetComponent<RectTransform>();
     }
 
@@ -124,26 +124,6 @@ public class UIEnemyPointer : MonoBehaviour
         t.rotation = r * Quaternion.Euler(north);
 
         //Debug.Log("rotate to target called");
-    }
-
-    private void RotateToTargetPop()
-    {
-        //Plane plane = new Plane(cameraRef.transform.forward, cameraRef.transform.position);
-        
-        Vector3 direction = 
-            Vector3.ProjectOnPlane(target.position-player.position, cameraRef.transform.forward);
-
-        Debug.DrawRay(transform.position, direction, Color.red);
-
-        /*
-        Quaternion r = Quaternion.LookRotation(direction);
-        r.z = -r.y;
-        r.x = 0;
-        r.y = 0;
-
-        Vector3 north = new Vector3(0, 0, player.eulerAngles.y);
-        t.rotation = r * Quaternion.Euler(north);
-        */
     }
 
     /// <summary>

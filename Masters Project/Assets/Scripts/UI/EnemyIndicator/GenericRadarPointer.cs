@@ -19,6 +19,8 @@ public class GenericRadarPointer : MonoBehaviour
     [Tooltip("Additional offset for radius. Useful for getting perfect bounds.")]
     [SerializeField] private float radiusMod;
 
+    [SerializeField] private float absoluteMaxDistance = 100f;
+
     /// <summary>
     /// Reference to internal transform
     /// </summary>
@@ -96,8 +98,12 @@ public class GenericRadarPointer : MonoBehaviour
         indicatorRect.anchoredPosition = distRect;
         maxDistRect.anchoredPosition = distRect;
 
-
-        if (currDist >= maxDistance && !maxDistGraphic.activeSelf)
+        if(currDist > absoluteMaxDistance)
+        {
+            maxDistGraphic.SetActive(false);
+            indicatorGraphic.SetActive(false);
+        }
+        else if (currDist >= maxDistance && !maxDistGraphic.activeSelf)
         {
             //Debug.Log("Toggling to max range arrow");
             maxDistGraphic.SetActive(true);

@@ -415,7 +415,7 @@ public class SpawnManager : MonoBehaviour
 
     private IEnumerator CheckCount()
     {
-        backupTimer = new ScaledTimer(5f, false);
+        backupTimer = new ScaledTimer(4f, false);
         // Consistantly check if a wave is finished every few seconds
         WaitForSeconds delay = new WaitForSeconds(1f);
         while (!finished)

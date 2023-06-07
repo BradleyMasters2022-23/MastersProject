@@ -30,7 +30,7 @@ public class Loader : MonoBehaviour
     public Coroutine LoadToScene(string name)
     {
         // dont load to a scene already loaded
-        if (name == SceneManager.GetActiveScene().name) return null;
+        // if (name == SceneManager.GetActiveScene().name) return null;
 
         return StartCoroutine(LoadSceneAsync(name));
     }
