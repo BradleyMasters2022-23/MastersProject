@@ -51,11 +51,11 @@ public class TimeOrb : PickupOrb, IPoolable
     /// <summary>
     /// What happens when this object is picked up
     /// </summary>
-    protected override bool OnPickup()
+    protected override void OnPickup()
     {
         // Try adding to the gauge. False means it was full and not picked up 
         playerTime.RemoveFromBuffer(this);
-        return playerTime.AddGauge(refillAmount);
+        playerTime.AddGauge(refillAmount);
     }
 
     public float GetAmt()

@@ -198,10 +198,8 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
     {
         if (other.CompareTag("Player") && currState == OrbState.Chasing)
         {
-            if (OnPickup())
-            {
-                GeneralPickup();
-            }
+            OnPickup();
+            GeneralPickup();
         }
     }
 
@@ -267,7 +265,7 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
     /// <summary>
     /// What happens when this item is picked up
     /// </summary>
-    protected abstract bool OnPickup();
+    protected abstract void OnPickup();
 
     /// <summary>
     /// Check any chase requirements before chasing

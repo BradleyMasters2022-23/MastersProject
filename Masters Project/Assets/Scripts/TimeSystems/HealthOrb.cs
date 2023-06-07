@@ -59,10 +59,10 @@ public class HealthOrb : PickupOrb, IPoolable
     /// <summary>
     /// What happens when this object is picked up
     /// </summary>
-    protected override bool OnPickup()
+    protected override void OnPickup()
     {
         playerHealth.RemoveFromBuffer(this);
-        return playerHealth.Heal(refillAmount, BarType.Health);
+        playerHealth.Heal(refillAmount, BarType.Health);
     }
 
     public float GetAmt()
