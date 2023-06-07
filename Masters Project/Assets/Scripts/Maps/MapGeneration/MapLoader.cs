@@ -309,7 +309,9 @@ public class MapLoader : MonoBehaviour
     /// </summary>
     public void NextMainPortal()
     {
-        StartCoroutine(LoadRoomRoutine());
+        // if not already loading, load
+        if(loadState != LoadState.Loading)
+            StartCoroutine(LoadRoomRoutine());
     }
 
     /// <summary>
@@ -317,9 +319,16 @@ public class MapLoader : MonoBehaviour
     /// </summary>
     private IEnumerator LoadRoomRoutine()
     {
+        loadState = LoadState.Loading;
+
+        // disable to prevent any new inputs
+        GameManager.controls.Disable();
+
         loadingScreen.SetActive(true);
 
         onEncounterComplete?.RemoveAllListeners();
+
+        Debug.Log("Load room routine called");
 
         // iterate to next step
         portalDepth++;
@@ -362,8 +371,10 @@ public class MapLoader : MonoBehaviour
         }
 
         navMesh.BuildNavMesh();
-
         loadingScreen.SetActive(false);
+        GameManager.controls.PlayerGameplay.Enable();
+
+        loadState = LoadState.Done;
     }
 
     public void ActivatePortal()
