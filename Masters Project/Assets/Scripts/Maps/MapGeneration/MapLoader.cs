@@ -13,6 +13,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 public enum LoadState
 {
@@ -22,24 +23,10 @@ public enum LoadState
 
 public class MapLoader : MonoBehaviour
 {
-    public enum States
-    {
-        Preparing,
-        Start,
-        Room, 
-        Hallway,
-        Final
-    }
-
     /// <summary>
     /// Reference to this loader
     /// </summary>
     public static MapLoader instance;
-
-    /// <summary>
-    /// Current state of the loader
-    /// </summary>
-    //private States currState;
 
     private LoadState loadState;
 
@@ -48,42 +35,50 @@ public class MapLoader : MonoBehaviour
         get { return loadState; }
     }
 
-    /// <summary>
-    /// Navmesh for overall map
-    /// </summary>
-    private NavMeshSurface navMesh;
-
     #region Initialization Variables 
 
-    [Tooltip("Hallways that can be used"), AssetsOnly]
-    [SerializeField] private List<MapSegmentSO> allHallways;
+    //[Tooltip("Hallways that can be used"), AssetsOnly]
+    //[SerializeField] private List<MapSegmentSO> allHallways;
     [Tooltip("Rooms that can be used"), AssetsOnly]
     [SerializeField] private List<MapSegmentSO> allRooms;
 
     [Tooltip("How many rooms to complete before loading ")]
     [SerializeField] private int maxFloorLength;
 
-    [Tooltip("Root of the starting room"), SceneObjectsOnly, Required]
-    [SerializeField] private GameObject startingRoom;
+    //[Tooltip("Root of the starting room"), SceneObjectsOnly, Required]
+    //[SerializeField] private GameObject startingRoom;
 
     [Tooltip("Final boss room"), AssetsOnly]
     [SerializeField] private MapSegmentSO finalRoom;
+
+    private List<MapSegmentSO> availableRooms;
+    //private List<MapSegmentSO> availableHalls;
+
+    [Tooltip("The current order of maps to be played. Randomized at runtime")]
+    [SerializeField, ReadOnly, HideInEditorMode] private List<MapSegmentSO> mapOrder;
+
+    [Tooltip("Reference to the loading screen to use")]
+    [SerializeField] GameObject loadingScreen;
+
+    /// <summary>
+    /// Navmesh for overall map
+    /// </summary>
+    private NavMeshSurface navMesh;
+
+    /// <summary>
+    /// Actions to be executed when an encounter is complete
+    /// </summary>
+    private UnityEvent onEncounterComplete;
 
     #endregion
 
     #region Big Map Variables
 
-    [Header("=== Big Map Variables ===")]
-
-    [Tooltip("The current order of maps to be played. Randomized at runtime")]
-    [SerializeField, ReadOnly, HideInEditorMode] private List<MapSegmentSO> mapOrder;
+    /*
     /// <summary>
     /// All segments loaded into the scene, in order
     /// </summary>
     private List<SegmentLoader> loadedMap;
-    
-    private List<MapSegmentSO> availableRooms;
-    private List<MapSegmentSO> availableHalls;
 
     /// <summary>
     /// Current index for looking through rooms
@@ -91,16 +86,53 @@ public class MapLoader : MonoBehaviour
     [SerializeField] private int roomIndex;
 
     [SerializeField] private bool testShowAll;
+    */
 
     #endregion
 
-    #region Loading Stuff
+    #region Portal Map Variables 
 
-    [SerializeField] GameObject loadingScreen;
+    [Header("Portal Map Generation")]
+
+    [Tooltip("Current depth of the portal system")]
+    [SerializeField, ReadOnly] int portalDepth = -1;
+
+    [Tooltip("Reference to the loader the starting room uses")]
+    [SerializeField] RoomInitializer startingRoomInitializer;
+    
+    [SerializeField] MapSegmentSO preBossNeutralRoom;
+
+    /// <summary>
+    /// Current destination to load to
+    /// </summary>
+    private string dest = "";
+
+    /// <summary>
+    /// Refernce to all portals in the current scene
+    /// </summary>
+    private PortalTrigger[] portals;
+
+    /// <summary>
+    /// The current room manager
+    /// </summary>
+    private RoomInitializer currentRoom;
 
     #endregion
 
-    #region Initialization
+    #region Secret Room Variables
+
+    [Tooltip("Range of room indexes that can be used for a secret interaction")]
+    [SerializeField] Vector2Int randomSecretRoomRange;
+    [Tooltip("The secret room index that was chosen")]
+    [SerializeField, ReadOnly] int chosenSecretRoomIndex;
+    [Tooltip("Pool of secret rooms to utilize")]
+    [SerializeField] MapSegmentSO[] secretRoomPool;
+    [Tooltip("The random secret room that was chosen")]
+    [SerializeField, ReadOnly] MapSegmentSO chosenSecretRoom;
+
+    #endregion
+
+    #region Initialization Funcs
 
     /// <summary>
     /// Initialize pools
@@ -119,15 +151,337 @@ public class MapLoader : MonoBehaviour
             return;
         }
         mapOrder = new List<MapSegmentSO>();
-        loadedMap = new List<SegmentLoader>();
+        // loadedMap = new List<SegmentLoader>();
 
         availableRooms = new List<MapSegmentSO>();
-        availableHalls = new List<MapSegmentSO>();
+        // availableHalls = new List<MapSegmentSO>();
 
         navMesh = GetComponent<NavMeshSurface>();
         StartCoroutine(ArrangeMap());
     }
 
+    /// <summary>
+    /// Prepare the order of the run
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator ArrangeMap()
+    {
+        loadState = LoadState.Loading;
+
+        // Enable loading screen, wait to disable controls
+        loadingScreen.SetActive(true);
+        while (GameManager.controls == null)
+            yield return null;
+        GameControls controls = GameManager.controls;
+        if (controls != null)
+        {
+            controls.Disable();
+        }
+
+
+        // === Choose what rooms to use === //
+        int c = 0;
+        int backup = 0;
+        while (c < maxFloorLength)
+        {
+            // Add new room, iterate next step
+            mapOrder.Add(SelectRoomNew());
+            c++;
+
+            backup++;
+            if (backup > 1000)
+            {
+                Debug.LogError("MapLoader loop to build the room list is in an infinite loop!");
+                Debug.Break();
+                break;
+            }
+            yield return new WaitForFixedUpdate();
+        }
+
+        // Choose which room to 'add' the secret room to
+        chosenSecretRoomIndex = Random.Range(randomSecretRoomRange.x, randomSecretRoomRange.y);
+
+        // Load in the final room, if there is one
+        if (finalRoom != null)
+        {
+            mapOrder.Add(finalRoom);
+        }
+
+        // make sure player is set to not despawn between scenes 
+        yield return new WaitUntil(() => PlayerTarget.p != null);
+        DontDestroyOnLoad(PlayerTarget.p);
+
+        // Debug.Log("[MAPLOADER] Map arrangement prepared, order can be viewed in inspector");
+        startingRoomInitializer.Init();
+
+        loadState = LoadState.Done;
+        loadingScreen.SetActive(false);
+
+        yield return new WaitForSecondsRealtime(0.5f);
+        // Wait half a second before reenabling controls
+        if (controls != null)
+        {
+            controls.Enable();
+            controls.UI.Disable();
+            controls.PlayerGameplay.Enable();
+        }
+
+        // tell stat manager that a run has begun
+        GlobalStatsManager.data.runsAttempted++;
+        if (CallManager.instance != null)
+            CallManager.instance.IncrementRuns();
+
+        yield return null;
+    }
+
+    /// <summary>
+    /// Select a new room, auto managing containers. 
+    /// Only difference is this doesn't account for hallways
+    /// </summary>
+    /// <returns>A new room to use</returns>
+    private MapSegmentSO SelectRoomNew()
+    {
+        // If out of rooms, repopulate the pool
+        if (availableRooms.Count <= 0)
+        {
+            availableRooms = new List<MapSegmentSO>(allRooms);
+        }
+
+        // populate all potential rooms allowed to be used here
+        List<MapSegmentSO> allUsableRooms = new List<MapSegmentSO>();
+        foreach (MapSegmentSO option in availableRooms)
+        {
+            if (option.WithinDifficulty(mapOrder.Count))
+            {
+                allUsableRooms.Add(option);
+            }
+        }
+
+        // if no usable rooms available after first attempt, allow all rooms ignoring difficulty
+        if (allUsableRooms.Count <= 0)
+        {
+            foreach (MapSegmentSO option in availableRooms)
+            {
+                allUsableRooms.Add(option);
+            }
+        }
+
+        // if still empty, just stop the play session because something broke or no rooms passed in
+        if (allUsableRooms.Count <= 0)
+        {
+            Debug.LogError("[MapLoader] LOADING ERROR! Cannot find any rooms to build with!");
+            Debug.Break();
+            return null;
+        }
+
+        // Get the next room segment trying to ignore dupes
+        MapSegmentSO selectedObject;
+        // remove the previous room (if there is one) from the selection pool
+        if (allUsableRooms.Count > 1 && mapOrder.Count > 0 && allUsableRooms.Contains(mapOrder[mapOrder.Count - 1]))
+        {
+            allUsableRooms.Remove(mapOrder[mapOrder.Count - 1]);
+        }
+
+        selectedObject = allUsableRooms[Random.Range(0, allUsableRooms.Count)];
+
+        // Remove from current pool
+        availableRooms.Remove(selectedObject);
+
+        // Return new room
+        return selectedObject;
+    }
+
+    #endregion
+
+    #region Portal Transition Funcs
+
+    /// <summary>
+    /// Get current portal depth
+    /// </summary>
+    /// <returns>current portal depth, adjusted for top-level reading</returns>
+    public int PortalDepth()
+    {
+        return portalDepth + 1;
+    }
+
+    /// <summary>
+    /// Loadd to the next level
+    /// </summary>
+    public void NextMainPortal()
+    {
+        StartCoroutine(LoadRoomRoutine());
+    }
+
+    /// <summary>
+    /// Load to a next room
+    /// </summary>
+    private IEnumerator LoadRoomRoutine()
+    {
+        loadingScreen.SetActive(true);
+
+        onEncounterComplete?.RemoveAllListeners();
+
+        // iterate to next step
+        portalDepth++;
+
+        // If out of rooms, then return to hub
+        if (portalDepth >= mapOrder.Count)
+        {
+            Debug.Log("Depth matches end, returning to hub");
+            ReturnToHub();
+            yield break;
+        }
+        // Otherwise, get the next map and load to that scene. Wait for load to finish
+        else
+        {
+            dest = mapOrder[portalDepth].sceneName;
+            yield return GameManager.instance.LoadToScene(dest);
+        }
+
+        // Once loading finishes, teleport player to a spawnpoint
+        MovePlayerToSpawn();
+
+        // Initialize the room
+        currentRoom = FindObjectOfType<RoomInitializer>();
+        if (currentRoom == null)
+        {
+            Debug.LogError("[MAPLOADER] While loading to new map, no room initializer was found!");
+        }
+        else
+        {
+            currentRoom.Init();
+        }
+
+        // If at secret room depth, load that too
+        if (portalDepth == chosenSecretRoomIndex)
+        {
+            currentRoom.ChooseRandomSecretProp();
+            yield return StartCoroutine(LoadSecretRoom());
+
+            //FindObjectOfType<SecretPortalInstance>(true).Init();
+        }
+
+        navMesh.BuildNavMesh();
+
+        loadingScreen.SetActive(false);
+    }
+
+    public void ActivatePortal()
+    {
+        PortalTrigger p = currentRoom.GetExitPortal();
+
+        if (p == null)
+        {
+            Debug.LogError("[MAPLOADER] Tried to select an exit portal, but none found!");
+            Debug.Break();
+            return;
+        }
+
+        p.SummonPortal();
+    }
+
+    /// <summary>
+    /// Choose a spawnpoint to teleport the player to
+    /// </summary>
+    public void MovePlayerToSpawn()
+    {
+        Transform p = PlayerTarget.p.transform;
+
+        GameObject[] positions = GameObject.FindGameObjectsWithTag("ExitPoint");
+
+        Vector3 dest;
+        Quaternion destRot;
+
+        if (positions.Length <= 0)
+        {
+            Debug.LogError("[MAPLOADER] Tried to move player to spawn, but there are no spawn points set!");
+            return;
+        }
+        else if (positions.Length == 1)
+        {
+            dest = positions[0].transform.position;
+            destRot = positions[0].transform.rotation;
+        }
+        else
+        {
+            int i = Random.Range(0, positions.Length);
+            dest = positions[i].transform.position;
+            destRot = positions[i].transform.rotation;
+        }
+
+        p.position = dest;
+        p.rotation = destRot;
+    }
+
+    #endregion
+
+    #region Core Flow Funcs
+
+    public void EndRoomEncounter()
+    {
+        Debug.Log("End room encounter called");
+
+        //Debug.Log($"Phew! You won it all good jorb {roomIndex+1}!");
+        //loadedMap[roomIndex+1].GetComponent<DoorManager>().UnlockExit();
+
+        //if (mapOrder[roomIndex+1].segmentType == MapSegmentSO.MapSegmentType.Room
+        //    && LinearSpawnManager.instance != null)
+        //{
+        //    WarningText.instance.Play("ANOMALY SUBSIDED, ROOM UNLOCKED", false);
+        //    LinearSpawnManager.instance.IncrementDifficulty();
+        //}
+
+        WarningText.instance.Play("ANOMALY SUBSIDED, ROOM UNLOCKED", false);
+        LinearSpawnManager.instance.IncrementDifficulty();
+
+        onEncounterComplete?.Invoke();
+
+        ActivatePortal();
+    }
+
+    /// <summary>
+    /// Return to the hub world and reset run data 
+    /// </summary>
+    public void ReturnToHub()
+    {
+        GameManager.instance.GoToHub();
+        ClearRunData();
+    }
+
+    /// <summary>
+    /// Reset the current run data
+    /// </summary>
+    public void ClearRunData()
+    {
+        // Destroy crystal manager
+        if (CrystalManager.instance != null)
+            CrystalManager.instance.DestroyCM();
+
+        // Move player out of 'dont destroy' scene so it clears properly on unload
+        if (PlayerTarget.p != null)
+            SceneManager.MoveGameObjectToScene(PlayerTarget.p.gameObject, SceneManager.GetActiveScene());
+
+        instance = null;
+        Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// Register an action to be performed on encounter complete
+    /// </summary>
+    /// <param name="a">New action to subscribe</param>
+    public void RegisterOnEncounterComplete(UnityAction a)
+    {
+        if (onEncounterComplete == null)
+            onEncounterComplete = new UnityEvent();
+
+        onEncounterComplete.AddListener(a);
+    }
+
+    #endregion
+
+    #region Old Large Map
+
+    /*
     /// <summary>
     /// Initialize the entire map
     /// </summary>
@@ -274,11 +628,6 @@ public class MapLoader : MonoBehaviour
 
         yield return null;
     }
-
-
-    #endregion
-
-    #region Selection Functions
 
     /// <summary>
     /// Get the next segment based on the last segment in the list
@@ -430,10 +779,6 @@ public class MapLoader : MonoBehaviour
         return selectedObject;
     }
 
-    #endregion
-
-    #region Room Incremenation
-
     public void UpdateLoadedSegments()
     {
         loadState = LoadState.Loading;
@@ -474,7 +819,7 @@ public class MapLoader : MonoBehaviour
         loadState = LoadState.Done;
         yield return null;
     }
-
+    
     private void PrepareNavmesh()
     {
         navMesh.BuildNavMesh();
@@ -484,357 +829,6 @@ public class MapLoader : MonoBehaviour
     {
         loadedMap[roomIndex+1].StartSegment();
     }
-
-    public void EndRoomEncounter()
-    {
-        Debug.Log("End room encounter called");
-
-        //Debug.Log($"Phew! You won it all good jorb {roomIndex+1}!");
-        //loadedMap[roomIndex+1].GetComponent<DoorManager>().UnlockExit();
-
-        //if (mapOrder[roomIndex+1].segmentType == MapSegmentSO.MapSegmentType.Room
-        //    && LinearSpawnManager.instance != null)
-        //{
-        //    WarningText.instance.Play("ANOMALY SUBSIDED, ROOM UNLOCKED", false);
-        //    LinearSpawnManager.instance.IncrementDifficulty();
-        //}
-
-        WarningText.instance.Play("ANOMALY SUBSIDED, ROOM UNLOCKED", false);
-        LinearSpawnManager.instance.IncrementDifficulty();
-
-        ActivatePortal();
-
-    }
-
-    /// <summary>
-    /// Return to the hub world and reset run data 
-    /// </summary>
-    public void ReturnToHub()
-    {
-        GameManager.instance.GoToHub();
-        ClearRunData();
-    }
-
-    /// <summary>
-    /// Reset the current run data
-    /// </summary>
-    public void ClearRunData()
-    {
-        // Destroy crystal manager
-        if (CrystalManager.instance != null)
-            CrystalManager.instance.DestroyCM();
-
-        // Move player out of 'dont destroy' scene so it clears properly on unload
-        if (PlayerTarget.p != null)
-            SceneManager.MoveGameObjectToScene(PlayerTarget.p.gameObject, SceneManager.GetActiveScene());
-
-        instance = null;
-        Destroy(gameObject);
-
-    }
-
-    #endregion
-
-
-    #region Portal Transition Loading
-
-    [Header("Portal Map Generation")]
-
-    [SerializeField] Vector2Int randomSecretRoomRange;
-    [SerializeField, ReadOnly] int chosenSecretRoomIndex;
-
-    [Tooltip("Current depth of the portal system")]
-    [SerializeField, ReadOnly] int portalDepth = -1;
-    
-    [Tooltip("Reference to the loader the starting room uses")]
-    [SerializeField] RoomInitializer startingRoomInitializer;
-
-    [SerializeField] MapSegmentSO[] secretRoomOptions;
-
-    [SerializeField] MapSegmentSO preBossNeutralRoom;
-
-    /// <summary>
-    /// Current destination to load to
-    /// </summary>
-    private string dest = "";
-
-    /// <summary>
-    /// Refernce to all portals in the current scene
-    /// </summary>
-    private PortalTrigger[] portals;
-
-    /// <summary>
-    /// Prepare the order of the run
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator ArrangeMap()
-    {
-        loadState = LoadState.Loading;
-
-        // Enable loading screen, wait to disable controls
-        loadingScreen.SetActive(true);
-        while (GameManager.controls == null)
-            yield return null;
-        GameControls controls = GameManager.controls;
-        if (controls != null)
-        {
-            controls.Disable();
-        }
-
-
-        // === Choose what rooms to use === //
-        int c = 0;
-        int backup = 0;
-        while (c < maxFloorLength)
-        {
-            // Add new room, iterate next step
-            mapOrder.Add(SelectRoomNew());
-            c++;
-
-            backup++;
-            if (backup > 1000)
-            {
-                Debug.LogError("MapLoader loop to build the room list is in an infinite loop!");
-                Debug.Break();
-                break;
-            }
-            yield return new WaitForFixedUpdate();
-        }
-
-        // Choose which room to 'add' the secret room to
-        chosenSecretRoomIndex = Random.Range(randomSecretRoomRange.x, randomSecretRoomRange.y);
-
-        // Load in the final room, if there is one
-        if (finalRoom != null)
-        {
-            mapOrder.Add(finalRoom);
-        }
-
-        // make sure player is set to not despawn between scenes 
-        yield return new WaitUntil(() => PlayerTarget.p != null);
-        DontDestroyOnLoad(PlayerTarget.p);
-
-        // Debug.Log("[MAPLOADER] Map arrangement prepared, order can be viewed in inspector");
-        startingRoomInitializer.Init();
-
-        loadState = LoadState.Done;
-        loadingScreen.SetActive(false);
-
-        yield return new WaitForSecondsRealtime(0.5f);
-        // Wait half a second before reenabling controls
-        if (controls != null)
-        {
-            controls.Enable();
-            controls.UI.Disable();
-            controls.PlayerGameplay.Enable();
-        }
-
-        // tell stat manager that a run has begun
-        GlobalStatsManager.data.runsAttempted++;
-        if (CallManager.instance != null)
-            CallManager.instance.IncrementRuns();
-
-        yield return null;
-    }
-
-    /// <summary>
-    /// Select a new room, auto managing containers. 
-    /// Only difference is this doesn't account for hallways
-    /// </summary>
-    /// <returns>A new room to use</returns>
-    private MapSegmentSO SelectRoomNew()
-    {
-        // If out of rooms, repopulate the pool
-        if (availableRooms.Count <= 0)
-        {
-            availableRooms = new List<MapSegmentSO>(allRooms);
-        }
-
-        // populate all potential rooms allowed to be used here
-        List<MapSegmentSO> allUsableRooms = new List<MapSegmentSO>();
-        foreach (MapSegmentSO option in availableRooms)
-        {
-            if (option.WithinDifficulty(mapOrder.Count))
-            {
-                allUsableRooms.Add(option);
-            }
-        }
-
-        // if no usable rooms available after first attempt, allow all rooms ignoring difficulty
-        if (allUsableRooms.Count <= 0)
-        {
-            foreach (MapSegmentSO option in availableRooms)
-            {
-                allUsableRooms.Add(option);
-            }
-        }
-
-        // if still empty, just stop the play session because something broke or no rooms passed in
-        if (allUsableRooms.Count <= 0)
-        {
-            Debug.LogError("[MapLoader] LOADING ERROR! Cannot find any rooms to build with!");
-            Debug.Break();
-            return null;
-        }
-
-        // Get the next room segment trying to ignore dupes
-        MapSegmentSO selectedObject;
-        // remove the previous room (if there is one) from the selection pool
-        if (allUsableRooms.Count > 1 && mapOrder.Count > 0 && allUsableRooms.Contains(mapOrder[mapOrder.Count - 1]))
-        {
-            allUsableRooms.Remove(mapOrder[mapOrder.Count - 1]);
-        }
-
-        selectedObject = allUsableRooms[Random.Range(0, allUsableRooms.Count)];
-
-        // Remove from current pool
-        availableRooms.Remove(selectedObject);
-
-        // Return new room
-        return selectedObject;
-    }
-
-    /// <summary>
-    /// Loadd to the next level
-    /// </summary>
-    public void NextMainPortal()
-    {
-        StartCoroutine(LoadRoomRoutine());
-    }
-
-    /// <summary>
-    /// Load to a next room
-    /// </summary>
-    private IEnumerator LoadRoomRoutine()
-    {
-        loadingScreen.SetActive(true);
-
-        // iterate to next step
-        portalDepth++;
-
-        // If out of rooms, then return to hub
-        if (portalDepth >= mapOrder.Count)
-        {
-            Debug.Log("Depth matches end, returning to hub");
-            ReturnToHub();
-            yield break;
-        }
-        // Otherwise, get the next map and load to that scene. Wait for load to finish
-        else
-        {
-            dest = mapOrder[portalDepth].sceneName;
-            yield return GameManager.instance.LoadToScene(dest);
-        }
-
-        // Once loading finishes, teleport player to a spawnpoint
-        MovePlayerToSpawn();
-
-        // turn off each portal
-        portals = FindObjectsOfType<PortalTrigger>();
-        foreach(PortalTrigger p in portals)
-        {
-            p.gameObject.SetActive(false);
-        }
-        //Debug.Log("Load room routine done");
-
-        // Initialize the room
-        RoomInitializer rm = FindObjectOfType<RoomInitializer>();
-        if(rm == null)
-        {
-            Debug.LogError("[MAPLOADER] While loading to new map, no room initializer was found!");
-        }
-        else
-        {
-            rm.Init();
-        }
-
-        if(portalDepth == chosenSecretRoomIndex)
-        {
-            // Todo - actually implement this
-            Debug.Log("Secret room chosen, initializing it");
-        }
-
-        navMesh.BuildNavMesh();
-
-        loadingScreen.SetActive(false);
-    }
-
-    public void ActivatePortal()
-    {
-        PortalTrigger p;
-
-        if (portals.Length <= 0)
-        {
-            Debug.LogError("[MAPLOADER] Tried to select an exit portal, but none found!");
-            Debug.Break();
-            return;
-        }
-        else if (portals.Length == 1)
-        {
-            p = portals[0];
-        }
-        else
-        {
-            // for now choose one at random. Improve later
-            int i = Random.Range(0, portals.Length);
-            p = portals[i];
-        }
-
-        p.SummonPortal();
-    }
-
-    /// <summary>
-    /// Get current portal depth
-    /// </summary>
-    /// <returns>current portal depth, adjusted for top-level reading</returns>
-    public int PortalDepth()
-    {
-        return portalDepth+1;
-    }
-
-    /// <summary>
-    /// Choose a spawnpoint to teleport the player to
-    /// </summary>
-    public void MovePlayerToSpawn()
-    {
-        Transform p = PlayerTarget.p.transform;
-
-        GameObject[] positions = GameObject.FindGameObjectsWithTag("ExitPoint");
-
-        Vector3 dest;
-        Quaternion destRot;
-
-        if(positions.Length <= 0)
-        {
-            Debug.LogError("[MAPLOADER] Tried to move player to spawn, but there are no spawn points set!");
-            return;
-        }
-        else if(positions.Length == 1)
-        {
-            dest = positions[0].transform.position;
-            destRot = positions[0].transform.rotation;
-        }
-        else
-        {
-            int i = Random.Range(0, positions.Length);
-            dest = positions[i].transform.position;
-            destRot = positions[i].transform.rotation;
-        }
-
-        p.position = dest;
-        p.rotation = destRot;
-    }
-
-    #endregion
-
-    public int RoomDepth()
-    {
-        return (roomIndex+1)/2;
-    }
-
-    
-
-    #region Utility - Debug
 
     /// <summary>
     /// Continuely load the rooms. Debug only to help test in inspector
@@ -854,10 +848,51 @@ public class MapLoader : MonoBehaviour
         yield return null;
     }
 
+    public int RoomDepth()
+    {
+        return (roomIndex+1)/2;
+    }
+    */
+
+    #endregion
+
+    #region Secret Room Funcs
+
+    /// <summary>
+    /// Get a random secret room to load
+    /// </summary>
+    /// <returns>Selected random room</returns>
+    private MapSegmentSO GetRandomRoom()
+    {
+        if (secretRoomPool.Length == 0)
+            return null;
+
+        return secretRoomPool[ Random.Range(0, secretRoomPool.Length) ];
+    }
+
+    /// <summary>
+    /// Load in the secret room additively
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator LoadSecretRoom()
+    {
+        // Try to get a random secret room
+        chosenSecretRoom = GetRandomRoom();
+        if(chosenSecretRoom == null)
+        {
+            Debug.Log("Tried to load a secret room, but no room found!");
+            yield break;
+        }
+
+        // Load the secret room addatively so we can quickly teleport the player around
+        AsyncOperation op = SceneManager.LoadSceneAsync(chosenSecretRoom.sceneName, LoadSceneMode.Additive);
+        yield return new WaitUntil(()=> op.isDone);
+    }
+
+    #endregion
+
     private void OnDestroy()
     {
         instance = null;
     }
-
-    #endregion
 }

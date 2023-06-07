@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ConversationInteract : Interactable
+public class ConversationInteract : MonoBehaviour, Interactable
 {
     private CallManager calls;
     // eventually, should instead pull up a screen with a list of characters & info about them
@@ -75,7 +75,7 @@ public class ConversationInteract : Interactable
         
     }
 
-    public override void OnInteract(PlayerController player)
+    public void OnInteract(PlayerController player)
     {
         if (ui == null)
         {

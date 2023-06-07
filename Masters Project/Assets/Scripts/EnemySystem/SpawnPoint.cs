@@ -273,6 +273,13 @@ public class SpawnPoint : MonoBehaviour
     {
         // immediately spawn the enemy, but disable it temporarily
         lastSpawnedEnemy = EnemyPooler.instance.RequestEnemy(enemy);
+        // just in it fails, return it
+        if(lastSpawnedEnemy == null)
+        {
+            spawnManager.ReturnEnemy(enemy);
+            yield break;
+        }
+
         lastSpawnedEnemy.transform.position = transform.position;
         
         lastSpawnedEnemy.SetActive(false);

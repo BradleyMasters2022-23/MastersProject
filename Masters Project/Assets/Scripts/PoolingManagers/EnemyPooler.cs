@@ -75,6 +75,11 @@ public class EnemyPooler : MonoBehaviour
         if (pool.ContainsKey(enemyRequest))
         {
             GameObject enemy = pool[enemyRequest].Pull();
+            if(enemy == null)
+            {
+                Debug.Log($"ERROR! Enemy from pool was null while requesting {enemyRequest.name}");
+                return null;
+            }    
             enemy.transform.parent = null;
             enemy.GetComponent<EnemyTarget>().PullFromPool(enemyRequest);
             // TODO - any unique enemy functionality here like stat scaling

@@ -24,7 +24,7 @@ public class HallwayEventTrigger : MonoBehaviour
         {
             triggered = true;
 
-            MapLoader.instance.UpdateLoadedSegments();
+            //MapLoader.instance.UpdateLoadedSegments();
 
             GetComponent<Collider>().enabled = false;
         }
