@@ -59,7 +59,7 @@ public class GameOverMenu : MonoBehaviour
     /// </summary>
     public void RequestQuitGame()
     {
-        FindObjectOfType<ConfirmationBox>(true).RequestConfirmation(QuitGame);
+        PlayerTarget.p.GetComponentInChildren<ConfirmationBox>(true).RequestConfirmation(QuitGame);
     }
 
     public void QuitGame()
@@ -67,27 +67,36 @@ public class GameOverMenu : MonoBehaviour
         Application.Quit();
     }
 
-    
-    public void LoadToHubOldSystem()
-    {
-        RoomGenerator.instance.ReturnToHub();
-    }
-
     /// <summary>
     /// Request the ability to return to hub
     /// </summary>
     public void RequestHUBReturn()
     {
-        FindObjectOfType<ConfirmationBox>(true).RequestConfirmation(LoadToHubNewSystem);
+        PlayerTarget.p.GetComponentInChildren<ConfirmationBox>(true).RequestConfirmation(LoadToHubNewSystem);
     }
 
+    /// <summary>
+    /// Return to the hub, using the new system 
+    /// </summary>
     public void LoadToHubNewSystem()
     {
-        MapLoader.instance.ReturnToHub();
+        // Debug.Log("Going to hub");
+        MapLoader.instance.ClearRunData();
+        GameManager.instance.GoToHub();
     }
 
+    public void RequestMainMenuReturn()
+    {
+        PlayerTarget.p.GetComponentInChildren<ConfirmationBox>(true).RequestConfirmation(LoadToHubNewSystem);
+    }
+
+    /// <summary>
+    /// return to the main menu
+    /// </summary>
     public void ReturnToMainMenu()
     {
+        // Debug.Log("Going to main menu");
+        MapLoader.instance.ClearRunData();
         GameManager.instance.GoToMainMenu();
     }
 

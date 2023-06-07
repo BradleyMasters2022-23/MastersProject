@@ -19,6 +19,7 @@ public class NoteFoundUI : MonoBehaviour
     [Tooltip("Reference to the description textbox")]
     [SerializeField] private TextMeshProUGUI content;
 
+    private Scrollbar scrollbar;
     public void LoadFragment(FragmentInteract f)
     {
         displayFrag = f.GetFragment();

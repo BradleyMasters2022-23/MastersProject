@@ -19,9 +19,11 @@ public class FragmentInteract : Interactable
     [SerializeField, ReadOnly] private Fragment fragment;
     [SerializeField, ReadOnly] private NoteObject note;
 
+    [SerializeField, ReadOnly] private NoteFoundUI ui;
+
     private void Awake()
     {
-        Debug.Log("Trying to awake fragment interact");
+        // Debug.Log("Trying to awake fragment interact");
 
         if(fragmentOverride != null || noteOverride != null)
         {
@@ -43,17 +45,32 @@ public class FragmentInteract : Interactable
         if (fragment != null)
             return;
 
-        // If no override assigned, try to get a random one
+        // If fragment override assigned, apply them both
         if(fragmentOverride != null)
         {
             note = noteOverride;
             fragment = fragmentOverride;
+
         }
         // If no fragment assigned but note assigned, get a random fragment from that note
         else if(noteOverride != null)
         {
+            Debug.Log("Checking logic for note override");
             note = noteOverride;
-            fragment = noteOverride.GetRandomLostFragment();
+
+            // If the override note is already complete, destroy fragment
+            // can be changed later to give repeats?
+            if (AllNotesManager.instance.CheckNoteComplete(noteOverride))
+            {
+                Debug.Log("Note set to complete, trying to get fragment");
+                DestroyFrag();
+                return;
+            }
+            else
+            {
+                Debug.Log("Trying to get lost fragment from overriden note");
+                fragment = noteOverride.GetRandomLostFragment();
+            }
         }
         // Otherwise, pull fronm pool
         else
@@ -72,6 +89,9 @@ public class FragmentInteract : Interactable
             Debug.Log("No fragment found, destroying frag instead");
             DestroyFrag();
         }
+
+        // get the one thats combined with player object ensure we get the instanced one
+        ui = PlayerTarget.p.GetComponentInChildren<NoteFoundUI>(true);
     }
 
     public override void OnInteract(PlayerController player)
@@ -89,10 +109,10 @@ public class FragmentInteract : Interactable
             return;
         }
 
-        AllNotesManager.instance.GetUI().LoadFragment(this);
-        AllNotesManager.instance.GetUI().OpenScreen();
+        ui.LoadFragment(this);
+        ui.OpenScreen();
 
-        PlayerNotesManager.instance.FindFragment(fragment);
+        AllNotesManager.instance.FragmentFound(fragment);
     }
 
     public Fragment GetFragment()

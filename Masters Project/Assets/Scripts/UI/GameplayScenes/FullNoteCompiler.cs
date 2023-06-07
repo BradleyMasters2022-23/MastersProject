@@ -27,7 +27,7 @@ public class FullNoteCompiler : MonoBehaviour
 
         for (int i = 0; i < allFrags.Count; i++)
         {
-            if (allFrags[i].found)
+            if (note.FragmentFound(allFrags[i]))
             {
                 noteData.text += allFrags[i].content;
                 collected++;
@@ -38,11 +38,10 @@ public class FullNoteCompiler : MonoBehaviour
                 noteData.text += noNoteFiller;
                 noteData.text += "<br><br>";
             }
-
-            
         }
 
         fragmentCounter.text = collected.ToString() + " / " + allFrags.Count + " fragments found";
+
     }
 
     private void OnDisable()

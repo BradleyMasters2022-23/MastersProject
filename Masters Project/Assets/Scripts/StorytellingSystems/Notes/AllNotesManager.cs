@@ -8,26 +8,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 public class AllNotesManager : MonoBehaviour
 {
-    /// <summary>
-    /// list of all extant notes
-    /// </summary>
-    public List<NoteObject> notes = new List<NoteObject>();
+    [Tooltip("All notes in the game to reference. Some may be handled independently.")]
+    [SerializeField] private List<NoteObject> allNotes;
+
+    [Tooltip("All notes in the game that can be found via random drops, whether found or not")]
+    [SerializeField] private List<NoteObject> worldNoteDrops;
+
+    [Tooltip("All notes currently able to be used in new fragments")]
+    [SerializeField, ReadOnly, HideInEditorMode] private List<NoteObject> worldDropPool;
 
     /// <summary>
-    /// list of all notes player has not completed
+    /// Save data for notes 
     /// </summary>
-    private List<NoteObject> lostNotes = new List<NoteObject>();
+    private NoteSaveData saveData;
+    /// <summary>
+    /// File name for the save data
+    /// </summary>
+    private const string saveDataName = "noteSaveData";
 
     /// <summary>
     /// object to call this class easily
     /// </summary>
     public static AllNotesManager instance;
-
-    [SerializeField] private NoteFoundUI noteFoundUI;
-
 
     /// <summary>
     /// sets up the manager
@@ -42,25 +48,33 @@ public class AllNotesManager : MonoBehaviour
         else
         {
             Destroy(this.gameObject);
+            return;
         }
+
+        // Load data. If no data, then create fresh set
+        saveData = DataManager.instance.Load<NoteSaveData>(saveDataName);
+        if (saveData == null)
+            saveData = new NoteSaveData();
     }
 
-    private void Start() {
-        // adds all NoteObjects in notes to lostNotes on first load
-        foreach (NoteObject note in notes)
+    /// <summary>
+    /// Load the pool of notes using save data as a reference
+    /// </summary>
+    private void Start()
+    {
+        // Prepare the pool of notes to use in the world
+        foreach (NoteObject note in worldNoteDrops)
         {
-            foreach(Fragment fragment in note.fragments)
+            // If a note is not yet complete, add it to the pool
+            if(!saveData.NoteCompleted(note) && !worldDropPool.Contains(note))
             {
-                fragment.found = false;
-            }
-
-            if (!note.AllFragmentsFound() && !lostNotes.Contains(note))
-            {
-                //Debug.Log($"Adding to lost notes {note.name} | {note.GetAllLostFragments().Count}");
-                lostNotes.Add(note);
+                worldDropPool.Add(note);
             }
         }
-        //Debug.Log($"Lost notes size {lostNotes.Count}");
+
+        // debug checking
+        Debug.Log($"Lost notes size {worldDropPool.Count}");
+        UpdateNotes();
     }
 
     /// <summary>
@@ -68,58 +82,103 @@ public class AllNotesManager : MonoBehaviour
     /// </summary>
     public NoteObject GetRandomLostNote()
     {
-        int ran = Random.Range(0, notes.Count);
-        //Debug.Log($"Lost notes size {lostNotes.Count} | Random Num {ran}");
-        
-        if (lostNotes != null && lostNotes.Count > 0 && ran < lostNotes.Count)
-            return lostNotes[ran];
-        else
-        {
-            //Debug.Log("Potential break detected in AllNoteManager, but prevented!");
+        // Make sure there are world drops available
+        if (worldDropPool == null || worldDropPool.Count <= 0)
             return null;
-        }
-            
+
+        // Return a random note
+        int ran = Random.Range(0, worldDropPool.Count);
+        return worldDropPool[ran];
+           
     }
 
     /// <summary>
-    /// called when player collects a note fragment; removes NoteObject from lostNotes if it's the
-    /// first fragment from that note collected
+    /// If a note is completed, remove it from the selection pool
     /// </summary>
     /// <param name="note"> note to be removed from lostNotes</param>
     public void FindNote(NoteObject note)
     {
-        if (lostNotes.Contains(note)) {
-            lostNotes.Remove(note);
+        if (worldDropPool.Contains(note) && saveData.NoteCompleted(note)) 
+        {
+            worldDropPool.Remove(note);
+            if (worldDropPool.Count <= 0)
+                Debug.Log("The note drop pool is now empty!");
         }
-        return;
     }
 
     public bool NoteFindable()
     {
-        
-        if (lostNotes.Count == 0)
-        {
-            return false;
-        }
-
-        return true;
+        return worldDropPool.Count > 0;
     }
 
     public NoteObject GetNote(int index)
     {
-        if (notes.Count > index)
-            return notes[index];
+        if (allNotes.Count > index)
+            return allNotes[index];
         else
             return null;
     }
 
-    public List<NoteObject> GetNotes()
+
+    /// <summary>
+    /// Checks whether a note is completed
+    /// </summary>
+    /// <param name="note">Note to check</param>
+    /// <returns>Whether the note is complete</returns>
+    public bool CheckNoteComplete(NoteObject note)
     {
-        return notes;
+        return saveData.NoteCompleted(note);
     }
 
-    public NoteFoundUI GetUI()
+    /// <summary>
+    /// Get a list of all collected notes. A collected note is defined by a note with atleast 1 fragment found
+    /// </summary>
+    /// <returns>New list of all collected notes</returns>
+    public List<NoteObject> GetCollectedNotes()
     {
-        return noteFoundUI;
+        // prepare a new container
+        List<NoteObject> foundNotes = new List<NoteObject>();
+
+        // Loop through each note and see if it's found in save data 
+        foreach(var data in allNotes)
+        {
+            if (saveData.NoteStarted(data))
+                foundNotes.Add(data);
+        }
+
+        // return list of all found notes
+        return foundNotes;
+    }
+
+    public void FragmentFound(Fragment frag)
+    {
+        saveData.AddFragment(frag);
+        UpdateNotes();
+    }
+
+    private void UpdateNotes()
+    {
+        // loop through all notes
+        foreach (NoteObject note in allNotes)
+        {
+            // Tell each note to check its own list to confirm
+            note.UpdateNote(saveData);
+
+            // if all fragments found, mark it as complete
+            if (saveData.NoteCompleted(note))
+            {
+                FindNote(note);
+            }
+        }
+
+        // Save the data 
+        DataManager.instance.Save(saveDataName, saveData);
+        //saveData.PrintData();
+    }
+
+    public void ResetData()
+    {
+        saveData = new NoteSaveData();
+        UpdateNotes();
     }
 }

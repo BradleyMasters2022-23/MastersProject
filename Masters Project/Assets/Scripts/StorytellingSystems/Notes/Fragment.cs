@@ -23,8 +23,8 @@ public class Fragment : ScriptableObject
     [Tooltip("Content of this fragment."), TextArea(15, 50)]
     public string content;
 
-    [Tooltip("Whether or not this fragment has been found.")]
-    public bool found = false;
+    //[Tooltip("Whether or not this fragment has been found.")]
+    //public bool found = false;
 
     public string GetNoteName()
     {

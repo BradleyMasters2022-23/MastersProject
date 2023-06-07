@@ -116,6 +116,9 @@ public class DataManager : MonoBehaviour
                 if(CallManager.instance != null)
                     CallManager.instance.ResetData();
 
+                if(AllNotesManager.instance != null)
+                    AllNotesManager.instance.ResetData();
+
                 hasSaveData = false;
             }
 
