@@ -168,14 +168,17 @@ public class Pool
 
         // If set to recycle, make sure to reset it just incase.
         // Add to end of pool queue
-        if (recycle)
+        if (recycle && o != null)
         {
             o.GetComponent<IPoolable>().PoolPush();
             currentPool.Enqueue(o);
         }
 
-        o.GetComponent<IPoolable>().PoolPull();
-        o.SetActive(true);
+        if(o != null)
+        {
+            o.GetComponent<IPoolable>()?.PoolPull();
+            o.SetActive(true);
+        }
 
         return o;
     }
