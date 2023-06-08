@@ -190,4 +190,9 @@ public class CallManager : MonoBehaviour
         saveData = new DialogueSaveData();
         UpdateCalls();
     }
+
+    public bool HasNewCall(Conversation c)
+    {
+        return availableConversations.Contains(c);
+    }
 }

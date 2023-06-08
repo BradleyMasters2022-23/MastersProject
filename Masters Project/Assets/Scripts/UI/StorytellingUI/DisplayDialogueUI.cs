@@ -57,8 +57,8 @@ public class DisplayDialogueUI : MonoBehaviour
         activeLineIndex = 0;
         GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
         DisplayDialogue();
-        gameObject.SetActive(true);
-        click.Enable();
+        gameObject.transform.parent.gameObject.SetActive(true);
+        //click.Enable();
     }
 
     private void DisplayDialogue(InputAction.CallbackContext c)
