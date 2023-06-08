@@ -26,6 +26,7 @@ public class TimeTrigger : Trigger
     private void OnEnable()
     {
         StartTimer();
+        Debug.Log("Starting timer");
     }
 
     private void StartTimer()

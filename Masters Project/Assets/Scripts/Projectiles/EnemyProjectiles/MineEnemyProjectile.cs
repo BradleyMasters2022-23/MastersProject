@@ -31,12 +31,11 @@ public class MineEnemyProjectile : ProjectileAccelerate
 
     private IEnumerator ShrinkRoutine()
     {
-        ScaledTimer t = new ScaledTimer(shrinkTime, false);
+        LocalTimer t = GetTimer(shrinkTime);
         Vector3 baseScale = transform.localScale;
 
         while(!t.TimerDone())
         {
-            t.SetModifier(Timescale);
             transform.localScale = baseScale * (1 - t.TimerProgress());
             yield return null;
         }

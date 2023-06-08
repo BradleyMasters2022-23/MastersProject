@@ -17,7 +17,7 @@ public enum TrapPlacementType
     Floor
 }
 
-public abstract class Trap : MonoBehaviour, ITriggerable
+public abstract class Trap : TimeAffectedEntity, ITriggerable
 {
     [Header("=== Triggers ===")]
 

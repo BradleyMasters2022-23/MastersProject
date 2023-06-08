@@ -10,7 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Throwable : MonoBehaviour
+public class Throwable : TimeAffectedEntity
 {
     protected Rigidbody rb;
     protected float savedMag;

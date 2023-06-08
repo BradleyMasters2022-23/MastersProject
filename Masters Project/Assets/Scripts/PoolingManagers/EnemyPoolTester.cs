@@ -27,7 +27,7 @@ public class EnemyPoolTester : MonoBehaviour
         if (EnemyPooler.instance == null) return;
 
 
-        GameObject enemy = EnemyPooler.instance.RequestEnemy(enemyRequest);
+        GameObject enemy = EnemyPooler.instance.RequestEnemy(enemyRequest.enemyPrefab);
         
         if(enemy == null)
         {

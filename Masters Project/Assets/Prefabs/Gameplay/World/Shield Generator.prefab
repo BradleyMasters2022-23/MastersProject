@@ -376,6 +376,8 @@ MonoBehaviour:
   _team: 3
   _targetThreat: 0
   _unkillable: 1
+  _healthManager: {fileID: 0}
+  _killed: 0
   immuneToKnockback: 1
   knockbackModifier: 1
   maxKnockback: 0
@@ -455,6 +457,7 @@ MonoBehaviour:
   permDeadIndicators:
   - {fileID: 6048897410970200492}
   - {fileID: 2396877945517402950}
+  host: {fileID: 6983741314443107902}
   summonEffect: {fileID: 8022967669629598937}
 --- !u!82 &8086544376268116245
 AudioSource:
@@ -927,8 +930,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.7901902, y: 5.495919, z: 1.5968926}
-  m_Center: {x: 0, y: 3.8775587, z: 0.29844654}
+  m_Size: {x: 2.5815039, y: 5.495919, z: 3.7324448}
+  m_Center: {x: 0, y: 3.8775587, z: -0.7693306}
 --- !u!114 &3831177845286818491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -956,6 +959,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 6983741314443107902}
   damageMultiplier: 1
+  impactVFX: {fileID: 0}
 --- !u!4 &1846985408895233310 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8767a009a3ca5154093d3e1a2993899e, type: 3}
@@ -1178,6 +1182,8 @@ MonoBehaviour:
   _team: 0
   _targetThreat: 0
   _unkillable: 1
+  _healthManager: {fileID: 0}
+  _killed: 0
   immuneToKnockback: 1
   knockbackModifier: 1
   maxKnockback: 0
@@ -1221,6 +1227,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 6983741314443107902}
   damageMultiplier: 0
+  impactVFX: {fileID: 0}
 --- !u!1 &5713376827704151728 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9091913311078379251, guid: f8845eb12fc5c57439b6068fb66e980b, type: 3}
@@ -1517,6 +1524,8 @@ MonoBehaviour:
   _team: 0
   _targetThreat: 0
   _unkillable: 1
+  _healthManager: {fileID: 0}
+  _killed: 0
   immuneToKnockback: 1
   knockbackModifier: 1
   maxKnockback: 0
@@ -1540,6 +1549,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 6983741314443107902}
   damageMultiplier: 0
+  impactVFX: {fileID: 0}
 --- !u!114 &6423009430751793467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1581,8 +1591,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.7901902, y: 5.495919, z: 1.5968926}
-  m_Center: {x: 0, y: 3.8775587, z: 0.29844654}
+  m_Size: {x: 2.6063914, y: 5.495919, z: 3.7360353}
+  m_Center: {x: 0, y: 3.8775587, z: -0.7711275}
 --- !u!114 &5466640755910693742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1597,6 +1607,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 6983741314443107902}
   damageMultiplier: 1
+  impactVFX: {fileID: 0}
 --- !u!114 &6945027904358535404
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1855,6 +1866,8 @@ MonoBehaviour:
   _team: 0
   _targetThreat: 0
   _unkillable: 1
+  _healthManager: {fileID: 0}
+  _killed: 0
   immuneToKnockback: 1
   knockbackModifier: 1
   maxKnockback: 0
@@ -1898,3 +1911,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 6983741314443107902}
   damageMultiplier: 0
+  impactVFX: {fileID: 0}

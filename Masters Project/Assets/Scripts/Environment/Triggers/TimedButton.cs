@@ -26,14 +26,12 @@ public class TimedButton : TimeAffectedEntity, ITriggerable
     [Tooltip("Indicators that play when a generator is permenately offline")]
     [SerializeField] private IIndicator[] permDeadIndicators;
 
-    private Target host;
+    [SerializeField] private Target host;
 
     [SerializeField] private SummonObj summonEffect;
 
     private void Awake()
     {
-        host = GetComponent<Target>();
-
         if (targetTrigger == null)
         {
             targetTrigger = GetComponent<Trigger>();
@@ -48,12 +46,11 @@ public class TimedButton : TimeAffectedEntity, ITriggerable
         activated = false;
         //Indicators.SetIndicators(activatedIndicators, false);
         //Indicators.SetIndicators(generatorFixedIndicator, true);
-
-        
     }
 
     public void SummonButton()
     {
+        gameObject.SetActive(true);
         summonEffect.transform.parent= null;
         summonEffect.gameObject.SetActive(true);
         summonEffect.Play();
@@ -128,7 +125,8 @@ public class TimedButton : TimeAffectedEntity, ITriggerable
     /// </summary>
     public void ResetButton()
     {
-        StartCoroutine(TryRepair());
+        if(gameObject.activeSelf)
+            StartCoroutine(TryRepair());
         
         if(host == null)
             host = GetComponent<Target>();

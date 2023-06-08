@@ -10,7 +10,6 @@ using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 
 public class ProjectileAccelerate : Projectile
 {
@@ -29,7 +28,7 @@ public class ProjectileAccelerate : Projectile
     /// <summary>
     /// Track its lifetime timer
     /// </summary>
-    private ScaledTimer lifetime;
+    private LocalTimer lifetime;
 
     // Update is called once per frame
     protected override void Fly()
@@ -52,7 +51,7 @@ public class ProjectileAccelerate : Projectile
     public override void Activate()
     {
         if(acceleratingRate < 1)
-            lifetime = new ScaledTimer(projectileLifetime, Affected);
+            lifetime = GetTimer(projectileLifetime);
 
         base.Activate();
     }
@@ -62,7 +61,6 @@ public class ProjectileAccelerate : Projectile
         if (!reachedTarget)
         {
             flyTime += DeltaTime;
-
 
             targetVelocity = transform.forward * speed * Mathf.Pow(acceleratingRate, flyTime);
         }
@@ -78,5 +76,12 @@ public class ProjectileAccelerate : Projectile
         {
             reachedTarget = true;
         }
+    }
+
+    public override void PoolPull()
+    {
+        base.PoolPull();
+        reachedTarget = false;
+        flyTime = 0;
     }
 }

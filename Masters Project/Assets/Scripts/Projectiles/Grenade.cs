@@ -10,20 +10,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grenade : Throwable
+public class Grenade : Throwable, TimeObserver
 {
     [SerializeField] private GameObject explosive;
 
     [SerializeField] private float detonateTimer;
-    
-    [SerializeField] private bool affectedByTimestop;
     
     [SerializeField] private float triggerDelay;
     [SerializeField] private float triggerRadius;
     [SerializeField] private SphereCollider triggerCol;
     private bool triggered;
 
-    private ScaledTimer timer;
+    private LocalTimer timer;
 
     [SerializeField] private int bounceToTimer;
     private int bounces;
@@ -56,10 +54,6 @@ public class Grenade : Throwable
 
     private void Update()
     {
-        if (affectedByTimestop)
-        {
-            AdjustProjectileForTimestop();
-        }
 
         if (timer != null && timer.TimerDone())
             Activate();
@@ -68,7 +62,7 @@ public class Grenade : Throwable
     private void StartTimer(float time)
     {
         if (timer == null)
-            timer = new ScaledTimer(time, affectedByTimestop);
+            timer = GetTimer(time);
         else
             timer.ResetTimer(time);
     }
@@ -120,20 +114,19 @@ public class Grenade : Throwable
     {
         source = gameObject.AddComponent<AudioSource>();
     }
-    private void AdjustProjectileForTimestop()
-    {
-        if (!TimeManager.TimeStopped && rb.isKinematic)
-        {
-            rb.isKinematic = false;
-            rb.velocity = savedDir * savedMag;
-        }
-        else if(TimeManager.TimeStopped && !rb.isKinematic)
-        {
-            savedDir = rb.velocity.normalized;
-            savedMag = rb.velocity.magnitude;
 
-            rb.isKinematic = true;
-            rb.velocity = Vector3.zero;
-        }
+    public void OnStop()
+    {
+        savedDir = rb.velocity.normalized;
+        savedMag = rb.velocity.magnitude;
+
+        rb.isKinematic = true;
+        rb.velocity = Vector3.zero;
+    }
+
+    public void OnResume()
+    {
+        rb.isKinematic = false;
+        rb.velocity = savedDir * savedMag;
     }
 }

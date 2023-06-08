@@ -153,7 +153,6 @@ public class ResourceBarUI : MonoBehaviour
 
     public void OnDecrease()
     {
-        //Debug.Log($"Decrease called from {gameObject.name}");
         // Do any other visual representation when the value decreases
         if (effectSource!=null && decreaseColor!=null)
         {
@@ -165,7 +164,6 @@ public class ResourceBarUI : MonoBehaviour
 
     public void OnIncrease()
     {
-        //Debug.Log($"Replenish called from {gameObject.name}");
         // Do any other visual representation when the value increases
         if (effectSource != null && replenishColor != null)
         {

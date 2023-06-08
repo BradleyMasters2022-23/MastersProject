@@ -79,8 +79,6 @@ public class TimeslowField : MonoBehaviour, TimeInfluencer
     private void RegisterTgt(Collider tgt)
     {
         // Get the main target hitbox, get all time effected objects there
-        //Debug.Log("Attempting to register " + tgt.name);
-
         TargetHitbox indirectTarget = tgt.GetComponent<TargetHitbox>();
         if (indirectTarget != null)
         {
@@ -139,12 +137,13 @@ public class TimeslowField : MonoBehaviour, TimeInfluencer
     /// <param name="tgt">indirect references to unregister</param>
     private void UnregisterTgt(Collider tgt)
     {
-        TimeAffectedEntity[] targets = tgt.transform.root.GetComponentsInChildren<TimeAffectedEntity>();
+        TimeAffectedEntity[] targets = tgt.transform.GetComponentsInChildren<TimeAffectedEntity>();
 
         foreach (var t in targets)
         {
             if (t != null && detectedTargets.Contains(t))
             {
+                //Debug.Log($"Unregistering {t.name} bc it was child of {tgt.name}");
                 t.SecondaryUnsubscribe(this);
                 detectedTargets.Add(t);
             }

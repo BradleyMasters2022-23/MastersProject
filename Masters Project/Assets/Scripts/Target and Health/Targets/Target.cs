@@ -49,12 +49,12 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
     /// <summary>
     /// The manager controlling health for this target
     /// </summary>
-    protected HealthManager _healthManager;
+    [SerializeField] protected HealthManager _healthManager;
 
     /// <summary>
     /// Whether or not this entity has already been killed
     /// </summary>
-    protected bool _killed = false;
+    [SerializeField] protected bool _killed = false;
 
     [Header("Core Gameplay Features")]
 
@@ -258,8 +258,20 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
         for (int i = 0; i < spawnAmount; i++)
         {
             // Spawn objects, apply rotation and velocity
-            if (transform != null)
-                Instantiate(orb, _center.position, Quaternion.identity);
+            if (_center != null)
+            {
+                if(ProjectilePooler.instance.HasPool(orb))
+                {
+                    GameObject t = ProjectilePooler.instance.GetProjectile(orb);
+                    if(t != null)
+                        t.transform.position = _center.position;
+                }
+                else
+                {
+                    Instantiate(orb, _center.position, Quaternion.identity);
+                }
+            }
+                
         }
     }
 

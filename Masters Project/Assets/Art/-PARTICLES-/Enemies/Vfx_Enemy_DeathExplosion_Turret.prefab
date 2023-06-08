@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7428150280865193491}
-  - component: {fileID: 5114165333641290126}
+  - component: {fileID: 6909129906838959861}
   m_Layer: 0
   m_Name: Vfx_Enemy_DeathExplosion_Turret
   m_TagString: Untagged
@@ -33,7 +33,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5114165333641290126
+--- !u!114 &6909129906838959861
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,10 +42,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 7428150280865193490}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24a025df64953f34d9f4b267c557a9f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 331ac01e693182d4cb57d2d61e11ff1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  time: 200
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
+  fastForwardTime: 0.15
+  lifetime: 0.5
 --- !u!1 &7428150281643535732
 GameObject:
   m_ObjectHideFlags: 0
@@ -57,7 +64,6 @@ GameObject:
   - component: {fileID: 7428150281643535735}
   - component: {fileID: 7428150281643535734}
   - component: {fileID: 7428150281643535733}
-  - component: {fileID: 2669066337943916924}
   m_Layer: 0
   m_Name: VFX Explosion
   m_TagString: Untagged
@@ -193,16 +199,3 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &2669066337943916924
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7428150281643535732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 331ac01e693182d4cb57d2d61e11ff1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fastForwardTime: 0.1

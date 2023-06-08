@@ -58,6 +58,9 @@ public abstract class RangeAttack : Attack
     [Tooltip("Visual effect that plays when hitting anything")]
     [SerializeField] protected GameObject onHitVFX;
 
+    protected float originalDamage;
+    protected float originalSpeed;
+
     #endregion
 
     /// <summary>
@@ -132,7 +135,15 @@ public abstract class RangeAttack : Attack
         // Spawn in whatever its told to, if able
         if (onHitVFX != null)
         {
-            GameObject t = Instantiate(onHitVFX, impactPoint, Quaternion.identity);
+            GameObject t = VFXPooler.instance.GetVFX(onHitVFX);
+            if(t != null)
+            {
+                t.transform.position = impactPoint;
+            }
+            else
+            {
+                t = Instantiate(onHitVFX, impactPoint, Quaternion.identity);
+            }
             t.transform.LookAt(t.transform.position + hitNormal);
         }
 
@@ -147,6 +158,14 @@ public abstract class RangeAttack : Attack
     {
         bool dealtDamage = DealDamage(target, damagePoint);
 
+        // If damage was dealt and target has hitbox, apply effects
+        if(dealtDamage)
+        {
+            TargetHitbox hb = target.GetComponent<TargetHitbox>();
+            if (hb != null)
+                hb.ImpactEffect(damagePoint);
+        }
+
         // if damage was dealt and max targets reached, end projectile
         if (dealtDamage && hitTargets.Count >= maxHits)
             End();
@@ -154,14 +173,17 @@ public abstract class RangeAttack : Attack
 
     /// <summary>
     /// What happens when this ranged attack ends
-    /// TODO later - send back to pooler
     /// </summary>
     protected virtual void End()
     {
         if (spawnProjectileOnEnd && onEndPrefab != null)
             Instantiate(onEndPrefab, transform.position, transform.rotation);
 
-        Destroy(gameObject);
+        // try returning to pool
+        if (ProjectilePooler.instance != null && ProjectilePooler.instance.HasPool(gameObject))
+            ProjectilePooler.instance.ReturnProjectile(gameObject);
+        else
+            Destroy(gameObject);
     }
 
     #endregion

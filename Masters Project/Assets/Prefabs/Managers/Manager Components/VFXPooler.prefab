@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4350534326759539186
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4350534326759539188}
+  - component: {fileID: 4350534326759539187}
+  m_Layer: 0
+  m_Name: VFXPooler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4350534326759539188
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4350534326759539186}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 16.175077, y: 20.475206, z: 1.6627135}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4350534326759539187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4350534326759539186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e0103fff2365124d9107fb9513329b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VFXPools:
+  - prefab: {fileID: 6918287896248534240, guid: 9b90f1dedda807a429479e8afa54de2d, type: 3}
+    size: 10
+    maxSize: 10
+    incrementRate: 0
+    recycleOldest: 1
+  - prefab: {fileID: 293939513845853792, guid: 869ecd5e7016262419c7da794e1448cc, type: 3}
+    size: 20
+    maxSize: 20
+    incrementRate: 0
+    recycleOldest: 1
+  - prefab: {fileID: 293939513845853792, guid: e5a26414f710b8f4b870ba95ee78b7d5, type: 3}
+    size: 10
+    maxSize: 10
+    incrementRate: 0
+    recycleOldest: 1
+  - prefab: {fileID: 5028213672476139401, guid: f86612e1349e5d2429164cb8341b2733, type: 3}
+    size: 16
+    maxSize: 16
+    incrementRate: 0
+    recycleOldest: 1
+  - prefab: {fileID: 4806199407329216484, guid: 400c18ce31b06944ca781991e22741af, type: 3}
+    size: 8
+    maxSize: 8
+    incrementRate: 0
+    recycleOldest: 1
+  - prefab: {fileID: 9110516864071591092, guid: 4c8c1cac5e88a70428c5db240d66f36c, type: 3}
+    size: 12
+    maxSize: 12
+    incrementRate: 0
+    recycleOldest: 1

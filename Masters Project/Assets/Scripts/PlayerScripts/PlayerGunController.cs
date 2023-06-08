@@ -195,7 +195,16 @@ public class PlayerGunController : MonoBehaviour
     {
         if(muzzleflashVFX != null)
         {
-            Instantiate(muzzleflashVFX, shootPoint.position, shootPoint.rotation);
+            GameObject mf = VFXPooler.instance.GetVFX(muzzleflashVFX);
+            if(mf != null)
+            {
+                mf.transform.position = shootPoint.position;
+                mf.transform.rotation = shootPoint.rotation;
+            }
+            else
+            {
+                Instantiate(muzzleflashVFX, shootPoint.position, shootPoint.rotation);
+            }
         }
 
         if(animator != null)
@@ -211,7 +220,9 @@ public class PlayerGunController : MonoBehaviour
                 // Shoot projectile, aiming towards passed in target
                 GameObject newShot;
 
-                newShot = Instantiate(shotPrefab, shootPoint.position, transform.rotation);
+                newShot = ProjectilePooler.instance.GetProjectile(shotPrefab);
+                newShot.transform.position = shootPoint.position;
+                newShot.transform.rotation = shootPoint.rotation;
 
                 // Calculate & apply the new minor displacement
                 Vector3 displacement = new Vector3(
@@ -236,7 +247,9 @@ public class PlayerGunController : MonoBehaviour
                 // Shoot projectile, aiming towards passed in target
                 GameObject newShot;
 
-                newShot = Instantiate(enhancedBulletPrefab, shootPoint.position, transform.rotation);
+                newShot = ProjectilePooler.instance.GetProjectile(enhancedBulletPrefab);
+                newShot.transform.position = shootPoint.position;
+                newShot.transform.rotation = shootPoint.rotation;
 
                 // Calculate & apply the new minor displacement
                 Vector3 displacement = new Vector3(

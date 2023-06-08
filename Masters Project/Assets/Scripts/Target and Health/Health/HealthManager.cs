@@ -194,13 +194,60 @@ public class HealthManager : MonoBehaviour
         for (int i = 0; i < _healthbars.Length; i++)
         {
             //Debug.Log($"Comparing healthbar index {i} | Type : {_healthbars[i].Type()} | Can heal : {!_healthbars[i].IsFull()}");
-            if (_healthbars[i].Type() == healthType && !_healthbars[i].IsFull())
+            if (_healthbars[i].Type() == healthType && !BufferFull())
             {
                 return true;
             }
         }
         return false;
     }
+
+    #region Healing Buffer
+
+    /// <summary>
+    /// Current buffer of incoming health
+    /// </summary>
+    private List<HealthOrb> healingBuffer = new List<HealthOrb>();
+
+    /// <summary>
+    /// Add an orb to potential healing buffer
+    /// </summary>
+    /// <param name="orb">Orb to add to buffer</param>
+    public void AddToBuffer(HealthOrb orb)
+    {
+        if (!healingBuffer.Contains(orb))
+        {
+            healingBuffer.Add(orb);
+        }
+            
+    }
+    /// <summary>
+    /// Remove orb from potential healing buffer
+    /// </summary>
+    /// <param name="orb">Orb to remove from buffer</param>
+    public void RemoveFromBuffer(HealthOrb orb)
+    {
+        if (healingBuffer.Contains(orb))
+        {
+            healingBuffer.Remove(orb);
+        }
+            
+    }
+    /// <summary>
+    /// Check if the healing potential is above the necessary to fully heal
+    /// </summary>
+    private bool BufferFull()
+    {
+        float healingPot = 0;
+        foreach(HealthOrb o in healingBuffer.ToArray())
+        {
+            healingPot += o.GetAmt();
+        }
+
+        return (CurrentHealth(0) + healingPot) >= MaxHealth(0);
+    }
+
+    #endregion
 
     /// <summary>
     /// Heal this entity's lowest healthbar

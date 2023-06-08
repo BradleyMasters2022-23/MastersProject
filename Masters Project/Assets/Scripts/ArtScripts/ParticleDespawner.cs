@@ -8,7 +8,7 @@
  */
 using UnityEngine;
 
-public class ParticleDespawner : TimeAffectedEntity
+public class ParticleDespawner : TimeAffectedEntity, IPoolable
 {
     [SerializeField] private bool keepReserved;
 
@@ -25,30 +25,53 @@ public class ParticleDespawner : TimeAffectedEntity
     /// <summary>
     /// tracker for lifetime
     /// </summary>
-    private ScaledTimer lifeTimer;
+    private LocalTimer lifeTimer;
+
+    public void PoolInit()
+    {
+        return;
+    }
+
+    public void PoolPull()
+    {
+        lifeTimer.ResetTimer();
+        // Update timeline, check if timer is done
+        for (int i = 0; i < particles.Length; i++)
+        {
+            particles[i].Play();
+        }
+    }
+
+    public void PoolPush()
+    {
+        for (int i = 0; i < particles.Length; i++)
+        {
+            particles[i].Stop();
+            particles[i].time = 0;
+        }
+        return;
+    }
 
     /// <summary>
     /// Get necessary references 
     /// </summary>
     void Awake()
     {
-        particles = GetComponentsInChildren<ParticleSystem>();
+        particles = GetComponentsInChildren<ParticleSystem>(true);
         loops = particles[0].main.loop;
 
         float longestDur = float.MinValue;
-        for(int i = 0; i < particles.Length; i++)
+        for (int i = 0; i < particles.Length; i++)
         {
             if (particles[i].main.duration > longestDur)
                 longestDur = particles[i].main.duration;
         }
 
-        lifeTimer = new ScaledTimer(longestDur, !Affected);
+        lifeTimer = GetTimer(longestDur);
     }
 
     void Update()
     {
-        lifeTimer?.SetModifier(Timescale);
-
         // Update timeline, check if timer is done
         for (int i = 0; i < particles.Length; i++)
         {
@@ -58,6 +81,6 @@ public class ParticleDespawner : TimeAffectedEntity
 
         // If not looping and reached its duration, destroy self
         if (!keepReserved && !loops && lifeTimer.TimerDone())
-            Destroy(gameObject);
+            VFXPooler.instance.ReturnVFX(gameObject);
     }
 }

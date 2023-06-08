@@ -171,6 +171,13 @@ public class TimeManager : MonoBehaviour
     /// </summary>
     public bool inRegenField;
 
+    /// <summary>
+    /// base duration for duration
+    /// </summary>
+    private float baseDuration;
+
+    private List<TimeOrb> timeOrbBuffer = new List<TimeOrb>();
+
     #endregion
 
     #region Time System Observer
@@ -220,6 +227,7 @@ public class TimeManager : MonoBehaviour
         emptiedDelayTimer = new ScaledTimer(emptiedDelay.Current, false);
 
         // Multiply slow duration seconds by update calls per second
+        baseDuration = slowDuration.Current;
         currSlowGauge = slowDuration.Current * FixedUpdateCalls;
 
         source = gameObject.AddComponent<AudioSource>();
@@ -499,6 +507,60 @@ public class TimeManager : MonoBehaviour
         }
     }
 
+    public void SetCheatMode(bool cheat)
+    {
+        cheatMode = cheat;
+    }
+
+    /// <summary>
+    /// Add more energy to the time gauge
+    /// </summary>
+    /// <param name="amount">amount to add</param>
+    /// <returns>Whether anything was added</returns>
+    public bool AddGauge(float amount)
+    {
+        // If Idle, or filled, then dont use
+        if(currentState == TimeGaugeState.IDLE)
+            return false;
+
+        float maxGauge = slowDuration.Current * FixedUpdateCalls;
+
+        // Replenish the gauge, determine if state should change
+        if (currSlowGauge + amount >= maxGauge)
+        {
+            currSlowGauge = maxGauge;
+            ChangeState(TimeGaugeState.IDLE);
+        }
+        else
+        {
+            currSlowGauge += amount;
+        }
+
+        // Since some was used, return true
+        return true;
+    }
+
+    public TimeGaugeState GetState()
+    {
+        return currentState;
+    }
+
+    /// <summary>
+    /// Toggle inputs if game pauses
+    /// </summary>
+    /// <param name="_newState">new state</param>
+    private void ToggleInputs(GameManager.States _newState)
+    {
+        if (_newState == GameManager.States.GAMEPLAY
+            || _newState == GameManager.States.HUB)
+        {
+            slowInput.Enable();
+        }
+        else
+        {
+            slowInput.Disable();
+        }
+    }
 
     #region Observer Stuff
 
@@ -551,104 +613,58 @@ public class TimeManager : MonoBehaviour
 
     #endregion
 
-    public void SetCheatMode(bool cheat)
-    {
-        cheatMode = cheat;
-    }
-
-    public void ChipRefillGauge()
-    {
-        RefillGauge();
-    }
-
-    /// <summary>
-    /// Add more energy to the time gauge
-    /// </summary>
-    /// <param name="amount">amount to add</param>
-    /// <returns>Whether anything was added</returns>
-    public bool AddGauge(float amount)
-    {
-        // If Idle, or filled, then dont use
-        if(currentState == TimeGaugeState.IDLE)
-            return false;
-
-        float maxGauge = slowDuration.Current * FixedUpdateCalls;
-
-        // Replenish the gauge, determine if state should change
-        if (currSlowGauge + amount >= maxGauge)
-        {
-            currSlowGauge = maxGauge;
-            ChangeState(TimeGaugeState.IDLE);
-        }
-        else
-        {
-            currSlowGauge += amount;
-        }
-
-        // Since some was used, return true
-        return true;
-    }
-
-    public TimeGaugeState GetState()
-    {
-        return currentState;
-    }
+    #region Upgrade Functions
 
     public float MaxGauge()
     {
         return slowDuration.Current * FixedUpdateCalls;
     }
-
+    public float GetBaseMax()
+    {
+        return baseDuration;
+    }
     public float UpgradeMaxGauge()
     {
         return slowDuration.Current;
     }
-
-    public void SetRegenTime(float regenMultiplier)
-    {
-        float temp = replenishTime.Current * regenMultiplier;
-        replenishTime.ChangeVal(Mathf.Ceil(temp));
-    }
-
-    public void SetGaugeMax(float gaugeMultiplier)
-    {
-        float temp = slowDuration.Current * gaugeMultiplier;
-        slowDuration.ChangeVal(Mathf.Ceil(temp));
-        //currentState = TimeGaugeState.RECHARGING;
-    }
-
     public void UpgradeSetGaugeMax(float newMax)
     {
-        slowDuration.ChangeVal(Mathf.Ceil(newMax));
+        //Debug.Log("New max is " + newMax);
+        slowDuration.ChangeVal(newMax);
         currentState = TimeGaugeState.RECHARGING;
     }
 
-    public void SetRegenDelay(float delayMultiplier)
-    {
-        float temp = replenishDelay.Current * delayMultiplier;
-        replenishDelay.ChangeVal(Mathf.Ceil(temp));
-        replenishDelayTimer.ResetTimer(replenishDelay.Current);
-    }
+    #endregion
+
+    #region Time Buffer 
 
     public bool IsFull()
     {
-        return currSlowGauge >= (slowDuration.Current * FixedUpdateCalls);
+        return BufferFull();
     }
 
-    /// <summary>
-    /// Toggle inputs if game pauses
-    /// </summary>
-    /// <param name="_newState">new state</param>
-    private void ToggleInputs(GameManager.States _newState)
+    public void AddToBuffer(TimeOrb orb)
     {
-        if (_newState == GameManager.States.GAMEPLAY
-            || _newState == GameManager.States.HUB)
-        {
-            slowInput.Enable();
-        }
-        else
-        {
-            slowInput.Disable();
-        }
+        if(!timeOrbBuffer.Contains(orb))
+            timeOrbBuffer.Add(orb);
     }
+
+    public void RemoveFromBuffer(TimeOrb orb)
+    {
+        if (timeOrbBuffer.Contains(orb))
+            timeOrbBuffer.Remove(orb);
+    }
+
+    private bool BufferFull()
+    {
+        float healingPot = 0;
+        foreach (TimeOrb o in timeOrbBuffer.ToArray())
+        {
+            healingPot += o.GetAmt();
+        }
+
+        return (currSlowGauge + healingPot) >= (slowDuration.Current * FixedUpdateCalls);
+    }
+
+    #endregion
 }

@@ -10,35 +10,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HealthOrb : PickupOrb
+public class HealthOrb : PickupOrb, IPoolable
 {
     [Header("---Healing Specific---")]
 
     [Tooltip("How much time gauge does this orb refill (in seconds)")]
     [SerializeField] private float refillAmount;
 
-    [Tooltip("Whether the orbs can be picked up during slowed time")]
-    [SerializeField] private bool pickupWhileSlowing;
-
     /// <summary>
     /// player time manager
     /// </summary>
-    [SerializeField] private HealthManager playerHealth;
-
-    /// <summary>
-    /// collider of this object
-    /// </summary>
-    private SphereCollider col;
-
-    private void Start()
-    {
-        col = GetComponent<SphereCollider>();
-    }
+    private HealthManager playerHealth;
 
     /// <summary>
     /// If this object cannot be picked up during time, modify the colliders
     /// </summary>
-    private void LateUpdate()
+    protected override void LateUpdate()
     {
         if (playerHealth == null)
         {
@@ -46,17 +33,7 @@ public class HealthOrb : PickupOrb
             return;
         }
 
-        if(!pickupWhileSlowing)
-        {
-            if(TimeManager.WorldTimeScale < 1 && col.enabled)
-            {
-                col.enabled = false;
-            }
-            else if (TimeManager.WorldTimeScale == 1 && !col.enabled)
-            {
-                col.enabled = true;
-            }
-        }
+        base.LateUpdate();
     }
 
     /// <summary>
@@ -65,16 +42,18 @@ public class HealthOrb : PickupOrb
     /// <returns></returns>
     protected override bool CheckChaseRequirements()
     {
-        if (!pickupWhileSlowing && TimeManager.WorldTimeScale < 1)
+        if ((!pickupWhileSlowing && Slowed) || !InRange())
             return false;
 
+        bool canHeal = playerHealth != null && playerHealth.CanHeal(BarType.Health);
 
-        float dist = Vector3.Distance(player.position, transform.position);
-
-        bool canPlayerHeal = playerHealth != null && playerHealth.CanHeal(BarType.Health);
-        //Debug.Log("Can player heal: " + canPlayerHeal);
-        // Check if the orb can be used and if in range to chase
-        return (dist <= chaseRadius) && canPlayerHeal;
+        if (canHeal)
+        {
+            playerHealth.AddToBuffer(this);
+            return true;
+        }
+        else
+            return false;
     }
 
     /// <summary>
@@ -82,9 +61,12 @@ public class HealthOrb : PickupOrb
     /// </summary>
     protected override void OnPickup()
     {
-        if(playerHealth.Heal(refillAmount, BarType.Health))
-        {
-            Destroy(gameObject);
-        }
+        playerHealth.RemoveFromBuffer(this);
+        playerHealth.Heal(refillAmount, BarType.Health);
+    }
+
+    public float GetAmt()
+    {
+        return refillAmount;
     }
 }
