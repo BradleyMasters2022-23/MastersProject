@@ -195,4 +195,14 @@ public class CallManager : MonoBehaviour
     {
         return availableConversations.Contains(c);
     }
+
+    /// <summary>
+    /// Check if call is found. Do here to keep save data only here.
+    /// </summary>
+    /// <param name="c">Call to check</param>
+    /// <returns>Whether its in the save</returns>
+    public bool CallInSave(Conversation c)
+    {
+        return saveData.AlreadyRead(c);
+    }
 }

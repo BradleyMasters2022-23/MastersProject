@@ -41,10 +41,11 @@ public class ContactOptionUI : MonoBehaviour
         loadedData = data;
         thumbnail.sprite = data.characterThumbnail;
         nameText.text = data.name;
-        subtitleText.text = data.subtitle;
+        //subtitleText.text = data.subtitle;
+        InitLogs();
 
         init = true;
-
+        
         GetIncomingCall();
     }
     /// <summary>
@@ -69,7 +70,7 @@ public class ContactOptionUI : MonoBehaviour
     /// <summary>
     /// Get the first available incoming call
     /// </summary>
-    private void GetIncomingCall()
+    public void GetIncomingCall()
     {
         // Reference available calls, see if its available
         // Store one thats available
@@ -105,6 +106,27 @@ public class ContactOptionUI : MonoBehaviour
             currColor = (currColor == flashColor1) ? flashColor2 : flashColor1;
             flashOverlay.color = currColor;
             yield return null;           
+        }
+    }
+
+    #endregion
+
+    #region Log Display
+
+    [Header("Logs")]
+    [SerializeField] private GameObject logPrefab;
+    [SerializeField] private RectTransform logContainer;
+
+    /// <summary>
+    /// Load in all call log data, init them
+    /// </summary>
+    private void InitLogs()
+    {
+        foreach(var c in loadedData.allConversations)
+        {
+            ContactLogUI obj = Instantiate(logPrefab, logContainer).GetComponent<ContactLogUI>();
+            obj.SetConvo(c);
+            obj.CheckConvoStatus();
         }
     }
 
