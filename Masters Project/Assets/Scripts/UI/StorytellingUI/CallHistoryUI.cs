@@ -4,16 +4,12 @@ using UnityEngine;
 
 public class CallHistoryUI : MonoBehaviour
 {
-    [SerializeField] private ContactOptionSO loadedCharcter;
+    private ContactOptionSO loadedCharcter;
     [SerializeField] private ContactOptionUI dataManager;
-
-    private void OnEnable()
-    {
-        OpenContactHistory(loadedCharcter);
-    }
 
     public void OpenContactHistory(ContactOptionSO data)
     {
+        loadedCharcter = data;
         gameObject.SetActive(true);
         dataManager.InitContact(data);
     }

@@ -28,6 +28,8 @@ public class ContactOptionUI : MonoBehaviour
     private Coroutine flashingRoutine;
     [SerializeField] private Conversation newConvo;
 
+    private List<GameObject> spawnedObjects = new List<GameObject>();
+
     private bool init = false;
 
     #region Contact Option Funcs
@@ -111,7 +113,7 @@ public class ContactOptionUI : MonoBehaviour
         flashOverlay.gameObject.SetActive(true);
 
         Color currColor = flashColor1;
-        while(newConvo != null)
+        while(CallManager.instance.HasNewCall(newConvo))
         {
             yield return new WaitForSecondsRealtime(flashInterval);
 
@@ -119,6 +121,7 @@ public class ContactOptionUI : MonoBehaviour
             flashOverlay.color = currColor;
             yield return null;           
         }
+        flashOverlay.gameObject.SetActive(false);
     }
 
     #endregion
@@ -134,11 +137,20 @@ public class ContactOptionUI : MonoBehaviour
     /// </summary>
     private void InitLogs()
     {
+        // clear remaining logs , if any
+        foreach(var o in spawnedObjects.ToArray())
+        {
+            spawnedObjects.Remove(o);
+            Destroy(o);
+        }
+
+        // spawn in and init new logs
         foreach(var c in loadedData.allConversations)
         {
             ContactLogUI obj = Instantiate(logPrefab, logContainer).GetComponent<ContactLogUI>();
             obj.SetConvo(c);
             obj.CheckConvoStatus();
+            spawnedObjects.Add(obj.gameObject);
         }
     }
 
@@ -146,15 +158,29 @@ public class ContactOptionUI : MonoBehaviour
 
     #region Screenflow Funcs
 
+    /// <summary>
+    /// Go to this character's call history
+    /// </summary>
     public void GoToLog()
     {
-        Debug.Log("Going to call log");
+        //Debug.Log("Going to call log");
+
+        if (ConvoRefManager.instance == null) return;
+
+        ConvoRefManager.instance.GetCallHistoryUI().OpenContactHistory(loadedData);
         return;
     }
 
+    /// <summary>
+    /// Go to a new call. Should only be available if theres a new conversation available
+    /// </summary>
     public void GoToNewCall()
     {
-        Debug.Log("Going to new call");
+        //Debug.Log("Going to new call");
+
+        if (ConvoRefManager.instance == null || newConvo == null) return;
+
+        ConvoRefManager.instance.GetCallUI().OpenScreen(newConvo);
         return;
     }
 

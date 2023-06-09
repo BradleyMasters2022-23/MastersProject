@@ -47,18 +47,6 @@ public class CallManager : MonoBehaviour
         saveData = DataManager.instance.Load<DialogueSaveData>(saveFileName);
         if (saveData == null)
             saveData = new DialogueSaveData();
-        //saveData.SeeAllReads();
-
-
-        //foreach (Conversation conversation in conversations)
-        //{
-        //    conversation.Lock();
-        //}
-
-        //conversations[0].Unlock();
-        //if(conversations.Count >= 4)
-        //    conversations[3].Unlock();
-
 
         UpdateCalls();
     }
@@ -68,35 +56,6 @@ public class CallManager : MonoBehaviour
         // loop through conversations
         foreach(Conversation conversation in conversations.ToList<Conversation>())
         {
-            /*
-            // check each locked conversation's dependencies. once run counting is implemented that lives here too
-            if (conversation.currentState == Conversation.ConversationState.LOCKED)
-            {
-                if (conversation.dependencies.Length > 0)
-                {
-                    foreach (int i in conversation.dependencies)
-                    {
-                        bool unlockable = true;
-                        if (conversations[i].currentState != Conversation.ConversationState.READ)
-                        {
-                            unlockable = false;
-                        }
-
-                        if (unlockable == true)
-                        {
-                            conversation.Unlock();
-                        }
-                    }
-                }
-            }
-
-            // check each conversation, add to available conversations if unread
-            if (conversation.currentState == Conversation.ConversationState.UNREAD && !availableConversations.Contains(conversation))
-            {
-                availableConversations.Add(conversation);
-                //Debug.Log(conversation.ID + " added to available");
-            }
-            */
 
             // Check saved data if the dependencies have been satisfied
             if (saveData.CheckDependencies(conversation) 
@@ -180,6 +139,9 @@ public class CallManager : MonoBehaviour
     public void SaveData(Conversation c)
     {
         saveData.ConversationRead(c);
+        if (availableConversations.Contains(c))
+            availableConversations.Remove(c);
+
         bool s = DataManager.instance.Save<DialogueSaveData>(saveFileName, saveData);
         //Debug.Log($"Conversation save successful : {s}");
         //saveData.SeeAllReads();

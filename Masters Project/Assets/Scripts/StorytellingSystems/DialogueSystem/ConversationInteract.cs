@@ -8,7 +8,7 @@ public class ConversationInteract : MonoBehaviour, Interactable
     private CallManager calls;
     // eventually, should instead pull up a screen with a list of characters & info about them
     // when a conversation is available, screen should blink; eventually, screen & contact both blink
-    private DisplayDialogueUI ui;
+    private ConvoRefManager ui;
 
     [SerializeField] private MeshRenderer flashRenderer;
     private Color original;
@@ -25,7 +25,7 @@ public class ConversationInteract : MonoBehaviour, Interactable
 
     private void Start()
     {
-        ui = FindObjectOfType<DisplayDialogueUI>(true);
+        ui = ConvoRefManager.instance;
         calls = CallManager.instance;
         if(flashRenderer == null)
         {
@@ -88,13 +88,9 @@ public class ConversationInteract : MonoBehaviour, Interactable
             return;
         }
 
-        if (calls.HasAvailable())
+        if (ui != null)
         {
-            ui.OpenScreen(calls.GetRandomAvailableConversation());
-        }
-        else
-        {
-            ui.OpenScreen(calls.GetDefault());
+            ui.OpenScreen();
         }
 
         // call any subscribed functions to the caller

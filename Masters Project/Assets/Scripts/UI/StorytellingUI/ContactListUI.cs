@@ -21,8 +21,6 @@ public class ContactListUI : MonoBehaviour
     [SerializeField] private ContactOptionSO[] contacts;
     [Tooltip("Prefab for each individual contact option")]
     [SerializeField] private GameObject contactPrefab;
-    [Tooltip("How much spacing on the sides to apply to the contact prefabs")]
-    [SerializeField] private float contactHorizontalSpacing;
     [Tooltip("Scroll manager for the menu")]
     [SerializeField] private ScrollRect scrollTrans;
     [Tooltip("How overflow should be added to the content scroll")]
@@ -39,7 +37,7 @@ public class ContactListUI : MonoBehaviour
             return;
         }
 
-        Debug.Log("Contact list initializing");
+
         PopulateList(contacts);
 
         init = true;

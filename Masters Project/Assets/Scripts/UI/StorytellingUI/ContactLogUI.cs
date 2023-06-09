@@ -22,6 +22,8 @@ public class ContactLogUI : MonoBehaviour
     [SerializeField] private Sprite checkedSprite;
     [SerializeField] private Sprite incomingSprite;
 
+    [SerializeField] private GameObject interactButton;
+
     [Header("Flashing Data")]
     [SerializeField] private float flashInterval;
     [SerializeField] private Color flashColor1;
@@ -32,7 +34,7 @@ public class ContactLogUI : MonoBehaviour
     [SerializeField] private string uncheckedText;
     [SerializeField] private string incomingCallText;
 
-    private int maxDescriptorLength = 15;
+    private int maxDescriptorLength = 50;
 
     #region Convo Status
 
@@ -102,6 +104,9 @@ public class ContactLogUI : MonoBehaviour
     {
         mImage.sprite = uncheckedSprite;
 
+        if(interactButton != null)
+            interactButton.SetActive(false);
+
         if (descriptor != null)
             descriptor.text = uncheckedText;
     }
@@ -124,9 +129,8 @@ public class ContactLogUI : MonoBehaviour
     {
         mImage.color = flashColor1;
         
-
         Color currColor = flashColor1;
-        while (true)
+        while (CallManager.instance.HasNewCall(convoRef))
         {
             yield return new WaitForSecondsRealtime(flashInterval);
 
@@ -134,6 +138,26 @@ public class ContactLogUI : MonoBehaviour
             mImage.color = currColor;
             yield return null;
         }
+
+        mImage.color = Color.white;
+        SetFound();
+    }
+
+    #endregion
+
+    #region Screenflow Funcs
+
+    /// <summary>
+    /// Go to this loaded call
+    /// </summary>
+    public void OpenCall()
+    {
+        Debug.Log("Going to new call");
+
+        if (ConvoRefManager.instance == null || convoRef == null) return;
+
+        ConvoRefManager.instance.GetCallUI().OpenScreen(convoRef);
+        return;
     }
 
     #endregion
