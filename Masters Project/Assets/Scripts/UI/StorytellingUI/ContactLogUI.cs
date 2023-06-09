@@ -10,19 +10,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
-[RequireComponent(typeof(Image))]
 public class ContactLogUI : MonoBehaviour
 {
+    [Header("Image States")]
+
     private Conversation convoRef;
     private Image mImage;
     [SerializeField] private Sprite uncheckedSprite;
     [SerializeField] private Sprite checkedSprite;
+    [SerializeField] private Sprite incomingSprite;
 
+    [Header("Flashing Data")]
     [SerializeField] private float flashInterval;
     [SerializeField] private Color flashColor1;
     [SerializeField] private Color flashColor2;
-    
+
+    [Header("Text Data")]
+    [SerializeField] private TextMeshProUGUI descriptor;
+    [SerializeField] private string uncheckedText;
+    [SerializeField] private string incomingCallText;
+
+    private int maxDescriptorLength = 15;
+
     #region Convo Status
 
     /// <summary>
@@ -31,7 +42,7 @@ public class ContactLogUI : MonoBehaviour
     /// <param name="c"></param>
     public void SetConvo(Conversation c)
     {
-        mImage = GetComponent<Image>();
+        mImage = GetComponentInChildren<Image>();
         convoRef = c;
     }
     /// <summary>
@@ -43,7 +54,7 @@ public class ContactLogUI : MonoBehaviour
 
         if (CallManager.instance.HasNewCall(convoRef))
         {
-            StartFlashing();
+            SetIncoming();
         }
         else if (CallManager.instance.CallInSave(convoRef))
         {
@@ -64,23 +75,55 @@ public class ContactLogUI : MonoBehaviour
 
     #region Status Functionality
 
+    /// <summary>
+    /// Set visual status to be found
+    /// </summary>
     private void SetFound()
     {
         mImage.sprite = checkedSprite;
+
+        if (descriptor != null)
+        {
+            // Get the descriptor. If too long, cut it off with 3 extra dots
+            string display = convoRef.lines[0].text;
+            if (display.Length > maxDescriptorLength)
+            {
+                display = display.Substring(0, maxDescriptorLength - 3);
+                display += "...";
+            }
+            descriptor.text = display;
+
+        }
     }
+    /// <summary>
+    /// Set visual status to be found
+    /// </summary>
     private void SetNotFound()
     {
         mImage.sprite = uncheckedSprite;
+
+        if (descriptor != null)
+            descriptor.text = uncheckedText;
     }
-    
-    private void StartFlashing()
+    /// <summary>
+    /// Set visual status to be an incoming call 
+    /// </summary>
+    private void SetIncoming()
     {
+        mImage.sprite = incomingSprite;
         StartCoroutine(FlashRoutine());
+
+        if (descriptor != null)
+            descriptor.text = incomingCallText;
     }
+    /// <summary>
+    /// Flash on and off to indicate incoming call
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator FlashRoutine()
     {
         mImage.color = flashColor1;
-        mImage.sprite = checkedSprite;
+        
 
         Color currColor = flashColor1;
         while (true)
@@ -91,10 +134,6 @@ public class ContactLogUI : MonoBehaviour
             mImage.color = currColor;
             yield return null;
         }
-    }
-    private void StopFlashing()
-    {
-        StopAllCoroutines();
     }
 
     #endregion

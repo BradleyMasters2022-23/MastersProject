@@ -56,10 +56,6 @@ public class ContactListUI : MonoBehaviour
             return;
 
         // Adjust children to scale width of the content bar, keeping height
-        Vector2 spareBuffer = 
-            new Vector2(scrollTrans.content.sizeDelta.x - (contactHorizontalSpacing*2), 
-            contactPrefab.GetComponent<RectTransform>().sizeDelta.y);
-
         int optionsLoaded = 0;
         // Spawn in new objects, load in data 
         foreach (var c in options)
@@ -72,7 +68,6 @@ public class ContactListUI : MonoBehaviour
 
             GameObject newPanel = Instantiate(contactPrefab, scrollTrans.content);
             newPanel.GetComponent<ContactOptionUI>().InitContact(c); // init call will automatically check for calls
-            //newPanel.GetComponent<RectTransform>().sizeDelta = spareBuffer;
             optionsLoaded++;
         }
 
@@ -85,9 +80,8 @@ public class ContactListUI : MonoBehaviour
 
         // Only apply new size if its greater than the default size. Reset scroll bar
         newSpacing = (newSpacing > scrollTrans.content.sizeDelta.y) ? newSpacing : scrollTrans.content.sizeDelta.y;
-        spareBuffer.x = scrollTrans.content.sizeDelta.x;
-        spareBuffer.y = newSpacing;
-        scrollTrans.content.sizeDelta = spareBuffer;
+        Vector2 sizeBuffer = new Vector2(scrollTrans.content.sizeDelta.x, newSpacing);
+        scrollTrans.content.sizeDelta = sizeBuffer;
         StartCoroutine(SetScrollTop());
     }
 

@@ -38,10 +38,22 @@ public class ContactOptionUI : MonoBehaviour
     /// <param name="data">Data to load</param>
     public void InitContact(ContactOptionSO data)
     {
-        loadedData = data;
-        thumbnail.sprite = data.characterThumbnail;
-        nameText.text = data.name;
-        //subtitleText.text = data.subtitle;
+        if (data != null)
+            loadedData = data;
+        else
+        {
+            Debug.Log($"{name} Tried to initiate contact, but null data was given!");
+            return;
+        }
+            
+
+        if (thumbnail != null)
+            thumbnail.sprite = data.characterThumbnail;
+        if (nameText != null)
+            nameText.text = data.name;
+        if(subtitleText!= null )
+            subtitleText.text = data.subtitle;
+
         InitLogs();
 
         init = true;
