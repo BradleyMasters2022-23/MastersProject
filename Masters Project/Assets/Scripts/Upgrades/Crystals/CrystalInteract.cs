@@ -36,15 +36,16 @@ public class CrystalInteract : MonoBehaviour, Interactable
 
     public void RandomizeCrystal()
     {
-        if(crystalManagerInstance == null)
+        // loads crystal from normal depth mod
+        RandomizeCrystalSetLevel(MapLoader.instance.PortalDepth()+1);
+    }
+
+    public void RandomizeCrystalSetLevel(int newPar)
+    {
+        if (crystalManagerInstance == null)
             crystalManagerInstance = CrystalManager.instance;
 
-
-        // loads crystal
-        if (LinearSpawnManager.instance != null)
-        {
-            par = (MapLoader.instance.PortalDepth()+1) * parMod;
-        }
+        par = newPar * parMod;
 
         if (crystalManagerInstance != null && crystal == null)
         {
@@ -52,7 +53,7 @@ public class CrystalInteract : MonoBehaviour, Interactable
 
         }
 
-        switch(crystal.stats[0].GetGroup())
+        switch (crystal.stats[0].GetGroup())
         {
             case IStat.StatGroup.HEALTH:
                 health.GetComponent<Renderer>().material.color = crystal.GetColor();

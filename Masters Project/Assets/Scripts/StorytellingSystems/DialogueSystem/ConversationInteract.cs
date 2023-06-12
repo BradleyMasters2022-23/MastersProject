@@ -75,7 +75,7 @@ public class ConversationInteract : MonoBehaviour, Interactable
         
     }
 
-    public void OnInteract(PlayerController player)
+    public virtual void OnInteract(PlayerController player)
     {
         if (ui == null)
         {

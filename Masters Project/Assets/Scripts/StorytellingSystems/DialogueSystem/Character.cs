@@ -14,6 +14,9 @@ public class Character : ScriptableObject
     [Tooltip("All conversations this character has")]
     public List<Conversation> allConversations;
 
+    [Tooltip("When this characters dialogue is exhausted, pull from this list")]
+    public GenericWeightedList<Conversation> repeatableConversations;
+
     [Header("Visuals")]
     [Tooltip("Thumbnail for this character")]
     public Sprite characterThumbnail;

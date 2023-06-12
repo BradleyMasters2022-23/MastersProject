@@ -69,4 +69,17 @@ public class ConvoRefManager : MonoBehaviour
         GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
         contactListUI.gameObject.SetActive(true);
     }
+
+    /// <summary>
+    /// Try closing all of the menus in correct order
+    /// </summary>
+    public void CloseAllScreens()
+    {
+        if(callUI.isActiveAndEnabled)
+            callUI.GetComponent<GameObjectMenu>().CloseButton();
+        if (callLogUI.isActiveAndEnabled)
+            callLogUI.GetComponent<GameObjectMenu>().CloseButton();
+        if (contactListUI.isActiveAndEnabled)
+            contactListUI.GetComponent<GameObjectMenu>().CloseButton();
+    }
 }

@@ -79,15 +79,6 @@ public class DisplayDialogueUI : MonoBehaviour
             return;
         }
             
-        if(activeLineIndex == conversation.lines.Length)
-        {
-            if (conversation.ID >= 0)
-            {
-                // mark conversation as read and add to save data
-                CallManager.instance.SaveData(conversation);
-            }
-        }
-
         // Check which dialogue screen to use, if there are any lines left 
         if (activeLineIndex < conversation.lines.Length)
         {
@@ -114,7 +105,11 @@ public class DisplayDialogueUI : MonoBehaviour
 
     public void CloseScreen()
     {
-        
+        if (conversation.ID >= 0)
+        {
+            // mark conversation as read and add to save data
+            CallManager.instance.SaveData(conversation);
+        }
         click.Disable();
         GameManager.instance.CloseTopMenu();
     }

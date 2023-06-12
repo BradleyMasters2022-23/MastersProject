@@ -10,7 +10,7 @@ public class CallManager : MonoBehaviour
 {
     public List<Conversation> conversations = new List<Conversation>();
     [SerializeField, ReadOnly, HideInEditorMode] 
-    private List<Conversation> availableConversations = new List<Conversation>();
+    protected List<Conversation> availableConversations = new List<Conversation>();
     public Conversation defaultConversation;
     public static CallManager instance;
 
@@ -35,10 +35,11 @@ public class CallManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
     }
 
@@ -167,5 +168,17 @@ public class CallManager : MonoBehaviour
     public bool CallInSave(Conversation c)
     {
         return saveData.AlreadyRead(c);
+    }
+
+    /// <summary>
+    /// get the count of available conversations
+    /// </summary>
+    /// <returns></returns>
+    public int AvailableCallCount()
+    {
+        if (availableConversations == null)
+            return 0;
+
+        return availableConversations.Count;
     }
 }

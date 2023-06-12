@@ -95,7 +95,8 @@ namespace Masters.UI
             // Just to be sure, assign the text to the full thing at the end
             target.text = text;
 
-            yield return null;
+            // wait an extra second to prevent accidental skips
+            yield return new WaitForSecondsRealtime(1.5f);
         }
 
         public static IEnumerator SlowTextUnloadRealtime(this TextMeshProUGUI target, float delayPerChar)
