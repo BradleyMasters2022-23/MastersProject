@@ -75,7 +75,7 @@ public class ConversationInteract : MonoBehaviour, Interactable
         
     }
 
-    public void OnInteract()
+    public virtual void OnInteract()
     {
         if (ui == null)
         {
