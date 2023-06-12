@@ -75,7 +75,7 @@ public class ConversationInteract : MonoBehaviour, Interactable
         
     }
 
-    public virtual void OnInteract(PlayerController player)
+    public void OnInteract()
     {
         if (ui == null)
         {
@@ -95,5 +95,14 @@ public class ConversationInteract : MonoBehaviour, Interactable
 
         // call any subscribed functions to the caller
         onStartCall?.Invoke();
+    }
+
+    /// <summary>
+    /// Can interact if the UI is not null
+    /// </summary>
+    /// <returns></returns>
+    public bool CanInteract()
+    {
+        return (ui != null);
     }
 }

@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1649765919
 Transform:
@@ -56,15 +56,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6938077067943911365, guid: 2d9097f8193fbf24a9309441b0603955, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.65
+      value: 19.52
       objectReference: {fileID: 0}
     - target: {fileID: 6938077067943911365, guid: 2d9097f8193fbf24a9309441b0603955, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.059
       objectReference: {fileID: 0}
     - target: {fileID: 6938077067943911365, guid: 2d9097f8193fbf24a9309441b0603955, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.5
+      value: -20.42
       objectReference: {fileID: 0}
     - target: {fileID: 6938077067943911365, guid: 2d9097f8193fbf24a9309441b0603955, type: 3}
       propertyPath: m_LocalRotation.w
@@ -72,15 +72,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6938077067943911365, guid: 2d9097f8193fbf24a9309441b0603955, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6938077067943911365, guid: 2d9097f8193fbf24a9309441b0603955, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6938077067943911365, guid: 2d9097f8193fbf24a9309441b0603955, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6938077067943911365, guid: 2d9097f8193fbf24a9309441b0603955, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -109,6 +109,10 @@ PrefabInstance:
     - target: {fileID: 7710955283797034367, guid: 2d9097f8193fbf24a9309441b0603955, type: 3}
       propertyPath: m_TagString
       value: Interactable
+      objectReference: {fileID: 0}
+    - target: {fileID: 7710955283797034367, guid: 2d9097f8193fbf24a9309441b0603955, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d9097f8193fbf24a9309441b0603955, type: 3}
@@ -238,13 +242,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf67b8df4d7f2ea43b3de7cbf2b245b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
   _center: {fileID: 1649765919}
   _team: 3
   _targetThreat: 0
   _unkillable: 0
+  immuneToKnockback: 1
+  knockbackModifier: 1
+  maxKnockback: 0
+  invincibilityShield: {fileID: 0}
   _deathVFX: {fileID: 0}
   damagedSound: {fileID: 0}
   deathSound: {fileID: 11400000, guid: 4664370fbacf27841b86016c1bd9cb1f, type: 2}
+  damagedSoundCooldown: 0.5
   dropList:
   - spawnObject: {fileID: 3071240432754548792, guid: 97a60d67e4614554c8c11e70672f7cd2, type: 3}
     quantityRange: {x: 3, y: 3}
@@ -266,7 +281,38 @@ MonoBehaviour:
   _damagedInvulnerabilityDuration: 0
   _gateHealthbarDamage: 0
   _gateHealthbarHealing: 0
+  _gatedHealthInvulnerability: 0
   _godMode: 0
+  timeScale: 0
+--- !u!114 &8307042298558291673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3780181508360703342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ce18b6b2f95e5e469658681c19225b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minimumRoomNum: 0
+  maximumRoomNum: 4
+  baseStayChance: 60
+  depthChanceModifier: -10
+--- !u!114 &8307042298558291674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3780181508360703342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3da36f883ef8e404dbcd99c7c146297a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guid: 4a7d9a42b09b83b43a3dfb6264dacc7a
 --- !u!4 &4557141038160369620 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6938077067943911365, guid: 2d9097f8193fbf24a9309441b0603955, type: 3}

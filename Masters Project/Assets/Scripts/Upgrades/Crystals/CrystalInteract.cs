@@ -82,7 +82,7 @@ public class CrystalInteract : MonoBehaviour, Interactable
         }
     }
 
-    public void OnInteract(PlayerController player)
+    public void OnInteract()
     {
         if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
         {
@@ -96,6 +96,11 @@ public class CrystalInteract : MonoBehaviour, Interactable
         }
 
         crystalManagerInstance.GetCurrentScreen().OpenScreen(this);
+    }
+
+    public bool CanInteract()
+    {
+        return true;
     }
 
     public Crystal GetCrystal()
