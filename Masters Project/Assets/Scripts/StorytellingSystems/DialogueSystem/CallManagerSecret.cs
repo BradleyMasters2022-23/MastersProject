@@ -14,12 +14,17 @@ public class CallManagerSecret : ConversationInteract
 
     private bool available = true;
 
-    public override void OnInteract(PlayerController player)
+    public override void OnInteract()
     {
         if (!available) return;
 
-        base.OnInteract(player);
+        base.OnInteract();
         StartCoroutine(CheckForComplete());
+    }
+
+    public override bool CanInteract()
+    {
+        return available;
     }
 
     /// <summary>

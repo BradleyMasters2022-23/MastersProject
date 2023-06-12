@@ -101,7 +101,7 @@ public class ConversationInteract : MonoBehaviour, Interactable
     /// Can interact if the UI is not null
     /// </summary>
     /// <returns></returns>
-    public bool CanInteract()
+    public virtual bool CanInteract()
     {
         return (ui != null);
     }
