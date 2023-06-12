@@ -6,18 +6,24 @@ using Sirenix.OdinInspector;
 [CreateAssetMenu(menuName = "Storytelling/Character")]
 public class Character : ScriptableObject
 {
+    [Header("Data")]
     public string characterName;
     [Tooltip("Subtitle for this character"), TextArea]
     public string subtitle;
-    
-    [Tooltip("Thumbnail for this character")]
-    public Sprite characterThumbnail;
-
-    public Sprite[] sprites;
 
     [Tooltip("All conversations this character has")]
     public List<Conversation> allConversations;
 
+    [Header("Visuals")]
+    [Tooltip("Thumbnail for this character")]
+    public Sprite characterThumbnail;
+    public Sprite[] sprites;
+
+    [Header("Audio")]
+    [Tooltip("The ringtone for this character. TBD")]
+    public AudioClipSO ringtone;
+    [Tooltip("The main theme for this character.")]
+    public AudioClipSO characterTheme;
 
     /// <summary>
     /// Check whether this character has a conversation

@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.EventSystems;
+using Sirenix.OdinInspector;
 
 public class CallManager : MonoBehaviour
 {
     public List<Conversation> conversations = new List<Conversation>();
-    [SerializeField] private List<Conversation> availableConversations = new List<Conversation>();
+    [SerializeField, ReadOnly, HideInEditorMode] 
+    private List<Conversation> availableConversations = new List<Conversation>();
     public Conversation defaultConversation;
     public static CallManager instance;
 

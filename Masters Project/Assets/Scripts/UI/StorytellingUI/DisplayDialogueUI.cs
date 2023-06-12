@@ -32,7 +32,17 @@ public class DisplayDialogueUI : MonoBehaviour
     }
     private void OnDisable()
     {
+        if (loadingRoutine != null)
+        {
+            StopCoroutine(loadingRoutine);
+            loadingRoutine = null;
+        }
+
+        currentActive = null;
+
         click.performed -= DisplayDialogue;
+        pennyScreen.ResetScreen();
+        NPCScreen.ResetScreen();
     }
 
     public void OpenScreen(Conversation c)
@@ -105,7 +115,6 @@ public class DisplayDialogueUI : MonoBehaviour
     public void CloseScreen()
     {
         
-
         click.Disable();
         GameManager.instance.CloseTopMenu();
     }

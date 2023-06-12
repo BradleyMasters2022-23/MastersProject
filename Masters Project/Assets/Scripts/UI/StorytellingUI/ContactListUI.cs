@@ -99,10 +99,10 @@ public class ContactListUI : MonoBehaviour
 
     private void ResetCallLog()
     {
-        // Tell each option loaded to check for a new call
+        // clear all logs so they can be properly reinitialized next time
         for (int i = scrollTrans.content.childCount-1; i >= 0 ; i--)
         {
-            Destroy(scrollTrans.content.GetChild(i));
+            Destroy(scrollTrans.content.GetChild(i).gameObject, 0.1f);
         }
     }
 }

@@ -152,7 +152,7 @@ public class ContactLogUI : MonoBehaviour
     /// </summary>
     public void OpenCall()
     {
-        Debug.Log("Going to new call");
+        //Debug.Log("Going to new call");
 
         if (ConvoRefManager.instance == null || convoRef == null) return;
 

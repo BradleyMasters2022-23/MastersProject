@@ -61,9 +61,35 @@ namespace Masters.UI
             string fullTxt = "";
             for (int i = 0; i < text.Length; i++)
             {
-                fullTxt += text[i];
-                target.text = fullTxt;
-                yield return delay;
+                // Check for a richtext tag
+                if (text[i] == '<')
+                {
+                    // Build a string until hitting end of the richtext '>'
+                    string richtextBuffer = "<";
+                    int j = i + 1;
+                    while (text[j] != '>' && j < text.Length)
+                    {
+                        richtextBuffer += text[j];
+                        j++;
+                        yield return null;
+                    }
+                    richtextBuffer += '>';
+
+                    // Apply it to the text, update the i index so it doesnt re-read it
+                    fullTxt += richtextBuffer;
+                    target.text = fullTxt;
+                    i = j;
+
+                    // dont wait for a delay, just keep going
+                    yield return null;
+                }
+                else
+                {
+                    // If normal text, just add it to the screen
+                    fullTxt += text[i];
+                    target.text = fullTxt;
+                    yield return delay;
+                }
             }
 
             // Just to be sure, assign the text to the full thing at the end
