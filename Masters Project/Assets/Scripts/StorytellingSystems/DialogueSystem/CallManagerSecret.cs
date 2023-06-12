@@ -11,6 +11,7 @@ public class CallManagerSecret : ConversationInteract
     [SerializeField] private CrystalInteract crystal;
 
     [SerializeField] private Animator anim;
+    [SerializeField] private RandomCallUI newCallUI;
 
     private bool available = true;
 
@@ -18,7 +19,10 @@ public class CallManagerSecret : ConversationInteract
     {
         if (!available) return;
 
-        base.OnInteract();
+        //base.OnInteract();
+        GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
+        newCallUI.gameObject.SetActive(true);
+
         StartCoroutine(CheckForComplete());
     }
 
@@ -48,7 +52,7 @@ public class CallManagerSecret : ConversationInteract
     /// </summary>
     private void SpawnNewCrystal()
     {
-        crystal.RandomizeCrystalSetLevel(MapLoader.instance.PortalDepth() + crystalBuff);
+        crystal.RandomizeCrystalSetStats(MapLoader.instance.PortalDepth() + crystalBuff);
         crystal.gameObject.SetActive(true);
     }
     /// <summary>
