@@ -43,7 +43,8 @@ public class CrystalInteract : MonoBehaviour, Interactable
         // loads crystal
         if (LinearSpawnManager.instance != null)
         {
-            par = (MapLoader.instance.PortalDepth()+1) * parMod;
+            par = Mathf.Clamp((MapLoader.instance.PortalDepth()) * parMod, 1, 999);
+            Debug.Log("Crystal with par mod of " + par);
         }
 
         if (crystalManagerInstance != null && crystal == null)
