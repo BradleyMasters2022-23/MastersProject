@@ -18,15 +18,36 @@ public class ConvoRefManager : MonoBehaviour
     [SerializeField] private CallHistoryUI callLogUI;
     [SerializeField] private DisplayDialogueUI callUI;
 
-    public void Awake()
+    public void Start()
     {
         if(instance == null)
         {
             instance = this;
+
+            StartCoroutine(Init());
         }
         else
         {
             Destroy(this);
+        }
+    }
+
+    /// <summary>
+    /// While any of the three screens are uninitialized, continually try to get them
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator Init()
+    {
+        while(contactListUI == null || callLogUI == null || callUI == null)
+        {
+            if(contactListUI == null)
+                contactListUI = PlayerTarget.p.GetComponentInChildren<ContactListUI>();
+            if(callLogUI == null)
+                callLogUI = PlayerTarget.p.GetComponentInChildren<CallHistoryUI>();
+            if(callUI== null)
+                callUI = PlayerTarget.p.GetComponentInChildren<DisplayDialogueUI>();
+
+            yield return new WaitForSecondsRealtime(1);
         }
     }
 

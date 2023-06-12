@@ -18,36 +18,31 @@ public class ContactListUI : MonoBehaviour
     private bool init = false;
 
     [Tooltip("All contacts to load")]
-    [SerializeField] private ContactOptionSO[] contacts;
+    [SerializeField] private Character[] contacts;
     [Tooltip("Prefab for each individual contact option")]
     [SerializeField] private GameObject contactPrefab;
     [Tooltip("Scroll manager for the menu")]
     [SerializeField] private ScrollRect scrollTrans;
     [Tooltip("How overflow should be added to the content scroll")]
     [SerializeField] private float containerOverflowRatio = 1;
-    
+
+    private ContactOptionUI[] loadedOptions;
+
     private void OnEnable()
     {
-        // reset scroll bar
-        //scrollTrans.verticalScrollbar.value = 1;
-
-        if (init) // Only init once when opened, though do check incoming calls
-        {
-            CheckForCalls();
-            return;
-        }
-
-
+        loadedOptions = new ContactOptionUI[contacts.Length];
         PopulateList(contacts);
-
-        init = true;
+    }
+    private void OnDisable()
+    {
+        ResetCallLog();
     }
 
     /// <summary>
     /// Populate contacts in list, adjust the scroll accordingly
     /// </summary>
     /// <param name="options">All contacts to load into the list</param>
-    private void PopulateList(ContactOptionSO[] options)
+    private void PopulateList(Character[] options)
     {
         // only populate if theres something to actually... well populate
         if (options.Length <= 0)
@@ -86,7 +81,7 @@ public class ContactListUI : MonoBehaviour
     private IEnumerator SetScrollTop()
     {
         yield return new WaitUntil(() => scrollTrans.verticalScrollbar.value != 1);
-        yield return new WaitForEndOfFrame();
+        //yield return new WaitForEndOfFrame();
         scrollTrans.verticalScrollbar.value = 1;
     }
 
@@ -99,6 +94,15 @@ public class ContactListUI : MonoBehaviour
         for (int i = 0; i < scrollTrans.content.childCount; i++)
         {
             scrollTrans.content.GetChild(i).GetComponent<ContactOptionUI>()?.GetIncomingCall();
+        }
+    }
+
+    private void ResetCallLog()
+    {
+        // Tell each option loaded to check for a new call
+        for (int i = scrollTrans.content.childCount-1; i >= 0 ; i--)
+        {
+            Destroy(scrollTrans.content.GetChild(i));
         }
     }
 }

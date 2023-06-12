@@ -13,7 +13,7 @@ using TMPro;
 
 public class ContactOptionUI : MonoBehaviour
 {
-    private ContactOptionSO loadedData;
+    private Character loadedData;
     [SerializeField] private Image thumbnail;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private TextMeshProUGUI subtitleText;
@@ -38,7 +38,7 @@ public class ContactOptionUI : MonoBehaviour
     /// Initialize this contact option's data
     /// </summary>
     /// <param name="data">Data to load</param>
-    public void InitContact(ContactOptionSO data)
+    public void InitContact(Character data)
     {
         if (data != null)
             loadedData = data;
@@ -98,6 +98,8 @@ public class ContactOptionUI : MonoBehaviour
         // if theres a conversation, start flashing
         if (newConvo != null)
             StartFlashing();
+        else
+            Stopflashing();
     }
 
     /// <summary>
@@ -121,6 +123,11 @@ public class ContactOptionUI : MonoBehaviour
             flashOverlay.color = currColor;
             yield return null;           
         }
+        flashOverlay.gameObject.SetActive(false);
+    }
+    private void Stopflashing()
+    {
+        StopAllCoroutines();
         flashOverlay.gameObject.SetActive(false);
     }
 
@@ -182,6 +189,11 @@ public class ContactOptionUI : MonoBehaviour
 
         ConvoRefManager.instance.GetCallUI().OpenScreen(newConvo);
         return;
+    }
+
+    public Character LoadedChar()
+    {
+        return loadedData;
     }
 
     #endregion
