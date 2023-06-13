@@ -35,7 +35,7 @@ public struct EncounterDifficulty
     public int GetBudget(int depth, float globalMod = 0)
     {
         return (int)
-            ( baseBudget + Mathf.CeilToInt((budgetDepthMod + budgetDepthMod*globalMod) * depth)
+            ( baseBudget + Mathf.CeilToInt((budgetDepthMod*globalMod) * depth)
             * (1 + Random.Range(-randomizePercentageThreshold, randomizePercentageThreshold)));
     }
 }
@@ -50,7 +50,7 @@ public class LinearSpawnManager : MonoBehaviour
     [SerializeField] private float globalDepthScalingBuff;
 
     [Tooltip("Current number of combat encounters completed")]
-    private int combatRoomCount = 0;
+    [SerializeField] private int combatRoomCount = 0;
     [Tooltip("All possible enemies to spawn")]
     [SerializeField] private EnemySO[] spawnableEnemies;
 

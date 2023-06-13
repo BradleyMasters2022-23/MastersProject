@@ -43,7 +43,7 @@ public class CrystalInteract : MonoBehaviour, Interactable
         // loads crystal
         if (LinearSpawnManager.instance != null)
         {
-            par = (MapLoader.instance.PortalDepth()+1) * parMod;
+            par = Mathf.Clamp((MapLoader.instance.PortalDepth()) * parMod, 1, 999);
         }
 
         if (crystalManagerInstance != null && crystal == null)
@@ -81,7 +81,7 @@ public class CrystalInteract : MonoBehaviour, Interactable
         }
     }
 
-    public void OnInteract(PlayerController player)
+    public void OnInteract()
     {
         if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
         {
@@ -95,6 +95,11 @@ public class CrystalInteract : MonoBehaviour, Interactable
         }
 
         crystalManagerInstance.GetCurrentScreen().OpenScreen(this);
+    }
+
+    public bool CanInteract()
+    {
+        return true;
     }
 
     public Crystal GetCrystal()

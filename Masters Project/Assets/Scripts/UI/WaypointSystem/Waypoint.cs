@@ -44,7 +44,6 @@ public class Waypoint : MonoBehaviour
     [Tooltip("Additional buffer added to the vertical bounds")]
     [SerializeField] private float verticalBuffer;
 
-    
     /// <summary>
     /// Reference to center of the screen
     /// </summary>
@@ -92,6 +91,11 @@ public class Waypoint : MonoBehaviour
     /// </summary>
     private Color displayColor = Color.white;
 
+    /// <summary>
+    /// whether or not theres an icon
+    /// </summary>
+    private bool hasIcon;
+
     #endregion
 
     #region Pool Functions
@@ -104,7 +108,6 @@ public class Waypoint : MonoBehaviour
         t = GetComponent<RectTransform>();
         baseScale = t.transform.localScale;
         cam = Camera.main.transform;
-
     }
 
     /// <summary>
@@ -123,12 +126,15 @@ public class Waypoint : MonoBehaviour
         // Load in any icon if possible
         if(data.icon != null)
         {
+            hasIcon = true;
             iconImage.sprite = data.icon;
             iconImage.enabled = true;
         }
         // Disable otherwise
         else
         {
+            hasIcon = false;
+            iconImage.sprite = null;
             iconImage.enabled = false;
         }
 
@@ -145,6 +151,7 @@ public class Waypoint : MonoBehaviour
         t.transform.localScale = baseScale;
         iconImage.sprite = null;
         iconImage.enabled = false;
+        hasIcon= false;
 
         displayColor = Color.white;
         UpdateColor(displayColor);
@@ -183,7 +190,8 @@ public class Waypoint : MonoBehaviour
         if (!show) return;
 
         // set icon active only if in bounds AND in range
-        iconImage.enabled = (inBounds && positionDist <= iconDisplayRange);
+        if(hasIcon)
+            iconImage.enabled = (inBounds && positionDist <= iconDisplayRange);
 
         float distRatio = (positionDist-minRange) / (maxRange-minRange);
 
@@ -221,7 +229,7 @@ public class Waypoint : MonoBehaviour
             pos.y = Mathf.Clamp(pos.y, verBounds.x, verBounds.y);
         }
 
-        t.transform.position = pos;
+        t.transform.position = Vector3.Lerp(t.transform.position, pos, 0.8f);
 
         #endregion
 

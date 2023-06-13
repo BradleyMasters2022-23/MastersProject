@@ -102,7 +102,7 @@ public class PortalTrigger : MonoBehaviour, Interactable
     /// When interacted, perform appropriate action
     /// </summary>
     /// <param name="player">The player reference</param>
-    public void OnInteract(PlayerController player)
+    public void OnInteract()
     {
         // make sure it can only be used once
         if(usable && interactionCooldown.TimerDone())
@@ -111,6 +111,10 @@ public class PortalTrigger : MonoBehaviour, Interactable
             Indicators.SetIndicators(interactIndicators, true);
             onInteract.Invoke();
         }
+    }
+    public bool CanInteract()
+    {
+        return (usable && interactionCooldown.TimerDone());
     }
 
     /// <summary>
