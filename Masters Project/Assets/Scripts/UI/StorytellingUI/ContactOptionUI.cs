@@ -52,9 +52,9 @@ public class ContactOptionUI : MonoBehaviour
 
         InitLogs();
 
-        init = true;
-        
         GetIncomingCall();
+
+        init = true;
     }
     /// <summary>
     /// Try to get an incoming call on open
@@ -63,6 +63,8 @@ public class ContactOptionUI : MonoBehaviour
     {
         if(init)
             GetIncomingCall();
+        else
+            CheckStatus();
     }
     /// <summary>
     /// Stop flashing when off
@@ -70,6 +72,7 @@ public class ContactOptionUI : MonoBehaviour
     private void OnDisable()
     {
         newConvo = null;
+        StopFlashing();
     }
 
     /// <summary>
@@ -77,6 +80,7 @@ public class ContactOptionUI : MonoBehaviour
     /// </summary>
     public void GetIncomingCall()
     {
+        newConvo = null;
         // Reference available calls, see if its available
         // Store one thats available
         foreach (var c in loadedData.allConversations)
@@ -108,12 +112,12 @@ public class ContactOptionUI : MonoBehaviour
     /// <summary>
     /// Toggle the flash routine on and off
     /// </summary>
-    private void StartFlashing()
+    public void StartFlashing()
     {
         flashComponent?.BeginFlash();
         
     }
-    private void StopFlashing()
+    public void StopFlashing()
     {
         flashComponent?.StopFlash();
 

@@ -29,7 +29,7 @@ public class CallManager : MonoBehaviour
     /// List of characters with complete stories
     /// </summary>
     [SerializeField, ReadOnly, HideInEditorMode]
-    private List<Character> completeCharacters = new List<Character>();
+    private List<Character> randomChatOptions = new List<Character>();
 
     /// <summary>
     /// Cheat controls
@@ -83,37 +83,22 @@ public class CallManager : MonoBehaviour
         // loop through character conversations.
         foreach(Character character in characters.ToList())
         {
-            if(character.CharacterComplete(this))
+            bool oneFound = false;
+            foreach (Conversation conversation in character.allConversations)
             {
-                if(!completeCharacters.Contains(character))
-                    completeCharacters.Add(character);
-            }
-            else // If not complete, add their conversations to list
-            {
-                foreach (Conversation conversation in character.allConversations)
+                // Check saved data if the dependencies have been satisfied
+                if (saveData.CheckDependencies(conversation) && !saveData.AlreadyRead(conversation))
                 {
-                    // Check saved data if the dependencies have been satisfied
-                    if (saveData.CheckDependencies(conversation)
-                        && !saveData.AlreadyRead(conversation)
-                        && !availableConversations.Contains(conversation))
-                    {
-                        //Debug.Log($"Adding {conversation} to list");
+                    oneFound = true;
+                    // prevent dupes from being added
+                    if(!availableConversations.Contains(conversation))
                         availableConversations.Add(conversation);
-                    }
                 }
             }
 
-            
-        }
-        
-        // Find out which ones are already read and remove from the list
-        foreach(Conversation conversation in availableConversations.ToList())
-        {
-            if(saveData.AlreadyRead(conversation))
-            {
-                //Debug.Log($"Removing {conversation} from list bc it was already read");
-                availableConversations.Remove(conversation);
-            }
+            // If a character doesn't have any new talks available (due to complete or locked), add them to the 'small talk' option list
+            if (!oneFound && character.CharacterMet(this))
+                randomChatOptions.Add(character);
         }
     }
     /// <summary>
@@ -128,7 +113,7 @@ public class CallManager : MonoBehaviour
         }
         else // if no options, get a random final choice from list of complete characters
         {
-            return completeCharacters[Random.Range(0, completeCharacters.Count)].repeatableConversations.Pull();
+            return randomChatOptions[Random.Range(0, randomChatOptions.Count)].repeatableConversations.Pull();
         }
     }
 
@@ -163,6 +148,7 @@ public class CallManager : MonoBehaviour
         GlobalStatsManager.data.runsAttempted++;
         saveData?.IncrementRuns();
         bool s = DataManager.instance.Save(saveFileName, saveData);
+        UpdateCalls();
         //saveData.SeeAllReads();
         //Debug.Log($"Increment runs saved successfully : {s}");
     }

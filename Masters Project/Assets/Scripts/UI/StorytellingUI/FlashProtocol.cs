@@ -70,7 +70,7 @@ public class FlashProtocol : MonoBehaviour
     /// </summary>
     public void StopFlash()
     {
-        if(flashRoutine != null)
+        if (flashRoutine != null)
         {
             StopCoroutine(flashRoutine);
         }

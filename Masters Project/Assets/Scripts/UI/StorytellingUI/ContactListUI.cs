@@ -44,7 +44,7 @@ public class ContactListUI : MonoBehaviour
         foreach (var c in options)
         {
             // If they dont have their first call available, don't load it
-            if (!CheckRequirements(c))
+            if (!c.CharacterMet(CallManager.instance))
             {
                 continue;
             }
@@ -66,12 +66,6 @@ public class ContactListUI : MonoBehaviour
         Vector2 sizeBuffer = new Vector2(scrollTrans.content.sizeDelta.x, newSpacing);
         scrollTrans.content.sizeDelta = sizeBuffer;
         StartCoroutine(SetScrollTop());
-    }
-
-    protected virtual bool CheckRequirements(Character c)
-    {
-        return (CallManager.instance.HasNewCall(c.allConversations[0]) 
-            || CallManager.instance.CallInSave(c.allConversations[0]));
     }
 
     private IEnumerator SetScrollTop()

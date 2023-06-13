@@ -38,6 +38,17 @@ public class Character : ScriptableObject
         return allConversations.Contains(c);
     }
 
+    /// <summary>
+    /// Whether this character has been met yet
+    /// </summary>
+    /// <param name="manager">Manager to check</param>
+    /// <returns>Whether this character has been met</returns>
+    public bool CharacterMet(CallManager manager)
+    {
+        return (manager.HasNewCall(allConversations[0])
+            || manager.CallInSave(allConversations[0]));
+    }
+
     public bool CharacterComplete(CallManager manager)
     {
         // If any conversation is NOT in save data, then character is not complete

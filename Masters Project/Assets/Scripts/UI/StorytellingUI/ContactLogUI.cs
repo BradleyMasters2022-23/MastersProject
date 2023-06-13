@@ -31,8 +31,10 @@ public class ContactLogUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI descriptor;
     [SerializeField] private string uncheckedText;
     [SerializeField] private string incomingCallText;
-
-    private int maxDescriptorLength = 50;
+    /// <summary>
+    /// Max number of characters that can be passed into the start of the descriptor
+    /// </summary>
+    private readonly int maxDescriptorLength = 50;
 
     #region Convo Status
 
