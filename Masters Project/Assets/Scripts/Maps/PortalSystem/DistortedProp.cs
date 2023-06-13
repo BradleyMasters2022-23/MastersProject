@@ -50,7 +50,7 @@ public class DistortedProp : MonoBehaviour
     public void ClearDistortion()
     {
         distorted = false;
-        Indicators.SetIndicators(primedIndicators, false);
+        //Indicators.SetIndicators(primedIndicators, false);
         Indicators.SetIndicators(interactableIndicators, false);
     }
 }
