@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2518360300825110114}
   - component: {fileID: 7112530024406217187}
   - component: {fileID: 8032753603219100770}
+  - component: {fileID: 8049900171149354404}
   m_Layer: 5
   m_Name: Call Dot
   m_TagString: Untagged
@@ -76,6 +77,22 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8049900171149354404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4002462725088027117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4484dc7b2202c942bd627fca337f9fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flashRate: 0.8
+  flashColors:
+  - {r: 1, g: 0.88922286, b: 0.1830188, a: 0.62352943}
+  - {r: 1, g: 0.9455069, b: 0.5981132, a: 0.3137255}
 --- !u!1 &4591809553405901634
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,9 +158,7 @@ MonoBehaviour:
   checkedSprite: {fileID: 21300000, guid: 0656090f487d1f347bac9c1f4b5b301c, type: 3}
   incomingSprite: {fileID: 21300000, guid: 0656090f487d1f347bac9c1f4b5b301c, type: 3}
   interactButton: {fileID: 6408966905260133819}
-  flashInterval: 0.8
-  flashColor1: {r: 1, g: 0.7943834, b: 0, a: 0.7058824}
-  flashColor2: {r: 1, g: 0.9895435, b: 0.84339625, a: 0.7058824}
+  flashComponent: {fileID: 8049900171149354404}
   descriptor: {fileID: 9201058726411457070}
   uncheckedText: ???
   incomingCallText: 'Incoming Call '

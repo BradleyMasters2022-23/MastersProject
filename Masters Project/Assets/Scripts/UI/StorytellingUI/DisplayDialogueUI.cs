@@ -1,3 +1,10 @@
+/* ================================================================================================
+ * Author - Soma    
+ * Date Created - October, 2022
+ * Last Edited - June 13th, 2023 by Ben Schuster
+ * Description - Handles iterating over a conversation for the UI. 
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +28,10 @@ public class DisplayDialogueUI : MonoBehaviour
 
     private Coroutine loadingRoutine;
 
+    public delegate void onDialogueFinish();
+    private onDialogueFinish loadedFinishFunc;
+
+
     private void OnEnable()
     {
         if (!init)
@@ -39,15 +50,23 @@ public class DisplayDialogueUI : MonoBehaviour
         }
 
         currentActive = null;
-
+        loadedFinishFunc = null;
         click.performed -= DisplayDialogue;
         pennyScreen.ResetScreen();
         NPCScreen.ResetScreen();
     }
 
-    public void OpenScreen(Conversation c)
+    /// <summary>
+    /// Open the screen and begin displaying dialogue
+    /// </summary>
+    /// <param name="c">Conversation to process</param>
+    /// <param name="onFinishFunc">The function to perform upon COMPLETION of the dialogue</param>
+    public void OpenScreen(Conversation c, onDialogueFinish onFinishFunc = null)
     {
-        GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
+        if (GameManager.instance.CurrentState != GameManager.States.GAMEMENU)
+            GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
+
+        loadedFinishFunc = onFinishFunc;
         conversation = c;
         activeLineIndex = 0;
         gameObject.SetActive(true);
@@ -80,6 +99,13 @@ public class DisplayDialogueUI : MonoBehaviour
             return;
         }
             
+        // save conversation if the player reaches the last line of dialogue
+        if(activeLineIndex == conversation.lines.Length && conversation.ID >= 0)
+        {
+            // mark conversation as read and add to save data
+            CallManager.instance.SaveData(conversation);
+        }
+
         // Check which dialogue screen to use, if there are any lines left 
         if (activeLineIndex < conversation.lines.Length)
         {
@@ -96,21 +122,20 @@ public class DisplayDialogueUI : MonoBehaviour
                 loadingRoutine = NPCScreen.LoadInDialogue(conversation.nonPennyCharacter, conversation.lines[activeLineIndex], false);
             }
         }
-        else // otherwise, no more, close screen
+        else // otherwise, no more, close screen, perform any on finish functionality
         {
+            loadedFinishFunc?.Invoke();
             CloseScreen();
         }
 
         activeLineIndex++;
     }
-
+    /// <summary>
+    /// Close the screen after it finishes the entire dialogue
+    /// </summary>
     public void CloseScreen()
     {
-        if (conversation.ID >= 0)
-        {
-            // mark conversation as read and add to save data
-            CallManager.instance.SaveData(conversation);
-        }
+        
         click.Disable();
         GameManager.instance.CloseTopMenu();
     }

@@ -1,3 +1,10 @@
+/* ================================================================================================
+ * Author - Soma   
+ * Date Created - October, 2022
+ * Last Edited - June 13th, 2023 by Ben Schuster
+ * Description - Manages all conversations the player has access to, loading them and saving them
+ * ================================================================================================
+ */
 
 using System.Collections;
 using System.Collections.Generic;

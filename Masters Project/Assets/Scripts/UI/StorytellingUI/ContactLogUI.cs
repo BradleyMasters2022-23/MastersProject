@@ -25,9 +25,7 @@ public class ContactLogUI : MonoBehaviour
     [SerializeField] private GameObject interactButton;
 
     [Header("Flashing Data")]
-    [SerializeField] private float flashInterval;
-    [SerializeField] private Color flashColor1;
-    [SerializeField] private Color flashColor2;
+    [SerializeField] private FlashProtocol flashComponent;
 
     [Header("Text Data")]
     [SerializeField] private TextMeshProUGUI descriptor;
@@ -54,6 +52,8 @@ public class ContactLogUI : MonoBehaviour
     {
         if (convoRef == null) return;
 
+        
+        flashComponent.StopFlash();
         if (CallManager.instance.HasNewCall(convoRef))
         {
             SetIncoming();
@@ -94,7 +94,6 @@ public class ContactLogUI : MonoBehaviour
                 display += "...";
             }
             descriptor.text = display;
-
         }
     }
     /// <summary>
@@ -116,33 +115,11 @@ public class ContactLogUI : MonoBehaviour
     private void SetIncoming()
     {
         mImage.sprite = incomingSprite;
-        StartCoroutine(FlashRoutine());
+        flashComponent.BeginFlash();
 
         if (descriptor != null)
             descriptor.text = incomingCallText;
     }
-    /// <summary>
-    /// Flash on and off to indicate incoming call
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator FlashRoutine()
-    {
-        mImage.color = flashColor1;
-        
-        Color currColor = flashColor1;
-        while (CallManager.instance.HasNewCall(convoRef))
-        {
-            yield return new WaitForSecondsRealtime(flashInterval);
-
-            currColor = (currColor == flashColor1) ? flashColor2 : flashColor1;
-            mImage.color = currColor;
-            yield return null;
-        }
-
-        mImage.color = Color.white;
-        SetFound();
-    }
-
     #endregion
 
     #region Screenflow Funcs
@@ -156,7 +133,7 @@ public class ContactLogUI : MonoBehaviour
 
         if (ConvoRefManager.instance == null || convoRef == null) return;
 
-        ConvoRefManager.instance.GetCallUI().OpenScreen(convoRef);
+        ConvoRefManager.instance.GetCallUI().OpenScreen(convoRef, ConvoRefManager.instance.CheckCallStatuses);
         return;
     }
 

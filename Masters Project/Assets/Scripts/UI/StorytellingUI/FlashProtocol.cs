@@ -1,4 +1,10 @@
-using System.Collections;
+/* ================================================================================================
+ * Author - Ben Schuster   
+ * Date Created - June 12th, 2023
+ * Last Edited - June 12th, 2023 by Ben Schuster
+ * Description - Flashes an image item through various colors
+ * ================================================================================================
+ */using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,14 +12,29 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
 public class FlashProtocol : MonoBehaviour
 {
+    /// <summary>
+    /// Image to change colors of
+    /// </summary>
     private Image img;
-
+    [Tooltip("Time between each color change")]
     [SerializeField] private float flashRate;
-    [SerializeField] private Color[] flashColors;
-    private Color originalColor;
-    private int colIndex;
 
+    [Tooltip("Set of colors to flash through")]
+    [SerializeField] private Color[] flashColors;
+    /// <summary>
+    /// The original color of the object
+    /// </summary>
+    private Color originalColor;
+    /// <summary>
+    /// Reference to the routine
+    /// </summary>
     private Coroutine flashRoutine;
+    /// <summary>
+    /// Activation status of the object before the flash routine began
+    /// </summary>
+    private bool preActivationStatus;
+
+
 
     /// <summary>
     /// Begin flashing through all colors 
@@ -25,8 +46,9 @@ public class FlashProtocol : MonoBehaviour
 
         originalColor = img.color;
 
+        preActivationStatus = gameObject.activeInHierarchy;
         gameObject.SetActive(true);
-        StartCoroutine(Flash());
+        flashRoutine = StartCoroutine(Flash());
     }
     /// <summary>
     /// Repeatedly flash through all colors
@@ -34,6 +56,7 @@ public class FlashProtocol : MonoBehaviour
     /// <returns></returns>
     private IEnumerator Flash()
     {
+        int colIndex = 0;
         while(true)
         {
             img.color = flashColors[colIndex];
@@ -47,14 +70,16 @@ public class FlashProtocol : MonoBehaviour
     /// </summary>
     public void StopFlash()
     {
-        gameObject.SetActive(false);
-
         if(flashRoutine != null)
         {
             StopCoroutine(flashRoutine);
         }
 
-        img.color = originalColor;
-        colIndex = 0;
+        // Only change stuff if img is initialized. 
+        if(img != null)
+        {
+            img.color = originalColor;
+            gameObject.SetActive(preActivationStatus);
+        }
     }
 }

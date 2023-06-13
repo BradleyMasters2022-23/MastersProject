@@ -19,13 +19,7 @@ public class ContactOptionUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI subtitleText;
 
     [Tooltip("Image container for the flash")]
-    [SerializeField] private Image flashOverlay;
-    [SerializeField] private Color flashColor1;
-    [SerializeField] private Color flashColor2;
-    [Tooltip("Interval for the flash")]
-    [SerializeField] private float flashInterval;
-
-    private Coroutine flashingRoutine;
+    [SerializeField] private FlashProtocol flashComponent;
     [SerializeField] private Conversation newConvo;
 
     private List<GameObject> spawnedObjects = new List<GameObject>();
@@ -76,9 +70,6 @@ public class ContactOptionUI : MonoBehaviour
     private void OnDisable()
     {
         newConvo = null;
-
-        if (flashingRoutine != null)
-            StopCoroutine(flashingRoutine);
     }
 
     /// <summary>
@@ -99,36 +90,38 @@ public class ContactOptionUI : MonoBehaviour
         if (newConvo != null)
             StartFlashing();
         else
-            Stopflashing();
+            StopFlashing();
     }
 
     /// <summary>
-    /// Begin the flashing routine
+    /// Check if the loaded conversation has been read yet
+    /// </summary>
+    public void CheckStatus()
+    {
+        if(!CallManager.instance.HasNewCall(newConvo))
+        {
+            newConvo = null;
+            StopFlashing();
+        }
+    }
+
+    /// <summary>
+    /// Toggle the flash routine on and off
     /// </summary>
     private void StartFlashing()
     {
-        flashingRoutine = StartCoroutine(FlashRoutine());
+        flashComponent?.BeginFlash();
+        
     }
-    private IEnumerator FlashRoutine()
+    private void StopFlashing()
     {
-        flashOverlay.color = flashColor1;
-        flashOverlay.gameObject.SetActive(true);
+        flashComponent?.StopFlash();
 
-        Color currColor = flashColor1;
-        while(CallManager.instance.HasNewCall(newConvo))
+        // Tell each log to stop flashing
+        foreach (var o in spawnedObjects.ToArray())
         {
-            yield return new WaitForSecondsRealtime(flashInterval);
-
-            currColor = (currColor == flashColor1) ? flashColor2 : flashColor1;
-            flashOverlay.color = currColor;
-            yield return null;           
+            o.GetComponent<ContactLogUI>()?.CheckConvoStatus();
         }
-        flashOverlay.gameObject.SetActive(false);
-    }
-    private void Stopflashing()
-    {
-        StopAllCoroutines();
-        flashOverlay.gameObject.SetActive(false);
     }
 
     #endregion
@@ -187,7 +180,7 @@ public class ContactOptionUI : MonoBehaviour
 
         if (ConvoRefManager.instance == null || newConvo == null) return;
 
-        ConvoRefManager.instance.GetCallUI().OpenScreen(newConvo);
+        ConvoRefManager.instance.GetCallUI().OpenScreen(newConvo, ConvoRefManager.instance.CheckCallStatuses);
         return;
     }
 

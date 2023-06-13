@@ -1,3 +1,10 @@
+/* ================================================================================================
+ * Author - Ben Schuster   
+ * Date Created - June 12th, 2023
+ * Last Edited - June 12th, 2023 by Ben Schuster
+ * Description - Handles the UI screen that retrieves a random call for the player to use.
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,15 +13,21 @@ using TMPro;
 
 public class RandomCallUI : MonoBehaviour
 {
+    [Header("Functionality")]
+    [SerializeField] private SecretConversationInteract interactRef;
+    private Conversation loadedConveration;
+
+    [Header("Visuals")]
     [SerializeField] private Image portrait;
     [SerializeField] private TextMeshProUGUI nameBox;
     [SerializeField] private FlashProtocol flashOverlay;
 
-    private Conversation loadedConveration;
-
     private AudioClipSO ringtone;
     AudioSource ringtoneSource;
 
+    /// <summary>
+    /// On enable, initialize it and load in data
+    /// </summary>
     private void OnEnable()
     {
         if(ringtoneSource == null)
@@ -40,7 +53,9 @@ public class RandomCallUI : MonoBehaviour
         // Begin flashing 
         flashOverlay.BeginFlash();
     }
-
+    /// <summary>
+    /// Stop flashing when turned off
+    /// </summary>
     private void OnDisable()
     {
         flashOverlay.StopFlash();
@@ -52,7 +67,7 @@ public class RandomCallUI : MonoBehaviour
     public void PlayConversation()
     {
         GetComponent<GameObjectMenu>().CloseButton();
-        ConvoRefManager.instance.GetCallUI().OpenScreen(loadedConveration);
+        ConvoRefManager.instance.GetCallUI().OpenScreen(loadedConveration, interactRef.OnCallComplete);
         ringtoneSource.Stop();
     }
 

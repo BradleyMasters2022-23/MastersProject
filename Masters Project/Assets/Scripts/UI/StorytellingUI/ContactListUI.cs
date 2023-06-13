@@ -94,12 +94,12 @@ public class ContactListUI : MonoBehaviour
     /// <summary>
     /// Check all spawned objects for a call
     /// </summary>
-    private void CheckForCalls()
+    public void CheckForCalls()
     {
         // Tell each option loaded to check for a new call
         for (int i = 0; i < scrollTrans.content.childCount; i++)
         {
-            scrollTrans.content.GetChild(i).GetComponent<ContactOptionUI>()?.GetIncomingCall();
+            scrollTrans.content.GetChild(i).GetComponent<ContactOptionUI>()?.CheckStatus();
         }
     }
 

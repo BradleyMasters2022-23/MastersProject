@@ -1,3 +1,10 @@
+/* ================================================================================================
+ * Author - Soma   
+ * Date Created - October, 2022
+ * Last Edited - June 13th, 2023 by Ben Schuster
+ * Description - Interact manager for the conversation system
+ * ================================================================================================
+ */
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -44,7 +51,7 @@ public class ConversationInteract : MonoBehaviour, Interactable
 
         // keep the anchor on if calls are available
         if(waypointAnchor != null)
-            waypointAnchor.SetActive(calls.HasAvailable());
+            waypointAnchor.SetActive((calls.HasAvailable() && CanInteract()));
 
         // if calls are available, flash
         if(calls.HasAvailable())

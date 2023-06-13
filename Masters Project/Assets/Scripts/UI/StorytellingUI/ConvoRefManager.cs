@@ -13,7 +13,7 @@ using UnityEngine;
 public class ConvoRefManager : MonoBehaviour
 {
     public static ConvoRefManager instance;
-
+    
     [SerializeField] private ContactListUI contactListUI;
     [SerializeField] private CallHistoryUI callLogUI;
     [SerializeField] private DisplayDialogueUI callUI;
@@ -77,5 +77,16 @@ public class ConvoRefManager : MonoBehaviour
             callLogUI.GetComponent<GameObjectMenu>().CloseButton();
         if (contactListUI != null && contactListUI.isActiveAndEnabled)
             contactListUI.GetComponent<GameObjectMenu>().CloseButton();
+    }
+
+    public void CheckCallStatuses()
+    {
+        // Tell main system to check its status
+        if (callLogUI != null)
+            callLogUI.CheckStatus();
+
+        // Tell each contact list to update its call status incase it was read
+        if (contactListUI != null)
+            contactListUI.CheckForCalls();
     }
 }

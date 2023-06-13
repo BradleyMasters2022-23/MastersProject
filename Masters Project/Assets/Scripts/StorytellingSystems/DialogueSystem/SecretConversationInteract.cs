@@ -1,8 +1,16 @@
+/* ================================================================================================
+ * Author - Ben Schuster   
+ * Date Created - June 12th, 2023
+ * Last Edited - June 12th, 2023 by Ben Schuster
+ * Description - Override for conversation interat for the secret terminals. Manages
+ * getting the new screen and destroying it once a conversation has been read
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CallManagerSecret : ConversationInteract
+public class SecretConversationInteract : ConversationInteract
 {
     [Header("Secrets")]
 
@@ -15,33 +23,33 @@ public class CallManagerSecret : ConversationInteract
 
     private bool available = true;
 
+    /// <summary>
+    /// On interact, open the menu
+    /// </summary>
     public override void OnInteract()
     {
         if (!available) return;
 
-        //base.OnInteract();
-        GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
+        if(GameManager.instance.CurrentState != GameManager.States.MAINMENU)
+            GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
         newCallUI.gameObject.SetActive(true);
 
-        StartCoroutine(CheckForComplete());
+        //StartCoroutine(CheckForComplete());
     }
-
+    /// <summary>
+    /// This can only be interacted with if a call is available
+    /// </summary>
+    /// <returns></returns>
     public override bool CanInteract()
     {
         return available;
     }
 
     /// <summary>
-    /// Continually check until a conversation was complete
+    /// Mark conversation as complete. Passed into the display dialogue via RandomCallUI
     /// </summary>
-    /// <returns></returns>
-    private IEnumerator CheckForComplete()
+    public void OnCallComplete()
     {
-        int originalCnt = CallManager.instance.AvailableCallCount();
-        Debug.Log($"Available count set to {originalCnt}, now waiting");
-        // Wait until an available conversation was removed to kill the terminal
-        yield return new WaitUntil(()=> originalCnt != CallManager.instance.AvailableCallCount());
-
         available = false;
         SpawnNewCrystal();
         SetOffline();
@@ -62,7 +70,7 @@ public class CallManagerSecret : ConversationInteract
     {
         // turn off the interact
         ConvoRefManager.instance.CloseAllScreens();
-        //this.enabled = false;
+        gameObject.SetActive(false);
 
         // set the animator to play through the sequence of offline mode
         anim?.SetTrigger("play");
