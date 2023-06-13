@@ -15,16 +15,32 @@ using Sirenix.OdinInspector;
 
 public class CallManager : MonoBehaviour
 {
-    public List<Conversation> conversations = new List<Conversation>();
-    [SerializeField, ReadOnly, HideInEditorMode] 
-    protected List<Conversation> availableConversations = new List<Conversation>();
-    public Conversation defaultConversation;
+    /// <summary>
+    /// manager instance
+    /// </summary>
     public static CallManager instance;
 
+    [Tooltip("All characters with available to call with")]
+    public List<Character> characters = new List<Character>();
+    [Tooltip("All conversations available at this moment")]
+    [SerializeField, ReadOnly, HideInEditorMode] 
+    protected List<Conversation> availableConversations = new List<Conversation>();
+    /// <summary>
+    /// List of characters with complete stories
+    /// </summary>
+    [SerializeField, ReadOnly, HideInEditorMode]
+    private List<Character> completeCharacters = new List<Character>();
+
+    /// <summary>
+    /// Cheat controls
+    /// </summary>
     public static GameControls controls;
     private InputAction backslash;
     private InputAction forwardSlash;
 
+    /// <summary>
+    /// Save data 
+    /// </summary>
     private DialogueSaveData saveData;
     private const string saveFileName = "conversationSaveData";
 
@@ -59,24 +75,39 @@ public class CallManager : MonoBehaviour
         UpdateCalls();
     }
 
+    /// <summary>
+    /// Get an updated list of conversations available
+    /// </summary>
     private void UpdateCalls()
     {
-        // loop through conversations
-        foreach(Conversation conversation in conversations.ToList<Conversation>())
+        // loop through character conversations.
+        foreach(Character character in characters.ToList())
         {
-
-            // Check saved data if the dependencies have been satisfied
-            if (saveData.CheckDependencies(conversation) 
-                && !saveData.AlreadyRead(conversation)
-                && !availableConversations.Contains(conversation))
+            if(character.CharacterComplete(this))
             {
-                //Debug.Log($"Adding {conversation} to list");
-                availableConversations.Add(conversation);
+                if(!completeCharacters.Contains(character))
+                    completeCharacters.Add(character);
+            }
+            else // If not complete, add their conversations to list
+            {
+                foreach (Conversation conversation in character.allConversations)
+                {
+                    // Check saved data if the dependencies have been satisfied
+                    if (saveData.CheckDependencies(conversation)
+                        && !saveData.AlreadyRead(conversation)
+                        && !availableConversations.Contains(conversation))
+                    {
+                        //Debug.Log($"Adding {conversation} to list");
+                        availableConversations.Add(conversation);
+                    }
+                }
             }
 
+            
         }
         
-        foreach(Conversation conversation in availableConversations.ToList<Conversation>())
+        // Find out which ones are already read and remove from the list
+        foreach(Conversation conversation in availableConversations.ToList())
         {
             if(saveData.AlreadyRead(conversation))
             {
@@ -85,25 +116,30 @@ public class CallManager : MonoBehaviour
             }
         }
     }
-
+    /// <summary>
+    /// Get a random conversation
+    /// </summary>
+    /// <returns></returns>
     public Conversation GetRandomAvailableConversation()
     {
-        return availableConversations[Random.Range(0, availableConversations.Count)];
+        if(availableConversations.Count > 0) // If new chats available, get this instead
+        {
+            return availableConversations[Random.Range(0, availableConversations.Count)];
+        }
+        else // if no options, get a random final choice from list of complete characters
+        {
+            return completeCharacters[Random.Range(0, completeCharacters.Count)].repeatableConversations.Pull();
+        }
     }
 
     public bool HasAvailable()
     {
-        UpdateCalls();
+        //UpdateCalls();
         if (availableConversations.Count > 0)
         {
             return true;
         }
         return false;
-    }
-
-    public Conversation GetDefault()
-    {
-        return defaultConversation;
     }
 
     public void ResetCalls(InputAction.CallbackContext c = default)

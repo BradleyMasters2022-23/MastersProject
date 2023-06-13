@@ -12,13 +12,6 @@ using UnityEngine.UI;
 
 public class ContactListUI : MonoBehaviour
 {
-    /// <summary>
-    /// Whether or not this UI has been initialized
-    /// </summary>
-    private bool init = false;
-
-    [Tooltip("All contacts to load")]
-    [SerializeField] private Character[] contacts;
     [Tooltip("Prefab for each individual contact option")]
     [SerializeField] private GameObject contactPrefab;
     [Tooltip("Scroll manager for the menu")]
@@ -26,12 +19,9 @@ public class ContactListUI : MonoBehaviour
     [Tooltip("How overflow should be added to the content scroll")]
     [SerializeField] private float containerOverflowRatio = 1;
 
-    private ContactOptionUI[] loadedOptions;
-
     private void OnEnable()
     {
-        loadedOptions = new ContactOptionUI[contacts.Length];
-        PopulateList(contacts);
+        PopulateList(CallManager.instance.characters.ToArray());
     }
     private void OnDisable()
     {

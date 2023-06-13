@@ -14,6 +14,7 @@ public class CallHistoryUI : MonoBehaviour
 
     public void CheckStatus()
     {
+        // Debug.Log("Checking status of main call log");
         dataManager.CheckStatus();
     }
 }

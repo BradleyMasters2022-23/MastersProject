@@ -38,4 +38,15 @@ public class Character : ScriptableObject
         return allConversations.Contains(c);
     }
 
+    public bool CharacterComplete(CallManager manager)
+    {
+        // If any conversation is NOT in save data, then character is not complete
+        foreach(var conversation in allConversations)
+        {
+            if (!manager.CallInSave(conversation))
+                return false;
+        }
+        // otherwise, complete
+        return true;
+    }
 }
