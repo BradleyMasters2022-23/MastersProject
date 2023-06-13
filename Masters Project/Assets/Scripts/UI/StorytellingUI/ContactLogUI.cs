@@ -53,10 +53,12 @@ public class ContactLogUI : MonoBehaviour
     public void CheckConvoStatus()
     {
         if (convoRef == null) return;
-
-        
         flashComponent.StopFlash();
-        if (CallManager.instance.HasNewCall(convoRef))
+
+
+        if (!gameObject.activeInHierarchy)
+            SetNotFound();
+        else if (CallManager.instance.HasNewCall(convoRef))
         {
             SetIncoming();
         }

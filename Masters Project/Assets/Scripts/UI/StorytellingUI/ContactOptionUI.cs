@@ -119,6 +119,7 @@ public class ContactOptionUI : MonoBehaviour
     }
     public void StopFlashing()
     {
+        //Debug.Log("Contact told to stop flashing");
         flashComponent?.StopFlash();
 
         // Tell each log to stop flashing

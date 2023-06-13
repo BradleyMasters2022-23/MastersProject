@@ -24,7 +24,7 @@ public class FlashProtocol : MonoBehaviour
     /// <summary>
     /// The original color of the object
     /// </summary>
-    private Color originalColor;
+    [SerializeField] private Color originalColor;
     /// <summary>
     /// Reference to the routine
     /// </summary>
@@ -32,7 +32,7 @@ public class FlashProtocol : MonoBehaviour
     /// <summary>
     /// Activation status of the object before the flash routine began
     /// </summary>
-    private bool preActivationStatus;
+    [SerializeField] private bool preActivationStatus;
 
 
 
@@ -41,6 +41,10 @@ public class FlashProtocol : MonoBehaviour
     /// </summary>
     public void BeginFlash()
     {
+        // Don't start routine if one is already going
+        if (flashRoutine != null)
+            return;
+
         if(img == null)
             img = GetComponent<Image>();
 
@@ -70,14 +74,12 @@ public class FlashProtocol : MonoBehaviour
     /// </summary>
     public void StopFlash()
     {
+        // only revert if the routine was active
         if (flashRoutine != null)
         {
             StopCoroutine(flashRoutine);
-        }
+            flashRoutine = null;
 
-        // Only change stuff if img is initialized. 
-        if(img != null)
-        {
             img.color = originalColor;
             gameObject.SetActive(preActivationStatus);
         }
