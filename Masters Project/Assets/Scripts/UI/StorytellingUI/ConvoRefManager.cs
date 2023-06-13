@@ -38,17 +38,13 @@ public class ConvoRefManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator Init()
     {
-        while(contactListUI == null || callLogUI == null || callUI == null)
-        {
-            if(contactListUI == null)
-                contactListUI = PlayerTarget.p.GetComponentInChildren<ContactListUI>();
-            if(callLogUI == null)
-                callLogUI = PlayerTarget.p.GetComponentInChildren<CallHistoryUI>();
-            if(callUI== null)
-                callUI = PlayerTarget.p.GetComponentInChildren<DisplayDialogueUI>();
-
-            yield return new WaitForSecondsRealtime(1);
-        }
+        if (contactListUI == null)
+            contactListUI = PlayerTarget.p.GetComponentInChildren<ContactListUI>();
+        if (callLogUI == null)
+            callLogUI = PlayerTarget.p.GetComponentInChildren<CallHistoryUI>();
+        if (callUI == null)
+            callUI = PlayerTarget.p.GetComponentInChildren<DisplayDialogueUI>();
+        yield return null;
     }
 
     public ContactListUI GetContactList()
@@ -75,11 +71,11 @@ public class ConvoRefManager : MonoBehaviour
     /// </summary>
     public void CloseAllScreens()
     {
-        if(callUI.isActiveAndEnabled)
+        if(callUI != null && callUI.isActiveAndEnabled)
             callUI.GetComponent<GameObjectMenu>().CloseButton();
-        if (callLogUI.isActiveAndEnabled)
+        if (callLogUI != null && callLogUI.isActiveAndEnabled)
             callLogUI.GetComponent<GameObjectMenu>().CloseButton();
-        if (contactListUI.isActiveAndEnabled)
+        if (contactListUI != null && contactListUI.isActiveAndEnabled)
             contactListUI.GetComponent<GameObjectMenu>().CloseButton();
     }
 }

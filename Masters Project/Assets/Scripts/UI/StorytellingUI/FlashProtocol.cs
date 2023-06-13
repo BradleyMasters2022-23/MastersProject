@@ -23,7 +23,7 @@ public class FlashProtocol : MonoBehaviour
         if(img == null)
             img = GetComponent<Image>();
 
-        originalColor= img.color;
+        originalColor = img.color;
 
         gameObject.SetActive(true);
         StartCoroutine(Flash());
@@ -37,7 +37,7 @@ public class FlashProtocol : MonoBehaviour
         while(true)
         {
             img.color = flashColors[colIndex];
-            colIndex = (colIndex++) % flashColors.Length;
+            colIndex = (colIndex+1) % flashColors.Length;
 
             yield return new WaitForSecondsRealtime(flashRate);
         }

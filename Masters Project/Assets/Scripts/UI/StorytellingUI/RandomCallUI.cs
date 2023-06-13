@@ -20,11 +20,24 @@ public class RandomCallUI : MonoBehaviour
         if(ringtoneSource == null)
             ringtoneSource= GetComponent<AudioSource>();
 
+        // Try to get conversation. If it fails, close immediately
         if (loadedConveration == null)
             loadedConveration = GetConversation();
+        if (loadedConveration == null)
+        {
+            GetComponent<GameObjectMenu>().CloseButton();
+            return;
+        }
 
+        // Load in the data
+        if (portrait != null)
+            portrait.sprite = loadedConveration.nonPennyCharacter.characterThumbnail;
+        if (nameBox != null)
+            nameBox.text = loadedConveration.nonPennyCharacter.characterName;
+        ringtone = loadedConveration.nonPennyCharacter.ringtone;
         ringtone.PlayClip(ringtoneSource);
 
+        // Begin flashing 
         flashOverlay.BeginFlash();
     }
 
@@ -33,8 +46,12 @@ public class RandomCallUI : MonoBehaviour
         flashOverlay.StopFlash();
     }
 
+    /// <summary>
+    /// Play the conversation, close this screen. Called via UI
+    /// </summary>
     public void PlayConversation()
     {
+        GetComponent<GameObjectMenu>().CloseButton();
         ConvoRefManager.instance.GetCallUI().OpenScreen(loadedConveration);
         ringtoneSource.Stop();
     }

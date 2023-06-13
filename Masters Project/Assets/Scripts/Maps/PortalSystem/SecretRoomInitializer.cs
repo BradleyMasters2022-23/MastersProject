@@ -33,7 +33,7 @@ public class SecretRoomInitializer : RoomInitializer
             Destroy(this);
             return;
         }
-        Debug.Log("Secret room instance initialized");
+        // Debug.Log("Secret room instance initialized");
     }
 
     private void OnDisable()

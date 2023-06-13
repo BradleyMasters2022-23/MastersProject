@@ -47,6 +47,7 @@ public class DisplayDialogueUI : MonoBehaviour
 
     public void OpenScreen(Conversation c)
     {
+        GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
         conversation = c;
         activeLineIndex = 0;
         gameObject.SetActive(true);

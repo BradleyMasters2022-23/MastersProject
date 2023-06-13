@@ -31,7 +31,6 @@ public class CallManager : MonoBehaviour
         forwardSlash.performed += IncrementRuns;
         forwardSlash.Enable();
 
-
         if (instance == null)
         {
             instance = this;
@@ -109,15 +108,6 @@ public class CallManager : MonoBehaviour
 
         availableConversations.Clear();
 
-        //foreach (Conversation conversation in conversations)
-        //{
-        //    conversation.Lock();
-        //}
-
-        //conversations[0].Unlock();
-        //if (conversations.Count >= 4)
-        //    conversations[3].Unlock();
-
         UpdateCalls();
         Debug.Log("Calls Reset");
     }
@@ -129,7 +119,7 @@ public class CallManager : MonoBehaviour
     {
         GlobalStatsManager.data.runsAttempted++;
         saveData?.IncrementRuns();
-        bool s = DataManager.instance.Save<DialogueSaveData>(saveFileName, saveData);
+        bool s = DataManager.instance.Save(saveFileName, saveData);
         //saveData.SeeAllReads();
         //Debug.Log($"Increment runs saved successfully : {s}");
     }
@@ -144,7 +134,7 @@ public class CallManager : MonoBehaviour
         if (availableConversations.Contains(c))
             availableConversations.Remove(c);
 
-        bool s = DataManager.instance.Save<DialogueSaveData>(saveFileName, saveData);
+        bool s = DataManager.instance.Save(saveFileName, saveData);
         //Debug.Log($"Conversation save successful : {s}");
         //saveData.SeeAllReads();
     }
