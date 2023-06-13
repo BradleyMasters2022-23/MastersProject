@@ -62,7 +62,7 @@ public class SecretPortalInstance : MonoBehaviour
     /// </summary>
     public void GoToSecretRoom()
     {
-        Debug.Log("Going to secret room");
+        //Debug.Log("Going to secret room");
         
         secretRoomPortal.TeleportToPortal();
     }
