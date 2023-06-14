@@ -36,7 +36,7 @@ public class CrystalInteract : MonoBehaviour, Interactable
 
     public void RandomizeCrystal()
     {
-        RandomizeCrystalSetStats(Mathf.Clamp((MapLoader.instance.PortalDepth()) * parMod, 1, 999));
+        RandomizeCrystalSetStats(MapLoader.instance.PortalDepth());
     }
 
     public void RandomizeCrystalSetStats(int newPar)
@@ -44,7 +44,8 @@ public class CrystalInteract : MonoBehaviour, Interactable
         if (crystalManagerInstance == null)
             crystalManagerInstance = CrystalManager.instance;
 
-        par = newPar;
+        // apply new level, clamp it to make sure its above 1
+        par = Mathf.Clamp(newPar * parMod, 1, 9999);
 
         // loads crystal
         if (crystalManagerInstance != null && crystal == null)
