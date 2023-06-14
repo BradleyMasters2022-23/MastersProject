@@ -39,6 +39,7 @@ public class CrystalSlotScreen : MonoBehaviour
 
 
     [SerializeField] private Animator animator;
+    [SerializeField] private CanvasGroup[] resetsOnOpen;
 
     /// <summary>
     /// Reference to the global instance 
@@ -71,6 +72,11 @@ public class CrystalSlotScreen : MonoBehaviour
         {
             Debug.LogError("Error! Tried to call open crystal screen, but theres no crystal manager!");
             return;
+        }
+
+        foreach(var o in resetsOnOpen)
+        {
+            o.alpha = 0;
         }
 
         GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
@@ -122,6 +128,8 @@ public class CrystalSlotScreen : MonoBehaviour
         // If no default slot found, set to first slot
         if(!found)
             allSlots[0].SelectUpgrade();
+
+        
 
         // Load current new icon
         newCrystalDisplay.LoadCrystal(this, newCrystal, -1);
@@ -261,7 +269,11 @@ public class CrystalSlotScreen : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(null);
     }
 
-    
+    /// <summary>
+    /// Lerp the pointer to the dedicated slot
+    /// </summary>
+    /// <param name="targPos"></param>
+    /// <returns></returns>
     private IEnumerator MoveToSlot(Vector3 targPos)
     {
         float t = 0;
@@ -273,6 +285,14 @@ public class CrystalSlotScreen : MonoBehaviour
         }
 
         yield return null;
+    }
+
+    /// <summary>
+    /// Set the new pos to the top by default
+    /// </summary>
+    private void OnDisable()
+    {
+        newCrystalTransform.position = allSlots[0].GetAnchoredPos();
     }
 
     /// <summary>
