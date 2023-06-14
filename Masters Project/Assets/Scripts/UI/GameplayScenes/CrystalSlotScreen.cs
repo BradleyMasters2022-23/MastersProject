@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Linq;
 using Masters.UI;
+using UnityEngine.EventSystems;
 
 public class CrystalSlotScreen : MonoBehaviour
 {
@@ -19,8 +20,8 @@ public class CrystalSlotScreen : MonoBehaviour
     private Crystal selectedCrystal;
     private int selectedCrystalIndex = 0;
 
-    // Currently empty, can be recommented to reimplement
-    // [SerializeField] private Sprite blank;
+    [Tooltip("A blocker for raycasts. Used to prevent")]
+    [SerializeField] GameObject raycastBlocker;
 
     [SerializeField] private CrystalUIDisplay newCrystalDisplay;
     [SerializeField] private CrystalUIDisplay hoverCrystalDisplay;
@@ -32,6 +33,10 @@ public class CrystalSlotScreen : MonoBehaviour
 
     [SerializeField] private RectTransform newCrystalTransform;
     [SerializeField] private RectTransform trashDisplay;
+
+    [SerializeField] private AudioClipSO slotSound;
+    [SerializeField] private AudioSource soundPlayer;
+
 
     [SerializeField] private Animator animator;
 
@@ -46,6 +51,11 @@ public class CrystalSlotScreen : MonoBehaviour
     /// Reference to the confirmation box
     /// </summary>
     private ConfirmationBox confirmBox;
+
+    /// <summary>
+    /// coroutine ref for sliding the stuff
+    /// </summary>
+    private Coroutine slideRoutine;
 
     /// <summary>
     /// Open the screen, change state
@@ -69,6 +79,8 @@ public class CrystalSlotScreen : MonoBehaviour
         animator.enabled = true;
         animator.ResetPlay();
         animator.SetTrigger("HoverStart");
+
+        raycastBlocker.SetActive(false);
 
         InitializeEquippedCrystals();
         DisplayNewCrystalStats();
@@ -137,7 +149,11 @@ public class CrystalSlotScreen : MonoBehaviour
 
         // Only do after init. otherwise, unity screen loading is weird and its wrong
         if(init)
-            newCrystalTransform.position = allSlots[index].GetAnchoredPos();
+        {
+            if (slideRoutine != null)
+                StopCoroutine(slideRoutine);
+            slideRoutine = StartCoroutine(MoveToSlot(allSlots[index].GetAnchoredPos()));
+        }
 
         if (crystalManager.GetEquippedCrystal(index) != null)
         {
@@ -168,10 +184,13 @@ public class CrystalSlotScreen : MonoBehaviour
     /// </summary>
     public void Trash()
     {
-        newCrystalTransform.position = trashDisplay.position;
+        // slide to target
+        if (slideRoutine != null)
+            StopCoroutine(slideRoutine);
+        slideRoutine = StartCoroutine(MoveToSlot(trashDisplay.position));
 
         // clear trash mark status from old, apply to current
-        if(selectedCrystalIndex != -1)
+        if (selectedCrystalIndex != -1)
             allSlots[selectedCrystalIndex].MarkForTrash(false);
         newCrystalDisplay.MarkForTrash(true);
 
@@ -235,9 +254,32 @@ public class CrystalSlotScreen : MonoBehaviour
         caller.BegoneCrystalInteract();
 
         animator.SetTrigger("SlotCrystal");
+
         // disable UI input during equip animation to prevent bugs
         GameManager.controls.UI.Disable();
+        raycastBlocker.SetActive(true);
+        EventSystem.current.SetSelectedGameObject(null);
+    }
 
-        //GetComponent<GameObjectMenu>().CloseButton();
+    
+    private IEnumerator MoveToSlot(Vector3 targPos)
+    {
+        float t = 0;
+        while (t < 0.15f)
+        {
+            t += Time.unscaledDeltaTime;
+            newCrystalTransform.position = Vector3.Lerp(newCrystalTransform.position, targPos, (t / 0.15f));
+            yield return new WaitForEndOfFrame();
+        }
+
+        yield return null;
+    }
+
+    /// <summary>
+    /// Play the slot sound effect. Played via animator
+    /// </summary>
+    public void PlaySlotSound()
+    {
+        slotSound.PlayClip(soundPlayer);
     }
 }
