@@ -21,6 +21,7 @@ public class GameObjectMenu : UIMenu
     /// </summary>
     public override void CloseFunctionality()
     {
+        //Debug.Log("Close button functionality done");
         gameObject.SetActive(false);
 
         if (backButton != null)

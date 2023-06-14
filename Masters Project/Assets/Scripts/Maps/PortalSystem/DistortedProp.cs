@@ -30,7 +30,7 @@ public class DistortedProp : MonoBehaviour
     {
         if(distorted)
         {
-            Debug.Log("Initializing distorted prop");
+            // Debug.Log("Initializing distorted prop");
             Indicators.SetIndicators(primedIndicators, true);
             MapLoader.instance.RegisterOnEncounterComplete(EnableInteraction);
         }
@@ -50,7 +50,7 @@ public class DistortedProp : MonoBehaviour
     public void ClearDistortion()
     {
         distorted = false;
-        Indicators.SetIndicators(primedIndicators, false);
+        //Indicators.SetIndicators(primedIndicators, false);
         Indicators.SetIndicators(interactableIndicators, false);
     }
 }

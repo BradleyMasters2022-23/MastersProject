@@ -87,7 +87,7 @@ public class LayoutRandomizer : MonoBehaviour, IRandomizer
                 continue;
 
             // only use ones that are within depth limit
-            if((layout.minRoomDepth != layout.maxRoomDepth) && depth >= layout.minRoomDepth && depth <= layout.maxRoomDepth)
+            if((layout.minRoomDepth == layout.maxRoomDepth) || (depth >= layout.minRoomDepth && depth <= layout.maxRoomDepth))
             {
                 usableLayouts.Add(layout);
                 totalWeight += layout.ModdedWeight(depth);

@@ -452,7 +452,7 @@ public class GameManager : MonoBehaviour
     public void PushMenu(UIMenu menu)
     {
         //EventSystem.current.SetSelectedGameObject(null);
-
+        //Debug.Log("New menu added");
         if(menuStack.Count > 0)
         {
             menuStack.Peek().StackSave();

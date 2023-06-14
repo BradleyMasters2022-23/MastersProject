@@ -101,6 +101,7 @@ public abstract class UIMenu : MonoBehaviour
     /// </summary>
     public virtual void CloseButton()
     {
+        //Debug.Log("Close button called");
         GameManager.instance.CloseTopMenu();
         lastSelected = null;
     }

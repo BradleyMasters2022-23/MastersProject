@@ -328,7 +328,7 @@ public class MapLoader : MonoBehaviour
 
         onEncounterComplete?.RemoveAllListeners();
 
-        Debug.Log("Load room routine called");
+        // Debug.Log("Load room routine called");
 
         // iterate to next step
         portalDepth++;

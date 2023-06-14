@@ -20,7 +20,7 @@ public class MusicSelectOnAwake : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Setting music to " + music);
+        // Debug.Log("Setting music to " + music);
 
         BackgroundMusicManager i = BackgroundMusicManager.instance;
         if (i != null)

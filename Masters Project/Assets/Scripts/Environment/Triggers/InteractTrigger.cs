@@ -19,7 +19,7 @@ public class InteractTrigger : Trigger, Interactable
     /// <returns>Whether this interact can be used</returns>
     public bool CanInteract()
     {
-        return subscribers.Count > 0;
+        return true;
     }
 
     /// <summary>
