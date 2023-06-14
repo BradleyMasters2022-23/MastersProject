@@ -12,8 +12,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
-using static Cinemachine.DocumentationSortingAttribute;
-using static Unity.VisualScripting.Member;
+using Masters.UI;
 
 public abstract class UIMenu : MonoBehaviour
 {
@@ -90,9 +89,10 @@ public abstract class UIMenu : MonoBehaviour
     {
         openMenu.PlayClip(source);
 
-        if (animator != null)
+        if (animator != null && animator.HasStateStr("Open"))
         {
-            animator.SetBool("open", true);
+            animator.StartPlayback();
+            animator.SetBool("Open", true);
         }
     }
 
@@ -101,7 +101,7 @@ public abstract class UIMenu : MonoBehaviour
     /// </summary>
     public virtual void CloseButton()
     {
-        //Debug.Log("Close button called");
+        Debug.Log("Close button called");
         GameManager.instance.CloseTopMenu();
         lastSelected = null;
     }
@@ -114,7 +114,17 @@ public abstract class UIMenu : MonoBehaviour
         // If there is an animator, play animation before closing
         if (animator != null)
         {
-            animator.SetBool("open", false);
+            // If the animator has an open/close state, use that instead
+            if(animator.HasStateStr("Open"))
+            {
+                animator.SetBool("Open", false);
+            }
+            else // Otherwise, close it and stop its playback now
+            {
+                animator.StopPlayback();
+                CloseFunctionality();
+            }
+            
             lastSelected = null;
         }
         // Otherwise, close by unloading

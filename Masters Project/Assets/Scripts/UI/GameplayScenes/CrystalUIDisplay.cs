@@ -160,4 +160,15 @@ public class CrystalUIDisplay : MonoBehaviour
 
         return displayString;
     }
+
+    /// <summary>
+    /// animator for the trash alert system
+    /// </summary>
+    [SerializeField] private Animator anim;
+    public void MarkForTrash(bool trash)
+    {
+        if (anim == null) return;
+
+        anim.SetBool("Trash", trash);
+    }
 }

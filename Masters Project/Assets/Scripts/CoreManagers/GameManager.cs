@@ -468,17 +468,15 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void CloseTopMenu(InputAction.CallbackContext c = default)
     {
-        //Debug.Log("Close was called! " + c.action);
-
         // Check if there are no options available
         if (menuStack.Count <= 0)
         {
-            // Debug.Log("[GameManager] Close menu called, but no menu to close!");
+            //Debug.Log("[GameManager] Close menu called, but no menu to close!");
             return;
         }
         else if(!menuStack.Peek().Closable)
         {
-            // Debug.Log($"[GameManager] Tried to close the menu {menuStack.Peek().name}, but its marked as permenant!");
+            Debug.Log($"[GameManager] Tried to close the menu {menuStack.Peek().name}, but its marked as permenant!");
             return;
         }
 
@@ -506,6 +504,7 @@ public class GameManager : MonoBehaviour
         {
             if(currentState == States.PAUSED)
             {
+                
                 TogglePause();
             }
             else if (currentState == States.GAMEMENU)

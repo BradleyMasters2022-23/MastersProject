@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Linq;
+using Masters.UI;
 
 public class CrystalSlotScreen : MonoBehaviour
 {
@@ -31,6 +32,8 @@ public class CrystalSlotScreen : MonoBehaviour
 
     [SerializeField] private RectTransform newCrystalTransform;
     [SerializeField] private RectTransform trashDisplay;
+
+    [SerializeField] private Animator animator;
 
     /// <summary>
     /// Reference to the global instance 
@@ -62,6 +65,10 @@ public class CrystalSlotScreen : MonoBehaviour
 
         GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
         gameObject.SetActive(true);
+
+        animator.enabled = true;
+        animator.ResetPlay();
+        animator.SetTrigger("HoverStart");
 
         InitializeEquippedCrystals();
         DisplayNewCrystalStats();
@@ -120,6 +127,12 @@ public class CrystalSlotScreen : MonoBehaviour
     /// </summary>
     public void SelectEquipSlot(int index)
     {
+        // Mark old slot to not trash, just in case
+        if (selectedCrystalIndex == -1)
+            newCrystalDisplay.MarkForTrash(false);
+        else
+            allSlots[selectedCrystalIndex].MarkForTrash(false);
+
         selectedCrystalIndex = index;
 
         // Only do after init. otherwise, unity screen loading is weird and its wrong
@@ -130,9 +143,12 @@ public class CrystalSlotScreen : MonoBehaviour
         {
             selectedCrystal = crystalManager.GetEquippedCrystal(index);
             DisplaySelectedCrystal();
+            allSlots[selectedCrystalIndex].MarkForTrash(true);
+            animator.SetInteger("DestroyTarget", 1);
         } 
         else
         {
+            animator.SetInteger("DestroyTarget", 0);
             hoverCrystalDisplay.LoadEmpty();
         }
 
@@ -147,16 +163,29 @@ public class CrystalSlotScreen : MonoBehaviour
         hoverCrystalDisplay.LoadCrystal(this, selectedCrystal, selectedCrystalIndex);
     }
 
+    /// <summary>
+    /// Set it to trash
+    /// </summary>
     public void Trash()
     {
         newCrystalTransform.position = trashDisplay.position;
 
+        // clear trash mark status from old, apply to current
+        if(selectedCrystalIndex != -1)
+            allSlots[selectedCrystalIndex].MarkForTrash(false);
+        newCrystalDisplay.MarkForTrash(true);
+
         selectedCrystalIndex = -1;
         hoverCrystalDisplay.LoadEmpty();
+
+        animator.SetInteger("DestroyTarget", -1);
 
         DisplayPennyStats();
     }
 
+    /// <summary>
+    /// Try applying changes, send warning first if appropriate
+    /// </summary>
     public void RequestApplyChanges()
     {
         // Try to get box if null
@@ -193,7 +222,9 @@ public class CrystalSlotScreen : MonoBehaviour
         confirmBox.RequestConfirmation(ApplyChanges, txt);
     }
 
-
+    /// <summary>
+    /// Apply changes, start equip animation
+    /// </summary>
     private void ApplyChanges()
     {
         if(selectedCrystalIndex >= 0)
@@ -203,6 +234,10 @@ public class CrystalSlotScreen : MonoBehaviour
         }
         caller.BegoneCrystalInteract();
 
-        GetComponent<GameObjectMenu>().CloseButton();
+        animator.SetTrigger("SlotCrystal");
+        // disable UI input during equip animation to prevent bugs
+        GameManager.controls.UI.Disable();
+
+        //GetComponent<GameObjectMenu>().CloseButton();
     }
 }
