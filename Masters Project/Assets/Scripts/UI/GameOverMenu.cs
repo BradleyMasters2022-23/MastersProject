@@ -81,22 +81,22 @@ public class GameOverMenu : MonoBehaviour
     public void LoadToHubNewSystem()
     {
         // Debug.Log("Going to hub");
-        MapLoader.instance.ClearRunData();
+        MapLoader.instance?.ClearRunData();
         GameManager.instance.GoToHub();
     }
 
     public void RequestMainMenuReturn()
     {
-        PlayerTarget.p.GetComponentInChildren<ConfirmationBox>(true).RequestConfirmation(LoadToHubNewSystem);
+        PlayerTarget.p.GetComponentInChildren<ConfirmationBox>(true).RequestConfirmation(LoadToMainMenu);
     }
 
     /// <summary>
     /// return to the main menu
     /// </summary>
-    public void ReturnToMainMenu()
+    public void LoadToMainMenu()
     {
         // Debug.Log("Going to main menu");
-        MapLoader.instance.ClearRunData();
+        MapLoader.instance?.ClearRunData();
         GameManager.instance.GoToMainMenu();
     }
 

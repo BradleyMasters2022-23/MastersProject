@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 4282705925873524701}
   - component: {fileID: 5470540619387770156}
   - component: {fileID: 2247461143848101900}
-  m_Layer: 0
+  - component: {fileID: 9146083776238661614}
+  m_Layer: 3
   m_Name: LargeRock_01_LOD4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4282705925873524701
 Transform:
@@ -61,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bb254ac1129644e448e629a8bb38134f, type: 2}
+  - {fileID: 2100000, guid: 2fb95be39e301b74ea27ca5356f45827, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -83,6 +84,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &9146083776238661614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 985677884940117795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3da36f883ef8e404dbcd99c7c146297a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guid: c6b4449abf6c0b441a258e9ce6d9e850
 --- !u!1 &1185579686390516313
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,12 +108,12 @@ GameObject:
   - component: {fileID: 5058696422920522633}
   - component: {fileID: 5195120694651063867}
   - component: {fileID: 1065061158086937745}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: LargeRock_01_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &5058696422920522633
 Transform:
@@ -177,12 +191,12 @@ GameObject:
   - component: {fileID: 3264776471167334067}
   - component: {fileID: 5073958518093515762}
   - component: {fileID: 6291268703456937887}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: LargeRock_01_LOD3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &3264776471167334067
 Transform:
@@ -260,12 +274,12 @@ GameObject:
   - component: {fileID: 7902603684234310266}
   - component: {fileID: 7467340140263751759}
   - component: {fileID: 2675972350138393121}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: LargeRock_01_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &7902603684234310266
 Transform:
@@ -343,12 +357,12 @@ GameObject:
   - component: {fileID: 4346602141561907525}
   - component: {fileID: 3892376190936160751}
   - component: {fileID: 7300499397760441385}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: LargeRock_01_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 0
 --- !u!4 &4346602141561907525
 Transform:
@@ -425,12 +439,13 @@ GameObject:
   m_Component:
   - component: {fileID: 5059600025395216442}
   - component: {fileID: 5639863517515831038}
-  m_Layer: 0
+  - component: {fileID: 7431319782624209726}
+  m_Layer: 3
   m_Name: LargeRock_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5059600025395216442
 Transform:
@@ -477,6 +492,22 @@ LODGroup:
     renderers:
     - renderer: {fileID: 7104586170250857577}
   m_Enabled: 1
+--- !u!114 &7431319782624209726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8100874785181643305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ce18b6b2f95e5e469658681c19225b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minimumRoomNum: 0
+  maximumRoomNum: 3
+  baseStayChance: 70
+  depthChanceModifier: -15
 --- !u!1 &9150424751108500462
 GameObject:
   m_ObjectHideFlags: 0
@@ -488,12 +519,13 @@ GameObject:
   - component: {fileID: 3444406756987379964}
   - component: {fileID: 1284850637554553743}
   - component: {fileID: 7104586170250857577}
-  m_Layer: 0
+  - component: {fileID: 4572879461740906082}
+  m_Layer: 3
   m_Name: LargeRock_01_LOD5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &3444406756987379964
 Transform:
@@ -560,6 +592,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4572879461740906082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9150424751108500462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3da36f883ef8e404dbcd99c7c146297a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  guid: baa02bc1fbb80b64e820ce6d65f057b5
 --- !u!1 &9187018368267597831
 GameObject:
   m_ObjectHideFlags: 0
@@ -570,12 +615,12 @@ GameObject:
   m_Component:
   - component: {fileID: 5135861405431342991}
   - component: {fileID: 6336129554133443932}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: LargeRock_01_Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5135861405431342991
 Transform:
@@ -603,6 +648,6 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 8104379205962413637, guid: 764379d727217764dba081f1996856a1, type: 3}

@@ -1,3 +1,10 @@
+/* ================================================================================================
+ * Author - Soma   
+ * Date Created - October, 2022
+ * Last Edited - June 13th, 2023 by Ben Schuster
+ * Description - Interact manager for the conversation system
+ * ================================================================================================
+ */
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +15,7 @@ public class ConversationInteract : MonoBehaviour, Interactable
     private CallManager calls;
     // eventually, should instead pull up a screen with a list of characters & info about them
     // when a conversation is available, screen should blink; eventually, screen & contact both blink
-    private DisplayDialogueUI ui;
+    private ConvoRefManager ui;
 
     [SerializeField] private MeshRenderer flashRenderer;
     private Color original;
@@ -25,7 +32,7 @@ public class ConversationInteract : MonoBehaviour, Interactable
 
     private void Start()
     {
-        ui = FindObjectOfType<DisplayDialogueUI>(true);
+        ui = ConvoRefManager.instance;
         calls = CallManager.instance;
         if(flashRenderer == null)
         {
@@ -44,7 +51,7 @@ public class ConversationInteract : MonoBehaviour, Interactable
 
         // keep the anchor on if calls are available
         if(waypointAnchor != null)
-            waypointAnchor.SetActive(calls.HasAvailable());
+            waypointAnchor.SetActive((calls.HasAvailable() && CanInteract()));
 
         // if calls are available, flash
         if(calls.HasAvailable())
@@ -75,7 +82,7 @@ public class ConversationInteract : MonoBehaviour, Interactable
         
     }
 
-    public void OnInteract(PlayerController player)
+    public virtual void OnInteract()
     {
         if (ui == null)
         {
@@ -88,16 +95,21 @@ public class ConversationInteract : MonoBehaviour, Interactable
             return;
         }
 
-        if (calls.HasAvailable())
+        if (ui != null)
         {
-            ui.OpenScreen(calls.GetRandomAvailableConversation());
-        }
-        else
-        {
-            ui.OpenScreen(calls.GetDefault());
+            ui.OpenScreen();
         }
 
         // call any subscribed functions to the caller
         onStartCall?.Invoke();
+    }
+
+    /// <summary>
+    /// Can interact if the UI is not null
+    /// </summary>
+    /// <returns></returns>
+    public virtual bool CanInteract()
+    {
+        return (ui != null);
     }
 }

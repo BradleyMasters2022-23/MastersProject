@@ -73,7 +73,7 @@ public class AllNotesManager : MonoBehaviour
         }
 
         // debug checking
-        Debug.Log($"Lost notes size {worldDropPool.Count}");
+        // Debug.Log($"Lost notes size {worldDropPool.Count}");
         UpdateNotes();
     }
 

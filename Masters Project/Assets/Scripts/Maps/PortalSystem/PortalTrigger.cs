@@ -50,6 +50,10 @@ public class PortalTrigger : MonoBehaviour, Interactable
     /// Current scale modifier
     /// </summary>
     private Vector3 horScale;
+    /// <summary>
+    /// The max amount of change that can be applied to a scale in one frame
+    /// </summary>
+    private float maxScaleChange = 0.02f;
 
     /// <summary>
     /// reference to the secret portal
@@ -92,8 +96,10 @@ public class PortalTrigger : MonoBehaviour, Interactable
         if (portalScaleObject != null)
         {
             float dist = Vector3.Distance(transform.position, playerRef.position);
-            horScale.x = horizontalScaleOverDistance.Evaluate(dist);
-            horScale.z = horizontalScaleOverDistance.Evaluate(dist);
+            float newVal = horizontalScaleOverDistance.Evaluate(dist);
+            newVal = Mathf.Clamp(newVal, horScale.x - maxScaleChange, horScale.x + maxScaleChange);
+            horScale.x = newVal;
+            horScale.z = newVal;
             portalScaleObject.localScale = horScale;
         }
     }
@@ -102,7 +108,7 @@ public class PortalTrigger : MonoBehaviour, Interactable
     /// When interacted, perform appropriate action
     /// </summary>
     /// <param name="player">The player reference</param>
-    public void OnInteract(PlayerController player)
+    public void OnInteract()
     {
         // make sure it can only be used once
         if(usable && interactionCooldown.TimerDone())
@@ -111,6 +117,10 @@ public class PortalTrigger : MonoBehaviour, Interactable
             Indicators.SetIndicators(interactIndicators, true);
             onInteract.Invoke();
         }
+    }
+    public bool CanInteract()
+    {
+        return (usable && interactionCooldown.TimerDone());
     }
 
     /// <summary>
@@ -123,7 +133,8 @@ public class PortalTrigger : MonoBehaviour, Interactable
         // Get reference for the scale, enable it
         gameObject.SetActive(true);
         horScale = portalScaleObject.localScale;
-
+        horScale.x = 0;
+        horScale.z = 0;
         // enable collider
         col.enabled = true;
         col.isTrigger = false;

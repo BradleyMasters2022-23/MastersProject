@@ -94,7 +94,7 @@ public class FragmentInteract : MonoBehaviour, Interactable
         ui = PlayerTarget.p.GetComponentInChildren<NoteFoundUI>(true);
     }
 
-    public void OnInteract(PlayerController player)
+    public void OnInteract()
     {
         if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
         {
@@ -113,6 +113,15 @@ public class FragmentInteract : MonoBehaviour, Interactable
         ui.OpenScreen();
 
         AllNotesManager.instance.FragmentFound(fragment);
+    }
+
+    /// <summary>
+    /// Can interact if the assigned interact is not null
+    /// </summary>
+    /// <returns></returns>
+    public bool CanInteract()
+    {
+        return fragment != null;
     }
 
     public Fragment GetFragment()

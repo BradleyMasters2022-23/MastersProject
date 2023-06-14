@@ -36,23 +36,24 @@ public class CrystalInteract : MonoBehaviour, Interactable
 
     public void RandomizeCrystal()
     {
-        if(crystalManagerInstance == null)
+        RandomizeCrystalSetStats(MapLoader.instance.PortalDepth());
+    }
+
+    public void RandomizeCrystalSetStats(int newPar)
+    {
+        if (crystalManagerInstance == null)
             crystalManagerInstance = CrystalManager.instance;
 
+        // apply new level, clamp it to make sure its above 1
+        par = Mathf.Clamp(newPar * parMod, 1, 9999);
 
         // loads crystal
-        if (LinearSpawnManager.instance != null)
-        {
-            par = (MapLoader.instance.PortalDepth()+1) * parMod;
-        }
-
         if (crystalManagerInstance != null && crystal == null)
         {
             crystal = crystalManagerInstance.GenerateCrystal(par);
-
         }
 
-        switch(crystal.stats[0].GetGroup())
+        switch (crystal.stats[0].GetGroup())
         {
             case IStat.StatGroup.HEALTH:
                 health.GetComponent<Renderer>().material.color = crystal.GetColor();
@@ -81,7 +82,7 @@ public class CrystalInteract : MonoBehaviour, Interactable
         }
     }
 
-    public void OnInteract(PlayerController player)
+    public void OnInteract()
     {
         if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
         {
@@ -95,6 +96,11 @@ public class CrystalInteract : MonoBehaviour, Interactable
         }
 
         crystalManagerInstance.GetCurrentScreen().OpenScreen(this);
+    }
+
+    public bool CanInteract()
+    {
+        return true;
     }
 
     public Crystal GetCrystal()
