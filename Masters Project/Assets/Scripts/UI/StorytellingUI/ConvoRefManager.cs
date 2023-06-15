@@ -18,7 +18,7 @@ public class ConvoRefManager : MonoBehaviour
     [SerializeField] private CallHistoryUI callLogUI;
     [SerializeField] private DisplayDialogueUI callUI;
 
-    public void Start()
+    public void Awake()
     {
         if(instance == null)
         {

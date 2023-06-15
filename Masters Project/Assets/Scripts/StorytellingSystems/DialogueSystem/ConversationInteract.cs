@@ -110,6 +110,6 @@ public class ConversationInteract : MonoBehaviour, Interactable
     /// <returns></returns>
     public virtual bool CanInteract()
     {
-        return (ui != null);
+        return true;
     }
 }
