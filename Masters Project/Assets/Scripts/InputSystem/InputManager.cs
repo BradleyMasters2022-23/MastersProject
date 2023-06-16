@@ -67,6 +67,7 @@ public class InputManager : MonoBehaviour
         // Disable ALL action maps for core gameplay, then only turn on the original
         Controls.Disable();
         newMap.Enable();
+        Debug.Log("Enabled map of " + newMap.name);
     }
 
     #endregion
@@ -182,7 +183,11 @@ public class InputManager : MonoBehaviour
 
     #region Rebinding
 
-    public void DoRebind(string actionName, int rebindIdx)
+    [SerializeField] private string[] globalKeybindBlacklist;
+
+    public delegate void VoidFunc();
+
+    public void DoRebind(string actionName, int rebindIdx, string[] keyBlacklist, VoidFunc onComplete = null, VoidFunc onCancel = null)
     {
         // Get ref to script version of binding, validate
         InputAction actionToRebind = Controls.FindAction(actionName);
@@ -198,18 +203,40 @@ public class InputManager : MonoBehaviour
         // SO: Rebinding works by creating a task, preparing it, and then executing it, so this
         // will create the task to rebind
         var rebind = actionToRebind.PerformInteractiveRebinding(rebindIdx);
-
         // Asign events to happen when rebinding completes or cancels
         rebind.OnComplete(op =>
         {
             actionToRebind.Enable();
             op.Dispose();
+            onComplete?.Invoke();
         });
         rebind.OnCancel(op =>
         {
             actionToRebind.Enable();
             op.Dispose();
+            onCancel?.Invoke();
+            Debug.Log("Rebind canceled");
         });
+
+        // Allow canceling via escape key
+        rebind.WithCancelingThrough("<Keyboard>/escape");
+
+
+        // Restrict keybinding to mouse and keyboard
+        rebind.WithControlsHavingToMatchPath("<Keyboard>");
+        rebind.WithControlsHavingToMatchPath("<Mouse>");
+        rebind.WithTimeout(8f);
+
+        // Apply global and passed in blacklists
+        foreach(string s in globalKeybindBlacklist)
+        {
+            rebind.WithControlsExcluding(s);
+        }
+        foreach(string s in keyBlacklist)
+        {
+            rebind.WithControlsExcluding(s);
+        }
+
 
         // This is where the rebinding actually happens
         rebind.Start();
@@ -224,6 +251,17 @@ public class InputManager : MonoBehaviour
     public static string GetBindingName(string actionName, int bindingIdx)
     {
         return Controls.asset.FindAction(actionName).GetBindingDisplayString(bindingIdx);
+    }
+
+    public bool InputAlreadyTaken()
+    {
+
+        InputBinding test = InputBinding.MaskByGroup("<GamePad>");
+
+
+
+
+        return false;
     }
 
     #endregion

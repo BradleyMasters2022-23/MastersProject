@@ -105,7 +105,7 @@ public class RebindUI : MonoBehaviour
         {
             nameTxt = actionName;
 
-            if(Application.isPlaying)
+            if(Application.isPlaying && InputManager.Instance != null)
                 bindingTxt = InputManager.GetBindingName(actionName, targetIndex);
             else
                 bindingTxt = inputActionRef.action.GetBindingDisplayString(targetIndex, displayOptions);
@@ -133,7 +133,7 @@ public class RebindUI : MonoBehaviour
     {
         //Debug.Log("Rebinding - not implemented");
         bindingText.text = "Awaiting Input";
-        InputManager.Instance.DoRebind(actionName, targetIndex);
+        InputManager.Instance.DoRebind(actionName, targetIndex, blacklistKeys, OnValidate, OnValidate);
     }
     /// <summary>
     /// Reset the binding for this action
@@ -141,7 +141,6 @@ public class RebindUI : MonoBehaviour
     public void DoReset()
     {
         Debug.Log("Resetting to normal - not implemented");
-
     }
 
 
