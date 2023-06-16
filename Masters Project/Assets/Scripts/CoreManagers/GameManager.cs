@@ -28,12 +28,6 @@ public class GameManager : MonoBehaviour
         LOADING
     }
 
-    public enum ControllerType
-    {
-        MOUSE,
-        CONTROLLER
-    }
-
     #region Core Variables
 
     /// <summary>
@@ -52,11 +46,6 @@ public class GameManager : MonoBehaviour
     {
         get { return currentState; }
     }
-
-    /// <summary>
-    /// Type of controller being used
-    /// </summary>
-    public static ControllerType controllerType;
 
     [Header("===== Scene Management Info =====")]
 
@@ -81,11 +70,11 @@ public class GameManager : MonoBehaviour
     /// Track the last state
     /// </summary>
     [SerializeField] private States lastState;
-
+    [SerializeField] private ChannelControlScheme onControlSchemeSwapChannel;
     public static GameControls controls;
     private InputAction escape;
-    private InputAction checkController;
-    private InputAction checkCursor;
+    //private InputAction checkController;
+    //private InputAction checkCursor;
 
     #endregion
 
@@ -130,19 +119,11 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // Set up controls
-        controls = new GameControls();
+        // Set up controls. Get refernece to Input Manager for ease of updates
+        controls = InputManager.Controls;
         escape = controls.PlayerGameplay.Pause;
         escape.performed += TogglePause;
         escape.Enable();
-
-        checkController = controls.UI.Controller;
-        checkController.performed += HideCursor;
-        checkController.Enable();
-
-        checkCursor = controls.UI.Mouse;
-        checkCursor.performed += ShowCursor;
-        checkCursor.Enable();
 
         backMenu = controls.UI.Back;
         backMenu.performed += CloseTopMenu;
@@ -348,66 +329,49 @@ public class GameManager : MonoBehaviour
         UpdateMouseMode();
     }
 
-    private void HideCursor(InputAction.CallbackContext c = default)
+    private void UpdateControlScheme(InputManager.ControlScheme scheme)
     {
-        if (controllerType == ControllerType.MOUSE
-            && checkController.ReadValue<Vector2>() != Vector2.zero)
-        {
-            // Debug.Log("Controller detected, hiding cursor");
-
-            controllerType = ControllerType.CONTROLLER;
-
-            // Hide the mouse cursor
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-
-            ClearPointer();
-
-            // Set the controller select to the screen
-            menuStack.Peek().TopStackFunction();
-        }
+        if (scheme == InputManager.ControlScheme.KEYBOARD)
+            ShowCursor();
+        else if(scheme == InputManager.ControlScheme.CONTROLLER)
+            HideCursor();
     }
 
-    private void ShowCursor(InputAction.CallbackContext c = default)
+    private void HideCursor()
     {
-        if (controllerType == ControllerType.CONTROLLER
-            && checkCursor.ReadValue<Vector2>() != Vector2.zero)
-        {
-            // Debug.Log("Mouse detected, showing cursor");
+        // Hide the mouse cursor
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
-            controllerType = ControllerType.MOUSE;
+        ClearPointer();
 
-            // Reenable cursor, set appropriate lock state
-            Cursor.visible = true;
-            UpdateMouseMode();
-
-            // Save the last thing the controller was on 
-            menuStack.Peek().StackSave();
-            // hide the controller's selected option
-            EventSystem.current.SetSelectedGameObject(null);
-        }
+        // Set the controller select to the screen
+        menuStack.Peek().TopStackFunction();
     }
 
+    private void ShowCursor()
+    {
+        // Reenable cursor, set appropriate lock state
+        Cursor.visible = true;
+        UpdateMouseMode();
 
+        // Save the last thing the controller was on 
+        menuStack.Peek().StackSave();
+        // hide the controller's selected option
+        EventSystem.current.SetSelectedGameObject(null);
+    }
+
+    /// <summary>
+    /// Update the cursor lock status
+    /// </summary>
     private void UpdateMouseMode()
     {
         Cursor.lockState = CursorLockMode.None;
 
+        // Currently, should be confined for everything except the main gameplay
         switch (currentState)
         {
-            case States.MAINMENU:
-                {
-                    Cursor.lockState = CursorLockMode.Confined;
-
-                    break;
-                }
-            case States.PAUSED:
-                {
-                    Cursor.lockState = CursorLockMode.Confined;
-
-                    break;
-                }
             case States.HUB:
                 {
                     Cursor.lockState = CursorLockMode.Locked;
@@ -420,22 +384,9 @@ public class GameManager : MonoBehaviour
 
                     break;
                 }
-            case States.GAMEMENU:
+            default:
                 {
                     Cursor.lockState = CursorLockMode.Confined;
-
-                    break;
-                }
-            case States.GAMEOVER:
-                {
-                    Cursor.lockState = CursorLockMode.Confined;
-
-                    break;
-                }
-            case States.LOADING:
-                {
-                    Cursor.lockState = CursorLockMode.Confined;
-
                     break;
                 }
         }
