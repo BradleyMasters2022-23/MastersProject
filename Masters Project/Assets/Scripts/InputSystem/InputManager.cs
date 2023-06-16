@@ -208,6 +208,7 @@ public class InputManager : MonoBehaviour
         {
             actionToRebind.Enable();
             op.Dispose();
+            InputAlreadyTaken(actionToRebind.bindings[rebindIdx]);
             onComplete?.Invoke();
         });
         rebind.OnCancel(op =>
@@ -242,6 +243,8 @@ public class InputManager : MonoBehaviour
         rebind.Start();
     }
 
+    [SerializeField] private InputActionReference[] allActions;
+
     /// <summary>
     /// Get the proper name for this binding
     /// </summary>
@@ -253,13 +256,21 @@ public class InputManager : MonoBehaviour
         return Controls.asset.FindAction(actionName).GetBindingDisplayString(bindingIdx);
     }
 
-    public bool InputAlreadyTaken()
+    public bool InputAlreadyTaken(InputBinding newBinding)
     {
+        foreach(var action in allActions)
+        {
 
-        InputBinding test = InputBinding.MaskByGroup("<GamePad>");
+            Debug.Log("Comparing ...");
 
+            if (action.action.bindings[0] != newBinding
+                && action.action.bindings[0].effectivePath == newBinding.effectivePath)
+            {
 
-
+                Debug.Log("Same binding detected!!!!!");
+                return true;
+            }
+        }
 
         return false;
     }
