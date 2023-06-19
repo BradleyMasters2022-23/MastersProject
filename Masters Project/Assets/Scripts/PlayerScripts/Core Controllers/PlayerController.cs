@@ -595,7 +595,7 @@ public class PlayerController : MonoBehaviour
 
             // Prepare new velocity
             Vector3 newVelocity = rb.velocity;
-
+            newVelocity.y = 0;
             // Redirect player velocity when jumping, if enabled
             if (jumpPivot)
             {

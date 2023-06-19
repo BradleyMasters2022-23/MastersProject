@@ -216,9 +216,7 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
         OrbCollect.PlayClip(transform);
 
         // try returning to pool
-        if (ProjectilePooler.instance.HasPool(gameObject))
-            ProjectilePooler.instance.ReturnProjectile(gameObject);
-        else
+        if (!ProjectilePooler.instance.ReturnProjectile(gameObject))
             Destroy(gameObject);
     }
 
@@ -255,7 +253,11 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
     /// </summary>
     protected virtual void DespawnOrb()
     {
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        if(!ProjectilePooler.instance.ReturnProjectile(gameObject))
+        {
+            Destroy(gameObject);
+        }
     }
 
     #endregion

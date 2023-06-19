@@ -30,17 +30,15 @@ public class ProjectilePooler : MonoBehaviour
 
     private void Start()
     {
-        if(instance == null)
+        // Override pool if a new one is available!
+        if(instance != null)
         {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-            InitPools();
+            Destroy(instance);
         }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+        InitPools();
     }
 
     /// <summary>

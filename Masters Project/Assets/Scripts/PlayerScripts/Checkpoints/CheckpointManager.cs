@@ -22,28 +22,39 @@ public class CheckpointManager : MonoBehaviour
             return;
         }
     }
-
+    /// <summary>
+    /// Get player ref on start
+    /// </summary>
     private void Start()
     {
         player = PlayerTarget.p;
     }
-
+    /// <summary>
+    /// Load a new checkpoint to return to
+    /// </summary>
+    /// <param name="t">New checkpoint. Make sure its a stationary transform</param>
     public void SetNewCheckpoint(Transform t)
     {
         teleportLocation = t;
     }
 
+    /// <summary>
+    /// Send the player to the currently stored checkpoint
+    /// </summary>
     public void SendPlayerToCheckpoint()
     {
-        // TODO - Link up a UI flash fade
         if(!movingPlayer)
             StartCoroutine(MovePlayer());
         
     }
 
+    /// <summary>
+    /// Move player to the checkpoint, managing controls AND UI at the same time
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator MovePlayer()
     {
-        Debug.Log("Moving player");
+        //Debug.Log("Moving player");
         movingPlayer = true;
 
         if (player != null && teleportLocation != null)

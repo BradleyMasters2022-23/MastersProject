@@ -105,6 +105,7 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
         audioSource = GetComponent<AudioSource>();
 
         damagedSoundCooldownTracker = new ScaledTimer(damagedSoundCooldown, false);
+        damagedSoundCooldownTracker.ResetTimer();
         // If initialization of health manager fails, destroy itself
         if (_healthManager == null || !_healthManager.Init())
         {
@@ -127,8 +128,7 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
     {
         if(!AffectedByAttacks()) return;
 
-
-        if (!_killed && _healthManager.Damage(dmg))
+        if (!_killed)
         {
             if (damagedSoundCooldownTracker != null && damagedSoundCooldownTracker.TimerDone())
             {
@@ -136,11 +136,15 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
                 damagedSoundCooldownTracker.ResetTimer();
             }
 
-            if (_unkillable)
-                return;
+            // if the target is out of health...
+            if (_healthManager.Damage(dmg))
+            {
+                if (_unkillable)
+                    return;
 
-            _killed = true;
-            KillTarget();
+                _killed = true;
+                KillTarget();
+            }
         }
             
     }

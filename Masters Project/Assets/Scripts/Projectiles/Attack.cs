@@ -139,10 +139,10 @@ public abstract class Attack : TimeAffectedEntity
                 verKnockback = verticalKnockback;
             }
 
-            if(dealDamage && dmg > 0)
+            if(dealDamage)
                 target.RegisterEffect(dmg);
 
-            if (knockback && horKnockback + verKnockback > 0)
+            if (knockback)
             {
                 targetComp.Knockback(horKnockback, verKnockback, damagePoint);
             }
