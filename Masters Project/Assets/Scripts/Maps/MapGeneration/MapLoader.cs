@@ -178,6 +178,7 @@ public class MapLoader : MonoBehaviour
             controls.Disable();
         }
 
+        currentRoom = startingRoomInitializer;
 
         // === Choose what rooms to use === //
         int c = 0;
