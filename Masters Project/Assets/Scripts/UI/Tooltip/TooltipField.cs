@@ -15,17 +15,21 @@ public class TooltipField : TooltipHolder
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
+        {
             SubmitTooltip();
+            gameObject.SetActive(false);
+        }
+            
     }
 
     private void OnDisable()
     {
-        RetractTooltip();
+        //RetractTooltip();
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
-            RetractTooltip();
+        //if (other.CompareTag("Player"))
+        //    RetractTooltip();
     }
 }

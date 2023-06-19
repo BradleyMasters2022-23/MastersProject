@@ -15,11 +15,12 @@ public class BulletHazard : TimeAffectedEntity
 
     [SerializeField] private AudioSource source;
 
+    [SerializeField] bool playOnStart = false;
+
     private void Start()
     {
-        fireTimer = GetTimer(initialDelay);
-
-        StartCoroutine(EndlessShoot());
+        if (playOnStart)
+            Play();
     }
 
     /// <summary>
@@ -62,5 +63,15 @@ public class BulletHazard : TimeAffectedEntity
             yield return waitTick;
             yield return null;
         }
+    }
+    public void Play()
+    {
+        fireTimer = GetTimer(initialDelay);
+
+        StartCoroutine(EndlessShoot());
+    }
+    public void Stop()
+    {
+        StopAllCoroutines();
     }
 }
