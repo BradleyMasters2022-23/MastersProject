@@ -161,6 +161,29 @@ public class Projectile : RangeAttack, TimeObserver, IPoolable
         }
     }
 
+    protected override void OnTriggerEnter(Collider other)
+    {
+        Vector3 hitNormal;
+
+        if (other.GetType() == typeof(MeshCollider) && !other.GetComponent<MeshCollider>().convex)
+            hitNormal = -transform.forward;
+        else
+            hitNormal = transform.position - other.ClosestPoint(transform.position);
+
+        // if colliding with a hit object, apply damage
+        if((hitLayers & (1 << other.gameObject.layer)) != 0)
+        {
+            Hit(transform.position, hitNormal.normalized);
+            ApplyDamage(other.transform, other.ClosestPoint(transform.position));
+        }
+        // If a world layer, just do the visual and end
+        else if((worldLayers & (1 << other.gameObject.layer)) != 0)
+        {
+            Hit(transform.position, hitNormal.normalized);
+            End();
+        }
+    }
+
     public void OnStop()
     {
         if(scaleOverDistance != null && bulletVisual != null)

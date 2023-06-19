@@ -160,7 +160,7 @@ public abstract class Attack : TimeAffectedEntity
     /// Deal damage to the targets it hits
     /// </summary>
     /// <param name="other">Object it hit</param>
-    private void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         Vector3 hitNormal;
 
@@ -168,6 +168,7 @@ public abstract class Attack : TimeAffectedEntity
             hitNormal = -transform.forward;
         else
             hitNormal = transform.position - other.ClosestPoint(transform.position);
+
 
         Hit(transform.position, hitNormal.normalized);
         DealDamage(other.transform);

@@ -4,18 +4,24 @@ using UnityEngine;
 
 public class BulletHazard : TimeAffectedEntity
 {
-    [SerializeField] private GameObject projectile;
-    [SerializeField] private float fireDelay;
-    [SerializeField] private float initialDelay;
-    [SerializeField] Transform shootPoint;
-    private LocalTimer fireTimer;
+    [Header("Projectile Stats")]
 
+    [SerializeField] private GameObject projectile;
+    [SerializeField] Transform shootPoint;
     [SerializeField] AudioClipSO shootSFX;
     [SerializeField] GameObject shootVFX;
+    [SerializeField] float speedModifier = 1;
+    [SerializeField] float damageMultiplier = 1;
+    [SerializeField] float range = 100f;
 
-    [SerializeField] private AudioSource source;
+    [Header("Trap Stats")]
 
     [SerializeField] bool playOnStart = false;
+    [SerializeField] private AudioSource source;
+    [SerializeField] private float initialDelay;
+    [SerializeField] private float fireDelay;
+
+    private LocalTimer fireTimer;
 
     private void Start()
     {
@@ -55,7 +61,7 @@ public class BulletHazard : TimeAffectedEntity
             {
                 proj.transform.position = shootPoint.position;
                 proj.transform.rotation = shootPoint.rotation;
-                proj.GetComponent<RangeAttack>().Activate();
+                proj.GetComponent<RangeAttack>().Initialize(damageMultiplier, speedModifier, range, gameObject);
             }
             
             // Reset fire delay

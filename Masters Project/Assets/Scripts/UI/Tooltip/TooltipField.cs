@@ -12,12 +12,14 @@ using UnityEngine;
 
 public class TooltipField : TooltipHolder
 {
+    private bool sent = false;
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (!sent && other.CompareTag("Player"))
         {
+            sent = true;
             SubmitTooltip();
-            gameObject.SetActive(false);
         }
             
     }
