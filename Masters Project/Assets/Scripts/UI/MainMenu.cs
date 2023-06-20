@@ -17,6 +17,9 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        GameManager.instance.GoToHub();
+        if(DataManager.instance.hasSaveData)
+            GameManager.instance.GoToHub();
+        else
+            GameManager.instance.GoToTutorial();
     }
 }

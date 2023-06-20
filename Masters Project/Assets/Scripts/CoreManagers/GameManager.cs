@@ -69,6 +69,9 @@ public class GameManager : MonoBehaviour
     [Tooltip("Name of the main gameplay scene")]
     [SerializeField] private string mainGameplayScene;
 
+    [Tooltip("Name of the tutorial scene")]
+    [SerializeField] private string tutorialScene;
+
     #endregion
 
     #region Input Management Variables
@@ -245,8 +248,9 @@ public class GameManager : MonoBehaviour
         {
             case States.MAINMENU:
                 {
-                    // Main menu can only go to hub gameplay
-                    return (_newState == States.HUB);
+                    // Main menu can only go to hub gameplay OR tutorial gameplay
+                    return (_newState == States.HUB
+                        || _newState == States.GAMEPLAY);
                 }
             case States.PAUSED:
                 {
@@ -643,6 +647,12 @@ public class GameManager : MonoBehaviour
     public void GoToMainGame()
     {
         LoadToScene(mainGameplayScene);
+        ChangeState(States.GAMEPLAY);
+    }
+
+    public void GoToTutorial()
+    {
+        LoadToScene(tutorialScene);
         ChangeState(States.GAMEPLAY);
     }
 
