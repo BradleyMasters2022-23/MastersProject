@@ -60,6 +60,8 @@ public class MapLoader : MonoBehaviour
     [Tooltip("Reference to the loading screen to use")]
     [SerializeField] GameObject loadingScreen;
 
+    [SerializeField] bool incrementSaveRuns = true;
+
     /// <summary>
     /// Navmesh for overall map
     /// </summary>
@@ -228,9 +230,12 @@ public class MapLoader : MonoBehaviour
         }
 
         // tell stat manager that a run has begun
-        GlobalStatsManager.data.runsAttempted++;
-        if (CallManager.instance != null)
-            CallManager.instance.IncrementRuns();
+        if(incrementSaveRuns)
+        {
+            GlobalStatsManager.data.runsAttempted++;
+            if (CallManager.instance != null)
+                CallManager.instance.IncrementRuns();
+        }
 
         yield return null;
     }

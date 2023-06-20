@@ -1475,7 +1475,7 @@ MonoBehaviour:
   onTutorialDeathEvents:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 33617642}
+      - m_Target: {fileID: 166955929}
         m_TargetAssemblyTypeName: CutsceneTrigger, Assembly-CSharp
         m_MethodName: TryCutscene
         m_Mode: 1
@@ -1492,52 +1492,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 117732005367473931, guid: fc9bc51ab3d98a54ba18dd8c960f6f9a, type: 3}
   m_PrefabInstance: {fileID: 1433115692}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &33617642
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 33617618}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42b4513b4ba76224e817e4fe9da24b42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cutscenePlayer: {fileID: 947251077}
-  cutscene: {fileID: 32900000, guid: c2d1bcd02a07883449277d4bbc5f5752, type: 3}
-  onlyPlayOnce: 0
-  playable: 0
-  onVideoFinishEvents:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 33617631}
-        m_TargetAssemblyTypeName: PlayerTargetTutorial, Assembly-CSharp
-        m_MethodName: EndTutorial
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: PlayerTargetTutorial, Assembly-CSharp
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onCutsceneFadeFinishEvents:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1001 &35371988
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4702,6 +4656,72 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5077304913595208708, guid: 4acbb50bcf3a5564db436aec7103d114, type: 3}
   m_PrefabInstance: {fileID: 166183812}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &166955927
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 166955928}
+  - component: {fileID: 166955929}
+  m_Layer: 6
+  m_Name: Ending Cutscnene
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &166955928
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 166955927}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 33617632}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &166955929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 166955927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42b4513b4ba76224e817e4fe9da24b42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cutscenePlayer: {fileID: 947251077}
+  cutscene: {fileID: 32900000, guid: c2d1bcd02a07883449277d4bbc5f5752, type: 3}
+  onlyPlayOnce: 0
+  playable: 0
+  onVideoFinishEvents:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 33617631}
+        m_TargetAssemblyTypeName: PlayerTargetTutorial, Assembly-CSharp
+        m_MethodName: EndTutorial
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onCutsceneFadeFinishEvents:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &170740493
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14121,6 +14141,7 @@ MonoBehaviour:
   finalRoom: {fileID: 11400000, guid: 485c3f4d005206043a899d063b2c3e1e, type: 2}
   mapOrder: []
   loadingScreen: {fileID: 591887946}
+  incrementSaveRuns: 0
   portalDepth: -1
   startingRoomInitializer: {fileID: 7826560951032293761}
   preBossNeutralRoom: {fileID: 0}
@@ -34151,6 +34172,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 117732005367473932, guid: fc9bc51ab3d98a54ba18dd8c960f6f9a, type: 3}
+      propertyPath: m_Name
+      value: PlayerTutorial
+      objectReference: {fileID: 0}
     - target: {fileID: 199795442410127030, guid: fc9bc51ab3d98a54ba18dd8c960f6f9a, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

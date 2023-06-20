@@ -36,7 +36,7 @@ public class CutsceneTrigger : MonoBehaviour
         if (onlyPlayOnce)
         {
             bool inSafe = saveData.SinglePlayOnly(cutscene);
-            Debug.Log($"Only play once enabled | In save data {inSafe} | Setting playable to {!inSafe}");
+            //Debug.Log($"Only play once enabled | In save data {inSafe} | Setting playable to {!inSafe}");
             playable = !inSafe;
         }
         else
@@ -98,6 +98,14 @@ public class CutsceneTrigger : MonoBehaviour
             cutscenePlayer.LoadVideoEndEvents(onVideoFinishEvents);
         if(onCutsceneFadeFinishEvents.GetPersistentEventCount() > 0)
             cutscenePlayer.LoadCutsceneEndEvents(onCutsceneFadeFinishEvents);
+
+        // if there is a map loader, wait for that to finish loading as well
+        if (MapLoader.instance != null && MapLoader.instance.LoadState == LoadState.Loading)
+        {
+            yield return new WaitUntil(() => MapLoader.instance.LoadState != LoadState.Loading);
+            yield return new WaitForSecondsRealtime(0.6f);
+        }
+            
 
         // wait until its done preparing
         yield return new WaitUntil(() => cutscenePlayer.GetComponent<VideoPlayer>().isPrepared);
