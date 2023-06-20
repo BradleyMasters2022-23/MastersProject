@@ -82,7 +82,7 @@ public class EnemyPooler : MonoBehaviour
                 return null;
             }    
             
-            enemy.transform.parent = null;
+            //enemy.transform.parent = null;
             //enemy.GetComponent<EnemyTarget>().PullFromPool(enemyRequest);
             // TODO - any unique enemy functionality here like stat scaling
             return enemy;
@@ -112,7 +112,7 @@ public class EnemyPooler : MonoBehaviour
             // do other funcs when being returned
             //enemyReturn.GetComponent<EnemyTarget>().ReturnToPool();
             pool[enemyID].Return(enemyReturn);
-            enemyReturn.transform.parent = transform;
+            //enemyReturn.transform.parent = transform;
             return true;
         }
         else

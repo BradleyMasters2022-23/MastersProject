@@ -114,8 +114,6 @@ public class CutsceneManager : MonoBehaviour
         pause.performed += TogglePause;
         showHide = playerControls.Cutscene.Any;
         showHide.performed += ShowPrompt;
-        playerControls.Cutscene.Any.Disable();
-        playerControls.Cutscene.Pause.Disable();
         playerControls.Cutscene.Disable();
     }
 
@@ -181,10 +179,8 @@ public class CutsceneManager : MonoBehaviour
         // turn on the screen
         yield return StartCoroutine(LoadScreen(true, fadeInTime));
 
-        playerControls.UI.Disable();
-        playerControls.PlayerGameplay.Disable();
+        playerControls.Disable();
         playerControls.Cutscene.Enable();
-        playerControls.Cutscene.Pause.Enable();
 
         yield return new WaitForSecondsRealtime(startDelay);
 
@@ -206,7 +202,7 @@ public class CutsceneManager : MonoBehaviour
 
         // Disable cutscene controls and reenable gameplay. 
         // Keep pause disabled to prevent any funky business
-        playerControls.Cutscene.Disable();
+        playerControls.Disable();
         playerControls.PlayerGameplay.Enable();
         playerControls.PlayerGameplay.Pause.Disable();
         playerControls.PlayerGameplay.Interact.Disable();
@@ -306,7 +302,7 @@ public class CutsceneManager : MonoBehaviour
     /// <param name="c">input context</param>
     private void TogglePause(InputAction.CallbackContext c)
     {
-        // Debug.Log("Trying to pause cutscene");
+        Debug.Log("Pausing cutscene " + c.action.name);
 
         if(pauseScreen.activeInHierarchy)
         {

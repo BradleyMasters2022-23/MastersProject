@@ -10,9 +10,9 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 
-    public void LoadSettings()
+    public void LoadToTutorial()
     {
-        // TODO add settings
+        GameManager.instance.GoToTutorial();
     }
 
     public void StartGame()

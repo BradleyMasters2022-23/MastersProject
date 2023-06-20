@@ -224,8 +224,6 @@ public class MapLoader : MonoBehaviour
         // Wait half a second before reenabling controls
         if (controls != null)
         {
-            controls.Enable();
-            controls.UI.Disable();
             controls.PlayerGameplay.Enable();
         }
 

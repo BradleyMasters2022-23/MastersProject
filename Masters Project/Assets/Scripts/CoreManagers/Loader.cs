@@ -59,7 +59,6 @@ public class Loader : MonoBehaviour
 
         if (c != null)
         {
-            c.Enable();
             c.UI.Disable();
             c.PlayerGameplay.Enable();
         }
