@@ -174,6 +174,7 @@ public class CutsceneManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator PlayCutscene()
     {
+        Debug.Log("playing cutscene");
         // Disable pausing just to be safe in big prevention
         playerControls.PlayerGameplay.Pause.Disable();
         playerControls.PlayerGameplay.Interact.Disable();
@@ -186,6 +187,7 @@ public class CutsceneManager : MonoBehaviour
         playerControls.Cutscene.Enable();
         playerControls.Cutscene.Pause.Enable();
 
+        Debug.Log("cutscene controls set");
 
         yield return new WaitForSecondsRealtime(startDelay);
 

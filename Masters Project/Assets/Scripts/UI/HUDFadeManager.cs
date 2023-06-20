@@ -37,6 +37,11 @@ public class HUDFadeManager : MonoBehaviour
         return FadeRoutine(1, 0, fadeInTime);
     }
 
+    public void SetImmediate(bool fade)
+    {
+        fadeElement.alpha = fade ? 1 : 0;
+    }
+
     private IEnumerator FadeRoutine(float start, float end, float dur)
     {
         ScaledTimer t = new ScaledTimer(dur, false);

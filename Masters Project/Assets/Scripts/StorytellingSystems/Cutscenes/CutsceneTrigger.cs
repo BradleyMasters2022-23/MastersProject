@@ -21,11 +21,6 @@ public class CutsceneTrigger : MonoBehaviour
     [Tooltip("events that execute once the cutscene is finished and the game fades back into the game")]
     [SerializeField] private UnityEvent onCutsceneFadeFinishEvents;
 
-    /// <summary>
-    /// Reference to video player obj
-    /// </summary>
-    private VideoPlayer player;
-
     private const string fileName = "cutsceneSaveData";
     private CutsceneSaveData saveData;
 
@@ -48,35 +43,45 @@ public class CutsceneTrigger : MonoBehaviour
             playable = true;
     }
 
-    private void OnEnable()
-    {
-        // prepare the cutscene ASAP
-        cutscenePlayer = CutsceneManager.instance;
-
-        if(cutscene!=null)
-            cutscenePlayer.PrepareCutscene(cutscene);
-    }
-
     /// <summary>
     /// Try to play the cutscene based on internal parameters
     /// </summary>
     public void TryCutscene()
     {
-        if(CanPlay())
+        if (CanPlay())
         {
             playable = true;
-            StartCoroutine(LoadCutscene());
+            StartCoroutine(PlayRoutine());
+            
         }
     }
 
+    /// <summary>
+    /// Routine that initializes and loads the cutscene
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator PlayRoutine()
+    {
+        yield return StartCoroutine(InitCutscene());
+        yield return StartCoroutine(LoadCutscene());
+    }
+    /// <summary>
+    /// Pass the video into the manager to load
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator InitCutscene()
+    {
+        yield return new WaitUntil(()=> CutsceneManager.instance != null);
+        cutscenePlayer = CutsceneManager.instance;
+        cutscenePlayer.PrepareCutscene(cutscene);
+    }
     /// <summary>
     /// Load up the cutscene and play it once its prepared 
     /// </summary>
     /// <returns></returns>
     private IEnumerator LoadCutscene()
     {
-        player = cutscenePlayer.GetComponent<VideoPlayer>();
-        if (player == null || cutscene == null)
+        if (cutscenePlayer == null || cutscene == null)
             yield break;
 
         // Get most recent save data and update it
@@ -94,8 +99,8 @@ public class CutsceneTrigger : MonoBehaviour
         if(onCutsceneFadeFinishEvents.GetPersistentEventCount() > 0)
             cutscenePlayer.LoadCutsceneEndEvents(onCutsceneFadeFinishEvents);
 
-        // make sure player is prepared
-        yield return new WaitUntil(() => player.isPrepared);
+        // wait until its done preparing
+        yield return new WaitUntil(() => cutscenePlayer.GetComponent<VideoPlayer>().isPrepared);
 
         // Play cutscene
         cutscenePlayer.BeginCutscene();
