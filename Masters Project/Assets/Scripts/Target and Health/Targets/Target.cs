@@ -49,12 +49,12 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
     /// <summary>
     /// The manager controlling health for this target
     /// </summary>
-    [SerializeField] protected HealthManager _healthManager;
+    protected HealthManager _healthManager;
 
     /// <summary>
     /// Whether or not this entity has already been killed
     /// </summary>
-    [SerializeField] protected bool _killed = false;
+    protected bool _killed = false;
 
     [Header("Core Gameplay Features")]
 

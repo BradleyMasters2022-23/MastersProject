@@ -33,7 +33,8 @@ public class ProjectilePooler : MonoBehaviour
         // Override pool if a new one is available!
         if(instance != null)
         {
-            Destroy(instance);
+            Debug.Log("Clearing previous pooler");
+            Destroy(instance.gameObject);
         }
 
         instance = this;

@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerTarget : Target
 {
@@ -110,5 +111,13 @@ public class PlayerTarget : Target
         healCheat.performed -= CheatHeal;
         damageCheat.performed -= CheatDamage;
         p = null;
+    }
+
+    /// <summary>
+    /// Set the player instance to be re-initialized on next scene load
+    /// </summary>
+    public void SetForClear()
+    {
+        SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
     }
 }

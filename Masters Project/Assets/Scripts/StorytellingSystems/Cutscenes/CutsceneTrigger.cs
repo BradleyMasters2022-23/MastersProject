@@ -3,17 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.Video;
+using UnityEngine.Events;
 
 public class CutsceneTrigger : MonoBehaviour
 {
     [Tooltip("Cutscene manager to trigger")]
-    [SerializeField] CutsceneManager cutscenePlayer;
+    [SerializeField, ReadOnly] CutsceneManager cutscenePlayer;
     [Tooltip("Cutscene to play")]
     [SerializeField] VideoClip cutscene;
     [Tooltip("Whether or not this cutscene should only be played once per save")]
     [SerializeField] private bool onlyPlayOnce;
     [Tooltip("Whether or not this trigger is playable")]
     [SerializeField, ReadOnly] private bool playable = false;
+
+    [Tooltip("events that execute once the video itself finishes")]
+    [SerializeField] private UnityEvent onVideoFinishEvents;
+    [Tooltip("events that execute once the cutscene is finished and the game fades back into the game")]
+    [SerializeField] private UnityEvent onCutsceneFadeFinishEvents;
 
     /// <summary>
     /// Reference to video player obj
@@ -35,7 +41,7 @@ public class CutsceneTrigger : MonoBehaviour
         if (onlyPlayOnce)
         {
             bool inSafe = saveData.SinglePlayOnly(cutscene);
-            //Debug.Log($"Only play once enabled | In save data {inSafe} | Setting playable to {!inSafe}");
+            Debug.Log($"Only play once enabled | In save data {inSafe} | Setting playable to {!inSafe}");
             playable = !inSafe;
         }
         else
@@ -45,7 +51,10 @@ public class CutsceneTrigger : MonoBehaviour
     private void OnEnable()
     {
         // prepare the cutscene ASAP
-        cutscenePlayer.PrepareCutscene(cutscene);
+        cutscenePlayer = CutsceneManager.instance;
+
+        if(cutscene!=null)
+            cutscenePlayer.PrepareCutscene(cutscene);
     }
 
     /// <summary>
@@ -53,10 +62,8 @@ public class CutsceneTrigger : MonoBehaviour
     /// </summary>
     public void TryCutscene()
     {
-        
         if(CanPlay())
         {
-            //Debug.Log($"Trying to play cutscene {cutscene.name}");
             playable = true;
             StartCoroutine(LoadCutscene());
         }
@@ -68,8 +75,6 @@ public class CutsceneTrigger : MonoBehaviour
     /// <returns></returns>
     private IEnumerator LoadCutscene()
     {
-        //Debug.Log("Preparing cutscene");
-
         player = cutscenePlayer.GetComponent<VideoPlayer>();
         if (player == null || cutscene == null)
             yield break;
@@ -83,12 +88,14 @@ public class CutsceneTrigger : MonoBehaviour
         saveData.PlayCutscene(cutscene, onlyPlayOnce);
         bool s = DataManager.instance.Save(fileName, saveData);
 
-        //Debug.Log($"Cutscene save data success : {s}");
+        // Load any events, if there are any
+        if (onVideoFinishEvents.GetPersistentEventCount() > 0)
+            cutscenePlayer.LoadVideoEndEvents(onVideoFinishEvents);
+        if(onCutsceneFadeFinishEvents.GetPersistentEventCount() > 0)
+            cutscenePlayer.LoadCutsceneEndEvents(onCutsceneFadeFinishEvents);
 
         // make sure player is prepared
         yield return new WaitUntil(() => player.isPrepared);
-
-       // Debug.Log("Preperation done, starting cutscene");
 
         // Play cutscene
         cutscenePlayer.BeginCutscene();

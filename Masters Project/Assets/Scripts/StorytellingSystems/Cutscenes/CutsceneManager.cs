@@ -6,10 +6,12 @@ using UnityEngine.Video;
 using UnityEngine.InputSystem;
 using TMPro;
 using Sirenix.OdinInspector;
-
+using UnityEngine.Events;
 
 public class CutsceneManager : MonoBehaviour
 {
+    public static CutsceneManager instance;
+
     [Header("Main Systems")]
     [Tooltip("Reference to the video player")]
     [SerializeField] private VideoPlayer videoPlayer;
@@ -68,7 +70,29 @@ public class CutsceneManager : MonoBehaviour
     private InputAction pause;
     private InputAction showHide;
 
+    /// <summary>
+    /// events that execute once the video itself finishes
+    /// </summary>
+    private UnityEvent onVideoFinishEvents;
+    /// <summary>
+    /// events that execute once the cutscene is finished and the game fades back into the game
+    /// </summary>
+    private UnityEvent onCutsceneFadeFinishEvents;
+
     #region Main Player
+
+    private void Awake()
+    {
+        if(instance != null)
+        {
+            Destroy(this);
+            return;
+        }
+        else
+        {
+            instance = this;
+        }
+    }
 
     private void Start()
     {
@@ -90,6 +114,8 @@ public class CutsceneManager : MonoBehaviour
         pause.performed += TogglePause;
         showHide = playerControls.Cutscene.Any;
         showHide.performed += ShowPrompt;
+        playerControls.Cutscene.Any.Disable();
+        playerControls.Cutscene.Pause.Disable();
         playerControls.Cutscene.Disable();
     }
 
@@ -121,8 +147,25 @@ public class CutsceneManager : MonoBehaviour
 
     public void BeginCutscene()
     {
-        if(allowedToPlay && loadedCutscene!=null)
+        if(loadedCutscene!=null)
             StartCoroutine(PlayCutscene());
+    }
+
+    /// <summary>
+    /// Load events that execute once the video itself finishes
+    /// </summary>
+    /// <param name="events"></param>
+    public void LoadVideoEndEvents(UnityEvent events)
+    {
+        onVideoFinishEvents = events;
+    }
+    /// <summary>
+    /// Load events that execute once the cutscene finishes and the fade is gone
+    /// </summary>
+    /// <param name="events"></param>
+    public void LoadCutsceneEndEvents(UnityEvent events)
+    {
+        onCutsceneFadeFinishEvents= events;
     }
 
     /// <summary>
@@ -155,11 +198,11 @@ public class CutsceneManager : MonoBehaviour
         while (timeElapsed < videoPlayer.length)
         {
             if (!videoPlayer.isPaused)
-                timeElapsed += Time.deltaTime;
+                timeElapsed += Time.unscaledDeltaTime;
 
             yield return null;
         }
-
+        videoRenderImg.enabled = false;
         yield return new WaitForSecondsRealtime(endDelay);
 
         // Disable cutscene controls and reenable gameplay. 
@@ -176,15 +219,23 @@ public class CutsceneManager : MonoBehaviour
             StopCoroutine(promptFadeRoutine);
 
         promptText.enabled = false;
-        videoRenderImg.enabled = false;
+        
+
+        onVideoFinishEvents?.Invoke();
 
         StartCoroutine(FadePrompt(false, 0.3f));
         // By now, video has stopped, close screen
         yield return StartCoroutine(LoadScreen(false, fadeOutTime));
 
+        onCutsceneFadeFinishEvents?.Invoke();
+
         // Disable pausing just to be safe in big prevention
         playerControls.PlayerGameplay.Pause.Enable();
         playerControls.PlayerGameplay.Interact.Enable();
+
+        // wipe both sets of events clear
+        onVideoFinishEvents = null;
+        onCutsceneFadeFinishEvents = null;
     }
 
     /// <summary>
@@ -225,6 +276,7 @@ public class CutsceneManager : MonoBehaviour
 
     public void SkipCutscene()
     {
+        // hide all prompts
         StopAllCoroutines();
         playerControls.Cutscene.Disable();
         pauseScreen.SetActive(false);
@@ -232,13 +284,21 @@ public class CutsceneManager : MonoBehaviour
         videoRenderImg.enabled = false;
         Cursor.lockState= CursorLockMode.Locked;
 
+        onVideoFinishEvents?.Invoke();
+
+        // Stop player, fade out
         videoPlayer.Stop();
         StartCoroutine(LoadScreen(false, skippedFadeOutTime));
 
-        
+        // Reneable gameplay controls
         playerControls.PlayerGameplay.Enable();
         playerControls.PlayerGameplay.Pause.Enable();
         playerControls.PlayerGameplay.Interact.Enable();
+        onCutsceneFadeFinishEvents?.Invoke();
+
+        // clear event finish events
+        onVideoFinishEvents = null;
+        onCutsceneFadeFinishEvents = null;
     }
 
     /// <summary>
