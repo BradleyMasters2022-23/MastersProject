@@ -110,7 +110,7 @@ public class SpawnTriggerField : MonoBehaviour
         }
 
         // dont bother activating if theres no combat or triggers attached to this obj
-        if (relativeDifficulty.Length > 0 && triggerCol.Length > 0)
+        if (triggerCol.Length > 0)
         {
             active = true;
         }
@@ -119,16 +119,21 @@ public class SpawnTriggerField : MonoBehaviour
     private void Start()
     {
         if (testing)
-            LoadWaves();
+            waves = BuildWaves();
+    }
+
+    public void LoadWaves()
+    {
+        waves = BuildWaves();
     }
 
     /// <summary>
     /// Load in the waves in a way to reduce activation later 
     /// </summary>
-    public void LoadWaves()
+    protected virtual Dictionary<EnemySO, int>[] BuildWaves()
     {
         // Request waves with current difficulty
-        waves = LinearSpawnManager.instance.RequestBatch(relativeDifficulty);
+        return LinearSpawnManager.instance.RequestBatch(relativeDifficulty);
     }
 
     /// <summary>
