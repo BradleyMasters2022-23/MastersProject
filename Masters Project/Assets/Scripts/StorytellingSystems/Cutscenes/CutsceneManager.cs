@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 using TMPro;
 using Sirenix.OdinInspector;
 using UnityEngine.Events;
+using UnityEngine.Playables;
 
 public class CutsceneManager : MonoBehaviour
 {
@@ -78,6 +79,11 @@ public class CutsceneManager : MonoBehaviour
     /// events that execute once the cutscene is finished and the game fades back into the game
     /// </summary>
     private UnityEvent onCutsceneFadeFinishEvents;
+
+    /// <summary>
+    /// whether the video started playing
+    /// </summary>
+    private bool playState = false;
 
     #region Main Player
 
@@ -183,10 +189,11 @@ public class CutsceneManager : MonoBehaviour
         playerControls.Cutscene.Enable();
 
         yield return new WaitForSecondsRealtime(startDelay);
-
+        yield return new WaitUntil(() => !pauseScreen.activeInHierarchy);
         // Play the video
         videoRenderImg.enabled = true;
         videoPlayer.Play();
+        playState = true;
 
         // Track time only if its playing. Dont if its paused
         float timeElapsed = 0;
@@ -198,6 +205,7 @@ public class CutsceneManager : MonoBehaviour
             yield return null;
         }
         videoRenderImg.enabled = false;
+        playState = false;
         yield return new WaitForSecondsRealtime(endDelay);
 
         // Disable cutscene controls and reenable gameplay. 
@@ -323,7 +331,8 @@ public class CutsceneManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         settingScreen.SetActive(false);
         pauseScreen.SetActive(true);
-        videoPlayer.Pause();
+        if(playState)
+            videoPlayer.Pause();
         promptText.enabled = false;
 
         if(promptRoutine!= null)
@@ -341,7 +350,8 @@ public class CutsceneManager : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         pauseScreen.SetActive(false);
-        videoPlayer.Play();
+        if(playState)
+            videoPlayer.Play();
     }
 
     /// <summary>
