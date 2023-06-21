@@ -73,7 +73,7 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
     private LocalTimer startDespawnTracker;
     private LocalTimer despawnTracker;
     private LocalTimer spawnTracker;
-    private float minimumSpawnTime = 1.5f;
+    private float minimumSpawnTime = 0.35f;
     private Animator anim;
     private TrailRenderer trail;
 
@@ -292,11 +292,10 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
     public void OnResume()
     {
         // apply stored velocity
-        rb.velocity = freezeVel;
-        rb.constraints = RigidbodyConstraints.None;
-        // apply stored collider data 
-        realCollider.isTrigger = freezeTrigger;
         realCollider.enabled = true;
+        rb.constraints = RigidbodyConstraints.None;
+        rb.velocity = freezeVel;
+        realCollider.isTrigger = freezeTrigger;
     }
 
     #endregion
