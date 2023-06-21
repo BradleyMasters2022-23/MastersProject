@@ -42,6 +42,8 @@ public class TooltipManager : MonoBehaviour
     private TooltipSaveData saveData;
 
     [SerializeField] private Animator animator;
+    [SerializeField] private AudioClipSO openSound;
+    [SerializeField] private AudioSource source;
 
     /// <summary>
     /// Verify tooltip loaded is prepared
@@ -134,6 +136,8 @@ public class TooltipManager : MonoBehaviour
             HideTooltip();
             return;
         }
+
+        openSound.PlayClip(source);
 
         StartCoroutine(titleTextbox.SlowTextLoadRealtime(currentTooltip.titleText, 0.02f));
         StartCoroutine(descriptionTextbox.SlowTextLoadRealtime(currentTooltip.GetPromptText(), 0.01f));
