@@ -296,6 +296,10 @@ public class SpawnPoint : MonoBehaviour
         while (!spawnDelayTimer.TimerDone())
             yield return null;
 
+        // If missing, then enemy is gone so stop. Only happens in unload of the tutorial
+        if (lastSpawnedEnemy == null)
+            yield break;
+
         // Enable enemy, make look at player
         lastSpawnedEnemy.SetActive(true);
         lastSpawnedEnemy.transform.LookAt(player.transform.position);
@@ -310,7 +314,6 @@ public class SpawnPoint : MonoBehaviour
         if(spawnParticles != null)
             spawnParticles.Stop();
 
-        
         s.Stop();
 
         spawning = false;

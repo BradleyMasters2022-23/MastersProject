@@ -155,7 +155,6 @@ public class TooltipManager : MonoBehaviour
     /// <param name="data">tooltip data to unload</param>
     public void UnloadTooltip(TooltipSO data)
     {
-        Debug.Log("trying to Unloading tooltip");
         // verify the requested tooltip to unload is the current one
         if (data == currentTooltip)
         {
@@ -163,7 +162,6 @@ public class TooltipManager : MonoBehaviour
             titleTextbox.text = "";
             descriptionTextbox.text = "";
 
-            Debug.Log("Unloading tooltip");
             imageOverride.CrossFadeAlpha(0, 0.5f, true);
             titleTextbox.text = "";
             descriptionTextbox.text = "";
