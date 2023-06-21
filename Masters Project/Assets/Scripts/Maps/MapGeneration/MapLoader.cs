@@ -351,8 +351,9 @@ public class MapLoader : MonoBehaviour
             yield return GameManager.instance.LoadToScene(dest);
         }
 
-        // Once loading finishes, teleport player to a spawnpoint
+        // Once loading finishes, teleport player to a spawnpoint. Wait a frame
         MovePlayerToSpawn();
+        yield return new WaitForEndOfFrame();
 
         // Initialize the room
         currentRoom = FindObjectOfType<RoomInitializer>();

@@ -268,7 +268,9 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
                 {
                     GameObject t = ProjectilePooler.instance.GetProjectile(orb);
                     if(t != null)
+                    {
                         t.transform.position = _center.position;
+                    }   
                 }
                 else
                 {
