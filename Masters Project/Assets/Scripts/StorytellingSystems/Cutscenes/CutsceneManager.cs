@@ -191,13 +191,13 @@ public class CutsceneManager : MonoBehaviour
 
         playerControls.Disable();
         playerControls.Cutscene.Enable();
-
         
         yield return new WaitForSecondsRealtime(startDelay);
         yield return new WaitUntil(() => !pauseScreen.activeInHierarchy);
         // Play the video
-        videoRenderImg.enabled = true;
         videoPlayer.Play();
+        yield return new WaitForEndOfFrame();
+        videoRenderImg.enabled = true;
         playState = true;
 
         // Track time only if its playing. Dont if its paused
