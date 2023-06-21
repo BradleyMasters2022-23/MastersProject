@@ -17,9 +17,9 @@ public class CutsceneTrigger : MonoBehaviour
     [SerializeField, ReadOnly] private bool playable = false;
 
     [Tooltip("events that execute once the video itself finishes")]
-    [SerializeField] private UnityEvent onVideoFinishEvents;
+    [SerializeField] protected UnityEvent onVideoFinishEvents;
     [Tooltip("events that execute once the cutscene is finished and the game fades back into the game")]
-    [SerializeField] private UnityEvent onCutsceneFadeFinishEvents;
+    [SerializeField] protected UnityEvent onCutsceneFadeFinishEvents;
 
     private const string fileName = "cutsceneSaveData";
     private CutsceneSaveData saveData;
@@ -103,7 +103,12 @@ public class CutsceneTrigger : MonoBehaviour
         if (MapLoader.instance != null && MapLoader.instance.LoadState == LoadState.Loading)
         {
             yield return new WaitUntil(() => MapLoader.instance.LoadState != LoadState.Loading);
-            yield return new WaitForSecondsRealtime(0.6f);
+            yield return new WaitForSecondsRealtime(0.5f);
+            if(GameManager.instance.CurrentState == GameManager.States.PAUSED)
+            {
+                GameManager.instance.CloseToTop();
+            }
+                
         }
             
 

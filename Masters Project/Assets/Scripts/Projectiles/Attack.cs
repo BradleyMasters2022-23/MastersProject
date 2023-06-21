@@ -126,7 +126,7 @@ public abstract class Attack : TimeAffectedEntity
             float verKnockback;
 
             // Determine which profile of damage and knockback to use
-            if(target.GetType() == typeof(PlayerTarget))
+            if(target.GetType() == typeof(PlayerTarget) || target.GetType() == typeof(PlayerTargetTutorial))
             {
                 dmg = playerDamage;
                 horKnockback = playerHorizontalKnockback;
@@ -144,9 +144,9 @@ public abstract class Attack : TimeAffectedEntity
 
             if (knockback)
             {
+                Debug.Log("Trying to apply KB " + horKnockback + " " + verKnockback);
                 targetComp.Knockback(horKnockback, verKnockback, damagePoint);
             }
-
             hitTargets.Add(targetComp);
 
             return true;

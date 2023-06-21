@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Collider))]
 public class SpawnTriggerField : MonoBehaviour
@@ -176,6 +177,22 @@ public class SpawnTriggerField : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        // Incase its still active, disable the spawn routine
+        if (spawnRoutine != null)
+            StopCoroutine(spawnRoutine);
+
+        if (spawnedEnemies != null)
+        {
+            // Incase any are left, kill all spawned enemies
+            for (int i = spawnedEnemies.Count - 1; i >= 0; i--)
+            {
+                Destroy(spawnedEnemies[i]);
+            }
+        }
+    }
+
     #endregion
 
     #region Spawning Functions
@@ -258,6 +275,8 @@ public class SpawnTriggerField : MonoBehaviour
             if (WarningText.instance != null && i != waves.Length-1)
                 WarningText.instance.Play(true);
 
+            onWaveComplete?.Invoke();
+
             yield return new WaitForSeconds(waveChangeDelay);
             // Debug.Log("Wave Finished, moving to next");
         }
@@ -295,23 +314,30 @@ public class SpawnTriggerField : MonoBehaviour
 
     #endregion
 
+    #region Bonus Utility
 
-    private void OnDisable()
+    private UnityEvent onWaveComplete;
+
+    public void SubmitEvent(UnityAction action)
     {
-        // Incase its still active, disable the spawn routine
-        if(spawnRoutine != null)
-            StopCoroutine(spawnRoutine);
+        // make sure it exists before adding
+        if (onWaveComplete == null)
+            onWaveComplete = new UnityEvent();
 
-        if(spawnedEnemies != null)
+        onWaveComplete.AddListener(action);
+    }
+
+    public void RemoveEvent(UnityAction action)
+    {
+        if(onWaveComplete != null)
         {
-            // Incase any are left, kill all spawned enemies
-            for (int i = spawnedEnemies.Count - 1; i >= 0; i--)
-            {
-                Destroy(spawnedEnemies[i]);
-            }
+            onWaveComplete.RemoveListener(action);
         }
     }
 
+    /// <summary>
+    /// On selected in scene view, draw line to all spawnpoints for QoL
+    /// </summary>
     private void OnDrawGizmosSelected()
     {
         foreach (var points in spawnPoints)
@@ -322,4 +348,7 @@ public class SpawnTriggerField : MonoBehaviour
             }
         }
     }
+
+    #endregion
+
 }

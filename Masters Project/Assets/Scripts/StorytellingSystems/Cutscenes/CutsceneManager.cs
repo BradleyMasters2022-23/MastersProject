@@ -310,7 +310,7 @@ public class CutsceneManager : MonoBehaviour
     /// <param name="c">input context</param>
     private void TogglePause(InputAction.CallbackContext c)
     {
-        Debug.Log("Pausing cutscene " + c.action.name);
+        //Debug.Log("Pausing cutscene " + c.action.name);
 
         if(pauseScreen.activeInHierarchy)
         {

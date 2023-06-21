@@ -13,6 +13,7 @@ using TMPro;
 using Sirenix.OdinInspector;
 using UnityEngine.InputSystem;
 using UnityEngine.Events;
+using UnityEngine.UI;
 using Masters.UI;
 
 public class TooltipManager : MonoBehaviour
@@ -27,12 +28,14 @@ public class TooltipManager : MonoBehaviour
     [SerializeField, Required] private TextMeshProUGUI titleTextbox;
     [Tooltip("Reference to the textbox that displays the description.")]
     [SerializeField, Required] private TextMeshProUGUI descriptionTextbox;
-
+    [Tooltip("Reference to the image that can be overriden")]
+    [SerializeField, Required] private Image imageOverride;
+    [Tooltip("Default sprite that displays")]
+    [SerializeField, Required] private Sprite defaultSprite;
     /// <summary>
     /// Currently loaded tooltip
     /// </summary>
     private TooltipSO currentTooltip;
-    private Dictionary<TooltipSO, int> tooltipHistory;
 
     private const string fileName = "tooltipData";
     private TooltipSaveData saveData;
@@ -43,7 +46,7 @@ public class TooltipManager : MonoBehaviour
     private void Awake()
     {
         if(tooltipPanel == null || titleTextbox == null || descriptionTextbox == null 
-            || instance != null)
+            || imageOverride == null || defaultSprite == null || instance != null)
         {
             Debug.LogError("[TOOLTIP] Tooltip is not set up correctly in inspector!");
             Destroy(gameObject);
@@ -66,7 +69,7 @@ public class TooltipManager : MonoBehaviour
     /// Request a tooltip to be loaded
     /// </summary>
     /// <param name="data">tooltip data to be requested</param>
-    public void RequestTooltip(TooltipSO data)
+    public void RequestTooltip(TooltipSO data, bool checkWithSave)
     {
         // verify request is not a null
         if(data == null)
@@ -75,17 +78,21 @@ public class TooltipManager : MonoBehaviour
             return;
         }
 
-        // Verify it has not exceeded its display count max
-        if (saveData.LimitReached(data))
+        if (data == currentTooltip)
+            return;
+
+        // If set to check with save, check if a limit has been reached
+        if(checkWithSave && saveData.LimitReached(data))
         {
+            // Verify it has not exceeded its display count max
             Debug.Log("Tooltip " + data.titleText + " reached max limit");
             return;
         }
 
-        // update save data
+        // update save data. Do this outside of check with save so it can still be found by the tooltip lookup UI
         saveData.IncrementTooltip(data);
         bool r = DataManager.instance.Save(fileName, saveData);
-        Debug.Log($"Tooltip saving successful: {r}");
+        //Debug.Log($"Tooltip saving successful: {r}");
 
         // for now, load the data
         LoadTooltip(data);
@@ -99,8 +106,11 @@ public class TooltipManager : MonoBehaviour
     {
         currentTooltip = data;
 
-        StartCoroutine(titleTextbox.SlowTextLoad(data.titleText, 0.02f));
-        StartCoroutine(descriptionTextbox.SlowTextLoad(data.tooltipText, 0.01f));
+        StartCoroutine(titleTextbox.SlowTextLoadRealtime(data.titleText, 0.02f));
+        StartCoroutine(descriptionTextbox.SlowTextLoadRealtime(data.GetPromptText(), 0.01f));
+
+        // Load in an override if possible. otherwise use the default
+        imageOverride.sprite = (data.spriteOverride != null) ? data.spriteOverride : defaultSprite;
 
         // display tooltip after being loaded
         DisplayTooltip();
@@ -119,8 +129,8 @@ public class TooltipManager : MonoBehaviour
             titleTextbox.text = "";
             descriptionTextbox.text = "";
 
-            StartCoroutine(titleTextbox.SlowTextUnload(0.005f));
-            StartCoroutine(descriptionTextbox.SlowTextUnload(0.005f));
+            StartCoroutine(titleTextbox.SlowTextUnloadRealtime(0.005f));
+            StartCoroutine(descriptionTextbox.SlowTextUnloadRealtime(0.005f));
 
             // hide tooltip after being loaded
             HideTooltip();
