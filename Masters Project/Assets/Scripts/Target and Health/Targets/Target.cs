@@ -282,11 +282,16 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
     public virtual void Knockback(float force, float verticalForce, Vector3 origin)
     {
         if (!AffectedByAttacks())
+        {
             return;
+        }
+            
 
         // make sure knockback can be applied
         if (immuneToKnockback || _rb == null || _rb.isKinematic || (force + verticalForce <= 0))
+        {
             return;
+        }
 
         // Calculate force vector, draw for debug reasons
         Vector3 forceVector = (_center.position - origin).normalized * force;
