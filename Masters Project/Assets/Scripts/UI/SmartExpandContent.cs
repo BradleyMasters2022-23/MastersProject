@@ -35,8 +35,10 @@ public class SmartExpandContent : MonoBehaviour
                 
         }
 
-        totalHeight += layout.spacing * (activeChildren);
+        totalHeight += (layout.spacing * (activeChildren-1));
         totalHeight += layout.padding.top + layout.padding.bottom;
-        container.sizeDelta = new Vector2(container.sizeDelta.x, totalHeight);
+        // only apply if it's larger than original 
+        if (container.sizeDelta.y <= totalHeight)
+            container.sizeDelta = new Vector2(container.sizeDelta.x, totalHeight);
     }
 }

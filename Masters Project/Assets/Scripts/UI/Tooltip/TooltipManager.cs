@@ -32,8 +32,10 @@ public class TooltipManager : MonoBehaviour
     /// Currently loaded tooltip
     /// </summary>
     private TooltipSO currentTooltip;
-
     private Dictionary<TooltipSO, int> tooltipHistory;
+
+    private const string fileName = "tooltipData";
+    private TooltipSaveData saveData;
 
     /// <summary>
     /// Verify tooltip loaded is prepared
@@ -52,13 +54,12 @@ public class TooltipManager : MonoBehaviour
             instance = this;
         }
 
-        tooltipHistory = new Dictionary<TooltipSO, int>();
-
+        // Get save data
+        saveData = DataManager.instance.Load<TooltipSaveData>(fileName);
+        if (saveData == null)
+            saveData = new TooltipSaveData();
         // hide tooltip on load
         HideTooltip();
-
-        // make it 8 for simplicity. The queue shouldnt be used often if at all
-        //tooltipQueue = new Queue<TooltipSO>(8);
     }
 
     /// <summary>
@@ -75,14 +76,15 @@ public class TooltipManager : MonoBehaviour
         }
 
         // Verify it has not exceeded its display count max
-        if(tooltipHistory.ContainsKey(data) && tooltipHistory[data] >= data.timesToDisplay)
+        if (saveData.LimitReached(data))
         {
             return;
         }
 
-        // increment dictionary with display count
-        if (tooltipHistory.ContainsKey(data)) tooltipHistory[data] += 1;
-        else tooltipHistory.Add(data, 1);
+        // update save data
+        saveData.IncrementTooltip(data);
+        bool r = DataManager.instance.Save(fileName, saveData);
+        Debug.Log($"Tooltip saving successful: {r}");
 
         // for now, load the data
         LoadTooltip(data);
@@ -98,9 +100,6 @@ public class TooltipManager : MonoBehaviour
 
         StartCoroutine(titleTextbox.SlowTextLoad(data.titleText, 0.02f));
         StartCoroutine(descriptionTextbox.SlowTextLoad(data.tooltipText, 0.01f));
-
-        //titleTextbox.text = data.titleText;
-        //descriptionTextbox.text = data.tooltipText;
 
         // display tooltip after being loaded
         DisplayTooltip();
@@ -155,9 +154,22 @@ public class TooltipManager : MonoBehaviour
         tooltipPanel.SetActive(false);
     }
 
+    /// <summary>
+    /// Whether the tooltip is currently loaded 
+    /// </summary>
+    /// <param name="tooltipToCheck"></param>
+    /// <returns></returns>
     public bool HasTooltip(TooltipSO tooltipToCheck)
     {
         return currentTooltip == tooltipToCheck;
+    }
+    /// <summary>
+    /// Get the save data reference
+    /// </summary>
+    /// <returns></returns>
+    public TooltipSaveData GetSaveData()
+    {
+        return saveData;
     }
 
     #endregion
@@ -191,26 +203,5 @@ public class TooltipManager : MonoBehaviour
         if (currentTooltip != null)
             UnloadTooltip(currentTooltip);
     }
-    #endregion
-
-    #region Queue System
-    /// <summary>
-    /// Current queue of tooltips
-    /// </summary>
-    //private Queue<TooltipSO> tooltipQueue;
-    //private IEnumerator TooltipUpdate()
-    //{
-    //    WaitForSeconds tooltipTickRate = new WaitForSeconds(2f);
-
-    //    while(true)
-    //    {
-
-
-    //        yield return tooltipTickRate;
-    //        yield return null;
-    //    }
-
-    //    yield return null;
-    //}
     #endregion
 }
