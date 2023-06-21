@@ -892,6 +892,7 @@ MonoBehaviour:
   angleClamp: {x: -80, y: 80}
   cameraLook: {fileID: 8810997312557230426}
   onStateChangedChannel: {fileID: 11400000, guid: 2770aed5fbc083e4d8279c944f0242e2, type: 2}
+  onSceneChangeChannel: {fileID: 11400000, guid: 44ac93730b7a0dd49a1e55a1ff27d806, type: 2}
 --- !u!114 &8810997313966297022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -905,6 +906,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onStateChangeChannel: {fileID: 11400000, guid: 2770aed5fbc083e4d8279c944f0242e2, type: 2}
+  onSceneChangeChannel: {fileID: 11400000, guid: 44ac93730b7a0dd49a1e55a1ff27d806, type: 2}
   currentState: 0
   centerMass: {fileID: 8728288572005836809}
   maxMoveSpeed:
@@ -928,8 +930,8 @@ MonoBehaviour:
     upperLimit: 3
   jumpForce: 180
   jumpMultiplier:
-    startingValue: 0
-    lowerLimit: 0.5
+    startingValue: 1
+    lowerLimit: 0.33
     upperLimit: 100
   jumpCooldown: 0.2
   kyoteTime: 0.25
@@ -942,7 +944,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2056
   groundCheck: {fileID: 8810997314421572952}
-  groundCheckRadius: 0.32
+  groundCheckRadius: 0.3
   maxAngle: 40
   slopeStickForce: 130
   QAbility: {fileID: 2702772752586940428}
@@ -961,7 +963,7 @@ MonoBehaviour:
   onStateChangeChannel: {fileID: 11400000, guid: 2770aed5fbc083e4d8279c944f0242e2, type: 2}
   damageMultiplier:
     startingValue: 1
-    lowerLimit: 0.5
+    lowerLimit: 0.1
     upperLimit: 20
   speedMultiplier:
     startingValue: 1
@@ -980,7 +982,7 @@ MonoBehaviour:
   gunshotSource: {fileID: 2810231602275043531}
   baseBloom: 0.5
   bloomPerShot: 0.2
-  maxBloom: 4.7
+  maxBloom: 2.5
   bloomRecoveryRate: 5
   bloomRecoveryDelay: 0.55
   maxShootDisplacement: 0.08

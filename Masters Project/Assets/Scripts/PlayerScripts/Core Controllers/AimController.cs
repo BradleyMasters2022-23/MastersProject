@@ -35,6 +35,7 @@ public class AimController : MonoBehaviour
     [Header("---Game flow---")]
     [Tooltip("Channel that watches the game manager states")]
     [SerializeField] private ChannelGMStates onStateChangedChannel;
+    [SerializeField] private ChannelVoid onSceneChangeChannel;
 
     /// <summary>
     /// Core controller map
@@ -163,6 +164,8 @@ public class AimController : MonoBehaviour
         onSettingsChangedChannel.OnEventRaised += UpdateSettings;
 
         resetPlayerLook.OnEventRaised += ResetLook;
+
+        onSceneChangeChannel.OnEventRaised += ResetLook;
     }
 
     /// <summary>
@@ -175,6 +178,8 @@ public class AimController : MonoBehaviour
         onSettingsChangedChannel.OnEventRaised -= UpdateSettings;
 
         resetPlayerLook.OnEventRaised -= ResetLook;
+
+        onSceneChangeChannel.OnEventRaised -= ResetLook;
 
         if (aim.enabled)
             aim.Disable();

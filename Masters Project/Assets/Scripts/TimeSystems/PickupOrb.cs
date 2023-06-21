@@ -329,7 +329,6 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
 
         spawnTracker.ResetTimer();
         Spawn();
-        //Debug.Break();
     }
 
     public virtual void PoolPush()
