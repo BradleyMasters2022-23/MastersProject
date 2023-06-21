@@ -144,7 +144,6 @@ public abstract class Attack : TimeAffectedEntity
 
             if (knockback)
             {
-                Debug.Log("Trying to apply KB " + horKnockback + " " + verKnockback);
                 targetComp.Knockback(horKnockback, verKnockback, damagePoint);
             }
             hitTargets.Add(targetComp);
