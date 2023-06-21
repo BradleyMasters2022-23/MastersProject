@@ -183,8 +183,8 @@ public class CutsceneManager : MonoBehaviour
         playerControls.PlayerGameplay.Interact.Disable();
 
         // stop music with fade
-        BackgroundMusicManager.instance.StopMusic();
-
+        if(BackgroundMusicManager.instance!= null)
+            BackgroundMusicManager.instance.StopMusic();
 
         // turn on the screen
         yield return StartCoroutine(LoadScreen(true, fadeInTime));
