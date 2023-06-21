@@ -13,6 +13,7 @@ using TMPro;
 using Sirenix.OdinInspector;
 using UnityEngine.InputSystem;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Masters.UI;
 
@@ -39,6 +40,8 @@ public class TooltipManager : MonoBehaviour
 
     private const string fileName = "tooltipData";
     private TooltipSaveData saveData;
+
+    [SerializeField] private Animator animator;
 
     /// <summary>
     /// Verify tooltip loaded is prepared
@@ -71,22 +74,40 @@ public class TooltipManager : MonoBehaviour
     /// <param name="data">tooltip data to be requested</param>
     public void RequestTooltip(TooltipSO data, bool checkWithSave)
     {
+        StartCoroutine(LoadTooltipRoutine(data, checkWithSave));
+    }
+
+    /// <summary>
+    /// Process the tooltip load. Do in a routine so we can wait for frame for animator
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="checkWithSave"></param>
+    /// <returns></returns>
+    private IEnumerator LoadTooltipRoutine(TooltipSO data, bool checkWithSave)
+    {
         // verify request is not a null
-        if(data == null)
+        if (data == null)
         {
             Debug.Log("[TOOLTIP] A tooltip was requested but passed in a null reference.");
-            return;
+            yield break;
         }
 
         if (data == currentTooltip)
-            return;
+        {
+            yield break;
+        }
+        else if (currentTooltip != null)
+        {
+            UnloadTooltip();
+            yield return new WaitForEndOfFrame();
+        }
 
         // If set to check with save, check if a limit has been reached
-        if(checkWithSave && saveData.LimitReached(data))
+        if (checkWithSave && saveData.LimitReached(data))
         {
             // Verify it has not exceeded its display count max
             Debug.Log("Tooltip " + data.titleText + " reached max limit");
-            return;
+            yield break;
         }
 
         // update save data. Do this outside of check with save so it can still be found by the tooltip lookup UI
@@ -94,26 +115,30 @@ public class TooltipManager : MonoBehaviour
         bool r = DataManager.instance.Save(fileName, saveData);
         //Debug.Log($"Tooltip saving successful: {r}");
 
-        // for now, load the data
-        LoadTooltip(data);
+        // save new tooltip, display it
+        currentTooltip = data;
+        DisplayTooltip();
     }
 
     /// <summary>
-    /// Load in a tooltip and display it
+    /// Load in a tooltip and display it. Called by animator
     /// </summary>
-    /// <param name="data">tooltip data to be loaded</param>
-    private void LoadTooltip(TooltipSO data)
+    public void LoadTooltip()
     {
-        currentTooltip = data;
+        if(currentTooltip == null)
+        {
+            HideTooltip();
+            return;
+        }
 
-        StartCoroutine(titleTextbox.SlowTextLoadRealtime(data.titleText, 0.02f));
-        StartCoroutine(descriptionTextbox.SlowTextLoadRealtime(data.GetPromptText(), 0.01f));
+        StartCoroutine(titleTextbox.SlowTextLoadRealtime(currentTooltip.titleText, 0.02f));
+        StartCoroutine(descriptionTextbox.SlowTextLoadRealtime(currentTooltip.GetPromptText(), 0.01f));
 
         // Load in an override if possible. otherwise use the default
-        imageOverride.sprite = (data.spriteOverride != null) ? data.spriteOverride : defaultSprite;
+        imageOverride.CrossFadeAlpha(1, 0.5f, true);
+        imageOverride.sprite = (currentTooltip.spriteOverride != null) ? currentTooltip.spriteOverride : defaultSprite;
 
         // display tooltip after being loaded
-        DisplayTooltip();
     }
 
     /// <summary>
@@ -122,18 +147,21 @@ public class TooltipManager : MonoBehaviour
     /// <param name="data">tooltip data to unload</param>
     public void UnloadTooltip(TooltipSO data)
     {
+        Debug.Log("trying to Unloading tooltip");
         // verify the requested tooltip to unload is the current one
-        if(data == currentTooltip)
+        if (data == currentTooltip)
         {
             currentTooltip= null;
             titleTextbox.text = "";
             descriptionTextbox.text = "";
 
-            StartCoroutine(titleTextbox.SlowTextUnloadRealtime(0.005f));
-            StartCoroutine(descriptionTextbox.SlowTextUnloadRealtime(0.005f));
+            Debug.Log("Unloading tooltip");
+            imageOverride.CrossFadeAlpha(0, 0.5f, true);
+            titleTextbox.text = "";
+            descriptionTextbox.text = "";
 
             // hide tooltip after being loaded
-            HideTooltip();
+            animator.SetBool("Open", false);
         }
     }
 
@@ -142,25 +170,22 @@ public class TooltipManager : MonoBehaviour
     /// </summary>
     public void UnloadTooltip()
     {
-        currentTooltip = null;
-        titleTextbox.text = "";
-        descriptionTextbox.text = "";
-
-        HideTooltip();
+        UnloadTooltip(currentTooltip);
     }
 
-
     /// <summary>
-    /// Display tooltip on HUD
+    /// Display tooltip on HUD, start is animation
     /// </summary>
     private void DisplayTooltip()
     {
-        tooltipPanel.SetActive(true);
+        Debug.Log("Display tooltip called");
+        animator.SetBool("Open", true);
     }
+
     /// <summary>
-    /// Hide tooltip on HUD
+    /// Hide tooltip on HUD immediately
     /// </summary>
-    private void HideTooltip()
+    public void HideTooltip()
     {
         tooltipPanel.SetActive(false);
     }
@@ -198,7 +223,6 @@ public class TooltipManager : MonoBehaviour
         dismissTooltip.Enable();
     }
 
-
     private void OnDisable()
     {
         dismissTooltip.performed -= DismissCurrentTooltip;
@@ -213,6 +237,11 @@ public class TooltipManager : MonoBehaviour
     {
         if (currentTooltip != null)
             UnloadTooltip(currentTooltip);
+    }
+
+    private void OnLevelWasLoaded(int level)
+    {
+        HideTooltip();
     }
     #endregion
 }
