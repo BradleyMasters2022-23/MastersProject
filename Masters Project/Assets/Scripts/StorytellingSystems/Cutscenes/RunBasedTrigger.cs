@@ -20,7 +20,7 @@ public class RunBasedTrigger : CutsceneTrigger
     {
         if (!CanPlay())
         {
-            Debug.Log("Cant play, disabling");
+            //Debug.Log("Cant play, disabling");
             onVideoFinishEvents.Invoke();
             onCutsceneFadeFinishEvents.Invoke();
         }

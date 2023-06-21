@@ -184,7 +184,6 @@ public class TooltipManager : MonoBehaviour
     /// </summary>
     private void DisplayTooltip()
     {
-        Debug.Log("Display tooltip called");
         animator.SetBool("Open", true);
     }
 
