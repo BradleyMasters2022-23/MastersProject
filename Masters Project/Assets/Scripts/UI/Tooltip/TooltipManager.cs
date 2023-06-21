@@ -98,6 +98,7 @@ public class TooltipManager : MonoBehaviour
         }
         else if (currentTooltip != null)
         {
+            // wait for frame to let the animator catch up
             UnloadTooltip();
             yield return new WaitForEndOfFrame();
         }
@@ -115,8 +116,11 @@ public class TooltipManager : MonoBehaviour
         bool r = DataManager.instance.Save(fileName, saveData);
         //Debug.Log($"Tooltip saving successful: {r}");
 
-        // save new tooltip, display it
+        // save new tooltip, tell it to display. Reset stats now for smoother tranistion in animator
         currentTooltip = data;
+        imageOverride.sprite = (currentTooltip.spriteOverride != null) ? currentTooltip.spriteOverride : defaultSprite;
+        titleTextbox.text = "";
+        descriptionTextbox.text = "";
         DisplayTooltip();
     }
 
