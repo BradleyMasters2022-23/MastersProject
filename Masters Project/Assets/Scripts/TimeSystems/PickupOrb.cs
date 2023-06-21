@@ -78,6 +78,7 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
 
     protected void Spawn()
     {
+        Debug.Log("Spawn effect called");
         // Randomly generate velocity and rotation angles
         float vel = Random.Range(dropVelocityRange.x, dropVelocityRange.y);
         float angY = Random.Range(0, 360);

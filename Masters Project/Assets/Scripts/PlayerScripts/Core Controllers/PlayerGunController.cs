@@ -220,9 +220,18 @@ public class PlayerGunController : MonoBehaviour
                 // Shoot projectile, aiming towards passed in target
                 GameObject newShot;
 
-                newShot = ProjectilePooler.instance.GetProjectile(shotPrefab);
-                newShot.transform.position = shootPoint.position;
-                newShot.transform.rotation = shootPoint.rotation;
+                // Try to get pool. If not, just spawn normally
+                if(ProjectilePooler.instance != null && ProjectilePooler.instance.HasPool(shotPrefab))
+                {
+                    newShot = ProjectilePooler.instance.GetProjectile(shotPrefab);
+                    newShot.transform.position = shootPoint.position;
+                    newShot.transform.rotation = shootPoint.rotation;
+                }
+                else
+                {
+                    newShot = Instantiate(shotPrefab, shootPoint.position, shootPoint.rotation);
+                }
+                
 
                 // Calculate & apply the new minor displacement
                 Vector3 displacement = new Vector3(
@@ -247,9 +256,16 @@ public class PlayerGunController : MonoBehaviour
                 // Shoot projectile, aiming towards passed in target
                 GameObject newShot;
 
-                newShot = ProjectilePooler.instance.GetProjectile(enhancedBulletPrefab);
-                newShot.transform.position = shootPoint.position;
-                newShot.transform.rotation = shootPoint.rotation;
+                if (ProjectilePooler.instance != null && ProjectilePooler.instance.HasPool(enhancedBulletPrefab))
+                {
+                    newShot = ProjectilePooler.instance.GetProjectile(enhancedBulletPrefab);
+                    newShot.transform.position = shootPoint.position;
+                    newShot.transform.rotation = shootPoint.rotation;
+                }
+                else
+                {
+                    newShot = Instantiate(enhancedBulletPrefab, shootPoint.position, shootPoint.rotation);
+                }
 
                 // Calculate & apply the new minor displacement
                 Vector3 displacement = new Vector3(

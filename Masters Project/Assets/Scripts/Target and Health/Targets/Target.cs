@@ -264,7 +264,7 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
             // Spawn objects, apply rotation and velocity
             if (_center != null)
             {
-                if(ProjectilePooler.instance.HasPool(orb))
+                if(ProjectilePooler.instance != null && ProjectilePooler.instance.HasPool(orb))
                 {
                     GameObject t = ProjectilePooler.instance.GetProjectile(orb);
                     if(t != null)
