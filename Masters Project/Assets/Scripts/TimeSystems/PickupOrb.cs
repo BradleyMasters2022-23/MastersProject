@@ -331,7 +331,7 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
         //Debug.Break();
     }
 
-    public void PoolPush()
+    public virtual void PoolPush()
     {
         trail.Clear();
     }

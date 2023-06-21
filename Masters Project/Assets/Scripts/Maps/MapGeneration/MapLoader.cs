@@ -62,6 +62,9 @@ public class MapLoader : MonoBehaviour
 
     [SerializeField] bool incrementSaveRuns = true;
 
+    [Tooltip("Channel called when any scene change happens. Used to tell poolers to reset.")]
+    [SerializeField] ChannelVoid onSceneChange;
+
     /// <summary>
     /// Navmesh for overall map
     /// </summary>
@@ -108,11 +111,6 @@ public class MapLoader : MonoBehaviour
     /// Current destination to load to
     /// </summary>
     private string dest = "";
-
-    /// <summary>
-    /// Refernce to all portals in the current scene
-    /// </summary>
-    private PortalTrigger[] portals;
 
     /// <summary>
     /// The current room manager
@@ -324,6 +322,8 @@ public class MapLoader : MonoBehaviour
     private IEnumerator LoadRoomRoutine()
     {
         loadState = LoadState.Loading;
+
+        onSceneChange?.RaiseEvent();
 
         // disable to prevent any new inputs
         GameManager.controls.Disable();
