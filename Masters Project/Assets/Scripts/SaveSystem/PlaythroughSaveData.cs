@@ -34,4 +34,16 @@ public class PlaythroughSaveData
         Debug.Log($"player deaths {playerDeaths}");
         Debug.Log($"crystals collected {crystalsCollected}");
     }
+
+    /// <summary>
+    /// Whether the data has been modified from default
+    /// </summary>
+    /// <returns></returns>
+    public bool DataChanged()
+    {
+        return !(runsAttempted == 0
+            && runsCompleted == 0
+            && playerDeaths == 0
+            && crystalsCollected == 0);
+    }
 }
