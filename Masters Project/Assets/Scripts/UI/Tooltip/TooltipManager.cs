@@ -146,7 +146,7 @@ public class TooltipManager : MonoBehaviour
         loadBodyRoutine = StartCoroutine(descriptionTextbox.SlowTextLoadRealtime(currentTooltip.GetPromptText(), 0.01f));
 
         // Load in an override if possible. otherwise use the default
-        imageOverride.CrossFadeAlpha(1, 0.5f, true);
+        //imageOverride.CrossFadeAlpha(1, 0.5f, true);
         imageOverride.sprite = (currentTooltip.spriteOverride != null) ? currentTooltip.spriteOverride : defaultSprite;
 
         // display tooltip after being loaded
@@ -193,6 +193,7 @@ public class TooltipManager : MonoBehaviour
     private void DisplayTooltip()
     {
         animator.SetBool("Open", true);
+        imageOverride.sprite = (currentTooltip.spriteOverride != null) ? currentTooltip.spriteOverride : defaultSprite;
     }
 
     /// <summary>
