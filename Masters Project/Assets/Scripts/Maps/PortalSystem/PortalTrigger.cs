@@ -26,8 +26,10 @@ public class PortalTrigger : MonoBehaviour, Interactable
     [SerializeField, ReadOnly] private bool usable = true;
     [Tooltip("Events to execute on interact")]
     [SerializeField] private UnityEvent onInteract;
-    
+
     [Header("VFX/SFX Indicators")]
+
+    [SerializeField] AmbientSFXSource portalAmbianceSFX;
 
     [Tooltip("Indicators that play when the portal is summoned")]
     [SerializeField] IIndicator[] summonIndicators;
@@ -98,9 +100,28 @@ public class PortalTrigger : MonoBehaviour, Interactable
             float dist = Vector3.Distance(transform.position, playerRef.position);
             float newVal = horizontalScaleOverDistance.Evaluate(dist);
             newVal = Mathf.Clamp(newVal, horScale.x - maxScaleChange, horScale.x + maxScaleChange);
+
+            // if 'opening', start ambiance
+            if (horScale.x <= 0 && newVal > 0)
+            {
+                Debug.Log("Playing portal SFX");
+                portalAmbianceSFX.Play();
+            }
+            // if 'closing', end ambiance
+            else if (horScale.x > 0 && newVal <= 0)
+            {
+                Debug.Log("Stoping portal SFX");
+                portalAmbianceSFX.Stop();
+            }
+                
+
+
+            // apply new scale 
             horScale.x = newVal;
             horScale.z = newVal;
             portalScaleObject.localScale = horScale;
+
+
         }
     }
 
@@ -135,6 +156,7 @@ public class PortalTrigger : MonoBehaviour, Interactable
         horScale = portalScaleObject.localScale;
         horScale.x = 0;
         horScale.z = 0;
+
         // enable collider
         col.enabled = true;
         col.isTrigger = false;
