@@ -28,15 +28,15 @@ public class Loader : MonoBehaviour
         }
     }
 
-    public Coroutine LoadToScene(string name)
+    public Coroutine LoadToScene(string name, bool enableControls=true)
     {
         // dont load to a scene already loaded
         // if (name == SceneManager.GetActiveScene().name) return null;
 
-        return StartCoroutine(LoadSceneAsync(name));
+        return StartCoroutine(LoadSceneAsync(name, enableControls));
     }
 
-    private IEnumerator LoadSceneAsync(string name)
+    private IEnumerator LoadSceneAsync(string name, bool enableControls)
     {
         loading = true;
         onSceneChange?.RaiseEvent();
@@ -59,9 +59,8 @@ public class Loader : MonoBehaviour
 
         mainFrame.SetActive(false);
 
-        if (c != null)
+        if (c != null && enableControls)
         {
-            c.UI.Disable();
             c.PlayerGameplay.Enable();
         }
         Time.timeScale = 1f;
