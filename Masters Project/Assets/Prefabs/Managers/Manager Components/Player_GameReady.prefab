@@ -278,8 +278,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3912768570946259478}
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 12.18, y: 1.1350002, z: -17.890005}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.005, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -829,7 +829,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17a82eb6eddc0e8488f954df957fb0c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  affectedByTimestop: 1
+  affectedByTimestop: 0
   minimumTimescale: 0
   slowFieldLayers:
     serializedVersion: 2
@@ -839,8 +839,6 @@ MonoBehaviour:
   _team: 1
   _targetThreat: 50
   _unkillable: 0
-  _healthManager: {fileID: 0}
-  _killed: 0
   immuneToKnockback: 0
   knockbackModifier: 1
   maxKnockback: 150
@@ -889,10 +887,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onSettingsChangedChannel: {fileID: 11400000, guid: 0c8d55cade4ec7748a24f8fe270230cc, type: 2}
+  resetPlayerLook: {fileID: 11400000, guid: 8b0ee066832a06148b8a33d191527054, type: 2}
   mouseSensitivity: 5
   angleClamp: {x: -80, y: 80}
   cameraLook: {fileID: 8810997312557230426}
   onStateChangedChannel: {fileID: 11400000, guid: 2770aed5fbc083e4d8279c944f0242e2, type: 2}
+  onSceneChangeChannel: {fileID: 11400000, guid: 44ac93730b7a0dd49a1e55a1ff27d806, type: 2}
 --- !u!114 &8810997313966297022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -906,6 +906,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onStateChangeChannel: {fileID: 11400000, guid: 2770aed5fbc083e4d8279c944f0242e2, type: 2}
+  onSceneChangeChannel: {fileID: 11400000, guid: 44ac93730b7a0dd49a1e55a1ff27d806, type: 2}
   currentState: 0
   centerMass: {fileID: 8728288572005836809}
   maxMoveSpeed:
@@ -929,8 +930,8 @@ MonoBehaviour:
     upperLimit: 3
   jumpForce: 180
   jumpMultiplier:
-    startingValue: 0
-    lowerLimit: 0.5
+    startingValue: 1
+    lowerLimit: 0.33
     upperLimit: 100
   jumpCooldown: 0.2
   kyoteTime: 0.25
@@ -945,7 +946,7 @@ MonoBehaviour:
   groundCheck: {fileID: 8810997314421572952}
   groundCheckRadius: 0.3
   maxAngle: 40
-  slopeStickForce: 125
+  slopeStickForce: 130
   QAbility: {fileID: 2702772752586940428}
 --- !u!114 &8810997313966297015
 MonoBehaviour:
@@ -962,7 +963,7 @@ MonoBehaviour:
   onStateChangeChannel: {fileID: 11400000, guid: 2770aed5fbc083e4d8279c944f0242e2, type: 2}
   damageMultiplier:
     startingValue: 1
-    lowerLimit: 0.5
+    lowerLimit: 0.1
     upperLimit: 20
   speedMultiplier:
     startingValue: 1
@@ -981,7 +982,7 @@ MonoBehaviour:
   gunshotSource: {fileID: 2810231602275043531}
   baseBloom: 0.5
   bloomPerShot: 0.2
-  maxBloom: 4.7
+  maxBloom: 2.5
   bloomRecoveryRate: 5
   bloomRecoveryDelay: 0.55
   maxShootDisplacement: 0.08

@@ -40,7 +40,7 @@ public class TooltipUIListLoader : MonoBehaviour
     private void OnEnable()
     {
         foundTooltips = GetLoadableTooltips();
-        spawnedObjects = PopulateList(displayArea, allTooltips.ToList());
+        spawnedObjects = PopulateList(displayArea, foundTooltips.ToList());
 
     }
     /// <summary>
@@ -73,7 +73,7 @@ public class TooltipUIListLoader : MonoBehaviour
         // Check each tooltip to see if its been found atleast once
         foreach (var tp in allTooltips)
         {
-            if (data.HasTooltip(tp))
+            if (tp.showInTooltipList && data.HasTooltip(tp))
                 found.Add(tp);
         }
 

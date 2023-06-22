@@ -11,7 +11,8 @@ public class Loader : MonoBehaviour
     private GameControls c;
 
     [SerializeField] private GameObject mainFrame;
-
+    [Tooltip("Channel called when loading begins")]
+    [SerializeField] private ChannelVoid onSceneChange;
     private void Awake()
     {
         if (instance == null)
@@ -38,6 +39,7 @@ public class Loader : MonoBehaviour
     private IEnumerator LoadSceneAsync(string name)
     {
         loading = true;
+        onSceneChange?.RaiseEvent();
 
         c = GameManager.controls;
 
@@ -59,7 +61,6 @@ public class Loader : MonoBehaviour
 
         if (c != null)
         {
-            c.Enable();
             c.UI.Disable();
             c.PlayerGameplay.Enable();
         }

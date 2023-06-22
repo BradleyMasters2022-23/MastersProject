@@ -128,6 +128,10 @@ public class SimpleShoot : AttackTarget
 
     protected override IEnumerator DamageAction()
     {
+        // if no projectile, dont do anything
+        if (projectile == null)
+            yield break;
+
         for(int i = 0; i < numOfShots; i++)
         {
             // Apply first shot accuracy instead
@@ -249,6 +253,11 @@ public class SimpleShoot : AttackTarget
 
     private void Shoot(Transform target, float minSpread, float maxSpread)
     {
+        if(projectile == null)
+        {
+            return;
+        }
+
         // Spawn projectile for each barrel
         List<GameObject> spawnedProjectiles = new List<GameObject>();
         foreach (Transform barrel in shootPoints)
@@ -349,7 +358,7 @@ public class SimpleShoot : AttackTarget
 
     private Vector3 GetLeadedPosition(Transform target, float strength)
     {
-        if (strength == 0)
+        if (strength == 0 || projectile == null)
         {
             // Debug.Log("No lead strenght, setting to target position at: " + target.position);
             return target.position;

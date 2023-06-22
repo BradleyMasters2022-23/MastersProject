@@ -42,6 +42,7 @@ public class EnemyPooler : MonoBehaviour
         {
             instance = this;
             Init();
+            onSceneChange.OnEventRaised += ReturnAllToPool;
         }
         else
         {
@@ -82,7 +83,7 @@ public class EnemyPooler : MonoBehaviour
                 return null;
             }    
             
-            enemy.transform.parent = null;
+            //enemy.transform.parent = null;
             //enemy.GetComponent<EnemyTarget>().PullFromPool(enemyRequest);
             // TODO - any unique enemy functionality here like stat scaling
             return enemy;
@@ -112,7 +113,7 @@ public class EnemyPooler : MonoBehaviour
             // do other funcs when being returned
             //enemyReturn.GetComponent<EnemyTarget>().ReturnToPool();
             pool[enemyID].Return(enemyReturn);
-            enemyReturn.transform.parent = transform;
+            //enemyReturn.transform.parent = transform;
             return true;
         }
         else
@@ -120,5 +121,27 @@ public class EnemyPooler : MonoBehaviour
             Debug.Log($"[EnemyPooler] Pool of enemy {enemyReturn.name} is trying to be returned but does not exist!");
             return false;
         }
+    
+    }
+
+    [SerializeField] private ChannelVoid onSceneChange;
+
+    /// <summary>
+    /// Return all objects to the pool instantly. Defined by children
+    /// </summary>
+    private void ReturnAllToPool()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            // if an object is out of the pool, return it
+            if (transform.GetChild(i) != null && transform.GetChild(i).gameObject.activeInHierarchy)
+            {
+                Return(transform.GetChild(i).gameObject);
+            }
+        }
+    }
+    private void OnDestroy()
+    {
+        onSceneChange.OnEventRaised -= ReturnAllToPool;
     }
 }

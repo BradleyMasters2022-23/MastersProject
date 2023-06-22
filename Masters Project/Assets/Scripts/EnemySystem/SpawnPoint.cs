@@ -78,7 +78,7 @@ public class SpawnPoint : MonoBehaviour
     [SerializeField] private AudioClipSO spawnSound;
 
     [Tooltip("What enemies are allowed to spawn on this spawnpoint. Drag enemy prefabs here.")]
-    [SerializeField] private GameObject[] enemyWhitelist;
+    [SerializeField] private List<EnemySO> enemyWhitelist;
 
     [SerializeField] private List<EnemySO> enemyBlacklist;
 
@@ -163,11 +163,10 @@ public class SpawnPoint : MonoBehaviour
         if (enemyStorage != null)
             return false;
 
-        bool _allowed = false;
-        if (enemyWhitelist.Length > 0)
+        if (enemyWhitelist.Count > 0)
         {
-            //EnemyManager proposed = proposedEnemy.GetComponent<EnemyManager>();
-            foreach (GameObject type in enemyWhitelist)
+            bool _allowed = false;
+            foreach (var type in enemyWhitelist)
             {
                 if (type == proposedEnemy)
                     _allowed = true;
@@ -297,6 +296,10 @@ public class SpawnPoint : MonoBehaviour
         while (!spawnDelayTimer.TimerDone())
             yield return null;
 
+        // If missing, then enemy is gone so stop. Only happens in unload of the tutorial
+        if (lastSpawnedEnemy == null)
+            yield break;
+
         // Enable enemy, make look at player
         lastSpawnedEnemy.SetActive(true);
         lastSpawnedEnemy.transform.LookAt(player.transform.position);
@@ -311,7 +314,6 @@ public class SpawnPoint : MonoBehaviour
         if(spawnParticles != null)
             spawnParticles.Stop();
 
-        
         s.Stop();
 
         spawning = false;

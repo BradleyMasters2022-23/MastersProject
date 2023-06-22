@@ -126,7 +126,7 @@ public abstract class Attack : TimeAffectedEntity
             float verKnockback;
 
             // Determine which profile of damage and knockback to use
-            if(target.GetType() == typeof(PlayerTarget))
+            if(target.GetType() == typeof(PlayerTarget) || target.GetType() == typeof(PlayerTargetTutorial))
             {
                 dmg = playerDamage;
                 horKnockback = playerHorizontalKnockback;
@@ -139,14 +139,13 @@ public abstract class Attack : TimeAffectedEntity
                 verKnockback = verticalKnockback;
             }
 
-            if(dealDamage && dmg > 0)
+            if(dealDamage)
                 target.RegisterEffect(dmg);
 
-            if (knockback && horKnockback + verKnockback > 0)
+            if (knockback)
             {
                 targetComp.Knockback(horKnockback, verKnockback, damagePoint);
             }
-
             hitTargets.Add(targetComp);
 
             return true;
@@ -160,7 +159,7 @@ public abstract class Attack : TimeAffectedEntity
     /// Deal damage to the targets it hits
     /// </summary>
     /// <param name="other">Object it hit</param>
-    private void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         Vector3 hitNormal;
 
@@ -168,6 +167,7 @@ public abstract class Attack : TimeAffectedEntity
             hitNormal = -transform.forward;
         else
             hitNormal = transform.position - other.ClosestPoint(transform.position);
+
 
         Hit(transform.position, hitNormal.normalized);
         DealDamage(other.transform);
