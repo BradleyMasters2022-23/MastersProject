@@ -27,8 +27,11 @@ public class PortalTrigger : MonoBehaviour, Interactable
     [Tooltip("Events to execute on interact")]
     [SerializeField] private UnityEvent onInteract;
 
+    [SerializeField] ChannelVoid onSceneLoadChannel;
+
     [Header("VFX/SFX Indicators")]
 
+    [Tooltip("Ambient SFX for the portal")]
     [SerializeField] AmbientSFXSource portalAmbianceSFX;
 
     [Tooltip("Indicators that play when the portal is summoned")]
@@ -104,24 +107,18 @@ public class PortalTrigger : MonoBehaviour, Interactable
             // if 'opening', start ambiance
             if (horScale.x <= 0 && newVal > 0)
             {
-                Debug.Log("Playing portal SFX");
                 portalAmbianceSFX.Play();
             }
             // if 'closing', end ambiance
             else if (horScale.x > 0 && newVal <= 0)
             {
-                Debug.Log("Stoping portal SFX");
                 portalAmbianceSFX.Stop();
             }
-                
-
 
             // apply new scale 
             horScale.x = newVal;
             horScale.z = newVal;
             portalScaleObject.localScale = horScale;
-
-
         }
     }
 
@@ -137,6 +134,7 @@ public class PortalTrigger : MonoBehaviour, Interactable
             interactionCooldown.ResetTimer(3f);
             Indicators.SetIndicators(interactIndicators, true);
             onInteract.Invoke();
+            onSceneLoadChannel.RaiseEvent();
         }
     }
     public bool CanInteract()
@@ -191,10 +189,13 @@ public class PortalTrigger : MonoBehaviour, Interactable
             Debug.LogError($"{name} tried going to next room but couldn't find a MapLoader!");
     }
 
+    /// <summary>
+    /// Teleport to the linked portal
+    /// </summary>
     public void TeleportToPortal()
     {
         // Debug.Log($"Player : {playerRef != null} | Exit point : {exitPoint !=  null}");
-
+        
         playerRef.position = exitPoint.position;
         playerRef.rotation = exitPoint.rotation;
     }
@@ -205,6 +206,7 @@ public class PortalTrigger : MonoBehaviour, Interactable
     }
     public void GoToSecretRoom()
     {
+        MapLoader.instance.PlaySecretPortalSFX();
         secretRef?.GoToSecretRoom();
     }
 }

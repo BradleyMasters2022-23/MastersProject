@@ -27,6 +27,8 @@ public class RunBasedTrigger : CutsceneTrigger
         else
         {
             TryCutscene();
+            // disable while loading
+            GameManager.controls.Disable();
         }
             
     }

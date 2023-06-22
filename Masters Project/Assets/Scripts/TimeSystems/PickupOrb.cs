@@ -163,7 +163,6 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
                 }
             case OrbState.Chasing:
                 {
-                    Debug.Log("Going to chase state");
                     // switch to kinematic for chasing reasons
                     rb.isKinematic = true;
 
@@ -174,7 +173,6 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
                 }
             case OrbState.Idle:
                 {
-                    Debug.Log("Going to idle state");
                     // switch to normal
                     rb.isKinematic = false;
 

@@ -33,7 +33,7 @@ public class PlayerTargetTutorial : PlayerTarget
     {
         GameManager.controls.Disable();
         yield return HUDFadeManager.instance.FadeIn();
-        SetForClear();
+        //SetForClear();
 
         // teleport player up to avoid any potential sound weirdness
         transform.position = Vector3.up * 100;
@@ -46,8 +46,9 @@ public class PlayerTargetTutorial : PlayerTarget
     /// </summary>
     public void EndTutorial()
     {
-        Destroy(MapLoader.instance.gameObject);
-        SetForClear();
+        MapLoader.instance.ClearRunData();
+        //Destroy(MapLoader.instance.gameObject);
+        //SetForClear();
         GameManager.instance.GoToHub();
     }
 }

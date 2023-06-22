@@ -115,12 +115,4 @@ public class PlayerTarget : Target
         damageCheat.performed -= CheatDamage;
         p = null;
     }
-
-    /// <summary>
-    /// Set the player instance to be re-initialized on next scene load
-    /// </summary>
-    public void SetForClear()
-    {
-        SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
-    }
 }

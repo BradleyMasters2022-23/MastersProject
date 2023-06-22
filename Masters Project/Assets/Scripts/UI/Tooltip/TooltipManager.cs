@@ -45,6 +45,9 @@ public class TooltipManager : MonoBehaviour
     [SerializeField] private AudioClipSO openSound;
     [SerializeField] private AudioSource source;
 
+    private Coroutine loadTitleRoutine;
+    private Coroutine loadBodyRoutine;
+
     /// <summary>
     /// Verify tooltip loaded is prepared
     /// </summary>
@@ -138,9 +141,9 @@ public class TooltipManager : MonoBehaviour
         }
 
         openSound.PlayClip(source);
-
-        StartCoroutine(titleTextbox.SlowTextLoadRealtime(currentTooltip.titleText, 0.02f));
-        StartCoroutine(descriptionTextbox.SlowTextLoadRealtime(currentTooltip.GetPromptText(), 0.01f));
+        
+        loadTitleRoutine = StartCoroutine(titleTextbox.SlowTextLoadRealtime(currentTooltip.titleText, 0.02f));
+        loadBodyRoutine = StartCoroutine(descriptionTextbox.SlowTextLoadRealtime(currentTooltip.GetPromptText(), 0.01f));
 
         // Load in an override if possible. otherwise use the default
         imageOverride.CrossFadeAlpha(1, 0.5f, true);
@@ -158,6 +161,11 @@ public class TooltipManager : MonoBehaviour
         // verify the requested tooltip to unload is the current one
         if (data == currentTooltip)
         {
+            if (loadTitleRoutine != null)
+                StopCoroutine(loadTitleRoutine);
+            if (loadBodyRoutine != null)
+                StopCoroutine(loadBodyRoutine);
+
             currentTooltip= null;
             titleTextbox.text = "";
             descriptionTextbox.text = "";
