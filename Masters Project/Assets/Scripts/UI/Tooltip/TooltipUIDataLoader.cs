@@ -44,7 +44,7 @@ public class TooltipUIDataLoader : MonoBehaviour
         if (title != null)
             title.text = d.titleText;
         if (data != null)
-            data.text = d.tooltipText;
+            data.text = d.GetSavedText();
        // if(img != null)
        //     img.sprite = d.icon
     }

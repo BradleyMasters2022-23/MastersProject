@@ -62,4 +62,10 @@ public class TimeOrb : PickupOrb, IPoolable
     {
         return refillAmount;
     }
+
+    public override void PoolPush()
+    {
+        base.PoolPush();
+        playerTime?.RemoveFromBuffer(this);
+    }
 }

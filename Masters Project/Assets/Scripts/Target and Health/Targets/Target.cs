@@ -49,12 +49,12 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
     /// <summary>
     /// The manager controlling health for this target
     /// </summary>
-    [SerializeField] protected HealthManager _healthManager;
+    protected HealthManager _healthManager;
 
     /// <summary>
     /// Whether or not this entity has already been killed
     /// </summary>
-    [SerializeField] protected bool _killed = false;
+    protected bool _killed = false;
 
     [Header("Core Gameplay Features")]
 
@@ -105,6 +105,7 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
         audioSource = GetComponent<AudioSource>();
 
         damagedSoundCooldownTracker = new ScaledTimer(damagedSoundCooldown, false);
+        damagedSoundCooldownTracker.ResetTimer();
         // If initialization of health manager fails, destroy itself
         if (_healthManager == null || !_healthManager.Init())
         {
@@ -127,8 +128,7 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
     {
         if(!AffectedByAttacks()) return;
 
-
-        if (!_killed && _healthManager.Damage(dmg))
+        if (!_killed)
         {
             if (damagedSoundCooldownTracker != null && damagedSoundCooldownTracker.TimerDone())
             {
@@ -136,11 +136,15 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
                 damagedSoundCooldownTracker.ResetTimer();
             }
 
-            if (_unkillable)
-                return;
+            // if the target is out of health...
+            if (_healthManager.Damage(dmg))
+            {
+                if (_unkillable)
+                    return;
 
-            _killed = true;
-            KillTarget();
+                _killed = true;
+                KillTarget();
+            }
         }
             
     }
@@ -260,11 +264,13 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
             // Spawn objects, apply rotation and velocity
             if (_center != null)
             {
-                if(ProjectilePooler.instance.HasPool(orb))
+                if(ProjectilePooler.instance != null && ProjectilePooler.instance.HasPool(orb))
                 {
                     GameObject t = ProjectilePooler.instance.GetProjectile(orb);
                     if(t != null)
+                    {
                         t.transform.position = _center.position;
+                    }   
                 }
                 else
                 {
@@ -278,11 +284,16 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
     public virtual void Knockback(float force, float verticalForce, Vector3 origin)
     {
         if (!AffectedByAttacks())
+        {
             return;
+        }
+            
 
         // make sure knockback can be applied
         if (immuneToKnockback || _rb == null || _rb.isKinematic || (force + verticalForce <= 0))
+        {
             return;
+        }
 
         // Calculate force vector, draw for debug reasons
         Vector3 forceVector = (_center.position - origin).normalized * force;

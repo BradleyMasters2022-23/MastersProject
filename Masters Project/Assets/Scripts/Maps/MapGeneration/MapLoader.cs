@@ -60,6 +60,11 @@ public class MapLoader : MonoBehaviour
     [Tooltip("Reference to the loading screen to use")]
     [SerializeField] GameObject loadingScreen;
 
+    [SerializeField] bool incrementSaveRuns = true;
+
+    [Tooltip("Channel called when any scene change happens. Used to tell poolers to reset.")]
+    [SerializeField] ChannelVoid onSceneChange;
+
     /// <summary>
     /// Navmesh for overall map
     /// </summary>
@@ -106,11 +111,6 @@ public class MapLoader : MonoBehaviour
     /// Current destination to load to
     /// </summary>
     private string dest = "";
-
-    /// <summary>
-    /// Refernce to all portals in the current scene
-    /// </summary>
-    private PortalTrigger[] portals;
 
     /// <summary>
     /// The current room manager
@@ -178,6 +178,7 @@ public class MapLoader : MonoBehaviour
             controls.Disable();
         }
 
+        currentRoom = startingRoomInitializer;
 
         // === Choose what rooms to use === //
         int c = 0;
@@ -221,15 +222,16 @@ public class MapLoader : MonoBehaviour
         // Wait half a second before reenabling controls
         if (controls != null)
         {
-            controls.Enable();
-            controls.UI.Disable();
             controls.PlayerGameplay.Enable();
         }
 
         // tell stat manager that a run has begun
-        GlobalStatsManager.data.runsAttempted++;
-        if (CallManager.instance != null)
-            CallManager.instance.IncrementRuns();
+        if(incrementSaveRuns)
+        {
+            GlobalStatsManager.data.runsAttempted++;
+            if (CallManager.instance != null)
+                CallManager.instance.IncrementRuns();
+        }
 
         yield return null;
     }
@@ -321,6 +323,8 @@ public class MapLoader : MonoBehaviour
     {
         loadState = LoadState.Loading;
 
+        onSceneChange?.RaiseEvent();
+
         // disable to prevent any new inputs
         GameManager.controls.Disable();
 
@@ -347,8 +351,9 @@ public class MapLoader : MonoBehaviour
             yield return GameManager.instance.LoadToScene(dest);
         }
 
-        // Once loading finishes, teleport player to a spawnpoint
+        // Once loading finishes, teleport player to a spawnpoint. Wait a frame
         MovePlayerToSpawn();
+        yield return new WaitForEndOfFrame();
 
         // Initialize the room
         currentRoom = FindObjectOfType<RoomInitializer>();

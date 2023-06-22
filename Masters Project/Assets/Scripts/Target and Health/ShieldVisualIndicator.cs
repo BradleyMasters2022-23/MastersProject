@@ -29,6 +29,7 @@ public class ShieldVisualIndicator : MonoBehaviour
     {
         if(_redTintRenderer != null)
         {
+            _redTintRenderer.gameObject.SetActive(true);
             baseColor = _redTintRenderer.material.color;
         }
 

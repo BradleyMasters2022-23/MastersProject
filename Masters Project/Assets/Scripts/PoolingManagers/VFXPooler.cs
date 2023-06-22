@@ -45,6 +45,7 @@ public class VFXPooler : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
             InitPools();
+            onSceneChange.OnEventRaised += ReturnAllToPool;
         }
         else
         {
@@ -115,5 +116,25 @@ public class VFXPooler : MonoBehaviour
     public bool HasPool(GameObject check)
     {
         return pools.ContainsKey(check.name.GetHashCode());
+    }
+
+    [SerializeField] ChannelVoid onSceneChange;
+
+    /// <summary>
+    /// Return all objects to the pool instantly. Defined by children
+    /// </summary>
+    private void ReturnAllToPool()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i) != null)
+            {
+                ReturnVFX(transform.GetChild(i).gameObject);
+            }
+        }
+    }
+    private void OnDestroy()
+    {
+        onSceneChange.OnEventRaised -= ReturnAllToPool;
     }
 }

@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using UnityEngine.Video;
+using UnityEngine.Events;
 
 public class CutsceneTrigger : MonoBehaviour
 {
     [Tooltip("Cutscene manager to trigger")]
-    [SerializeField] CutsceneManager cutscenePlayer;
+    [SerializeField, ReadOnly] CutsceneManager cutscenePlayer;
     [Tooltip("Cutscene to play")]
     [SerializeField] VideoClip cutscene;
     [Tooltip("Whether or not this cutscene should only be played once per save")]
@@ -15,10 +16,10 @@ public class CutsceneTrigger : MonoBehaviour
     [Tooltip("Whether or not this trigger is playable")]
     [SerializeField, ReadOnly] private bool playable = false;
 
-    /// <summary>
-    /// Reference to video player obj
-    /// </summary>
-    private VideoPlayer player;
+    [Tooltip("events that execute once the video itself finishes")]
+    [SerializeField] protected UnityEvent onVideoFinishEvents;
+    [Tooltip("events that execute once the cutscene is finished and the game fades back into the game")]
+    [SerializeField] protected UnityEvent onCutsceneFadeFinishEvents;
 
     private const string fileName = "cutsceneSaveData";
     private CutsceneSaveData saveData;
@@ -42,36 +43,45 @@ public class CutsceneTrigger : MonoBehaviour
             playable = true;
     }
 
-    private void OnEnable()
-    {
-        // prepare the cutscene ASAP
-        cutscenePlayer.PrepareCutscene(cutscene);
-    }
-
     /// <summary>
     /// Try to play the cutscene based on internal parameters
     /// </summary>
     public void TryCutscene()
     {
-        
-        if(CanPlay())
+        if (CanPlay())
         {
-            //Debug.Log($"Trying to play cutscene {cutscene.name}");
             playable = true;
-            StartCoroutine(LoadCutscene());
+            StartCoroutine(PlayRoutine());
+            
         }
     }
 
+    /// <summary>
+    /// Routine that initializes and loads the cutscene
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator PlayRoutine()
+    {
+        yield return StartCoroutine(InitCutscene());
+        yield return StartCoroutine(LoadCutscene());
+    }
+    /// <summary>
+    /// Pass the video into the manager to load
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator InitCutscene()
+    {
+        yield return new WaitUntil(()=> CutsceneManager.instance != null);
+        cutscenePlayer = CutsceneManager.instance;
+        cutscenePlayer.PrepareCutscene(cutscene);
+    }
     /// <summary>
     /// Load up the cutscene and play it once its prepared 
     /// </summary>
     /// <returns></returns>
     private IEnumerator LoadCutscene()
     {
-        //Debug.Log("Preparing cutscene");
-
-        player = cutscenePlayer.GetComponent<VideoPlayer>();
-        if (player == null || cutscene == null)
+        if (cutscenePlayer == null || cutscene == null)
             yield break;
 
         // Get most recent save data and update it
@@ -83,12 +93,27 @@ public class CutsceneTrigger : MonoBehaviour
         saveData.PlayCutscene(cutscene, onlyPlayOnce);
         bool s = DataManager.instance.Save(fileName, saveData);
 
-        //Debug.Log($"Cutscene save data success : {s}");
+        // Load any events, if there are any
+        if (onVideoFinishEvents.GetPersistentEventCount() > 0)
+            cutscenePlayer.LoadVideoEndEvents(onVideoFinishEvents);
+        if(onCutsceneFadeFinishEvents.GetPersistentEventCount() > 0)
+            cutscenePlayer.LoadCutsceneEndEvents(onCutsceneFadeFinishEvents);
 
-        // make sure player is prepared
-        yield return new WaitUntil(() => player.isPrepared);
+        // if there is a map loader, wait for that to finish loading as well
+        if (MapLoader.instance != null && MapLoader.instance.LoadState == LoadState.Loading)
+        {
+            yield return new WaitUntil(() => MapLoader.instance.LoadState != LoadState.Loading);
+            yield return new WaitForSecondsRealtime(0.5f);
+            if(GameManager.instance.CurrentState == GameManager.States.PAUSED)
+            {
+                GameManager.instance.CloseToTop();
+            }
+                
+        }
+            
 
-       // Debug.Log("Preperation done, starting cutscene");
+        // wait until its done preparing
+        yield return new WaitUntil(() => cutscenePlayer.GetComponent<VideoPlayer>().isPrepared);
 
         // Play cutscene
         cutscenePlayer.BeginCutscene();

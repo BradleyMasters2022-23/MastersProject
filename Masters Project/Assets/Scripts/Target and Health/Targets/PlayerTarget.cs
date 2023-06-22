@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerTarget : Target
 {
@@ -95,7 +96,10 @@ public class PlayerTarget : Target
     public override void Knockback(float force, float verticalForce, Vector3 origin)
     {
         if (immuneToKnockback || (force + verticalForce <= 0))
+        {
             return;
+        }
+            
 
         // kick the player up a tiny bit to reduce any ground drag
         transform.position += Vector3.up * 0.25f;
@@ -110,5 +114,13 @@ public class PlayerTarget : Target
         healCheat.performed -= CheatHeal;
         damageCheat.performed -= CheatDamage;
         p = null;
+    }
+
+    /// <summary>
+    /// Set the player instance to be re-initialized on next scene load
+    /// </summary>
+    public void SetForClear()
+    {
+        SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
     }
 }

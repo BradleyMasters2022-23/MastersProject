@@ -6,10 +6,13 @@ using UnityEngine.Video;
 using UnityEngine.InputSystem;
 using TMPro;
 using Sirenix.OdinInspector;
-
+using UnityEngine.Events;
+using UnityEngine.Playables;
 
 public class CutsceneManager : MonoBehaviour
 {
+    public static CutsceneManager instance;
+
     [Header("Main Systems")]
     [Tooltip("Reference to the video player")]
     [SerializeField] private VideoPlayer videoPlayer;
@@ -68,7 +71,34 @@ public class CutsceneManager : MonoBehaviour
     private InputAction pause;
     private InputAction showHide;
 
+    /// <summary>
+    /// events that execute once the video itself finishes
+    /// </summary>
+    private UnityEvent onVideoFinishEvents;
+    /// <summary>
+    /// events that execute once the cutscene is finished and the game fades back into the game
+    /// </summary>
+    private UnityEvent onCutsceneFadeFinishEvents;
+
+    /// <summary>
+    /// whether the video started playing
+    /// </summary>
+    private bool playState = false;
+
     #region Main Player
+
+    private void Awake()
+    {
+        if(instance != null)
+        {
+            Destroy(this);
+            return;
+        }
+        else
+        {
+            instance = this;
+        }
+    }
 
     private void Start()
     {
@@ -121,8 +151,25 @@ public class CutsceneManager : MonoBehaviour
 
     public void BeginCutscene()
     {
-        if(allowedToPlay && loadedCutscene!=null)
+        if(loadedCutscene!=null)
             StartCoroutine(PlayCutscene());
+    }
+
+    /// <summary>
+    /// Load events that execute once the video itself finishes
+    /// </summary>
+    /// <param name="events"></param>
+    public void LoadVideoEndEvents(UnityEvent events)
+    {
+        onVideoFinishEvents = events;
+    }
+    /// <summary>
+    /// Load events that execute once the cutscene finishes and the fade is gone
+    /// </summary>
+    /// <param name="events"></param>
+    public void LoadCutsceneEndEvents(UnityEvent events)
+    {
+        onCutsceneFadeFinishEvents= events;
     }
 
     /// <summary>
@@ -135,36 +182,40 @@ public class CutsceneManager : MonoBehaviour
         playerControls.PlayerGameplay.Pause.Disable();
         playerControls.PlayerGameplay.Interact.Disable();
 
+        // stop music with fade
+        if(BackgroundMusicManager.instance!= null)
+            BackgroundMusicManager.instance.StopMusic();
+
         // turn on the screen
         yield return StartCoroutine(LoadScreen(true, fadeInTime));
 
-        playerControls.UI.Disable();
-        playerControls.PlayerGameplay.Disable();
+        playerControls.Disable();
         playerControls.Cutscene.Enable();
-        playerControls.Cutscene.Pause.Enable();
-
-
+        
         yield return new WaitForSecondsRealtime(startDelay);
-
+        yield return new WaitUntil(() => !pauseScreen.activeInHierarchy);
         // Play the video
-        videoRenderImg.enabled = true;
         videoPlayer.Play();
+        yield return new WaitForEndOfFrame();
+        videoRenderImg.enabled = true;
+        playState = true;
 
         // Track time only if its playing. Dont if its paused
         float timeElapsed = 0;
         while (timeElapsed < videoPlayer.length)
         {
             if (!videoPlayer.isPaused)
-                timeElapsed += Time.deltaTime;
+                timeElapsed += Time.unscaledDeltaTime;
 
             yield return null;
         }
-
+        videoRenderImg.enabled = false;
+        playState = false;
         yield return new WaitForSecondsRealtime(endDelay);
 
         // Disable cutscene controls and reenable gameplay. 
         // Keep pause disabled to prevent any funky business
-        playerControls.Cutscene.Disable();
+        playerControls.Disable();
         playerControls.PlayerGameplay.Enable();
         playerControls.PlayerGameplay.Pause.Disable();
         playerControls.PlayerGameplay.Interact.Disable();
@@ -176,15 +227,23 @@ public class CutsceneManager : MonoBehaviour
             StopCoroutine(promptFadeRoutine);
 
         promptText.enabled = false;
-        videoRenderImg.enabled = false;
+        
+
+        onVideoFinishEvents?.Invoke();
 
         StartCoroutine(FadePrompt(false, 0.3f));
         // By now, video has stopped, close screen
         yield return StartCoroutine(LoadScreen(false, fadeOutTime));
 
+        onCutsceneFadeFinishEvents?.Invoke();
+
         // Disable pausing just to be safe in big prevention
         playerControls.PlayerGameplay.Pause.Enable();
         playerControls.PlayerGameplay.Interact.Enable();
+
+        // wipe both sets of events clear
+        onVideoFinishEvents = null;
+        onCutsceneFadeFinishEvents = null;
     }
 
     /// <summary>
@@ -225,6 +284,7 @@ public class CutsceneManager : MonoBehaviour
 
     public void SkipCutscene()
     {
+        // hide all prompts
         StopAllCoroutines();
         playerControls.Cutscene.Disable();
         pauseScreen.SetActive(false);
@@ -232,13 +292,21 @@ public class CutsceneManager : MonoBehaviour
         videoRenderImg.enabled = false;
         Cursor.lockState= CursorLockMode.Locked;
 
+        onVideoFinishEvents?.Invoke();
+
+        // Stop player, fade out
         videoPlayer.Stop();
         StartCoroutine(LoadScreen(false, skippedFadeOutTime));
 
-        
+        // Reneable gameplay controls
         playerControls.PlayerGameplay.Enable();
         playerControls.PlayerGameplay.Pause.Enable();
         playerControls.PlayerGameplay.Interact.Enable();
+        onCutsceneFadeFinishEvents?.Invoke();
+
+        // clear event finish events
+        onVideoFinishEvents = null;
+        onCutsceneFadeFinishEvents = null;
     }
 
     /// <summary>
@@ -247,7 +315,7 @@ public class CutsceneManager : MonoBehaviour
     /// <param name="c">input context</param>
     private void TogglePause(InputAction.CallbackContext c)
     {
-        // Debug.Log("Trying to pause cutscene");
+        //Debug.Log("Pausing cutscene " + c.action.name);
 
         if(pauseScreen.activeInHierarchy)
         {
@@ -268,7 +336,8 @@ public class CutsceneManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         settingScreen.SetActive(false);
         pauseScreen.SetActive(true);
-        videoPlayer.Pause();
+        if(playState)
+            videoPlayer.Pause();
         promptText.enabled = false;
 
         if(promptRoutine!= null)
@@ -286,7 +355,8 @@ public class CutsceneManager : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         pauseScreen.SetActive(false);
-        videoPlayer.Play();
+        if(playState)
+            videoPlayer.Play();
     }
 
     /// <summary>
