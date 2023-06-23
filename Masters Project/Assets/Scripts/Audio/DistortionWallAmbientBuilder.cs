@@ -17,10 +17,7 @@ public class DistortionWallAmbientBuilder : MonoBehaviour
     [SerializeField, Range(0, 100)] int accuracy = 3;
     [SerializeField] Axis faceDirection;
 
-    private void OnValidate()
-    {
-        BuildWall();
-    }
+    [Button]
     public void BuildWall()
     {
         float dist = 0;
@@ -63,8 +60,28 @@ public class DistortionWallAmbientBuilder : MonoBehaviour
         {
             spawned[i] = PrefabUtility.InstantiatePrefab(ambianceEmitter, transform) as GameObject;
             Vector3 newPos = Vector3.zero;
-            newPos.z = (i * objSpacing);
-            newPos.z -= (dist / 2) - objSpacing/2;
+            switch (faceDirection)
+            {
+                case Axis.X:
+                    {
+                        newPos.x = (i * objSpacing);
+                        newPos.x -= (dist / 2) - objSpacing / 2;
+                        break;
+                    }
+                case Axis.Y:
+                    {
+                        newPos.y = (i * objSpacing);
+                        newPos.y -= (dist / 2) - objSpacing / 2;
+                        break;
+                    }
+                case Axis.Z:
+                    {
+                        newPos.z = (i * objSpacing);
+                        newPos.z -= (dist / 2) - objSpacing / 2;
+                        break;
+                    }
+            }
+
             spawned[i].transform.localPosition= newPos;
         }
 
