@@ -14,8 +14,25 @@ using UnityEngine.Events;
 public class PlayerTargetTutorial : PlayerTarget
 {
     [Header("Tutorial")]
-    [Tooltip("Any events executed on playe death in the tutorial")]
+
+    [SerializeField] float missingHealthOnStart;
+    [SerializeField] float missingTimeOnStart;
+
+    [Tooltip("Any events executed on player death in the tutorial")]
     [SerializeField] UnityEvent onTutorialDeathEvents;
+
+    /// <summary>
+    /// In addition to core systems, apply damage and time damages on start for tutorial sakes
+    /// </summary>
+    protected override void Start()
+    {
+        base.Start();
+        damagedSoundCooldownTracker.ResetTimer();
+
+        // apply damage to healthbar 0, bypassing shield
+        _healthManager.ResourceBarAtIndex(0).Decrease(missingHealthOnStart);
+        timestop.DrainGauge(missingTimeOnStart);
+    }
 
     /// <summary>
     /// On death, initiate the tutorial sequence

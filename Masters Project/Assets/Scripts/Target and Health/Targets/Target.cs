@@ -88,7 +88,7 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
     [Tooltip("Cooldown between ability for damaged sound effect play")]
     [SerializeField] private float damagedSoundCooldown = 0.5f;
 
-    private ScaledTimer damagedSoundCooldownTracker;
+    protected ScaledTimer damagedSoundCooldownTracker;
 
     [Header("Drop Stuff")]
     [SerializeField] protected List<DroppableQuantity> dropList;
