@@ -32,6 +32,7 @@ public class DistortionWallAmbientBuilder : MonoBehaviour
 
         // Get the width. Easiest way is to temporarily add a box collider
         BoxCollider temp = gameObject.AddComponent<BoxCollider>();
+        temp.enabled= false;
         switch(faceDirection)
         {
             case Axis.X:
@@ -65,6 +66,13 @@ public class DistortionWallAmbientBuilder : MonoBehaviour
             newPos.z = (i * objSpacing);
             newPos.z -= (dist / 2) - objSpacing/2;
             spawned[i].transform.localPosition= newPos;
+        }
+
+        // do one extra check just to make sure
+        BoxCollider[] allCols = GetComponents<BoxCollider>();
+        for(int i = allCols.Length-1; i >= 0; i--)
+        {
+            DestroyImmediate(allCols[i]);
         }
     }
 
