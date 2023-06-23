@@ -713,6 +713,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Continue"",
+                    ""type"": ""Button"",
+                    ""id"": ""ef4e9c45-0392-4502-b0dc-579deeb00453"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -814,6 +823,28 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""Any"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""10a6cc35-ed84-4f23-90c5-91a73780d641"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Continue"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""93d57522-8b01-4178-b1d0-a8b4260448bd"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Continue"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -854,6 +885,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_Cutscene = asset.FindActionMap("Cutscene", throwIfNotFound: true);
         m_Cutscene_Pause = m_Cutscene.FindAction("Pause", throwIfNotFound: true);
         m_Cutscene_Any = m_Cutscene.FindAction("Any", throwIfNotFound: true);
+        m_Cutscene_Continue = m_Cutscene.FindAction("Continue", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1182,12 +1214,14 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private ICutsceneActions m_CutsceneActionsCallbackInterface;
     private readonly InputAction m_Cutscene_Pause;
     private readonly InputAction m_Cutscene_Any;
+    private readonly InputAction m_Cutscene_Continue;
     public struct CutsceneActions
     {
         private @GameControls m_Wrapper;
         public CutsceneActions(@GameControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Pause => m_Wrapper.m_Cutscene_Pause;
         public InputAction @Any => m_Wrapper.m_Cutscene_Any;
+        public InputAction @Continue => m_Wrapper.m_Cutscene_Continue;
         public InputActionMap Get() { return m_Wrapper.m_Cutscene; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1203,6 +1237,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Any.started -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnAny;
                 @Any.performed -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnAny;
                 @Any.canceled -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnAny;
+                @Continue.started -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnContinue;
+                @Continue.performed -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnContinue;
+                @Continue.canceled -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnContinue;
             }
             m_Wrapper.m_CutsceneActionsCallbackInterface = instance;
             if (instance != null)
@@ -1213,6 +1250,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @Any.started += instance.OnAny;
                 @Any.performed += instance.OnAny;
                 @Any.canceled += instance.OnAny;
+                @Continue.started += instance.OnContinue;
+                @Continue.performed += instance.OnContinue;
+                @Continue.canceled += instance.OnContinue;
             }
         }
     }
@@ -1254,5 +1294,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     {
         void OnPause(InputAction.CallbackContext context);
         void OnAny(InputAction.CallbackContext context);
+        void OnContinue(InputAction.CallbackContext context);
     }
 }
