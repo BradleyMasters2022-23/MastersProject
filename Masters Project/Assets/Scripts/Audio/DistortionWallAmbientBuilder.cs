@@ -14,13 +14,23 @@ public class DistortionWallAmbientBuilder : MonoBehaviour
 
     [SerializeField] Object ambianceEmitter;
 
-    [SerializeField] int accuracy = 3;
+    [SerializeField, Range(0, 100)] int accuracy = 3;
     [SerializeField] Axis faceDirection;
 
-    [Button]
+
+
+    private void OnValidate()
+    {
+        BuildWall();
+    }
     public void BuildWall()
     {
         float dist = 0;
+
+        for(int i = transform.childCount-1; i >= 0; i--)
+        {
+            DestroyImmediate(transform.GetChild(i).gameObject);
+        }
 
         // Get the width. Easiest way is to temporarily add a box collider
         BoxCollider temp = gameObject.AddComponent<BoxCollider>();
