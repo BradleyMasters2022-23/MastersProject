@@ -17,8 +17,6 @@ public class DistortionWallAmbientBuilder : MonoBehaviour
     [SerializeField, Range(0, 100)] int accuracy = 3;
     [SerializeField] Axis faceDirection;
 
-
-
     private void OnValidate()
     {
         BuildWall();
