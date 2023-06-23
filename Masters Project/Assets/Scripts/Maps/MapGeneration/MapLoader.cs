@@ -61,7 +61,7 @@ public class MapLoader : MonoBehaviour
     [SerializeField] GameObject loadingScreen;
 
     [SerializeField] bool incrementSaveRuns = true;
-
+    [SerializeField] bool enableControlsOnFinish = true;
     [Tooltip("Channel called when any scene change happens. Used to tell poolers to reset.")]
     [SerializeField] ChannelVoid onSceneChange;
 
@@ -225,7 +225,7 @@ public class MapLoader : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(0.5f);
         // Wait half a second before reenabling controls
-        if (controls != null)
+        if (controls != null && enableControlsOnFinish)
         {
             controls.PlayerGameplay.Enable();
         }

@@ -671,9 +671,6 @@ public class GameManager : MonoBehaviour
         // if none of the main scenes, dont load. 
         // Useful for testing scenes and pausing/unpausing
         string currScene = SceneManager.GetActiveScene().name;
-        //if (currScene != mainMenuScene && currScene != mainGameplayScene && currScene != mainHubScene)
-        //    return;
-
         try
         {
             // attempt to save global stats whenver loading
@@ -688,7 +685,13 @@ public class GameManager : MonoBehaviour
         UnPause();
         menuStack.Clear();
         controls.UI.Disable();
-        return Loader.instance.LoadToScene(name);
+
+        // if loading to tutorial, don't enable controls on load complete
+        if(name == tutorialScene)
+            return Loader.instance.LoadToScene(name, false);
+        else
+            return Loader.instance.LoadToScene(name);
+
     }
 
 

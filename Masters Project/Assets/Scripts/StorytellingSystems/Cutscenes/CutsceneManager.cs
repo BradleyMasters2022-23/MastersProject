@@ -143,7 +143,6 @@ public class CutsceneManager : MonoBehaviour
     public void PrepareCutscene(VideoClip newCutscene)
     {
         if (newCutscene == null) return;
-
         loadedCutscene = newCutscene;
         videoPlayer.clip = newCutscene;
         videoPlayer.Prepare();
