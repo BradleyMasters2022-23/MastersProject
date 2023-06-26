@@ -143,6 +143,10 @@ public class RebindUI : MonoBehaviour
         Debug.Log("Resetting to normal - not implemented");
     }
 
+    public void ForceUpdate()
+    {
+        OnValidate();
+    }
 
     #endregion
 }
