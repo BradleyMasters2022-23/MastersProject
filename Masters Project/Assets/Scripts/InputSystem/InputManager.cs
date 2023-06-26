@@ -12,6 +12,13 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Sirenix.OdinInspector;
 
+[System.Serializable]
+public struct BindingTextOverride
+{
+    public string originalText;
+    public string newText;
+}
+
 public class InputManager : MonoBehaviour
 {
     #region Singleton
@@ -50,6 +57,7 @@ public class InputManager : MonoBehaviour
     private void Start()
     {
         SchemeSwapStart();
+        GenerateOverrideDict(textOverrides);
     }
 
     #region Action Map Swapping
@@ -171,6 +179,7 @@ public class InputManager : MonoBehaviour
         // Update observer to only register M&K inputs to reduce load
         schemeObserver.ObserveMK.Enable();
     }
+
     private bool inputCD = false;
     private IEnumerator FrameCooldown()
     {
@@ -273,6 +282,91 @@ public class InputManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    #endregion
+
+    #region ActionLookup
+
+    [SerializeField] public BindingTextOverride[] textOverrides;
+    private Dictionary<string, string> overrideLookup;
+    /// <summary>
+    /// Build the dictionary used for text overrides
+    /// </summary>
+    /// <param name="overrideData">Data to generate override dict with</param>
+    private void GenerateOverrideDict(BindingTextOverride[] overrideData)
+    {
+        overrideLookup = new Dictionary<string, string>();
+        foreach (var data in overrideData)
+        {
+            overrideLookup.Add(data.originalText, data.newText);
+        }
+    }
+    /// <summary>
+    /// Get the string representation of an action, control type sensitive
+    /// </summary>
+    /// <param name="actionRef">Input action to lookup</param>
+    /// <returns>String of the binding for the action</returns>
+    public string ActionKeybindLookup(InputActionReference actionRef)
+    {
+        // get the actual action
+        InputAction action = actionRef.action;
+
+        // Do some edge checking
+        if (action == null)
+            return "ERR-NOACTION";
+        else if (action.bindings.Count == 0)
+            return "UNBOUND";
+
+        string temp;
+        switch(CurrControlScheme)
+        {
+            case ControlScheme.KEYBOARD:
+                {
+                    // Check if input is composite. Use 0 because 0 is always M&K 
+                    if (action.bindings[0].isComposite)
+                    {
+                        // get exact composite, then loop through all composits, combinding them
+                        temp = "";
+                        for (int i = 0; i < action.bindings.Count; i++)
+                        {
+                            if (action.bindings[i].isComposite)
+                            {
+                                int j = i + 1;
+                                while (j < action.bindings.Count && action.bindings[j].isPartOfComposite)
+                                {
+                                    temp += action.GetBindingDisplayString(j);
+                                    j++;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        temp = action.GetBindingDisplayString(group: "KeyboardMouse");
+                    }
+                    break;
+                }
+            case ControlScheme.CONTROLLER:
+                {
+                    // shouldnt be any composits for controllers
+                    Debug.Log("Attempting to get gamepad");
+                    temp = ":" + action.GetBindingDisplayString(group: "Gamepad") + ":";
+                    break;
+                }
+            default:
+                {
+                    temp = "NOT FOUND";
+                    break;
+                }
+        }
+
+        // if theres an override, apply it
+        if(overrideLookup.ContainsKey(temp))
+            temp = overrideLookup[temp];
+
+        return temp;
     }
 
     #endregion

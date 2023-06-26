@@ -143,7 +143,7 @@ public class TooltipManager : MonoBehaviour
         openSound.PlayClip(source);
         
         loadTitleRoutine = StartCoroutine(titleTextbox.SlowTextLoadRealtime(currentTooltip.titleText, 0.02f));
-        loadBodyRoutine = StartCoroutine(descriptionTextbox.SlowTextLoadRealtime(currentTooltip.GetPromptText(), 0.01f));
+        loadBodyRoutine = StartCoroutine(LoadTooltipText(currentTooltip));
 
         // Load in an override if possible. otherwise use the default
         //imageOverride.CrossFadeAlpha(1, 0.5f, true);
@@ -257,5 +257,68 @@ public class TooltipManager : MonoBehaviour
     {
         HideTooltip();
     }
+    #endregion
+
+    #region InputAction Lookup
+
+    /// <summary>
+    /// delimiter used to indicate that a input action lookup is requested
+    /// </summary>
+    private char inputDelimiter = '#';
+
+    private IEnumerator LoadTooltipText(TooltipSO data)
+    {
+        // create delay here to minimize 'new' keyword
+        WaitForSecondsRealtime delay = new WaitForSecondsRealtime(0.01f);
+
+        // Loop through each character, updating the text team time
+        // Wait for the delay for each character
+        string text = data.GetPromptText();
+        string fullTxt = "";
+        int inputIdx = 0;
+        for (int i = 0; i < text.Length; i++)
+        {
+            // Check for a richtext tag
+            if (text[i] == '<')
+            {
+                // Build a string until hitting end of the richtext '>'
+                string richtextBuffer = "<";
+                int j = i + 1;
+                while (text[j] != '>' && j < text.Length)
+                {
+                    richtextBuffer += text[j];
+                    j++;
+                    yield return null;
+                }
+                richtextBuffer += '>';
+
+                // Apply it to the text, update the i index so it doesnt re-read it
+                fullTxt += richtextBuffer;
+                descriptionTextbox.text = fullTxt;
+                i = j;
+
+                // dont wait for a delay, just keep going
+                yield return null;
+            }
+            // If an input, get lookup and add here
+            else if (text[i] == inputDelimiter && inputIdx < data.inputReference.Length)
+            {
+                fullTxt += InputManager.Instance.ActionKeybindLookup(data.inputReference[inputIdx]);
+                inputIdx++;
+            }
+            // If normal text, just add it to the screen
+            else
+            {
+                fullTxt += text[i];
+                descriptionTextbox.text = fullTxt;
+                yield return delay;
+            }
+        }
+
+        // Just to be sure, assign the text to the full thing at the end
+        //descriptionTextbox.text = text;
+        yield return null;
+    }
+
     #endregion
 }
