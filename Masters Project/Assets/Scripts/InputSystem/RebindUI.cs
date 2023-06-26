@@ -140,7 +140,7 @@ public class RebindUI : MonoBehaviour
     /// </summary>
     public void DoReset()
     {
-        Debug.Log("Resetting to normal - not implemented");
+        InputManager.Instance.RevertKeybindings();
     }
 
     public void ForceUpdate()

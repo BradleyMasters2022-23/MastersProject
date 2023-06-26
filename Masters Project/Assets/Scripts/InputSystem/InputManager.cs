@@ -118,6 +118,8 @@ public class InputManager : MonoBehaviour
     {
         schemeObserver.ObserveGamePad.SwapControls.performed -= SwapControls;
         schemeObserver.ObserveMK.SwapControls.performed -= SwapControls;
+
+        SaveKeybindings();
     }
 
     /// <summary>
@@ -345,9 +347,7 @@ public class InputManager : MonoBehaviour
         Debug.Log($"Swapped controls: {actionToSwap.name}'s new effective path is {actionToSwap.bindings[idx].effectivePath}");
         //onComplete?.Invoke();
 
-        RebindUI[] temp = FindObjectsOfType<RebindUI>();
-        foreach(var t in temp)
-            t.ForceUpdate();
+        UpdateUIElements();
     }
 
     /// <summary>
@@ -362,6 +362,22 @@ public class InputManager : MonoBehaviour
         Debug.Log($"Undid bind: {targetAction.name}'s new effective path is {targetAction.bindings[targetIdx].effectivePath}");
         onComplete?.Invoke();
 
+        UpdateUIElements();
+    }
+
+    /// <summary>
+    /// Revert all keybindings. Force update for any UI elements
+    /// </summary>
+    public void RevertKeybindings()
+    {
+        Controls.RemoveAllBindingOverrides();
+        PlayerPrefs.DeleteKey(keybindDataKey);
+
+        UpdateUIElements();
+    }
+
+    private void UpdateUIElements()
+    {
         RebindUI[] temp = FindObjectsOfType<RebindUI>();
         foreach (var t in temp)
             t.ForceUpdate();
@@ -369,6 +385,30 @@ public class InputManager : MonoBehaviour
 
     #endregion
 
+    #region KeybindingSaving
+
+    private const string keybindDataKey = "keybindOverrides";
+
+    public void LoadKeybindings()
+    {
+        string data = PlayerPrefs.GetString(keybindDataKey);
+
+        if(data != null)
+            Controls.LoadBindingOverridesFromJson(data);
+    }
+
+    private void OnEnable()
+    {
+        LoadKeybindings();
+        UpdateUIElements();
+    }
+    
+    public void SaveKeybindings()
+    {
+        PlayerPrefs.SetString(keybindDataKey, Controls.SaveBindingOverridesAsJson());
+    }
+
+    #endregion
 
     #region ActionLookup
 
