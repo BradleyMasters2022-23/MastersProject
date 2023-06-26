@@ -230,7 +230,7 @@ public class InputManager : MonoBehaviour
         }
 
         actionToRebind.Disable();
-
+        Controls.UI.Back.Disable();
         // store the target action to be rebind
         targetAction = actionToRebind;
         targetIdx = rebindIdx;
@@ -252,6 +252,7 @@ public class InputManager : MonoBehaviour
         rebind.OnCancel(op =>
         {
             actionToRebind.Enable();
+            Controls.UI.Back.Enable();
             op.Dispose();
             onCancel?.Invoke();
             Debug.Log("Rebind canceled");
@@ -330,11 +331,14 @@ public class InputManager : MonoBehaviour
                         ()=> UndoRebind(onComplete), 
                         "Cancel");
 
-                    break;
+                    return;
                 }
                 i++;
             }
         }
+        // since it returns earlier on conflict, this only happens if NO conflicts
+        Controls.UI.Back.Enable();
+        UpdateUIElements();
     }
 
     /// <summary>
@@ -347,6 +351,7 @@ public class InputManager : MonoBehaviour
         Debug.Log($"Swapped controls: {actionToSwap.name}'s new effective path is {actionToSwap.bindings[idx].effectivePath}");
         //onComplete?.Invoke();
 
+        Controls.UI.Back.Enable();
         UpdateUIElements();
     }
 
@@ -362,6 +367,7 @@ public class InputManager : MonoBehaviour
         Debug.Log($"Undid bind: {targetAction.name}'s new effective path is {targetAction.bindings[targetIdx].effectivePath}");
         onComplete?.Invoke();
 
+        Controls.UI.Back.Enable();
         UpdateUIElements();
     }
 
@@ -381,6 +387,8 @@ public class InputManager : MonoBehaviour
         RebindUI[] temp = FindObjectsOfType<RebindUI>();
         foreach (var t in temp)
             t.ForceUpdate();
+
+        controlSchemeSwapChannel.RaiseEvent();
     }
 
     #endregion

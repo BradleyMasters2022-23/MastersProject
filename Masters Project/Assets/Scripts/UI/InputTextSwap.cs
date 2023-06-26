@@ -31,6 +31,7 @@ public class InputTextSwap : MonoBehaviour
     /// <param name="c"></param>
     private void UpdateInputText(InputManager.ControlScheme c = default)
     {
+        //Debug.Log($"{gameObject.name} called to update text input");
         string temp = "";
         // iterate through content, adding any input bindings when necessary
         for (int i = 0; i < displayString.Length; i++)
@@ -38,6 +39,7 @@ public class InputTextSwap : MonoBehaviour
             if (displayString[i] == TooltipManager.instance.inputDelimiter)
             {
                 temp += InputManager.Instance.ActionKeybindLookup(action);
+                //Debug.Log($"Retrieved input: {InputManager.Instance.ActionKeybindLookup(action)}");
             }
             else
             {
