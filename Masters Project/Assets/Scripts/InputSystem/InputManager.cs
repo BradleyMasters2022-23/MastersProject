@@ -49,7 +49,7 @@ public class InputManager : MonoBehaviour
         }
 
         Controls = new GameControls();
-
+        GenerateOverrideDict(textOverrides);
 
     }
     #endregion
@@ -57,7 +57,7 @@ public class InputManager : MonoBehaviour
     private void Start()
     {
         SchemeSwapStart();
-        GenerateOverrideDict(textOverrides);
+        
     }
 
     #region Action Map Swapping
@@ -414,6 +414,9 @@ public class InputManager : MonoBehaviour
 
     [SerializeField] public BindingTextOverride[] textOverrides;
     private Dictionary<string, string> overrideLookup;
+
+    [SerializeField] private InputBinding.DisplayStringOptions displayOptions;
+
     /// <summary>
     /// Build the dictionary used for text overrides
     /// </summary>
@@ -434,7 +437,7 @@ public class InputManager : MonoBehaviour
     public string ActionKeybindLookup(InputActionReference actionRef)
     {
         // get the actual action
-        InputAction action = actionRef.action;
+        InputAction action = Controls.FindAction(actionRef.action.id.ToString());
 
         // Do some edge checking
         if (action == null)
@@ -459,7 +462,7 @@ public class InputManager : MonoBehaviour
                                 int j = i + 1;
                                 while (j < action.bindings.Count && action.bindings[j].isPartOfComposite)
                                 {
-                                    temp += action.GetBindingDisplayString(j);
+                                    temp += action.GetBindingDisplayString(j, displayOptions);
                                     j++;
                                 }
                                 break;
@@ -490,6 +493,7 @@ public class InputManager : MonoBehaviour
         if(overrideLookup.ContainsKey(temp))
             temp = overrideLookup[temp];
 
+        Debug.Log($"Request for {actionRef.action.name}, returning {temp}");
         return temp;
     }
 
