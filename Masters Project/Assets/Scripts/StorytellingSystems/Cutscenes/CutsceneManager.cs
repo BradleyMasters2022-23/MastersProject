@@ -6,10 +6,13 @@ using UnityEngine.Video;
 using UnityEngine.InputSystem;
 using TMPro;
 using Sirenix.OdinInspector;
-
+using UnityEngine.Events;
+using UnityEngine.Playables;
 
 public class CutsceneManager : MonoBehaviour
 {
+    public static CutsceneManager instance;
+
     [Header("Main Systems")]
     [Tooltip("Reference to the video player")]
     [SerializeField] private VideoPlayer videoPlayer;
@@ -46,6 +49,8 @@ public class CutsceneManager : MonoBehaviour
     [SerializeField] private GameObject pausePrompt;
     [Tooltip("Ref to the prompt saying to skip")]
     [SerializeField] private TextMeshProUGUI promptText;
+    [Tooltip("Ref to the prompt requesting a continue input")]
+    [SerializeField] private TextMeshProUGUI continueText;
     [Tooltip("Time the note remains on screen with no input")]
     [SerializeField] private float noteDisplayTime;
     /// <summary>
@@ -59,7 +64,7 @@ public class CutsceneManager : MonoBehaviour
     /// <summary>
     /// Scaled timer tracking the prompt life
     /// </summary>
-    private ScaledTimer promptLifeTracker;
+    private float promptLifeTracker;
 
     /// <summary>
     /// Reference to the game controls 
@@ -67,13 +72,43 @@ public class CutsceneManager : MonoBehaviour
     private GameControls playerControls;
     private InputAction pause;
     private InputAction showHide;
+    private InputAction cont;
+
+    /// <summary>
+    /// events that execute once the video itself finishes
+    /// </summary>
+    private UnityEvent onVideoFinishEvents;
+    /// <summary>
+    /// events that execute once the cutscene is finished and the game fades back into the game
+    /// </summary>
+    private UnityEvent onCutsceneFadeFinishEvents;
+
+    /// <summary>
+    /// whether the video started playing
+    /// </summary>
+    private bool playState = false;
+
+    private bool continuePressed = false;
 
     #region Main Player
+
+    private void Awake()
+    {
+        if(instance != null)
+        {
+            Destroy(this);
+            return;
+        }
+        else
+        {
+            instance = this;
+        }
+    }
 
     private void Start()
     {
         // prepare life tracker
-        promptLifeTracker = new ScaledTimer(noteDisplayTime, false);
+        promptLifeTracker = 0;
 
         // assign audio system
         videoPlayer.SetTargetAudioSource(0, GetComponent<AudioSource>());
@@ -90,7 +125,12 @@ public class CutsceneManager : MonoBehaviour
         pause.performed += TogglePause;
         showHide = playerControls.Cutscene.Any;
         showHide.performed += ShowPrompt;
+
+        cont = playerControls.Cutscene.Continue;
+        cont.performed += ContinueCutscene;
+
         playerControls.Cutscene.Disable();
+
     }
 
     /// <summary>
@@ -108,12 +148,12 @@ public class CutsceneManager : MonoBehaviour
     {
         pause.performed -= TogglePause;
         showHide.performed -= ShowPrompt;
+        cont.performed -= ContinueCutscene;
     }
 
     public void PrepareCutscene(VideoClip newCutscene)
     {
         if (newCutscene == null) return;
-
         loadedCutscene = newCutscene;
         videoPlayer.clip = newCutscene;
         videoPlayer.Prepare();
@@ -121,8 +161,25 @@ public class CutsceneManager : MonoBehaviour
 
     public void BeginCutscene()
     {
-        if(allowedToPlay && loadedCutscene!=null)
+        if(loadedCutscene!=null)
             StartCoroutine(PlayCutscene());
+    }
+
+    /// <summary>
+    /// Load events that execute once the video itself finishes
+    /// </summary>
+    /// <param name="events"></param>
+    public void LoadVideoEndEvents(UnityEvent events)
+    {
+        onVideoFinishEvents = events;
+    }
+    /// <summary>
+    /// Load events that execute once the cutscene finishes and the fade is gone
+    /// </summary>
+    /// <param name="events"></param>
+    public void LoadCutsceneEndEvents(UnityEvent events)
+    {
+        onCutsceneFadeFinishEvents= events;
     }
 
     /// <summary>
@@ -135,56 +192,79 @@ public class CutsceneManager : MonoBehaviour
         playerControls.PlayerGameplay.Pause.Disable();
         playerControls.PlayerGameplay.Interact.Disable();
 
+        // stop music with fade
+        if(BackgroundMusicManager.instance!= null)
+            BackgroundMusicManager.instance.StopMusic();
+
         // turn on the screen
         yield return StartCoroutine(LoadScreen(true, fadeInTime));
-
-        playerControls.UI.Disable();
-        playerControls.PlayerGameplay.Disable();
+        playerControls.Disable();
         playerControls.Cutscene.Enable();
-        playerControls.Cutscene.Pause.Enable();
-
+        cont.Disable();
 
         yield return new WaitForSecondsRealtime(startDelay);
-
+        yield return new WaitUntil(() => !pauseScreen.activeInHierarchy);
         // Play the video
-        videoRenderImg.enabled = true;
         videoPlayer.Play();
+        yield return new WaitForEndOfFrame();
+        videoRenderImg.enabled = true;
+        playState = true;
 
         // Track time only if its playing. Dont if its paused
         float timeElapsed = 0;
         while (timeElapsed < videoPlayer.length)
         {
             if (!videoPlayer.isPaused)
-                timeElapsed += Time.deltaTime;
+                timeElapsed += Time.unscaledDeltaTime;
 
             yield return null;
         }
-
+        // wait for end delay
         yield return new WaitForSecondsRealtime(endDelay);
-
-        // Disable cutscene controls and reenable gameplay. 
-        // Keep pause disabled to prevent any funky business
-        playerControls.Cutscene.Disable();
-        playerControls.PlayerGameplay.Enable();
-        playerControls.PlayerGameplay.Pause.Disable();
-        playerControls.PlayerGameplay.Interact.Disable();
 
         // Disable on cutscene end stuff
         if (promptRoutine != null)
             StopCoroutine(promptRoutine);
-        if(promptFadeRoutine!=null)
+        if (promptFadeRoutine != null)
             StopCoroutine(promptFadeRoutine);
-
         promptText.enabled = false;
-        videoRenderImg.enabled = false;
 
-        StartCoroutine(FadePrompt(false, 0.3f));
+        // Request a continue input before proceeding
+        showHide.Disable();
+        cont.Enable();
+
+        playState = false;
+        continuePressed = false;
+        StartCoroutine(FadePrompt(continueText, true, 0.5f));
+        yield return new WaitUntil(() => continuePressed);
+
+        // once continue is pressed, turn off cutscene manager
+        StartCoroutine(FadePrompt(continueText, false, 0.3f));
+        videoRenderImg.enabled = false;
+        
+
+        // Disable cutscene controls and reenable gameplay. 
+        // Keep pause disabled to prevent any funky business
+        playerControls.Disable();
+        playerControls.PlayerGameplay.Enable();
+        playerControls.PlayerGameplay.Pause.Disable();
+        playerControls.PlayerGameplay.Interact.Disable();
+        
+        onVideoFinishEvents?.Invoke();
+        StartCoroutine(FadePrompt(promptText, false, 0.3f));
+
         // By now, video has stopped, close screen
         yield return StartCoroutine(LoadScreen(false, fadeOutTime));
+
+        onCutsceneFadeFinishEvents?.Invoke();
 
         // Disable pausing just to be safe in big prevention
         playerControls.PlayerGameplay.Pause.Enable();
         playerControls.PlayerGameplay.Interact.Enable();
+
+        // wipe both sets of events clear
+        onVideoFinishEvents = null;
+        onCutsceneFadeFinishEvents = null;
     }
 
     /// <summary>
@@ -207,10 +287,11 @@ public class CutsceneManager : MonoBehaviour
         }
 
         // Lerp through with the given timer
-        ScaledTimer lerpTimer = new ScaledTimer(dur, false);
-        while (!lerpTimer.TimerDone())
+        float t = 0;
+        while (t < dur)
         {
-            background.color = Color.Lerp(originalCol, targetCol, lerpTimer.TimerProgress());
+            background.color = Color.Lerp(originalCol, targetCol, (t / dur));
+            t += Time.unscaledDeltaTime;
             yield return null;
         }
         // make sure the target color is reached
@@ -219,26 +300,45 @@ public class CutsceneManager : MonoBehaviour
         yield return null;
     }
 
+    /// <summary>
+    /// submit request to continue the cutscene
+    /// </summary>
+    /// <param name="c"></param>
+    private void ContinueCutscene(InputAction.CallbackContext c)
+    {
+        continuePressed= true;
+    }
+
     #endregion
 
     #region Pausing and Skipping
 
     public void SkipCutscene()
     {
+        // hide all prompts
         StopAllCoroutines();
         playerControls.Cutscene.Disable();
         pauseScreen.SetActive(false);
         pausePrompt.SetActive(false);
+        continueText.color = new Color(continueText.color.r, continueText.color.g, continueText.color.b, 0);
         videoRenderImg.enabled = false;
         Cursor.lockState= CursorLockMode.Locked;
 
+        onVideoFinishEvents?.Invoke();
+
+        // Stop player, fade out
         videoPlayer.Stop();
         StartCoroutine(LoadScreen(false, skippedFadeOutTime));
 
-        
+        // Reneable gameplay controls
         playerControls.PlayerGameplay.Enable();
         playerControls.PlayerGameplay.Pause.Enable();
         playerControls.PlayerGameplay.Interact.Enable();
+        onCutsceneFadeFinishEvents?.Invoke();
+
+        // clear event finish events
+        onVideoFinishEvents = null;
+        onCutsceneFadeFinishEvents = null;
     }
 
     /// <summary>
@@ -247,7 +347,7 @@ public class CutsceneManager : MonoBehaviour
     /// <param name="c">input context</param>
     private void TogglePause(InputAction.CallbackContext c)
     {
-        // Debug.Log("Trying to pause cutscene");
+        //Debug.Log("Pausing cutscene " + c.action.name);
 
         if(pauseScreen.activeInHierarchy)
         {
@@ -268,7 +368,8 @@ public class CutsceneManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         settingScreen.SetActive(false);
         pauseScreen.SetActive(true);
-        videoPlayer.Pause();
+        if(playState)
+            videoPlayer.Pause();
         promptText.enabled = false;
 
         if(promptRoutine!= null)
@@ -286,7 +387,8 @@ public class CutsceneManager : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         pauseScreen.SetActive(false);
-        videoPlayer.Play();
+        if(playState)
+            videoPlayer.Play();
     }
 
     /// <summary>
@@ -298,10 +400,15 @@ public class CutsceneManager : MonoBehaviour
         if (!videoPlayer.isPlaying)
             return;
 
-        if(!promptText.enabled)
-            promptFadeRoutine = StartCoroutine(FadePrompt(true, 1f));
+        if(!promptText.enabled || promptFadeRoutine != null)
+        {
+            if (promptFadeRoutine != null)
+                StopCoroutine(promptFadeRoutine);
+            promptFadeRoutine = StartCoroutine(FadePrompt(promptText, true, 1f));
+        }
+            
 
-        promptLifeTracker.ResetTimer();
+        promptLifeTracker = 0;
         if (promptRoutine == null)
             promptRoutine = StartCoroutine(CheckPrompt());
             
@@ -311,7 +418,7 @@ public class CutsceneManager : MonoBehaviour
     /// </summary>
     private void HidePrompt()
     {
-        StartCoroutine(FadePrompt(false, 1f));
+        promptFadeRoutine = StartCoroutine(FadePrompt(promptText, false, 1f));
     }
 
     /// <summary>
@@ -320,7 +427,7 @@ public class CutsceneManager : MonoBehaviour
     /// <param name="active"></param>
     /// <param name="dur"></param>
     /// <returns></returns>
-    private IEnumerator FadePrompt(bool active, float dur)
+    private IEnumerator FadePrompt(TextMeshProUGUI promptText, bool active, float dur)
     {
         // make visible to start
         promptText.enabled = true;
@@ -328,25 +435,21 @@ public class CutsceneManager : MonoBehaviour
         // determine target alpha color
         Color originalCol = promptText.color;
         Color targetCol = originalCol;
-        if (active)
-        {
-            targetCol.a = 1;
-        }
-        else
-        {
-            targetCol.a = 0;
-        }
+        targetCol.a = active ? 1f : 0f;
 
         // Lerp through with the given timer
-        ScaledTimer lerpTimer = new ScaledTimer(dur, false);
-        while (!lerpTimer.TimerDone())
+        float t = 0;
+        while (t <= dur)
         {
-            promptText.color = Color.Lerp(originalCol, targetCol, lerpTimer.TimerProgress());
+            promptText.color = Color.Lerp(originalCol, targetCol, (t/dur));
+            t += Time.unscaledDeltaTime;
             yield return null;
         }
         // make sure the target color is reached
         promptText.color = targetCol;
         promptText.enabled = active;
+
+        promptFadeRoutine = null;
     }
 
     /// <summary>
@@ -356,14 +459,17 @@ public class CutsceneManager : MonoBehaviour
     private IEnumerator CheckPrompt()
     {
         // wait for the timer to compelete
-        while(!promptLifeTracker.TimerDone())
+        while(promptLifeTracker < noteDisplayTime)
         {
-            yield return new WaitForSecondsRealtime(0.5f);
+            promptLifeTracker += Time.unscaledDeltaTime;
+            yield return null;
         }
 
         // If timer completed and its still active, hide the prompt
         if(promptText.isActiveAndEnabled)
             HidePrompt();
+
+        promptRoutine = null;
     }
 
     #endregion

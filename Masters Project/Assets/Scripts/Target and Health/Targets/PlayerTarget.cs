@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerTarget : Target
 {
@@ -23,13 +24,13 @@ public class PlayerTarget : Target
     [SerializeField] private GameObject godCheatNotification;
     [SerializeField] private float cheatDamage = 25;
     [SerializeField] private float cheatHeal = 25;
-    [SerializeField] private TimeManager timestop;
+    [SerializeField] protected TimeManager timestop;
     [SerializeField] private Ability grenadeAbility;
 
 
     public static PlayerTarget p;
 
-    private void Start()
+    protected virtual void Start()
     {
         if (p == null)
         {
@@ -95,7 +96,10 @@ public class PlayerTarget : Target
     public override void Knockback(float force, float verticalForce, Vector3 origin)
     {
         if (immuneToKnockback || (force + verticalForce <= 0))
+        {
             return;
+        }
+            
 
         // kick the player up a tiny bit to reduce any ground drag
         transform.position += Vector3.up * 0.25f;

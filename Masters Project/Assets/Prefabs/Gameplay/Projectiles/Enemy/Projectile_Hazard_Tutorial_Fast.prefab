@@ -1,0 +1,145 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &1999126985460243967
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2621031579033497993, guid: 8538f4a13da285448858176cbb356b74, type: 3}
+      propertyPath: m_Name
+      value: Projectile_Hazard_Tutorial_Fast
+      objectReference: {fileID: 0}
+    - target: {fileID: 4970183403434006975, guid: 8538f4a13da285448858176cbb356b74, type: 3}
+      propertyPath: dealDamage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5307925175271617478, guid: 8538f4a13da285448858176cbb356b74, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5307925175271617478, guid: 8538f4a13da285448858176cbb356b74, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -55.48683
+      objectReference: {fileID: 0}
+    - target: {fileID: 5307925175271617478, guid: 8538f4a13da285448858176cbb356b74, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.2590499
+      objectReference: {fileID: 0}
+    - target: {fileID: 5307925175271617478, guid: 8538f4a13da285448858176cbb356b74, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 10.697863
+      objectReference: {fileID: 0}
+    - target: {fileID: 5307925175271617478, guid: 8538f4a13da285448858176cbb356b74, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5307925175271617478, guid: 8538f4a13da285448858176cbb356b74, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5307925175271617478, guid: 8538f4a13da285448858176cbb356b74, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5307925175271617478, guid: 8538f4a13da285448858176cbb356b74, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5307925175271617478, guid: 8538f4a13da285448858176cbb356b74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5307925175271617478, guid: 8538f4a13da285448858176cbb356b74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5307925175271617478, guid: 8538f4a13da285448858176cbb356b74, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 4970183403434006975, guid: 8538f4a13da285448858176cbb356b74, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 8538f4a13da285448858176cbb356b74, type: 3}
+--- !u!1 &4603124341769383030 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2621031579033497993, guid: 8538f4a13da285448858176cbb356b74, type: 3}
+  m_PrefabInstance: {fileID: 1999126985460243967}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2624544414403063934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4603124341769383030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e0e73559f53fa444aecea9591b36c71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6972622677643043374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4603124341769383030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8927b1d62271c1f418faee0c8c1fab7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 4194304
+  secondaryTimescale: 1
+  dealDamage: 1
+  damage: 0
+  playerDamage: 0
+  spawnProjectileOnEnd: 0
+  onEndPrefab: {fileID: 0}
+  knockback: 1
+  horizontalKnockback: 0
+  verticalKnockback: 0
+  playerHorizontalKnockback: 100
+  playerVerticalKnockback: 50
+  shotByPlayer: 0
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  worldLayers:
+    serializedVersion: 2
+    m_Bits: 9
+  speed: 10
+  range: 50
+  maxHits: 1
+  onActivateSFX: {fileID: 0}
+  hitSFX: {fileID: 0}
+  onHitVFX: {fileID: 293939513845853792, guid: e5a26414f710b8f4b870ba95ee78b7d5, type: 3}
+  bulletVisual: {fileID: 0}
+  scaleOverDistance:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  fadeVFX: {fileID: 0}
+  onHitEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2624544414403063934}
+        m_TargetAssemblyTypeName: CheckpointCaller, Assembly-CSharp
+        m_MethodName: CallCheckpointTeleport
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

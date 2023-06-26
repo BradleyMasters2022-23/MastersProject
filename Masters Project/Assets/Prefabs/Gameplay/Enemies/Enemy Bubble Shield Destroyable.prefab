@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3433388504903533601
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8977544046516232109}
+  m_Layer: 0
+  m_Name: OrbSpawnpoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8977544046516232109
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3433388504903533601}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.41, z: 0}
+  m_LocalScale: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9020080356677620955}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7550744816532608176
 GameObject:
   m_ObjectHideFlags: 0
@@ -17,7 +48,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8475010084208231825
 Transform:
   m_ObjectHideFlags: 0
@@ -119,6 +150,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8475010084208231825}
+  - {fileID: 8977544046516232109}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -203,7 +235,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   secondaryTimescale: 1
-  _center: {fileID: 9020080356677620955}
+  _center: {fileID: 8977544046516232109}
   _team: 2
   _targetThreat: 0
   _unkillable: 0
@@ -214,10 +246,10 @@ MonoBehaviour:
   _deathVFX: {fileID: 7428150280865193490, guid: 40eba4e47bd3d6e498c0fc508227016b, type: 3}
   damagedSound: {fileID: 0}
   deathSound: {fileID: 0}
-  damagedSoundCooldown: 0.5
+  damagedSoundCooldown: 0.1
   dropList:
   - spawnObject: {fileID: 3071240432754548792, guid: 2001e4aa90ac76a47866171fcaafdf7f, type: 3}
-    quantityRange: {x: 3, y: 4}
+    quantityRange: {x: 4, y: 5}
     dropChance: 100
 --- !u!114 &9020080356677620958
 MonoBehaviour:
@@ -265,5 +297,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a33c2fc2c1e14b14e906e359abbe50f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  damageMultiplier: 0
+  target: {fileID: 8754009071203413504}
+  damageMultiplier: 1
+  impactVFX: {fileID: 0}

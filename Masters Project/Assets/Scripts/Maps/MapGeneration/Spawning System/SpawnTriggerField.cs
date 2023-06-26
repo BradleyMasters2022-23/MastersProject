@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Collider))]
 public class SpawnTriggerField : MonoBehaviour
@@ -110,7 +111,7 @@ public class SpawnTriggerField : MonoBehaviour
         }
 
         // dont bother activating if theres no combat or triggers attached to this obj
-        if (relativeDifficulty.Length > 0 && triggerCol.Length > 0)
+        if (triggerCol.Length > 0)
         {
             active = true;
         }
@@ -119,16 +120,21 @@ public class SpawnTriggerField : MonoBehaviour
     private void Start()
     {
         if (testing)
-            LoadWaves();
+            waves = BuildWaves();
+    }
+
+    public void LoadWaves()
+    {
+        waves = BuildWaves();
     }
 
     /// <summary>
     /// Load in the waves in a way to reduce activation later 
     /// </summary>
-    public void LoadWaves()
+    protected virtual Dictionary<EnemySO, int>[] BuildWaves()
     {
         // Request waves with current difficulty
-        waves = LinearSpawnManager.instance.RequestBatch(relativeDifficulty);
+        return LinearSpawnManager.instance.RequestBatch(relativeDifficulty);
     }
 
     /// <summary>
@@ -168,6 +174,22 @@ public class SpawnTriggerField : MonoBehaviour
         {
             // If not active and triggered, try disabling triggers again
             Deactivate(false);
+        }
+    }
+
+    private void OnDisable()
+    {
+        // Incase its still active, disable the spawn routine
+        if (spawnRoutine != null)
+            StopCoroutine(spawnRoutine);
+
+        if (spawnedEnemies != null)
+        {
+            // Incase any are left, kill all spawned enemies
+            for (int i = spawnedEnemies.Count - 1; i >= 0; i--)
+            {
+                Destroy(spawnedEnemies[i]);
+            }
         }
     }
 
@@ -253,6 +275,8 @@ public class SpawnTriggerField : MonoBehaviour
             if (WarningText.instance != null && i != waves.Length-1)
                 WarningText.instance.Play(true);
 
+            onWaveComplete?.Invoke();
+
             yield return new WaitForSeconds(waveChangeDelay);
             // Debug.Log("Wave Finished, moving to next");
         }
@@ -290,23 +314,30 @@ public class SpawnTriggerField : MonoBehaviour
 
     #endregion
 
+    #region Bonus Utility
 
-    private void OnDisable()
+    private UnityEvent onWaveComplete;
+
+    public void SubmitEvent(UnityAction action)
     {
-        // Incase its still active, disable the spawn routine
-        if(spawnRoutine != null)
-            StopCoroutine(spawnRoutine);
+        // make sure it exists before adding
+        if (onWaveComplete == null)
+            onWaveComplete = new UnityEvent();
 
-        if(spawnedEnemies != null)
+        onWaveComplete.AddListener(action);
+    }
+
+    public void RemoveEvent(UnityAction action)
+    {
+        if(onWaveComplete != null)
         {
-            // Incase any are left, kill all spawned enemies
-            for (int i = spawnedEnemies.Count - 1; i >= 0; i--)
-            {
-                Destroy(spawnedEnemies[i]);
-            }
+            onWaveComplete.RemoveListener(action);
         }
     }
 
+    /// <summary>
+    /// On selected in scene view, draw line to all spawnpoints for QoL
+    /// </summary>
     private void OnDrawGizmosSelected()
     {
         foreach (var points in spawnPoints)
@@ -317,4 +348,7 @@ public class SpawnTriggerField : MonoBehaviour
             }
         }
     }
+
+    #endregion
+
 }

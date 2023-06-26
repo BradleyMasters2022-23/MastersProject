@@ -69,4 +69,10 @@ public class HealthOrb : PickupOrb, IPoolable
     {
         return refillAmount;
     }
+
+    public override void PoolPush()
+    {
+        base.PoolPush();
+        playerHealth?.RemoveFromBuffer(this);
+    }
 }

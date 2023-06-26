@@ -5,13 +5,32 @@ using UnityEngine;
 public class RunBasedTrigger : CutsceneTrigger
 {
     [SerializeField] private int minRunLength;
-    
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        HUDFadeManager.instance.SetImmediate(true);
+    }
+
     /// <summary>
-    /// Try to play the cutscene ASAP
+    /// Try to play the cutscene ASAP if possible
     /// </summary>
     private void Start()
     {
-        TryCutscene();
+        if (!CanPlay())
+        {
+            //Debug.Log("Cant play, disabling");
+            onVideoFinishEvents.Invoke();
+            onCutsceneFadeFinishEvents.Invoke();
+        }
+        else
+        {
+            TryCutscene();
+            // disable while loading
+            GameManager.controls.Disable();
+        }
+            
     }
 
     /// <summary>
@@ -20,7 +39,6 @@ public class RunBasedTrigger : CutsceneTrigger
     /// <returns>Whether the cutscene trigger can be used</returns>
     protected override bool CanPlay()
     {
-        // Debug.Log($"curent runs : {GlobalStatsManager.data.runsAttempted}");
-        return base.CanPlay() && GlobalStatsManager.data.runsAttempted >= minRunLength;
+        return base.CanPlay() && (!onlyPlayOnce || GlobalStatsManager.data.runsAttempted >= minRunLength);
     }
 }

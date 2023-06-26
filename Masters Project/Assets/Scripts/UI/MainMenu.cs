@@ -10,13 +10,16 @@ public class MainMenu : MonoBehaviour
         Application.Quit();
     }
 
-    public void LoadSettings()
+    public void LoadToTutorial()
     {
-        // TODO add settings
+        GameManager.instance.GoToTutorial();
     }
 
     public void StartGame()
     {
-        GameManager.instance.GoToHub();
+        if(DataManager.instance.hasSaveData)
+            GameManager.instance.GoToHub();
+        else
+            GameManager.instance.GoToTutorial();
     }
 }

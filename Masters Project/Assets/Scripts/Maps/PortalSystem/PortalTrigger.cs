@@ -26,8 +26,13 @@ public class PortalTrigger : MonoBehaviour, Interactable
     [SerializeField, ReadOnly] private bool usable = true;
     [Tooltip("Events to execute on interact")]
     [SerializeField] private UnityEvent onInteract;
-    
+
+    [SerializeField] ChannelVoid onSceneLoadChannel;
+
     [Header("VFX/SFX Indicators")]
+
+    [Tooltip("Ambient SFX for the portal")]
+    [SerializeField] AmbientSFXSource portalAmbianceSFX;
 
     [Tooltip("Indicators that play when the portal is summoned")]
     [SerializeField] IIndicator[] summonIndicators;
@@ -98,6 +103,19 @@ public class PortalTrigger : MonoBehaviour, Interactable
             float dist = Vector3.Distance(transform.position, playerRef.position);
             float newVal = horizontalScaleOverDistance.Evaluate(dist);
             newVal = Mathf.Clamp(newVal, horScale.x - maxScaleChange, horScale.x + maxScaleChange);
+
+            // if 'opening', start ambiance
+            if (horScale.x <= 0 && newVal > 0)
+            {
+                portalAmbianceSFX.Play();
+            }
+            // if 'closing', end ambiance
+            else if (horScale.x > 0 && newVal <= 0)
+            {
+                portalAmbianceSFX.Stop();
+            }
+
+            // apply new scale 
             horScale.x = newVal;
             horScale.z = newVal;
             portalScaleObject.localScale = horScale;
@@ -116,6 +134,7 @@ public class PortalTrigger : MonoBehaviour, Interactable
             interactionCooldown.ResetTimer(3f);
             Indicators.SetIndicators(interactIndicators, true);
             onInteract.Invoke();
+            onSceneLoadChannel.RaiseEvent();
         }
     }
     public bool CanInteract()
@@ -135,6 +154,7 @@ public class PortalTrigger : MonoBehaviour, Interactable
         horScale = portalScaleObject.localScale;
         horScale.x = 0;
         horScale.z = 0;
+
         // enable collider
         col.enabled = true;
         col.isTrigger = false;
@@ -169,10 +189,13 @@ public class PortalTrigger : MonoBehaviour, Interactable
             Debug.LogError($"{name} tried going to next room but couldn't find a MapLoader!");
     }
 
+    /// <summary>
+    /// Teleport to the linked portal
+    /// </summary>
     public void TeleportToPortal()
     {
         // Debug.Log($"Player : {playerRef != null} | Exit point : {exitPoint !=  null}");
-
+        
         playerRef.position = exitPoint.position;
         playerRef.rotation = exitPoint.rotation;
     }
@@ -183,6 +206,7 @@ public class PortalTrigger : MonoBehaviour, Interactable
     }
     public void GoToSecretRoom()
     {
+        MapLoader.instance.PlaySecretPortalSFX();
         secretRef?.GoToSecretRoom();
     }
 }

@@ -45,6 +45,8 @@ public class MoveTo : MonoBehaviour
         yield return new WaitForSeconds(startDelay);
         onStartEvents.Invoke();
 
+        ScaledTimer temp = new ScaledTimer(10, false);
+
         // Continually go towards target. Currently just a straight shot
         while(currDist >= 0.1f)
         {
@@ -52,6 +54,12 @@ public class MoveTo : MonoBehaviour
             currDist = Vector3.Distance(transform.position, endingTarget.position);
             distRatio = 1 - (currDist / maxDist);
 
+            // if close enough or reachged max time, go to end
+            if (currDist <= (maxSpeed * accelerationRate.Evaluate(distRatio)) || temp.TimerDone())
+            {
+                transform.position = endingTarget.position;
+                break;
+            }
             // Move towards the end target, bottled by max speed and accounting for its current dist ratio
             transform.Translate(
                 (endingTarget.position - transform.position).normalized * 

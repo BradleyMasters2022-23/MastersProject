@@ -58,6 +58,9 @@ public class GameManager : MonoBehaviour
     [Tooltip("Name of the main gameplay scene")]
     [SerializeField] private string mainGameplayScene;
 
+    [Tooltip("Name of the tutorial scene")]
+    [SerializeField] private string tutorialScene;
+
     #endregion
 
     #region Input Management Variables
@@ -226,8 +229,9 @@ public class GameManager : MonoBehaviour
         {
             case States.MAINMENU:
                 {
-                    // Main menu can only go to hub gameplay
-                    return (_newState == States.HUB);
+                    // Main menu can only go to hub gameplay OR tutorial gameplay
+                    return (_newState == States.HUB
+                        || _newState == States.GAMEPLAY);
                 }
             case States.PAUSED:
                 {
@@ -318,6 +322,17 @@ public class GameManager : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Time.timeScale = 1;
+    }
+
+    /// <summary>
+    /// Close all menus possible
+    /// </summary>
+    public void CloseToTop()
+    {
+        while(menuStack.Count > 0 && menuStack.Peek().Closable)
+        {
+            CloseTopMenu();
+        }
     }
 
     #endregion
@@ -455,7 +470,6 @@ public class GameManager : MonoBehaviour
         {
             if(currentState == States.PAUSED)
             {
-                
                 TogglePause();
             }
             else if (currentState == States.GAMEMENU)
@@ -597,14 +611,17 @@ public class GameManager : MonoBehaviour
         ChangeState(States.GAMEPLAY);
     }
 
+    public void GoToTutorial()
+    {
+        LoadToScene(tutorialScene);
+        ChangeState(States.GAMEPLAY);
+    }
+
     public Coroutine LoadToScene(string name)
     {
         // if none of the main scenes, dont load. 
         // Useful for testing scenes and pausing/unpausing
         string currScene = SceneManager.GetActiveScene().name;
-        //if (currScene != mainMenuScene && currScene != mainGameplayScene && currScene != mainHubScene)
-        //    return;
-
         try
         {
             // attempt to save global stats whenver loading
@@ -619,7 +636,13 @@ public class GameManager : MonoBehaviour
         UnPause();
         menuStack.Clear();
         controls.UI.Disable();
-        return Loader.instance.LoadToScene(name);
+
+        // if loading to tutorial, don't enable controls on load complete
+        if(name == tutorialScene)
+            return Loader.instance.LoadToScene(name, false);
+        else
+            return Loader.instance.LoadToScene(name);
+
     }
 
 

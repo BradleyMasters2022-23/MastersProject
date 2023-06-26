@@ -16,9 +16,39 @@ public class TooltipSO : ScriptableObject
 {
     [Tooltip("Title text for the tooltip")]
     public string titleText;
-    [Tooltip("Content text for the tooltip")]
-    [TextArea] public string tooltipText;
+    [Tooltip("Content text for the tooltip that plays on screen")]
+    [SerializeField, TextArea] private string tooltipText;
+
+    [Tooltip("Content text for the tooltip on saved lookup. If empty, will use Tooltip Text instead.")]
+    [SerializeField, TextArea] private string savedTooltipText;
 
     [Tooltip("How many times can this tooltip reappear")]
     public int timesToDisplay = 1;
+
+    [Tooltip("Whether or not this should display in tooltip list")]
+    public bool showInTooltipList = true;
+
+    [Tooltip("A sprite to override the default image. Leave blank to not use")]
+    public Sprite spriteOverride;
+
+    /// <summary>
+    /// Get the text to show on the immediate prompt
+    /// </summary>
+    /// <returns></returns>
+    public string GetPromptText()
+    {
+        return tooltipText;
+    }
+
+    /// <summary>
+    /// Get the text to show in the saved lookup
+    /// </summary>
+    /// <returns></returns>
+    public string GetSavedText()
+    {
+        if (savedTooltipText == "")
+            return tooltipText;
+        else
+            return savedTooltipText;
+    }
 }
