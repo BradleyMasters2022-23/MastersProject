@@ -24,13 +24,13 @@ public class PlayerTarget : Target
     [SerializeField] private GameObject godCheatNotification;
     [SerializeField] private float cheatDamage = 25;
     [SerializeField] private float cheatHeal = 25;
-    [SerializeField] private TimeManager timestop;
+    [SerializeField] protected TimeManager timestop;
     [SerializeField] private Ability grenadeAbility;
 
 
     public static PlayerTarget p;
 
-    private void Start()
+    protected virtual void Start()
     {
         if (p == null)
         {
@@ -114,13 +114,5 @@ public class PlayerTarget : Target
         healCheat.performed -= CheatHeal;
         damageCheat.performed -= CheatDamage;
         p = null;
-    }
-
-    /// <summary>
-    /// Set the player instance to be re-initialized on next scene load
-    /// </summary>
-    public void SetForClear()
-    {
-        SceneManager.MoveGameObjectToScene(gameObject, SceneManager.GetActiveScene());
     }
 }

@@ -55,7 +55,7 @@ public class MoveTo : MonoBehaviour
             distRatio = 1 - (currDist / maxDist);
 
             // if close enough or reachged max time, go to end
-            if (currDist <= maxDist || temp.TimerDone())
+            if (currDist <= (maxSpeed * accelerationRate.Evaluate(distRatio)) || temp.TimerDone())
             {
                 transform.position = endingTarget.position;
                 break;
