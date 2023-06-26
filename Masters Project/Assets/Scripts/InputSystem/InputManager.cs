@@ -193,7 +193,7 @@ public class InputManager : MonoBehaviour
     #region Rebinding
 
     [SerializeField] private string[] globalKeybindBlacklist;
-
+    
     public delegate void VoidFunc();
 
     public void DoRebind(string actionName, int rebindIdx, string[] keyBlacklist, VoidFunc onComplete = null, VoidFunc onCancel = null)

@@ -237,12 +237,19 @@ public class TooltipManager : MonoBehaviour
         dismissTooltip.Enable();
     }
 
+    private void OnEnable()
+    {
+        onSchemeChangeChannel.OnEventRaised += InstantReloadTooltip;
+    }
     private void OnDisable()
     {
         dismissTooltip.performed -= DismissCurrentTooltip;
         dismissTooltip.Disable();
-    }
 
+        onSchemeChangeChannel.OnEventRaised -= InstantReloadTooltip;
+
+    }
+    
     /// <summary>
     /// Input call to dismiss the currently loaded tooltip
     /// </summary>
@@ -261,10 +268,12 @@ public class TooltipManager : MonoBehaviour
 
     #region InputAction Lookup
 
+    [SerializeField] ChannelControlScheme onSchemeChangeChannel;
+
     /// <summary>
     /// delimiter used to indicate that a input action lookup is requested
     /// </summary>
-    private char inputDelimiter = '#';
+    public readonly char inputDelimiter = '#';
 
     private IEnumerator LoadTooltipText(TooltipSO data)
     {
@@ -318,6 +327,38 @@ public class TooltipManager : MonoBehaviour
         // Just to be sure, assign the text to the full thing at the end
         //descriptionTextbox.text = text;
         yield return null;
+    }
+
+    /// <summary>
+    /// Instantly reload the tooltip prompt with the updated input action binding string
+    /// </summary>
+    private void InstantReloadTooltip(InputManager.ControlScheme c)
+    {
+        // if no input references or not enabled, then dont do anything. 
+        if (currentTooltip == null || currentTooltip.inputReference.Length <= 0 || !descriptionTextbox.isActiveAndEnabled) return;
+
+        // cancel anything currently loading
+        if (loadBodyRoutine != null)
+            StopCoroutine(loadBodyRoutine);
+
+        // loop through the text to be loaded, insert input action bindings where needed
+        string contentRef = currentTooltip.GetPromptText();
+        string temp = "";
+        int inputIdx = 0;
+        // iterate through content, adding any input bindings when necessary
+        for (int i = 0; i < contentRef.Length; i++)
+        {
+            if (contentRef[i] == inputDelimiter)
+            {
+                temp += InputManager.Instance.ActionKeybindLookup(currentTooltip.inputReference[inputIdx]);
+                inputIdx++;
+            }
+            else
+            {
+                temp += contentRef[i];
+            }
+        }
+        descriptionTextbox.text = temp;
     }
 
     #endregion
