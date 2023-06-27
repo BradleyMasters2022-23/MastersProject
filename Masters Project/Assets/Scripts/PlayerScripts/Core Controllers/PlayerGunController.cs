@@ -9,12 +9,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerGunController : MonoBehaviour
 {
     [Header("---Game Flow---")]
     [SerializeField] private ChannelGMStates onStateChangeChannel;
+    [SerializeField] private ChannelVoid onWeaponShoot;
 
     [Header("=====Gameplay=====")]
 
@@ -113,6 +115,7 @@ public class PlayerGunController : MonoBehaviour
     /// Tracker for between shots
     /// </summary>
     private ScaledTimer fireTimer;
+
 
     /// <summary>
     /// Initialize controls and starting values
@@ -283,6 +286,8 @@ public class PlayerGunController : MonoBehaviour
 
         // play sound effect
         gunshotSound.PlayClip(shootPoint, gunshotSource, true);
+        // call any subscribers to this event
+        onWeaponShoot?.RaiseEvent();
     }
 
     private Vector3 ApplySpread(Vector3 rot)
