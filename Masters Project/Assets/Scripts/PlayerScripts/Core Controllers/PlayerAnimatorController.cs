@@ -26,11 +26,11 @@ public class PlayerAnimatorController : MonoBehaviour
     [SerializeField] float minVelocityMag;
 
     [Header("Gun"), Space(5)]
-    [Tooltip("Reference to the player gun controller")]
+    [Tooltip("Channel that fires when the player shoots the gun")]
     [SerializeField] ChannelVoid gunShootChannel;
 
     [Header("Grenade"), Space(5)]
-    [Tooltip("Reference to the grenade ability controller")]
+    [Tooltip("Channel that fires when the player launches a grenade")]
     [SerializeField] ChannelVoid grenadeLaunchChannel;
 
     private void OnEnable()
