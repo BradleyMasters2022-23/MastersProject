@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class EnhancedShot : Projectile
 {
@@ -10,7 +11,7 @@ public class EnhancedShot : Projectile
     [SerializeField] private float lineDuration;
 
 
-    private ScaledTimer lineLifeTracker;
+    private LocalTimer lineLifeTracker;
 
     public override void Activate()
     {
@@ -34,8 +35,20 @@ public class EnhancedShot : Projectile
             lineRenderer.SetPosition(1, transform.position + transform.forward * range);
         }
 
-        lineLifeTracker = new ScaledTimer(lineDuration);
+        lineLifeTracker = GetTimer(lineDuration);
         lineRenderer.enabled = true;
+
+        // on activate, register itself to any timeslow fieldds around
+        Collider[] temp = Physics.OverlapSphere(transform.position, 0.1f, slowFieldLayers);
+        TimeslowField field;
+        foreach(var t in temp)
+        {
+            field = t.GetComponent<TimeslowField>();
+            if(field != null)
+            {
+                field.SubToField(GetComponent<Collider>());
+            }
+        }
     }
 
     private void Update()

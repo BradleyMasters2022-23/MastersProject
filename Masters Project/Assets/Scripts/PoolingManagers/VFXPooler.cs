@@ -101,6 +101,8 @@ public class VFXPooler : MonoBehaviour
         int id = vfxInstance.name.GetHashCode();
         if (pools.ContainsKey(id))
         {
+            vfxInstance.transform.parent= transform;
+            vfxInstance.transform.position = Vector3.zero;
             pools[id].Return(vfxInstance);
             return true;
         }

@@ -64,21 +64,13 @@ public class PlayerAnimatorController : MonoBehaviour
             UpdateMovement();
         }
     }
-    Coroutine shootRoutine;
+
     /// <summary>
     /// Trigger a weapon shoot
     /// </summary>
     public void ShootGun()
     {
-        if(shootRoutine != null)
-            StopCoroutine(shootRoutine);
-        shootRoutine = StartCoroutine(TestShoot());
-    }
-    private IEnumerator TestShoot()
-    {
         anim.SetTrigger("Shooting Trigger");
-        yield return new WaitForEndOfFrame();
-        anim.playbackTime = 1f;
     }
 
     /// <summary>
@@ -90,6 +82,11 @@ public class PlayerAnimatorController : MonoBehaviour
     }
 
     /// <summary>
+    /// default max velocity of the player. Used for ratio stuff
+    /// </summary>
+    private const float maxPlayerVelocity = 11f;
+
+    /// <summary>
     /// Update the player movement values for the animator
     /// </summary>
     public void UpdateMovement()
@@ -98,8 +95,9 @@ public class PlayerAnimatorController : MonoBehaviour
         bool playerMoving =
             moveController.CurrentState == PlayerController.PlayerState.GROUNDED
             && moveController.GetVelocity().magnitude > minVelocityMag;
-
+        //Debug.Log("Vel: " + moveController.GetVelocity().magnitude);
         anim.SetBool("Is Walking", playerMoving);
+        anim.SetFloat("Velocity", Mathf.Clamp((moveController.GetVelocity().magnitude / maxPlayerVelocity), 0.10f, 1));
     }
 
 

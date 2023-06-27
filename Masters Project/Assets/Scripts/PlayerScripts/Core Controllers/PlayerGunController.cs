@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-public class PlayerGunController : MonoBehaviour
+public class PlayerGunController : TimeAffectedEntity
 {
     [Header("---Game Flow---")]
     [SerializeField] private ChannelGMStates onStateChangeChannel;
@@ -162,9 +162,9 @@ public class PlayerGunController : MonoBehaviour
         }
         
     }
-
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
         // Tell the accuracy to recover over time while not firing
         if(!firing && currBloom != baseBloom && bloomRecoveryCDTracker.TimerDone() && !TimeManager.TimeStopped)
         {
@@ -173,8 +173,6 @@ public class PlayerGunController : MonoBehaviour
             {
                 newAccuracy = baseBloom;
             }
-                
-
             currBloom=newAccuracy;
         }
     }
@@ -206,8 +204,11 @@ public class PlayerGunController : MonoBehaviour
             }
             else
             {
-                Instantiate(muzzleflashVFX, shootPoint.position, shootPoint.rotation);
+                mf = Instantiate(muzzleflashVFX, shootPoint.position, shootPoint.rotation);
             }
+
+            if (!Slowed)
+                mf.transform.parent = shootPoint;
         }
 
         if(animator != null)
@@ -216,7 +217,7 @@ public class PlayerGunController : MonoBehaviour
         }
 
         // If time is not stopped, fire normal bullets
-        if(!TimeManager.TimeStopped)
+        if(!Slowed)
         {
             for (int i = 0; i < bulletsPerShot; i++)
             {
