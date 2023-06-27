@@ -11,24 +11,42 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using Cinemachine;
+
+[System.Serializable]
+public struct DamageToImpulse
+{
+    public float minDamage;
+    public float maxDamage;
+    public float impulse;
+
+    public bool WithinRange(float dmg)
+    {
+        return (dmg <= maxDamage) && (dmg >= minDamage);
+    }
+}
 
 public class PlayerTarget : Target
 {
-    private GameControls c;
-    private InputAction godCheat;
-    private InputAction damageCheat;
-    private InputAction healCheat;
+    public static PlayerTarget p;
+
+
+    [Header("Player Damage Impulse")]
+    [SerializeField] DamageToImpulse[] impulseRanges;
+    [SerializeField] CinemachineImpulseSource impulse;
 
     [Header("Cheats")]
-    private bool godMode = false;
     [SerializeField] private GameObject godCheatNotification;
     [SerializeField] private float cheatDamage = 25;
     [SerializeField] private float cheatHeal = 25;
     [SerializeField] protected TimeManager timestop;
     [SerializeField] private Ability grenadeAbility;
 
-
-    public static PlayerTarget p;
+    private GameControls c;
+    private InputAction godCheat;
+    private InputAction damageCheat;
+    private InputAction healCheat;
+    private bool godMode = false;
 
     protected virtual void Start()
     {
@@ -114,5 +132,22 @@ public class PlayerTarget : Target
         healCheat.performed -= CheatHeal;
         damageCheat.performed -= CheatDamage;
         p = null;
+    }
+
+    public override void RegisterEffect(float dmg)
+    {
+        base.RegisterEffect(dmg);
+        float impactForce = 1;
+
+        // use damage to determine which impulse effect to use
+        for(int i = 0; i < impulseRanges.Length; i++)
+        {
+            if(impulseRanges[i].WithinRange(dmg))
+            {
+                impactForce = impulseRanges[i].impulse;
+            }
+        }
+
+        impulse?.GenerateImpulseWithForce(impactForce);
     }
 }
