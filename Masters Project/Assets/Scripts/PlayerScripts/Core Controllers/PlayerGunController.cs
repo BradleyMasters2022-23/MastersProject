@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-public class PlayerGunController : TimeAffectedEntity
+public class PlayerGunController : TimeAffectedEntity, TimeObserver
 {
     [Header("---Game Flow---")]
     [SerializeField] private ChannelGMStates onStateChangeChannel;
@@ -364,5 +364,19 @@ public class PlayerGunController : TimeAffectedEntity
     public void SetMaxRange(float newVal)
     {
         maxRange = newVal;
+    }
+
+    public void OnStop()
+    {
+        // unpack any children in shootpoint, which would be paired VFX muzzle flashes
+        for(int i = shootPoint.childCount-1; i >= 0; i--)
+        {
+            shootPoint.GetChild(i).parent= null;
+        }
+    }
+
+    public void OnResume()
+    {
+        return;
     }
 }
