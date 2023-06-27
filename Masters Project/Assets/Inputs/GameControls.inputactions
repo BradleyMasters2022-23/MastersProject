@@ -6,6 +6,15 @@
             "id": "30ea3d81-5b23-4ec2-96a5-76eac299db6f",
             "actions": [
                 {
+                    "name": "Tactical",
+                    "type": "Button",
+                    "id": "43833b58-0f0f-460c-8195-a2b48cb722b3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Move",
                     "type": "Value",
                     "id": "2fc8805c-0641-4fb0-80db-46e9b64f2fe9",
@@ -45,15 +54,6 @@
                     "name": "SlowTime",
                     "type": "Button",
                     "id": "19362b4a-e82d-4d48-a928-5af9dc275244",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Tactical",
-                    "type": "Button",
-                    "id": "43833b58-0f0f-460c-8195-a2b48cb722b3",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -325,7 +325,7 @@
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "KeyboardMouse",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -336,7 +336,7 @@
                     "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard;KeyboardMouse",
+                    "groups": "KeyboardMouse",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -426,28 +426,6 @@
                     "processors": "",
                     "groups": "Controller;Gamepad",
                     "action": "SlowTime",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ba1c79c5-0447-4802-af9c-a7d946f6e458",
-                    "path": "<Keyboard>/q",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard;KeyboardMouse",
-                    "action": "Tactical",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "daf87aa2-9acf-46c7-95fc-28a55a575c9c",
-                    "path": "<Gamepad>/rightShoulder",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Controller;Gamepad",
-                    "action": "Tactical",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -712,6 +690,28 @@
                     "processors": "",
                     "groups": "Controller",
                     "action": "SwapControls",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ba1c79c5-0447-4802-af9c-a7d946f6e458",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Tactical",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "daf87aa2-9acf-46c7-95fc-28a55a575c9c",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Tactical",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

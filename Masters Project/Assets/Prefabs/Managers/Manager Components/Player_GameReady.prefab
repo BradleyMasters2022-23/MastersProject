@@ -1553,7 +1553,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5462805238772800524}
-  - component: {fileID: 6069102292172341088}
   m_Layer: 6
   m_Name: FirstPerson VISUALS
   m_TagString: Untagged
@@ -1578,26 +1577,6 @@ Transform:
   m_Father: {fileID: 2614998737500134957}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &6069102292172341088
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8795980696121949489}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 6b820da47adc3144cb1172fce0124a60, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8810997312557230427
 GameObject:
   m_ObjectHideFlags: 0
@@ -1853,6 +1832,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   onStateChangeChannel: {fileID: 11400000, guid: 2770aed5fbc083e4d8279c944f0242e2, type: 2}
+  onWeaponShoot: {fileID: 0}
   damageMultiplier:
     startingValue: 1
     lowerLimit: 0.1
@@ -1883,7 +1863,7 @@ MonoBehaviour:
   hitLayers:
     serializedVersion: 2
     m_Bits: 2918665
-  animator: {fileID: 6069102292172341088}
+  animator: {fileID: 0}
   enhancedBulletsPerShot: 1
   enhancedBulletPrefab: {fileID: 8727397786430278917, guid: 28050c439aeee544782969d47740fbc7, type: 3}
   enhancedSpeedMultiplier: 20
@@ -1936,6 +1916,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24a8e24958e03624683124887d0b1358, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onActivateChannel: {fileID: 0}
   performSpeedModifier: 1
   windupLength: 0
   recoveryLength: 0.3
@@ -2071,13 +2052,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8810997314044839443}
-  m_LocalRotation: {x: 0.0000000037252894, y: -0.7089556, z: 0.000000004743923, w: 0.7052532}
-  m_LocalPosition: {x: -1.85, y: 0.03, z: -0.048}
-  m_LocalScale: {x: 5.9484463, y: 5.948449, z: 5.9484205}
+  m_LocalRotation: {x: -0.50130725, y: -0.5013075, z: -0.4986893, w: 0.4986893}
+  m_LocalPosition: {x: 0.0006, y: 0.0481, z: -0.00111}
+  m_LocalScale: {x: 0.059484467, y: 0.059484486, z: 0.059484206}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4144220760584907843}
-  m_RootOrder: 4
+  m_Father: {fileID: 7308431781875690281}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: -90.3, z: 0}
 --- !u!82 &2810231602275043531
 AudioSource:
@@ -2302,7 +2283,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 532010952780546834, guid: cd4294e392450ef4fafab65bbf075ccd, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 876448790602209704, guid: cd4294e392450ef4fafab65bbf075ccd, type: 3}
       propertyPath: m_RootOrder
@@ -2365,6 +2346,33 @@ PrefabInstance:
 --- !u!4 &431311187433873145 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 876448790602209704, guid: cd4294e392450ef4fafab65bbf075ccd, type: 3}
+  m_PrefabInstance: {fileID: 708638222276593489}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1060460900224697411 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 532010952780546834, guid: cd4294e392450ef4fafab65bbf075ccd, type: 3}
+  m_PrefabInstance: {fileID: 708638222276593489}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4331826529899253143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1060460900224697411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89c1811f9bcd0c040b1437f1db58640d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveController: {fileID: 8810997313966297022}
+  minVelocityMag: 1
+  gunShootChannel: {fileID: 11400000, guid: bba2d2b8c6d1bab44a57df497b920a3c, type: 2}
+  grenadeLaunchChannel: {fileID: 11400000, guid: bfcf45ec590c8534d8eaeafe5d2f8b75, type: 2}
+  timestopActivatedChannel: {fileID: 11400000, guid: a8d6717bf7af5f94abdc7efc295883df, type: 2}
+--- !u!4 &7308431781875690281 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7834386823352659064, guid: cd4294e392450ef4fafab65bbf075ccd, type: 3}
   m_PrefabInstance: {fileID: 708638222276593489}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4470248890096618408
@@ -2668,7 +2676,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ccd00dc99d6204a44894b08cfeb2339a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 995847121114710365, guid: ccd00dc99d6204a44894b08cfeb2339a, type: 3}
       propertyPath: m_CastShadows

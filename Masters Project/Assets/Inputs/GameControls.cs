@@ -28,6 +28,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
             ""id"": ""30ea3d81-5b23-4ec2-96a5-76eac299db6f"",
             ""actions"": [
                 {
+                    ""name"": ""Tactical"",
+                    ""type"": ""Button"",
+                    ""id"": ""43833b58-0f0f-460c-8195-a2b48cb722b3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Move"",
                     ""type"": ""Value"",
                     ""id"": ""2fc8805c-0641-4fb0-80db-46e9b64f2fe9"",
@@ -67,15 +76,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""name"": ""SlowTime"",
                     ""type"": ""Button"",
                     ""id"": ""19362b4a-e82d-4d48-a928-5af9dc275244"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Tactical"",
-                    ""type"": ""Button"",
-                    ""id"": ""43833b58-0f0f-460c-8195-a2b48cb722b3"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -347,7 +347,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -358,7 +358,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard;KeyboardMouse"",
+                    ""groups"": ""KeyboardMouse"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -448,28 +448,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Controller;Gamepad"",
                     ""action"": ""SlowTime"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""ba1c79c5-0447-4802-af9c-a7d946f6e458"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard;KeyboardMouse"",
-                    ""action"": ""Tactical"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""daf87aa2-9acf-46c7-95fc-28a55a575c9c"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Controller;Gamepad"",
-                    ""action"": ""Tactical"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -734,6 +712,28 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Controller"",
                     ""action"": ""SwapControls"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ba1c79c5-0447-4802-af9c-a7d946f6e458"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Tactical"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""daf87aa2-9acf-46c7-95fc-28a55a575c9c"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Tactical"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1090,12 +1090,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
 }");
         // PlayerGameplay
         m_PlayerGameplay = asset.FindActionMap("PlayerGameplay", throwIfNotFound: true);
+        m_PlayerGameplay_Tactical = m_PlayerGameplay.FindAction("Tactical", throwIfNotFound: true);
         m_PlayerGameplay_Move = m_PlayerGameplay.FindAction("Move", throwIfNotFound: true);
         m_PlayerGameplay_Jump = m_PlayerGameplay.FindAction("Jump", throwIfNotFound: true);
         m_PlayerGameplay_Aim = m_PlayerGameplay.FindAction("Aim", throwIfNotFound: true);
         m_PlayerGameplay_Shoot = m_PlayerGameplay.FindAction("Shoot", throwIfNotFound: true);
         m_PlayerGameplay_SlowTime = m_PlayerGameplay.FindAction("SlowTime", throwIfNotFound: true);
-        m_PlayerGameplay_Tactical = m_PlayerGameplay.FindAction("Tactical", throwIfNotFound: true);
         m_PlayerGameplay_Pause = m_PlayerGameplay.FindAction("Pause", throwIfNotFound: true);
         m_PlayerGameplay_Interact = m_PlayerGameplay.FindAction("Interact", throwIfNotFound: true);
         m_PlayerGameplay_DismissTooltip = m_PlayerGameplay.FindAction("DismissTooltip", throwIfNotFound: true);
@@ -1182,12 +1182,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     // PlayerGameplay
     private readonly InputActionMap m_PlayerGameplay;
     private IPlayerGameplayActions m_PlayerGameplayActionsCallbackInterface;
+    private readonly InputAction m_PlayerGameplay_Tactical;
     private readonly InputAction m_PlayerGameplay_Move;
     private readonly InputAction m_PlayerGameplay_Jump;
     private readonly InputAction m_PlayerGameplay_Aim;
     private readonly InputAction m_PlayerGameplay_Shoot;
     private readonly InputAction m_PlayerGameplay_SlowTime;
-    private readonly InputAction m_PlayerGameplay_Tactical;
     private readonly InputAction m_PlayerGameplay_Pause;
     private readonly InputAction m_PlayerGameplay_Interact;
     private readonly InputAction m_PlayerGameplay_DismissTooltip;
@@ -1206,12 +1206,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     {
         private @GameControls m_Wrapper;
         public PlayerGameplayActions(@GameControls wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Tactical => m_Wrapper.m_PlayerGameplay_Tactical;
         public InputAction @Move => m_Wrapper.m_PlayerGameplay_Move;
         public InputAction @Jump => m_Wrapper.m_PlayerGameplay_Jump;
         public InputAction @Aim => m_Wrapper.m_PlayerGameplay_Aim;
         public InputAction @Shoot => m_Wrapper.m_PlayerGameplay_Shoot;
         public InputAction @SlowTime => m_Wrapper.m_PlayerGameplay_SlowTime;
-        public InputAction @Tactical => m_Wrapper.m_PlayerGameplay_Tactical;
         public InputAction @Pause => m_Wrapper.m_PlayerGameplay_Pause;
         public InputAction @Interact => m_Wrapper.m_PlayerGameplay_Interact;
         public InputAction @DismissTooltip => m_Wrapper.m_PlayerGameplay_DismissTooltip;
@@ -1235,6 +1235,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_PlayerGameplayActionsCallbackInterface != null)
             {
+                @Tactical.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
+                @Tactical.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
+                @Tactical.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
                 @Move.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnMove;
@@ -1250,9 +1253,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @SlowTime.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnSlowTime;
                 @SlowTime.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnSlowTime;
                 @SlowTime.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnSlowTime;
-                @Tactical.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
-                @Tactical.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
-                @Tactical.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
                 @Pause.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnPause;
@@ -1299,6 +1299,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
             {
+                @Tactical.started += instance.OnTactical;
+                @Tactical.performed += instance.OnTactical;
+                @Tactical.canceled += instance.OnTactical;
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
@@ -1314,9 +1317,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @SlowTime.started += instance.OnSlowTime;
                 @SlowTime.performed += instance.OnSlowTime;
                 @SlowTime.canceled += instance.OnSlowTime;
-                @Tactical.started += instance.OnTactical;
-                @Tactical.performed += instance.OnTactical;
-                @Tactical.canceled += instance.OnTactical;
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
@@ -1514,12 +1514,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     }
     public interface IPlayerGameplayActions
     {
+        void OnTactical(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnSlowTime(InputAction.CallbackContext context);
-        void OnTactical(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnDismissTooltip(InputAction.CallbackContext context);
