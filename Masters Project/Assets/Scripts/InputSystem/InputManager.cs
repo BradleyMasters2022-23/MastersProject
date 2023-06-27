@@ -319,13 +319,14 @@ public class InputManager : MonoBehaviour
                 // if conflict is found, ask the player to validate the new change
                 if(bind.effectivePath == targetAction.bindings[targetIdx].effectivePath)
                 {
+                    Debug.Log("Conflict detected");
                     // update prompt so player knows whats going on
-                    FindObjectOfType<TwoChoiceMenu>(true).SetMainPrompt(
+                    PlayerTarget.p.GetComponentInChildren<TwoChoiceMenu>(true).SetMainPrompt(
                         $"{targetAction.GetBindingDisplayString(targetIdx)} is already in use by {action.action.name}." +
                         $"\n\nSwap keybinds for {targetAction.name} and {action.action.name}?");
 
                     // Open the two choice window always in rebind menu. Pass in the two options for the player
-                    FindObjectOfType<TwoChoiceMenu>(true).Open(
+                    PlayerTarget.p.GetComponentInChildren<TwoChoiceMenu>(true).Open(
                         ()=> SwapControls(Controls.FindAction(action.action.id.ToString()), i, onComplete), 
                         "Swap Keybindings", 
                         ()=> UndoRebind(onComplete), 

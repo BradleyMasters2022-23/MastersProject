@@ -30,6 +30,7 @@ public class TwoChoiceMenu : MonoBehaviour
         optionB= actionB;
 
         gameObject.SetActive(true);
+        Debug.Log("Trying to open");
     }
 
     public void SelectOptionA()
