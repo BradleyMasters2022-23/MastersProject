@@ -9,6 +9,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Sirenix.OdinInspector;
 
 [CreateAssetMenu(menuName = "UI/Tooltip", fileName = "New tooltip")]
@@ -30,6 +31,9 @@ public class TooltipSO : ScriptableObject
 
     [Tooltip("A sprite to override the default image. Leave blank to not use")]
     public Sprite spriteOverride;
+
+    [Tooltip("Reference to input action this tooltip references, if any")]
+    public InputActionReference[] inputReference;
 
     /// <summary>
     /// Get the text to show on the immediate prompt

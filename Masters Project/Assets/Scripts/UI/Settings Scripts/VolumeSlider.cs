@@ -25,7 +25,7 @@ public class VolumeSlider : MonoBehaviour
     private void OnEnable()
     {
         float retrievedVal = PlayerPrefs.GetFloat(keyName, defaultVolume);
-        Debug.Log("retrieved value : " + retrievedVal);
+        //Debug.Log("retrieved value : " + retrievedVal);
         SetVolume(retrievedVal);
     }
 
@@ -41,7 +41,7 @@ public class VolumeSlider : MonoBehaviour
             slider.minValue = lowerVolumeLimit;
             slider.maxValue = upperVolumeLimit;
             slider.value = vol;
-            Debug.Log($"Slider value updated from {vol} to {slider.value}");
+            //Debug.Log($"Slider value updated from {vol} to {slider.value}");
         }
 
         // call slider func that sets saving and bus

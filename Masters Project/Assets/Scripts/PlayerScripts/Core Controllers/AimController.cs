@@ -45,7 +45,6 @@ public class AimController : MonoBehaviour
     /// Action input for aiming the camera [mouse delta / joystick delta]
     /// </summary>
     private InputAction aim;
-    private InputAction controllerAim;
 
     private void Awake()
     {
@@ -65,9 +64,6 @@ public class AimController : MonoBehaviour
 
         aim = controller.PlayerGameplay.Aim;
         aim.Enable();
-
-        controllerAim = controller.PlayerGameplay.ControllerAim;
-        controllerAim.Enable();
 
         yield return null;
     }
@@ -110,6 +106,7 @@ public class AimController : MonoBehaviour
 
         if (aim.ReadValue<Vector2>() != Vector2.zero)
         {
+            // TODO - Look up controller vs keyboard here for sensitivity
             lookDelta = aim.ReadValue<Vector2>();
             sensitivity = mouseSensitivity;
 
@@ -118,16 +115,6 @@ public class AimController : MonoBehaviour
             if (mouseYInverted)
                 verticalInversion *= -1;
 
-        }
-        else if (controllerAim.ReadValue<Vector2>() != Vector2.zero)
-        {
-            lookDelta = controllerAim.ReadValue<Vector2>();
-            sensitivity = controllerSensitivity;
-
-            if (controllerXInverted)
-                horizontalInversion *= -1;
-            if (controllerYInverted)
-                verticalInversion *= -1;
         }
     }
 

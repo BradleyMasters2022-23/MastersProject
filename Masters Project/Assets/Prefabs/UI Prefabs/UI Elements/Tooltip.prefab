@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 8030566386605398252}
   - component: {fileID: 7153228805169109664}
   - component: {fileID: 7998291942690972406}
+  - component: {fileID: 4891594174264713126}
   m_Layer: 5
   m_Name: Exit
   m_TagString: Untagged
@@ -143,7 +144,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press [TAB] to dismiss
+  m_text: Press # to dismiss
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 28f3e8d820a19804d836101d63e1d51c, type: 2}
   m_sharedMaterial: {fileID: 5477555680562956055, guid: 28f3e8d820a19804d836101d63e1d51c, type: 2}
@@ -212,6 +213,22 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4891594174264713126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870787230132157799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18db7bbd25bb1c54e82045a4a0d94ca7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayString: Press # to dismiss
+  displayArea: {fileID: 7998291942690972406}
+  action: {fileID: -6505935495895002620, guid: 013fc02a8f6ca504ea67bbb1397ce115, type: 3}
+  onSchemeChange: {fileID: 11400000, guid: 96c44305848abd444b49d5b48f1ac04c, type: 2}
 --- !u!1 &4085886187602371812
 GameObject:
   m_ObjectHideFlags: 0
@@ -417,6 +434,7 @@ MonoBehaviour:
   animator: {fileID: 325627463319922017}
   openSound: {fileID: 0}
   source: {fileID: 8767473203478559984}
+  onSchemeChangeChannel: {fileID: 11400000, guid: 96c44305848abd444b49d5b48f1ac04c, type: 2}
 --- !u!95 &325627463319922017
 Animator:
   serializedVersion: 4
