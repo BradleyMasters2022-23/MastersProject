@@ -4,7 +4,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using System.Linq;
 
-public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
+public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInfluencer
 {
     public enum AttackState
     {
@@ -248,6 +248,17 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
     public void OnStop()
     {
         originalPosVector = target.Center.position;
+
+        foreach(var p in spawnedProjectiles)
+        {
+            if (p != null && p.GetComponent<TimeAffectedEntity>() != null)
+            {
+                Debug.Log("Telling " + p + " to stop");
+                foreach (var e in p.GetComponentsInChildren<TimeAffectedEntity>(true))
+                    e.SecondarySubscribe(this);
+            }
+        }
+
         BonusStop();
     }
 
@@ -263,6 +274,15 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
                 stunnedTracker.ResetTimer();
                 Indicators.SetIndicators(inturruptIndicator, true);
                 BonusResume();
+            }
+        }
+        foreach (var p in spawnedProjectiles)
+        {
+            if (p != null && p.GetComponent<TimeAffectedEntity>() != null)
+            {
+                Debug.Log("Telling " + p + " to resume");
+                foreach (var e in p.GetComponentsInChildren<TimeAffectedEntity>(true))
+                    e.SecondaryUnsubscribe(this);
             }
         }
     }
@@ -307,5 +327,10 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
             transform.localRotation = Quaternion.Euler(Vector3.Lerp(rot, tar, maxTime.TimerProgress()));
             yield return null;
         }
+    }
+
+    public float GetScale()
+    {
+        return Timescale;
     }
 }

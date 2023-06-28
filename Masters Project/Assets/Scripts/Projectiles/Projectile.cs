@@ -42,6 +42,8 @@ public class Projectile : RangeAttack, TimeObserver, IPoolable
     [HideIf("@this.bulletVisual == null")]
     [Tooltip("The VFX that plays when this bullet despawns due to distance limit")]
     [SerializeField] private GameObject fadeVFX;
+    [Tooltip("Does this return to default size on timestop?")]
+    [SerializeField] private bool normalSizeOnStop = true;
     /// <summary>
     /// Original scale of this object
     /// </summary>
@@ -189,7 +191,7 @@ public class Projectile : RangeAttack, TimeObserver, IPoolable
 
     public void OnStop()
     {
-        if(scaleOverDistance != null && bulletVisual != null)
+        if(scaleOverDistance != null && bulletVisual != null && normalSizeOnStop)
         {
             bulletVisual.localScale = Vector3.one * originalVisualScale;
         }
