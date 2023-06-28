@@ -65,7 +65,7 @@ public class BFLController : MonoBehaviour
     {
         if (CanAttack())
         {
-            //Debug.Log("Attack selected");
+            Debug.Log("Attack selected");
             active = true;
             currentAttack = attacks.Pull();
             currentAttack.Attack();
@@ -112,11 +112,9 @@ public class BFLController : MonoBehaviour
 
     public void EnableBFL()
     {
-        attacks.Pull().RotateToEnabledState();
+        attacks.Pull().RotateToEnabledState(()=>disabled = false);
         mainUnit.SetActive(true);
         deactivatedUnit.SetActive(false);
-        disabled = false;
-
         target.SetHealthbarStatus(true);
     }
 }

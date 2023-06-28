@@ -25,11 +25,11 @@ public class BossLaserAttack : TimeAffectedEntity
         if(tracker.TimerDone())
         {
             
-            if (phase1Cannon.isActiveAndEnabled)
+            if (phase1Cannon.CanAttack())
             {
                 phase1Cannon.ChooseAttack();
             }
-            if (phase2Cannon.isActiveAndEnabled)
+            if (phase2Cannon.CanAttack())
             {
                 phase2Cannon.ChooseAttack();
             }

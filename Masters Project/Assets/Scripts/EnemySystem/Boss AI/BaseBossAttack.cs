@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using UnityEngine.Events;
 using System.Linq;
 
 public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInfluencer
@@ -209,7 +210,7 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInf
     /// </summary>
     /// <param name="delay">How long to wait before returning</param>
     /// <returns></returns>
-    protected IEnumerator ReturnToBase(float delay)
+    protected IEnumerator ReturnToBase(float delay, UnityAction onComplete = null)
     {
         // process delay, if available
         if (delay > 0)
@@ -235,6 +236,8 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInf
             transform.localRotation = Quaternion.Euler(Vector3.Lerp(rot, Vector3.zero, maxTime.TimerProgress()));
             yield return null;
         }
+
+        onComplete?.Invoke();
     }
 
     protected void SetTracker(float delay)
@@ -302,10 +305,10 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInf
     {
         StartCoroutine(RotateToDisable());
     }
-    public void RotateToEnabledState()
+    public void RotateToEnabledState(UnityAction onComplete=null)
     {
         //Debug.Log($"{transform.parent.name} Rotate to enabled state called");
-        StartCoroutine(ReturnToBase(0));
+        StartCoroutine(ReturnToBase(0, onComplete));
     }
     protected IEnumerator RotateToDisable()
     {
