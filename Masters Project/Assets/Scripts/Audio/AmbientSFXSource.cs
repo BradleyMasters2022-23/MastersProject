@@ -54,7 +54,6 @@ public class AmbientSFXSource : MonoBehaviour
         }
 
         ambientSFX.PlayClip(source);
-        source.loop = true;
     }
 
     /// <summary>
