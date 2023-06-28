@@ -150,6 +150,11 @@ public class TimeslowField : MonoBehaviour, TimeInfluencer
         }
     }
 
+    public void SubToField(Collider tgt)
+    {
+        RegisterTgt(tgt);
+    }
+
     public float GetScale()
     {
         return slowAmount;

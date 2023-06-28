@@ -12,7 +12,7 @@ public class CutsceneTrigger : MonoBehaviour
     [Tooltip("Cutscene to play")]
     [SerializeField] VideoClip cutscene;
     [Tooltip("Whether or not this cutscene should only be played once per save")]
-    [SerializeField] private bool onlyPlayOnce;
+    [SerializeField] protected bool onlyPlayOnce;
     [Tooltip("Whether or not this trigger is playable")]
     [SerializeField, ReadOnly] private bool playable = false;
 
@@ -84,6 +84,7 @@ public class CutsceneTrigger : MonoBehaviour
         if (cutscenePlayer == null || cutscene == null)
             yield break;
 
+
         // Get most recent save data and update it
         saveData = DataManager.instance.Load<CutsceneSaveData>(fileName);
 
@@ -110,7 +111,6 @@ public class CutsceneTrigger : MonoBehaviour
             }
                 
         }
-            
 
         // wait until its done preparing
         yield return new WaitUntil(() => cutscenePlayer.GetComponent<VideoPlayer>().isPrepared);

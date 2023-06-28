@@ -89,6 +89,9 @@ public class Projectile : RangeAttack, TimeObserver, IPoolable
         if (bulletVisual != null)
             bulletVisual.localScale = new Vector3(originalVisualScale, originalVisualScale, originalVisualScale);
 
+        distanceCovered = 0;
+        ScaleOverDistance();
+
         TimeManager.instance.Subscribe(this);
 
         targetVelocity = transform.forward * speed;
@@ -153,7 +156,7 @@ public class Projectile : RangeAttack, TimeObserver, IPoolable
     /// </summary>
     private void ScaleOverDistance()
     {
-        if (scaleOverDistance != null && bulletVisual != null && Timescale > TimeManager.TimeStopThreshold)
+        if (scaleOverDistance != null && bulletVisual != null && !Slowed)
         {
             float newScale = scaleOverDistance.Evaluate(distanceCovered / range) * originalVisualScale;
 

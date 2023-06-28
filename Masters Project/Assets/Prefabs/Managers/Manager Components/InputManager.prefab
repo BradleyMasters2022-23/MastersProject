@@ -1,0 +1,62 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6004277042359360992
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4905866617305664338}
+  - component: {fileID: 7474065248201131124}
+  m_Layer: 0
+  m_Name: InputManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4905866617305664338
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004277042359360992}
+  m_LocalRotation: {x: 0, y: -0.8491653, z: 0, w: 0.52812725}
+  m_LocalPosition: {x: -22.638332, y: 11.76886, z: 16.21957}
+  m_LocalScale: {x: 0.9999996, y: 1, z: 0.9999996}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: -116.242, z: 0}
+--- !u!114 &7474065248201131124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6004277042359360992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d27b9ced0e7bc4baba108f45c573a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controlSchemeSwapChannel: {fileID: 11400000, guid: 96c44305848abd444b49d5b48f1ac04c, type: 2}
+  globalKeybindBlacklist:
+  - <Keyboard>/escape
+  - <Keyboard>/anyKey
+  - <mouse>/delta
+  bindableActions:
+  - {fileID: 718760137050774696, guid: 013fc02a8f6ca504ea67bbb1397ce115, type: 3}
+  - {fileID: 6229790299828036164, guid: 013fc02a8f6ca504ea67bbb1397ce115, type: 3}
+  - {fileID: 1180241972073775892, guid: 013fc02a8f6ca504ea67bbb1397ce115, type: 3}
+  - {fileID: 6841497356225713230, guid: 013fc02a8f6ca504ea67bbb1397ce115, type: 3}
+  - {fileID: 2770929841624380692, guid: 013fc02a8f6ca504ea67bbb1397ce115, type: 3}
+  - {fileID: -7595180907879297951, guid: 013fc02a8f6ca504ea67bbb1397ce115, type: 3}
+  - {fileID: 689413215430243250, guid: 013fc02a8f6ca504ea67bbb1397ce115, type: 3}
+  textOverrides:
+  - originalText: Delta
+    newText: Mouse

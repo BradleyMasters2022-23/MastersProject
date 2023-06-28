@@ -620,7 +620,15 @@ public class PlayerController : MonoBehaviour
 
             jumpSound.PlayClip(transform, source, false);
         }
+    }
 
+    /// <summary>
+    /// get the current velocity of the player
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 GetVelocity()
+    {
+        return rb.velocity;
     }
 
     #endregion
