@@ -380,8 +380,7 @@ public class PlayerGunController : TimeAffectedEntity, TimeObserver
         // on stop, unpack any muzzle flashes and set it back to normal layer
         for(int i = shootPoint.childCount-1; i >= 0; i--)
         {
-            shootPoint.GetChild(i).gameObject.layer = 0;
-            shootPoint.GetChild(i).parent= null;
+            VFXPooler.instance.ReturnVFX(shootPoint.GetChild(i).gameObject);
         }
     }
 
