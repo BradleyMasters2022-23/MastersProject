@@ -28,8 +28,6 @@ public class PlayerAnimatorController : MonoBehaviour
     [Header("Gun"), Space(5)]
     [Tooltip("Channel that fires when the player shoots the gun")]
     [SerializeField] ChannelVoid gunShootChannel;
-    private float buildup;
-    private float shotIncrement;
 
     [Header("Grenade"), Space(5)]
     [Tooltip("Channel that fires when the player launches a grenade")]
@@ -37,8 +35,20 @@ public class PlayerAnimatorController : MonoBehaviour
 
     [SerializeField] ChannelBool timestopActivatedChannel;
 
+    [Header("Weapon Sway")]
+    [Tooltip("The intensity of the sway"), SerializeField]
+    private float sway;
+    [Tooltip("Speed of the sway"), SerializeField]
+    private float smoothness;
+    
+    /// <summary>
+    /// default look angle for the weapon
+    /// </summary>
+    Quaternion defaultLookAng;
+
     private void OnEnable()
     {
+        defaultLookAng = transform.localRotation;
         anim = GetComponent<Animator>();
 
         if (gunShootChannel != null)
@@ -63,6 +73,10 @@ public class PlayerAnimatorController : MonoBehaviour
         {
             UpdateMovement();
         }
+
+        // if in idle, allow sway
+        if (anim.GetCurrentAnimatorStateInfo(0).IsTag("Sway"))
+            WeaponSway();
     }
 
     /// <summary>
@@ -70,6 +84,9 @@ public class PlayerAnimatorController : MonoBehaviour
     /// </summary>
     public void ShootGun()
     {
+        if(anim.GetCurrentAnimatorStateInfo(0).IsTag("Sway"))
+            transform.localRotation = defaultLookAng;
+
         anim.SetTrigger("Shooting Trigger");
     }
 
@@ -78,6 +95,9 @@ public class PlayerAnimatorController : MonoBehaviour
     /// </summary>
     public void LaunchGrenade()
     {
+        if (anim.GetCurrentAnimatorStateInfo(0).IsTag("Sway"))
+            transform.localRotation = defaultLookAng;
+        
         anim.SetTrigger("Grenade Trigger");
     }
 
@@ -95,7 +115,7 @@ public class PlayerAnimatorController : MonoBehaviour
         bool playerMoving =
             moveController.CurrentState == PlayerController.PlayerState.GROUNDED
             && moveController.GetVelocity().magnitude > minVelocityMag;
-        //Debug.Log("Vel: " + moveController.GetVelocity().magnitude);
+
         anim.SetBool("Is Walking", playerMoving);
         anim.SetFloat("Velocity", Mathf.Clamp((moveController.GetVelocity().magnitude / maxPlayerVelocity), 0.10f, 1));
     }
@@ -116,5 +136,16 @@ public class PlayerAnimatorController : MonoBehaviour
     private void OnResume()
     {
         anim.SetTrigger("TimeResumed");
+    }
+
+    private void WeaponSway()
+    {
+        Vector2 data = InputManager.Controls.PlayerGameplay.Aim.ReadValue<Vector2>();
+        Quaternion rotX = Quaternion.AngleAxis(data.y * sway, Vector3.forward);
+        Quaternion rotY = Quaternion.AngleAxis(-data.x * sway, Vector3.up);
+
+        Quaternion tgtRot = defaultLookAng * rotY * rotX;
+
+        transform.localRotation = Quaternion.Lerp(transform.localRotation, tgtRot, smoothness * Time.deltaTime);
     }
 }

@@ -207,8 +207,17 @@ public class PlayerGunController : TimeAffectedEntity, TimeObserver
                 mf = Instantiate(muzzleflashVFX, shootPoint.position, shootPoint.rotation);
             }
 
-            if (!Slowed)
+            if(Slowed)
+            {
+                mf.transform.GetChild(0).gameObject.layer = 0;
+                
+                
+            }
+            else
+            {
                 mf.transform.parent = shootPoint;
+                mf.transform.GetChild(0).gameObject.layer = 6;
+            }
         }
 
         if(animator != null)
@@ -368,10 +377,10 @@ public class PlayerGunController : TimeAffectedEntity, TimeObserver
 
     public void OnStop()
     {
-        // unpack any children in shootpoint, which would be paired VFX muzzle flashes
+        // on stop, unpack any muzzle flashes and set it back to normal layer
         for(int i = shootPoint.childCount-1; i >= 0; i--)
         {
-            shootPoint.GetChild(i).parent= null;
+            VFXPooler.instance.ReturnVFX(shootPoint.GetChild(i).gameObject);
         }
     }
 
