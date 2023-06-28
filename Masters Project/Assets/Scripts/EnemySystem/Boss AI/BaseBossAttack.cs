@@ -249,15 +249,15 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInf
     {
         originalPosVector = target.Center.position;
 
-        foreach(var p in spawnedProjectiles)
-        {
-            if (p != null && p.GetComponent<TimeAffectedEntity>() != null)
-            {
-                Debug.Log("Telling " + p + " to stop");
-                foreach (var e in p.GetComponentsInChildren<TimeAffectedEntity>(true))
-                    e.SecondarySubscribe(this);
-            }
-        }
+        //foreach(var p in spawnedProjectiles)
+        //{
+        //    if (p != null && p.GetComponent<TimeAffectedEntity>() != null)
+        //    {
+        //        Debug.Log("Telling " + p + " to stop");
+        //        foreach (var e in p.GetComponentsInChildren<TimeAffectedEntity>(true))
+        //            e.SecondarySubscribe(this);
+        //    }
+        //}
 
         BonusStop();
     }
@@ -276,15 +276,15 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInf
                 BonusResume();
             }
         }
-        foreach (var p in spawnedProjectiles)
-        {
-            if (p != null && p.GetComponent<TimeAffectedEntity>() != null)
-            {
-                Debug.Log("Telling " + p + " to resume");
-                foreach (var e in p.GetComponentsInChildren<TimeAffectedEntity>(true))
-                    e.SecondaryUnsubscribe(this);
-            }
-        }
+        //foreach (var p in spawnedProjectiles)
+        //{
+        //    if (p != null && p.GetComponent<TimeAffectedEntity>() != null)
+        //    {
+        //        Debug.Log("Telling " + p + " to resume");
+        //        foreach (var e in p.GetComponentsInChildren<TimeAffectedEntity>(true))
+        //            e.SecondaryUnsubscribe(this);
+        //    }
+        //}
     }
 
     protected virtual void BonusStop()
