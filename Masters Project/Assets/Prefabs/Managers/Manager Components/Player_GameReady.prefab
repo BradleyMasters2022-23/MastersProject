@@ -186,6 +186,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1701509412264814789}
   - component: {fileID: 2436199686451806723}
+  - component: {fileID: 8810554937636178251}
   m_Layer: 0
   m_Name: CM vcam1
   m_TagString: Untagged
@@ -247,6 +248,29 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 2629518379066315614}
+--- !u!114 &8810554937636178251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3275549730010603225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b2d199b96b516448144ab30fb26aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ApplyAfter: 2
+  m_ChannelMask: 1
+  m_Gain: 1
+  m_Use2DDistance: 0
+  m_UseCameraSpace: 1
+  m_ReactionSettings:
+    m_SecondaryNoise: {fileID: 11400000, guid: 8608ec81ee27a15488d33f9dad239e91, type: 2}
+    m_AmplitudeGain: 1
+    m_FrequencyGain: 1
+    m_Duration: 1
+    m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &3912768570946259478
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,8 +302,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3912768570946259478}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.005, z: 0}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: 12.18, y: 1.1350002, z: -17.890005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -739,6 +763,7 @@ GameObject:
   - component: {fileID: -4782539468412231022}
   - component: {fileID: 2702772752586940428}
   - component: {fileID: 2718933415222955262}
+  - component: {fileID: 6810719271911296605}
   m_Layer: 6
   m_Name: Player_GameReady
   m_TagString: Player
@@ -819,14 +844,31 @@ MonoBehaviour:
   _targetThreat: 50
   _unkillable: 0
   immuneToKnockback: 0
-  knockbackModifier: 1
+  knockbackModifier: 10
   maxKnockback: 150
   invincibilityShield: {fileID: 0}
   _deathVFX: {fileID: 0}
   damagedSound: {fileID: 11400000, guid: 888e30f4deedc974c8f52b772e9d5290, type: 2}
   deathSound: {fileID: 0}
-  damagedSoundCooldown: 0.5
+  damagedSoundCooldown: 0.2
   dropList: []
+  impulseRanges:
+  - minDamage: 0
+    maxDamage: 5
+    impulse: 0.8
+  - minDamage: 5
+    maxDamage: 10
+    impulse: 1.3
+  - minDamage: 10
+    maxDamage: 15
+    impulse: 1.8
+  - minDamage: 15
+    maxDamage: 30
+    impulse: 2.5
+  - minDamage: 30
+    maxDamage: 999
+    impulse: 3
+  impulse: {fileID: 6810719271911296605}
   godCheatNotification: {fileID: 0}
   cheatDamage: 25
   cheatHeal: 25
@@ -1142,6 +1184,59 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6810719271911296605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8810997313966297016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180ecf9b41d478f468eb3e9083753217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ImpulseDefinition:
+    m_ImpulseChannel: 1
+    m_ImpulseShape: 2
+    m_CustomImpulseShape:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_ImpulseDuration: 0.2
+    m_ImpulseType: 0
+    m_DissipationRate: 0.25
+    m_RawSignal: {fileID: 0}
+    m_AmplitudeGain: 1
+    m_FrequencyGain: 1
+    m_RepeatMode: 0
+    m_Randomize: 1
+    m_TimeEnvelope:
+      m_AttackShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_DecayShape:
+        serializedVersion: 2
+        m_Curve: []
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_AttackTime: 0
+      m_SustainTime: 0.2
+      m_DecayTime: 0.7
+      m_ScaleWithImpact: 1
+      m_HoldForever: 0
+    m_ImpactRadius: 100
+    m_DirectionMode: 0
+    m_DissipationMode: 2
+    m_DissipationDistance: 100
+    m_PropagationSpeed: 343
+  m_DefaultVelocity: {x: 0, y: 0, z: 0}
 --- !u!1 &8810997314044839443
 GameObject:
   m_ObjectHideFlags: 0
