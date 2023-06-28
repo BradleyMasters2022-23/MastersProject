@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public abstract class TooltipHolder : MonoBehaviour
+public class TooltipHolder : MonoBehaviour
 {
     [Header("Tooltip")]
 
@@ -20,6 +20,10 @@ public abstract class TooltipHolder : MonoBehaviour
 
     [Tooltip("Max time this tooltip is displayed for. Set to 0 to not use display time")]
     [SerializeField] private float tooltipDisplayTime;
+
+    [Tooltip("Whether to make sure this tooltip hasen't met the display requirement in save. If false, the tooltip will always show.")]
+    [SerializeField] private bool validateInSave = true;
+
     /// <summary>
     /// timer tracking the display time for the tooltip
     /// </summary>
@@ -46,7 +50,7 @@ public abstract class TooltipHolder : MonoBehaviour
     /// </summary>
     protected virtual void SubmitTooltip()
     {
-        manager?.RequestTooltip(tooltip);
+        manager?.RequestTooltip(tooltip, validateInSave);
 
         // Set timer incase 
         if (tooltipDisplayTime > 0)

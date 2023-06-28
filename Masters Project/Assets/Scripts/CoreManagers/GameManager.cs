@@ -343,6 +343,17 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
+    /// <summary>
+    /// Close all menus possible
+    /// </summary>
+    public void CloseToTop()
+    {
+        while(menuStack.Count > 0 && menuStack.Peek().Closable)
+        {
+            CloseTopMenu();
+        }
+    }
+
     #endregion
 
     #region Controller & Mouse Swapping
@@ -508,7 +519,6 @@ public class GameManager : MonoBehaviour
         {
             if(currentState == States.PAUSED)
             {
-                
                 TogglePause();
             }
             else if (currentState == States.GAMEMENU)

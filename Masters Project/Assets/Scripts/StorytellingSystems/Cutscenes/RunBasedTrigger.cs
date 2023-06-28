@@ -20,8 +20,9 @@ public class RunBasedTrigger : CutsceneTrigger
     {
         if (!CanPlay())
         {
-            Debug.Log("Cant play, disabling");
-            HUDFadeManager.instance.SetImmediate(false);
+            //Debug.Log("Cant play, disabling");
+            onVideoFinishEvents.Invoke();
+            onCutsceneFadeFinishEvents.Invoke();
         }
         else
         {
