@@ -8,6 +8,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using TMPro;
+
 
 public class InteractUIManager : MonoBehaviour
 {
@@ -16,7 +19,6 @@ public class InteractUIManager : MonoBehaviour
     [Tooltip("Prompt object itself that should be shown/hidden when in range of an interact")]
     [SerializeField] private GameObject promptContainer;
 
-    /// <summary>
     /// Make sure the prompt is hidden by defualt
     /// </summary>
     public void Awake()
@@ -37,6 +39,7 @@ public class InteractUIManager : MonoBehaviour
     private void OnDisable()
     {
         onInteractChange.OnEventRaised -= UpdatePrompt;
+
     }
 
     /// <summary>
