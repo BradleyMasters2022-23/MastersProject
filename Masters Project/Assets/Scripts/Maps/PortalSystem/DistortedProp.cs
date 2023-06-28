@@ -20,7 +20,7 @@ public class DistortedProp : MonoBehaviour
     /// VFX that plays when the prop is interactable 
     /// </summary>
     [SerializeField] private IIndicator[] interactableIndicators;
-
+    [SerializeField] AmbientSFXSource ambientSourceRef;
     private bool distorted = true;
 
     /// <summary>
@@ -33,6 +33,7 @@ public class DistortedProp : MonoBehaviour
             // Debug.Log("Initializing distorted prop");
             Indicators.SetIndicators(primedIndicators, true);
             MapLoader.instance.RegisterOnEncounterComplete(EnableInteraction);
+            ambientSourceRef.Play();
         }
     }
 
