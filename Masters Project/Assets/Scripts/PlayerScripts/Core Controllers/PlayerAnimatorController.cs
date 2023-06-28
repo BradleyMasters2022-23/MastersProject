@@ -123,6 +123,7 @@ public class PlayerAnimatorController : MonoBehaviour
 
     private void UpdateTimestop(bool stopping)
     {
+        //Debug.Log("timestop trigger set to " + stopping);
         if (stopping)
             OnStop();
         else
