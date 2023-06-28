@@ -1736,16 +1736,28 @@ MonoBehaviour:
   _targetThreat: 50
   _unkillable: 0
   immuneToKnockback: 0
-  knockbackModifier: 1
-  maxKnockback: 150
+  knockbackModifier: 10
+  maxKnockback: 175
   invincibilityShield: {fileID: 0}
   _deathVFX: {fileID: 0}
   damagedSound: {fileID: 11400000, guid: 888e30f4deedc974c8f52b772e9d5290, type: 2}
   deathSound: {fileID: 0}
-  damagedSoundCooldown: 0.5
+  damagedSoundCooldown: 0.1
   dropList: []
-  impulseRanges: []
-  impulse: {fileID: 0}
+  impulseRanges:
+  - minDamage: 0
+    maxDamage: 5
+    impulse: 0.5
+  - minDamage: 5
+    maxDamage: 10
+    impulse: 1.2
+  - minDamage: 10
+    maxDamage: 15
+    impulse: 1.9
+  - minDamage: 15
+    maxDamage: 100
+    impulse: 3
+  impulse: {fileID: 4926335278070296218}
   godCheatNotification: {fileID: 0}
   cheatDamage: 25
   cheatHeal: 25
