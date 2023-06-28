@@ -562,6 +562,18 @@ public class TimeManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Drain the current player gauge by a set amount
+    /// </summary>
+    /// <param name="amountInTime">Amount to drain, in seconds</param>
+    public void DrainGauge(float amountInTime)
+    {
+        float amt = amountInTime * FixedUpdateCalls;
+        currSlowGauge = Mathf.Clamp(currSlowGauge - amt, 0, MaxGauge());
+        ChangeState(TimeGaugeState.FROZEN);
+
+    }
+
     #region Observer Stuff
 
     private void OnTimeStop()
