@@ -382,7 +382,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2802039313743926557, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
       propertyPath: colorOverDistance.ctime1
-      value: 65535
+      value: 65150
       objectReference: {fileID: 0}
     - target: {fileID: 2802039313743926557, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
       propertyPath: colorOverDistance.ctime2
@@ -406,19 +406,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2802039313743926557, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
       propertyPath: colorOverDistance.key1.a
-      value: 0.6039216
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2802039313743926557, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
       propertyPath: colorOverDistance.key1.b
-      value: 0.038447786
+      value: 0.45304376
       objectReference: {fileID: 0}
     - target: {fileID: 2802039313743926557, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
       propertyPath: colorOverDistance.key1.g
-      value: 0.038447786
+      value: 0.45304376
       objectReference: {fileID: 0}
     - target: {fileID: 2802039313743926557, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
       propertyPath: colorOverDistance.key1.r
-      value: 0.754717
+      value: 0.9528302
       objectReference: {fileID: 0}
     - target: {fileID: 2802039313743926557, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
       propertyPath: colorOverDistance.key2.a
@@ -477,6 +477,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2802039313743926557, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
+      propertyPath: offsetOverDistance.m_Curve.Array.data[1].time
+      value: 0.08034474
+      objectReference: {fileID: 0}
+    - target: {fileID: 2802039313743926557, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
+      propertyPath: offsetOverDistance.m_Curve.Array.data[2].time
+      value: 0.14907803
+      objectReference: {fileID: 0}
+    - target: {fileID: 2802039313743926557, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
       propertyPath: scaleOverDistance.m_Curve.Array.data[0].value
       value: 1
       objectReference: {fileID: 0}
@@ -487,6 +495,10 @@ PrefabInstance:
     - target: {fileID: 2802039313743926557, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
       propertyPath: scaleOverDistance.m_Curve.Array.data[2].value
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2802039313743926557, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
+      propertyPath: offsetOverDistance.m_Curve.Array.data[2].value
+      value: 372.5307
       objectReference: {fileID: 0}
     - target: {fileID: 2802039313743926557, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
       propertyPath: scaleOverDistance.m_Curve.Array.data[0].inSlope
@@ -646,4 +658,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 331ac01e693182d4cb57d2d61e11ff1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
   fastForwardTime: 0
+  lifetime: 1
+  keepReserved: 0
+  alwaysFastForward: 0
