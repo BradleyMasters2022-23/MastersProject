@@ -15354,6 +15354,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
+    - target: {fileID: 7289325324838842381, guid: 40cae640d202ca54599659ed90ea90f9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7407421764631853331, guid: 40cae640d202ca54599659ed90ea90f9, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
@@ -15366,7 +15370,8 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7289325324838842381, guid: 40cae640d202ca54599659ed90ea90f9, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 40cae640d202ca54599659ed90ea90f9, type: 3}
 --- !u!4 &1609934602 stripped
 Transform:
@@ -15392,8 +15397,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minimumRoomNum: 0
   maximumRoomNum: 0
-  baseStayChance: 65
-  depthChanceModifier: 0
+  baseStayChance: 40
+  depthChanceModifier: 10
 --- !u!1001 &1618805477
 PrefabInstance:
   m_ObjectHideFlags: 0
