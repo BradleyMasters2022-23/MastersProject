@@ -18,7 +18,7 @@ public class BFLTarget : Target
     {
         if(recoveryRoutine != null)
         {
-            //Debug.Log("New phase called during recovery");
+            Debug.Log("New phase called during recovery");
             StopCoroutine(recoveryRoutine);
             _healthManager.ResetHealth();
             _healthManager.ToggleGodmode(false);
@@ -48,7 +48,6 @@ public class BFLTarget : Target
     private IEnumerator Recover()
     {
         //Debug.Log("Recovery started");
-
         if (recoveryTracker != null)
         {
             recoveryTracker.ResetTimer();
@@ -63,7 +62,9 @@ public class BFLTarget : Target
         _healthManager.ResetHealth();
         _healthManager.ToggleGodmode(false);
         _killed = false;
-        controller?.EnableBFL();
+
+        if(controller.EnabledThisPhase())
+            controller?.EnableBFL();
     }
 
     public void SetHealthbarStatus(bool enabled)

@@ -219,21 +219,16 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInf
             yield return new WaitUntil(tracker.TimerDone);
         }
 
-        LocalTimer maxTime = GetTimer(1.5f);
-
-        Vector3 rot = transform.localRotation.eulerAngles;
-        // mod it to prevent it from ALWAYS GOING COUNTERCLOCKWISE
-        if (rot.x > 180)
-            rot.x -= 360;
-        if(rot.y > 180)
-            rot.y -= 360;
-        if (rot.z > 180)
-            rot.z -= 360;
+        LocalTimer maxTime = GetTimer(3f);
 
         // Return to resting position
         while (!maxTime.TimerDone())
         {
-            transform.localRotation = Quaternion.Euler(Vector3.Lerp(rot, Vector3.zero, maxTime.TimerProgress()));
+            transform.localRotation = Quaternion.Slerp(
+                transform.localRotation,
+                Quaternion.identity,
+                maxTime.TimerProgress());
+            
             yield return null;
         }
 
@@ -252,16 +247,6 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInf
     {
         originalPosVector = target.Center.position;
 
-        //foreach(var p in spawnedProjectiles)
-        //{
-        //    if (p != null && p.GetComponent<TimeAffectedEntity>() != null)
-        //    {
-        //        Debug.Log("Telling " + p + " to stop");
-        //        foreach (var e in p.GetComponentsInChildren<TimeAffectedEntity>(true))
-        //            e.SecondarySubscribe(this);
-        //    }
-        //}
-
         BonusStop();
     }
 
@@ -279,15 +264,6 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInf
                 BonusResume();
             }
         }
-        //foreach (var p in spawnedProjectiles)
-        //{
-        //    if (p != null && p.GetComponent<TimeAffectedEntity>() != null)
-        //    {
-        //        Debug.Log("Telling " + p + " to resume");
-        //        foreach (var e in p.GetComponentsInChildren<TimeAffectedEntity>(true))
-        //            e.SecondaryUnsubscribe(this);
-        //    }
-        //}
     }
 
     protected virtual void BonusStop()
@@ -313,21 +289,15 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInf
     protected IEnumerator RotateToDisable()
     {
         Vector3 tar = new Vector3(90, 0, 0);
-        LocalTimer maxTime = GetTimer(1.5f);
-        Vector3 rot = transform.localRotation.eulerAngles;
-        // mod it to prevent it from ALWAYS GOING COUNTERCLOCKWISE
-        if (rot.x > 180)
-            rot.x -= 360;
-        if (rot.y > 180)
-            rot.y -= 360;
-        if (rot.z > 180)
-            rot.z -= 360;
-
+        LocalTimer maxTime = GetTimer(3.5f);
 
         // Return to resting position
         while (!maxTime.TimerDone())
         {
-            transform.localRotation = Quaternion.Euler(Vector3.Lerp(rot, tar, maxTime.TimerProgress()));
+            transform.localRotation = Quaternion.Slerp(
+                transform.localRotation, 
+                Quaternion.Euler(tar), 
+                maxTime.TimerProgress());
             yield return null;
         }
     }
