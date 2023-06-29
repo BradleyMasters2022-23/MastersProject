@@ -98,7 +98,9 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInf
 
     public bool AttackDone()
     {
-        return state == AttackState.Ready;
+        return state == AttackState.Cooldown
+            || state == AttackState.Ready
+            || state == AttackState.Recovering;
     }
 
     #endregion
@@ -219,17 +221,17 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInf
             yield return new WaitUntil(tracker.TimerDone);
         }
 
-        LocalTimer maxTime = GetTimer(3f);
+        LocalTimer maxTime = GetTimer(1f);
 
         // Return to resting position
         while (!maxTime.TimerDone())
         {
-            transform.localRotation = Quaternion.Slerp(
+            transform.localRotation = Quaternion.Lerp(
                 transform.localRotation,
                 Quaternion.identity,
                 maxTime.TimerProgress());
             
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
 
         onComplete?.Invoke();
@@ -289,7 +291,7 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInf
     protected IEnumerator RotateToDisable()
     {
         Vector3 tar = new Vector3(90, 0, 0);
-        LocalTimer maxTime = GetTimer(3.5f);
+        LocalTimer maxTime = GetTimer(1.5f);
 
         // Return to resting position
         while (!maxTime.TimerDone())
@@ -298,7 +300,7 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInf
                 transform.localRotation, 
                 Quaternion.Euler(tar), 
                 maxTime.TimerProgress());
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
     }
 

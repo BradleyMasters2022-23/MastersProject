@@ -51,7 +51,7 @@ public class BFLController : MonoBehaviour
         {
             if(currentAttack.AttackDone())
             {
-                //Debug.Log("Attack done");
+                Debug.Log($"{name} Attack done");
                 currentAttack = null;
                 currentAttackActive= false;
                 GoToCooldown();
@@ -60,7 +60,8 @@ public class BFLController : MonoBehaviour
 
         if(onCooldown && cooldown.TimerDone())
         {
-            //Debug.Log("Cooldown done");
+            Debug.Log($"{name} cooldown done");
+
             onCooldown = false;
         }
             
@@ -136,5 +137,10 @@ public class BFLController : MonoBehaviour
     public bool EnabledThisPhase()
     {
         return activeThisPhase;
+    }
+
+    public bool CurrentlyAttacking()
+    {
+        return (currentAttackActive && !disabled);
     }
 }

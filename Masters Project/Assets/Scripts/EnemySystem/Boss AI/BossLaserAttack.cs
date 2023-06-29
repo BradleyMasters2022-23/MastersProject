@@ -11,29 +11,25 @@ public class BossLaserAttack : TimeAffectedEntity
     [SerializeField] float phaseChangeCooldown;
     [SerializeField] float inturruptCooldown;
 
-    private ScaledTimer tracker;
+    private LocalTimer phaseChangeCooldownTracker;
 
     private void Awake()
     {
-        tracker = new ScaledTimer(phaseChangeCooldown, false);
+        phaseChangeCooldownTracker = GetTimer(phaseChangeCooldown);
     }
 
     private void Update()
     {
-        tracker?.SetModifier(Timescale);
-
-        if(tracker.TimerDone())
+        if(phaseChangeCooldownTracker.TimerDone())
         {
-            
-            if (phase1Cannon.CanAttack())
+            if (phase1Cannon.CanAttack() && !phase2Cannon.CurrentlyAttacking())
             {
                 phase1Cannon.ChooseAttack();
             }
-            if (phase2Cannon.CanAttack())
+            if (phase2Cannon.CanAttack() && !phase1Cannon.CurrentlyAttacking())
             {
                 phase2Cannon.ChooseAttack();
             }
-
         }
     }
 
@@ -45,7 +41,7 @@ public class BossLaserAttack : TimeAffectedEntity
         phase2Cannon?.NewStage(newPhase);
 
 
-        tracker?.ResetTimer(phaseChangeCooldown);
+        phaseChangeCooldownTracker?.ResetTimer(phaseChangeCooldown);
     }
 
     public void Inturrupt()
@@ -59,6 +55,6 @@ public class BossLaserAttack : TimeAffectedEntity
             phase2Cannon?.Inturrupt();
         }
 
-        tracker?.ResetTimer(inturruptCooldown);
+        phaseChangeCooldownTracker?.ResetTimer(inturruptCooldown);
     }
 }

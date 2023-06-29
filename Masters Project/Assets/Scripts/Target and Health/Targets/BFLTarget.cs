@@ -6,7 +6,7 @@ public class BFLTarget : Target
 {
     [SerializeField] float recoveryTime;
     [SerializeField] BFLController controller;
-    private ScaledTimer recoveryTracker;
+    private LocalTimer recoveryTracker;
     private Coroutine recoveryRoutine;
 
     [SerializeField] GameObject healthbar;
@@ -47,24 +47,23 @@ public class BFLTarget : Target
     /// <returns></returns>
     private IEnumerator Recover()
     {
-        //Debug.Log("Recovery started");
+        Debug.Log("Recovery started");
         if (recoveryTracker != null)
         {
             recoveryTracker.ResetTimer();
         }
         else
-            recoveryTracker = new ScaledTimer(recoveryTime, Affected);
+            recoveryTracker = GetTimer(recoveryTime);
 
         yield return new WaitUntil(recoveryTracker.TimerDone);
 
-        //Debug.Log("Recovery finished");
+        Debug.Log("Recovery finished");
 
         _healthManager.ResetHealth();
         _healthManager.ToggleGodmode(false);
         _killed = false;
 
-        if(controller.EnabledThisPhase())
-            controller?.EnableBFL();
+        controller?.EnableBFL();
     }
 
     public void SetHealthbarStatus(bool enabled)
