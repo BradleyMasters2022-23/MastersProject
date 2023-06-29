@@ -157,21 +157,8 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
         TeamDmgProfile profile = data.GetTeam(_team);
         if (profile == null || profile.team != _team || !profile.active) return;
 
-
-        if (damagedSoundCooldownTracker != null && damagedSoundCooldownTracker.TimerDone())
-        {
-            damagedSound.PlayClip(_center, audioSource);
-            damagedSoundCooldownTracker.ResetTimer();
-        }
-
-        if (!_killed && _healthManager.Damage(profile.damage) && profile.canKill)
-        {
-            if (_unkillable)
-                return;
-
-            _killed = true;
-            KillTarget();
-        }
+        // pass in the damage
+        RegisterEffect(profile.damage*dmgMultiplier);
     }
 
     /// <summary>

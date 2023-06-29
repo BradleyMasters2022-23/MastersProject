@@ -20,7 +20,7 @@ public class TimeslowField : MonoBehaviour, TimeInfluencer
     [SerializeField] private LayerMask layerMask;
     private ScaledTimer t;
 
-    private List<TimeAffectedEntity> detectedTargets;
+    [SerializeField] private List<TimeAffectedEntity> detectedTargets;
 
     [Header("Comunication")]
     [SerializeField] Slider durationDisplay;

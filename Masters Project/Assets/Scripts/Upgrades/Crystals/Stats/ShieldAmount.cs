@@ -12,20 +12,22 @@ public class ShieldAmount : IStat
     public override void LoadStat(PlayerController player, int mod)
     {
         hp = player.gameObject.GetComponent<HealthManager>();
-        hp.IncreaseMaxHealth(statBase * (float)mod, healthBarIndex);
+        float originalMax = hp.ResourceDataAtIndex(healthBarIndex)._maxValue;
+        hp.IncreaseMaxHealth(originalMax * statBase * (float)mod, healthBarIndex);
     }
 
     public override void UnloadStat(PlayerController player, int mod)
     {
         hp = player.gameObject.GetComponent<HealthManager>();
+        float originalMax = hp.ResourceDataAtIndex(healthBarIndex)._maxValue;
 
-        hp.DecreaseMaxHealth(statBase * mod, healthBarIndex);
+        hp.DecreaseMaxHealth(originalMax * statBase * mod, healthBarIndex);
     }
 
     public override float GetStatIncrease(int mod)
     {
         float statIncrease = statBase * (float)mod;
 
-        return statIncrease;
+        return statIncrease * 100;
     }
 }

@@ -6,7 +6,7 @@ public class BFLTarget : Target
 {
     [SerializeField] float recoveryTime;
     [SerializeField] BFLController controller;
-    private ScaledTimer recoveryTracker;
+    private LocalTimer recoveryTracker;
     private Coroutine recoveryRoutine;
 
     [SerializeField] GameObject healthbar;
@@ -33,6 +33,8 @@ public class BFLTarget : Target
     {
         //Debug.Log($"{name} has been killed and thus inturrupted");
 
+        //if (_killed) return;
+
         _killed = true;
 
         controller?.Inturrupt();
@@ -48,13 +50,12 @@ public class BFLTarget : Target
     private IEnumerator Recover()
     {
         //Debug.Log("Recovery started");
-
         if (recoveryTracker != null)
         {
             recoveryTracker.ResetTimer();
         }
         else
-            recoveryTracker = new ScaledTimer(recoveryTime, Affected);
+            recoveryTracker = GetTimer(recoveryTime);
 
         yield return new WaitUntil(recoveryTracker.TimerDone);
 
@@ -63,6 +64,7 @@ public class BFLTarget : Target
         _healthManager.ResetHealth();
         _healthManager.ToggleGodmode(false);
         _killed = false;
+
         controller?.EnableBFL();
     }
 

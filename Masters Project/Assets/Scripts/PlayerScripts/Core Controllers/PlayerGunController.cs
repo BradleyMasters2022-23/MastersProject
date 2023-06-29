@@ -37,6 +37,8 @@ public class PlayerGunController : TimeAffectedEntity, TimeObserver
     [SerializeField] private float minAimRange;
     [Tooltip("The range of this weapon. Passed through to the bullet")]
     [SerializeField] private float maxRange;
+    private float defaultMaxRange;
+
 
     [Tooltip("Sound that happens when gun go pew pew")]
     [SerializeField] private AudioClipSO gunshotSound;
@@ -133,6 +135,8 @@ public class PlayerGunController : TimeAffectedEntity, TimeObserver
         // Initialize timers
         fireTimer = new ScaledTimer(fireDelay.Current, false);
         bloomRecoveryCDTracker = new ScaledTimer(bloomRecoveryDelay, false);
+
+        defaultMaxRange = maxRange;
     }
 
     private IEnumerator InitializeControls()
@@ -387,5 +391,10 @@ public class PlayerGunController : TimeAffectedEntity, TimeObserver
     public void OnResume()
     {
         return;
+    }
+
+    public float GetOriginalRange()
+    {
+        return defaultMaxRange;
     }
 }

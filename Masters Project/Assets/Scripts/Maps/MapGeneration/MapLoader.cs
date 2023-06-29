@@ -126,9 +126,9 @@ public class MapLoader : MonoBehaviour
     #region Secret Room Variables
 
     [Tooltip("Range of room indexes that can be used for a secret interaction")]
-    [SerializeField] Vector2Int randomSecretRoomRange;
-    [Tooltip("The secret room index that was chosen")]
-    [SerializeField, ReadOnly] int chosenSecretRoomIndex;
+    [SerializeField] List<int> secretRoomOptions;
+    [Tooltip("Number of secret rooms to utilize")]
+    [SerializeField] int numberOfSecretRooms;
     [Tooltip("Pool of secret rooms to utilize")]
     [SerializeField] MapSegmentSO[] secretRoomPool;
     [Tooltip("The random secret room that was chosen")]
@@ -204,8 +204,13 @@ public class MapLoader : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
 
-        // Choose which room to 'add' the secret room to
-        chosenSecretRoomIndex = Random.Range(randomSecretRoomRange.x, randomSecretRoomRange.y);
+        // Randomize which secret room index are allowed to stay.
+        while(secretRoomOptions.Count > numberOfSecretRooms)
+        {
+            int idx = Random.Range(0, secretRoomOptions.Count);
+            secretRoomOptions.RemoveAt(idx);
+            yield return null;
+        }
 
         // Load in the final room, if there is one
         if (finalRoom != null)
@@ -373,7 +378,7 @@ public class MapLoader : MonoBehaviour
         }
 
         // If at secret room depth, load that too
-        if (portalDepth == chosenSecretRoomIndex)
+        if (secretRoomOptions.Contains(portalDepth))
         {
             currentRoom.ChooseRandomSecretProp();
             yield return StartCoroutine(LoadSecretRoom());
