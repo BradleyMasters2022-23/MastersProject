@@ -7,6 +7,7 @@
  * ================================================================================================
  */
 using UnityEngine;
+using System.Collections;
 
 public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
 {
@@ -72,12 +73,13 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
     private LocalTimer startDespawnTracker;
     private LocalTimer despawnTracker;
     private LocalTimer spawnTracker;
-    private float minimumSpawnTime = 0.5f;
+    private float minimumSpawnTime = 0.35f;
     private Animator anim;
     private TrailRenderer trail;
 
     protected void Spawn()
     {
+        trail.Clear();
         // Randomly generate velocity and rotation angles
         float vel = Random.Range(dropVelocityRange.x, dropVelocityRange.y);
         float angY = Random.Range(0, 360);
@@ -114,12 +116,6 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
                 }
             case OrbState.Chasing:
                 {
-                    // if requirements not met, stop chasing
-                    //if(!CheckChaseRequirements())
-                    //{
-                    //    ChangeState(OrbState.Idle);
-                    //    return;
-                    //}
 
                     // Chase the player
                     Vector3 dir = player.position - transform.position;
@@ -294,11 +290,10 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
     public void OnResume()
     {
         // apply stored velocity
-        rb.velocity = freezeVel;
-        rb.constraints = RigidbodyConstraints.None;
-        // apply stored collider data 
-        realCollider.isTrigger = freezeTrigger;
         realCollider.enabled = true;
+        rb.constraints = RigidbodyConstraints.None;
+        rb.velocity = freezeVel;
+        realCollider.isTrigger = freezeTrigger;
     }
 
     #endregion
@@ -325,13 +320,12 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
         startDespawnTracker.ResetTimer();
         currState = OrbState.Spawning;
         rb.isKinematic = false;
-
-        spawnTracker.ResetTimer();
+        rb.constraints = RigidbodyConstraints.None;
         Spawn();
-        //Debug.Break();
+        spawnTracker.ResetTimer();
     }
 
-    public void PoolPush()
+    public virtual void PoolPush()
     {
         trail.Clear();
     }

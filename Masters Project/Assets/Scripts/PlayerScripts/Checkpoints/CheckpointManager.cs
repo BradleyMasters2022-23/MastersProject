@@ -10,6 +10,8 @@ public class CheckpointManager : MonoBehaviour
     private PlayerTarget player;
     private bool movingPlayer;
 
+    [SerializeField] Color flashColor;
+
     private void Awake()
     {
         if(Instance == null)
@@ -59,6 +61,9 @@ public class CheckpointManager : MonoBehaviour
 
         if (player != null && teleportLocation != null)
         {
+            if(flashColor != default(Color))
+                HUDFadeManager.instance.SetColor(flashColor);
+
             // Stop player control, begin fade
             GameManager.controls.PlayerGameplay.Disable();
             yield return HUDFadeManager.instance.FadeIn();
@@ -72,6 +77,7 @@ public class CheckpointManager : MonoBehaviour
 
             // Undo fade, enable controls
             yield return HUDFadeManager.instance.FadeOut();
+            HUDFadeManager.instance.ResetColor();
             GameManager.controls.PlayerGameplay.Enable();
         }
         else

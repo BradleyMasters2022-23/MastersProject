@@ -194,4 +194,14 @@ public class BossTarget : Target
     {
         damagedReactivateShieldDelay= delay;
     }
+
+    public void DeathExplosionKnockback()
+    {
+        Target t = PlayerTarget.p;
+
+        if(t != null)
+        {
+            t.Knockback(300, 300, _center.position);
+        }
+    }
 }

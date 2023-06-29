@@ -338,9 +338,9 @@ GameObject:
   - component: {fileID: 6670382296444136332}
   - component: {fileID: 1342889785973055828}
   - component: {fileID: 7441908486783889822}
-  - component: {fileID: 3056943052655479381}
   - component: {fileID: 4954014029687720844}
   - component: {fileID: 8507269831582515535}
+  - component: {fileID: 3056943052655479381}
   m_Layer: 15
   m_Name: Projectile_Enemy_Mine
   m_TagString: Enemy
@@ -448,6 +448,60 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &4954014029687720844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4730330725648419445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df5a001e63515124d9fff01548e22564, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _healthbarData:
+  - {fileID: 11400000, guid: 85e7a4f568166174c82e478c1576c24e, type: 2}
+  _damagedInvulnerabilityDuration: 0
+  _gateHealthbarDamage: 0
+  _gateHealthbarHealing: 0
+  _gatedHealthInvulnerability: 0
+  _godMode: 0
+  timeScale: 0
+--- !u!114 &8507269831582515535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4730330725648419445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf67b8df4d7f2ea43b3de7cbf2b245b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 4194304
+  secondaryTimescale: 1
+  _center: {fileID: 3194122223138261050}
+  _team: 0
+  _targetThreat: 0
+  _unkillable: 0
+  immuneToKnockback: 1
+  knockbackModifier: 1
+  maxKnockback: 0
+  invincibilityShield: {fileID: 0}
+  _deathVFX: {fileID: 0}
+  damagedSound: {fileID: 0}
+  deathSound: {fileID: 0}
+  damagedSoundCooldown: 0.5
+  dropList:
+  - spawnObject: {fileID: 9190282065216066553, guid: 9ce42a2ac67043d44bca09b82a8ef5fd, type: 3}
+    quantityRange: {x: 1, y: 1}
+    dropChance: 100
 --- !u!114 &3056943052655479381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -520,62 +574,6 @@ MonoBehaviour:
   projectileLifetime: 10
   targetManager: {fileID: 8507269831582515535}
   shrinkTime: 2
---- !u!114 &4954014029687720844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4730330725648419445}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df5a001e63515124d9fff01548e22564, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _healthbarData:
-  - {fileID: 11400000, guid: 85e7a4f568166174c82e478c1576c24e, type: 2}
-  _damagedInvulnerabilityDuration: 0
-  _gateHealthbarDamage: 0
-  _gateHealthbarHealing: 0
-  _gatedHealthInvulnerability: 0
-  _godMode: 0
-  timeScale: 0
---- !u!114 &8507269831582515535
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4730330725648419445}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bf67b8df4d7f2ea43b3de7cbf2b245b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  affectedByTimestop: 1
-  minimumTimescale: 0
-  slowFieldLayers:
-    serializedVersion: 2
-    m_Bits: 4194304
-  secondaryTimescale: 1
-  _center: {fileID: 3194122223138261050}
-  _team: 0
-  _targetThreat: 0
-  _unkillable: 0
-  _healthManager: {fileID: 0}
-  _killed: 0
-  immuneToKnockback: 1
-  knockbackModifier: 1
-  maxKnockback: 0
-  invincibilityShield: {fileID: 0}
-  _deathVFX: {fileID: 0}
-  damagedSound: {fileID: 0}
-  deathSound: {fileID: 0}
-  damagedSoundCooldown: 0.5
-  dropList:
-  - spawnObject: {fileID: 9190282065216066553, guid: 9ce42a2ac67043d44bca09b82a8ef5fd, type: 3}
-    quantityRange: {x: 1, y: 1}
-    dropChance: 100
 --- !u!1 &5105302778671605131
 GameObject:
   m_ObjectHideFlags: 0

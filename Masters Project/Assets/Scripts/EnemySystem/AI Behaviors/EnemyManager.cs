@@ -22,7 +22,7 @@ public struct MovementStates
     public float rotationSpeed;
     public float acceleration;
 }
-public class EnemyManager : TimeAffectedEntity
+public class EnemyManager : TimeAffectedEntity, TimeObserver
 {
     #region Core Variables
 
@@ -473,5 +473,20 @@ public class EnemyManager : TimeAffectedEntity
     public float GetDeltatime()
     {
         return DeltaTime;
+    }
+
+    public void OnStop()
+    {
+        //if (agent != null)
+        //{
+        //    agent.isStopped = true;
+        //}
+    }
+    public void OnResume()
+    {
+        //if(agent != null)
+        //{
+        //    agent.isStopped = false;
+        //}
     }
 }

@@ -140,7 +140,7 @@ public abstract class UIMenu : MonoBehaviour
     public void TopStackFunction()
     {
         // If type is mouse, dont auto assign 
-        if (GameManager.controllerType == GameManager.ControllerType.MOUSE)
+        if (InputManager.CurrControlScheme == InputManager.ControlScheme.KEYBOARD)
         {
             ClearPointer();
             return;

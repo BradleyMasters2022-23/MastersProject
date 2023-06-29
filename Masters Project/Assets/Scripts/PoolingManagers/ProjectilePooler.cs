@@ -10,6 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using UnityEngine.SceneManagement;
 
 public class ProjectilePooler : MonoBehaviour
 {
@@ -40,7 +41,11 @@ public class ProjectilePooler : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
         InitPools();
+
+        onSceneChange.OnEventRaised += ReturnAllToPool;
     }
+
+    
 
     /// <summary>
     /// Initialize each pool listed in VFXPool
@@ -104,5 +109,26 @@ public class ProjectilePooler : MonoBehaviour
     public bool HasPool(GameObject check)
     {
         return pools.ContainsKey(check.name.GetHashCode());
+    }
+
+    [SerializeField] ChannelVoid onSceneChange;
+
+    /// <summary>
+    /// Return all objects to the pool instantly. Defined by children
+    /// </summary>
+    private void ReturnAllToPool()
+    {
+        for(int i = 0; i < transform.childCount; i++)
+        {
+            // if an object is out of the pool, return it
+            if(transform.GetChild(i) != null && transform.GetChild(i).gameObject.activeInHierarchy)
+            {
+                ReturnProjectile(transform.GetChild(i).gameObject);
+            }
+        }
+    }
+    private void OnDestroy()
+    {
+        onSceneChange.OnEventRaised -= ReturnAllToPool;
     }
 }

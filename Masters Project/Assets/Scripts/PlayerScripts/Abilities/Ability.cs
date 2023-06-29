@@ -23,6 +23,8 @@ public abstract class Ability : MonoBehaviour
 
     [Tooltip("Current state of the ability's activation")]
     private AbilityStates currentState;
+    [SerializeField]
+    private ChannelVoid onActivateChannel;
 
     #region Ability Variables
 
@@ -86,6 +88,8 @@ public abstract class Ability : MonoBehaviour
         // prepare the windup
         currentState = AbilityStates.Windup;
         yield return StartCoroutine(OnWindup());
+        onActivateChannel?.RaiseEvent();
+
 
         // do the actual ability. Children classes will implement concrete implementation.
         yield return StartCoroutine(OnAbility());

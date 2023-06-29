@@ -27,6 +27,8 @@ public class RunBasedTrigger : CutsceneTrigger
         else
         {
             TryCutscene();
+            // disable while loading
+            GameManager.controls.Disable();
         }
             
     }
@@ -37,7 +39,6 @@ public class RunBasedTrigger : CutsceneTrigger
     /// <returns>Whether the cutscene trigger can be used</returns>
     protected override bool CanPlay()
     {
-        // Debug.Log($"curent runs : {GlobalStatsManager.data.runsAttempted}");
-        return base.CanPlay() && GlobalStatsManager.data.runsAttempted >= minRunLength;
+        return base.CanPlay() && (!onlyPlayOnce || GlobalStatsManager.data.runsAttempted >= minRunLength);
     }
 }

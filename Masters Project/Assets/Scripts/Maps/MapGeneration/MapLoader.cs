@@ -61,6 +61,9 @@ public class MapLoader : MonoBehaviour
     [SerializeField] GameObject loadingScreen;
 
     [SerializeField] bool incrementSaveRuns = true;
+    [SerializeField] bool enableControlsOnFinish = true;
+    [Tooltip("Channel called when any scene change happens. Used to tell poolers to reset.")]
+    [SerializeField] ChannelVoid onSceneChange;
 
     /// <summary>
     /// Navmesh for overall map
@@ -71,6 +74,8 @@ public class MapLoader : MonoBehaviour
     /// Actions to be executed when an encounter is complete
     /// </summary>
     private UnityEvent onEncounterComplete;
+
+    [SerializeField] private AudioSource source;
 
     #endregion
 
@@ -104,15 +109,12 @@ public class MapLoader : MonoBehaviour
     
     [SerializeField] MapSegmentSO preBossNeutralRoom;
 
+    [SerializeField] AudioClipSO normalPortalUseSFX;
+
     /// <summary>
     /// Current destination to load to
     /// </summary>
     private string dest = "";
-
-    /// <summary>
-    /// Refernce to all portals in the current scene
-    /// </summary>
-    private PortalTrigger[] portals;
 
     /// <summary>
     /// The current room manager
@@ -131,7 +133,7 @@ public class MapLoader : MonoBehaviour
     [SerializeField] MapSegmentSO[] secretRoomPool;
     [Tooltip("The random secret room that was chosen")]
     [SerializeField, ReadOnly] MapSegmentSO chosenSecretRoom;
-
+    [SerializeField] AudioClipSO secretPortalActivateSFX;
     #endregion
 
     #region Initialization Funcs
@@ -169,6 +171,7 @@ public class MapLoader : MonoBehaviour
     private IEnumerator ArrangeMap()
     {
         loadState = LoadState.Loading;
+        normalPortalUseSFX.PlayClip(source);
 
         // Enable loading screen, wait to disable controls
         loadingScreen.SetActive(true);
@@ -222,7 +225,7 @@ public class MapLoader : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(0.5f);
         // Wait half a second before reenabling controls
-        if (controls != null)
+        if (controls != null && enableControlsOnFinish)
         {
             controls.PlayerGameplay.Enable();
         }
@@ -324,6 +327,9 @@ public class MapLoader : MonoBehaviour
     private IEnumerator LoadRoomRoutine()
     {
         loadState = LoadState.Loading;
+        normalPortalUseSFX.PlayClip(source);
+
+        onSceneChange?.RaiseEvent();
 
         // disable to prevent any new inputs
         GameManager.controls.Disable();
@@ -351,8 +357,9 @@ public class MapLoader : MonoBehaviour
             yield return GameManager.instance.LoadToScene(dest);
         }
 
-        // Once loading finishes, teleport player to a spawnpoint
+        // Once loading finishes, teleport player to a spawnpoint. Wait a frame
         MovePlayerToSpawn();
+        yield return new WaitForEndOfFrame();
 
         // Initialize the room
         currentRoom = FindObjectOfType<RoomInitializer>();
@@ -427,6 +434,13 @@ public class MapLoader : MonoBehaviour
 
         p.position = dest;
         p.rotation = destRot;
+    }
+    /// <summary>
+    /// Play the audio for secret portal activate
+    /// </summary>
+    public void PlaySecretPortalSFX()
+    {
+        secretPortalActivateSFX.PlayClip(source);
     }
 
     #endregion

@@ -170,6 +170,7 @@ public class Pool
         // Add to end of pool queue
         if (recycle && o != null)
         {
+            o.SetActive(false);
             o.GetComponent<IPoolable>().PoolPush();
             currentPool.Enqueue(o);
         }

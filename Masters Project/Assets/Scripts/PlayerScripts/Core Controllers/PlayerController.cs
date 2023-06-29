@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("---Game Flow---")]
     [SerializeField] private ChannelGMStates onStateChangeChannel;
+    [SerializeField] private ChannelVoid onSceneChangeChannel;
 
     /// <summary>
     /// Current state of the player
@@ -153,6 +154,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AudioClipSO jumpSound;
     [Tooltip("Sound when the player lands")]
     [SerializeField] private AudioClipSO landSound;
+    private ScaledTimer landSoundCD;
     private AudioSource source;
 
     /// <summary>
@@ -224,6 +226,7 @@ public class PlayerController : MonoBehaviour
         // Initialize internal variables
         jumpTimer = new ScaledTimer(jumpCooldown, false);
         kyoteTracker = new ScaledTimer(kyoteTime, false);
+        landSoundCD = new ScaledTimer(0.5f, false);
         currentJumps = jumps.Current;
         targetMaxSpeed = maxMoveSpeed.Current;
 
@@ -379,9 +382,10 @@ public class PlayerController : MonoBehaviour
                     // When entering grounded state, reset target max speed
                     targetMaxSpeed = maxMoveSpeed.Current;
 
-                    if(currentState == PlayerState.MIDAIR)
+                    if(currentState == PlayerState.MIDAIR && landSoundCD.TimerDone())
                     {
                         landSound.PlayClip(transform, source, true);
+                        landSoundCD.ResetTimer();
                     }
 
                     velocity.y = 0;
@@ -616,7 +620,15 @@ public class PlayerController : MonoBehaviour
 
             jumpSound.PlayClip(transform, source, false);
         }
+    }
 
+    /// <summary>
+    /// get the current velocity of the player
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 GetVelocity()
+    {
+        return rb.velocity;
     }
 
     #endregion
@@ -680,6 +692,10 @@ public class PlayerController : MonoBehaviour
 
     #region Misc
 
+    private void OnEnable()
+    {
+        onSceneChangeChannel.OnEventRaised += GroundPlayer;
+    }
 
     /// <summary>
     /// Disable inputs to prevent crashing
@@ -690,6 +706,15 @@ public class PlayerController : MonoBehaviour
         sprint.started -= ToggleSprint;
         sprint.canceled -= ToggleSprint;
         qInput.performed-= ActivateQAbility;
+        onSceneChangeChannel.OnEventRaised -= GroundPlayer;
+    }
+
+    /// <summary>
+    /// ground player by resetting velocity to 0
+    /// </summary>
+    private void GroundPlayer()
+    {
+        rb.velocity = Vector3.zero;
     }
 
     #endregion

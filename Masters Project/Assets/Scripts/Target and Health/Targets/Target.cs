@@ -88,7 +88,7 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
     [Tooltip("Cooldown between ability for damaged sound effect play")]
     [SerializeField] private float damagedSoundCooldown = 0.5f;
 
-    private ScaledTimer damagedSoundCooldownTracker;
+    protected ScaledTimer damagedSoundCooldownTracker;
 
     [Header("Drop Stuff")]
     [SerializeField] protected List<DroppableQuantity> dropList;
@@ -264,11 +264,13 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
             // Spawn objects, apply rotation and velocity
             if (_center != null)
             {
-                if(ProjectilePooler.instance.HasPool(orb))
+                if(ProjectilePooler.instance != null && ProjectilePooler.instance.HasPool(orb))
                 {
                     GameObject t = ProjectilePooler.instance.GetProjectile(orb);
                     if(t != null)
+                    {
                         t.transform.position = _center.position;
+                    }   
                 }
                 else
                 {

@@ -24,6 +24,8 @@ public class TooltipUIDataLoader : MonoBehaviour
     public delegate void OnPress(TooltipSO data);
     private OnPress onPress;
 
+    [SerializeField] ChannelControlScheme onControlSchemeSwapChannel;
+
     /// <summary>
     /// Populate this UI element with relevant data
     /// </summary>
@@ -40,11 +42,37 @@ public class TooltipUIDataLoader : MonoBehaviour
             ResetFields();
             return;
         }
-
+        
         if (title != null)
             title.text = d.titleText;
         if (data != null)
-            data.text = d.GetSavedText();
+        {
+            if(d.inputReference.Length > 0)
+            {
+                string contentRef = d.GetSavedText();
+                string temp = "";
+                int inputIdx = 0;
+                // iterate through content, adding any input bindings when necessary
+                for (int i = 0; i < contentRef.Length; i++)
+                {
+                    if (contentRef[i] == TooltipManager.instance.inputDelimiter)
+                    {
+                        temp += InputManager.Instance.ActionKeybindLookup(d.inputReference[inputIdx]);
+                        inputIdx++;
+                    }
+                    else
+                    {
+                        temp += contentRef[i];
+                    }
+                }
+                data.text = temp;
+            }
+            else
+            {
+                data.text = d.GetSavedText();
+            }
+        }
+            
        // if(img != null)
        //     img.sprite = d.icon
     }
@@ -71,5 +99,43 @@ public class TooltipUIDataLoader : MonoBehaviour
     public void OnButtonPress()
     {
         onPress?.Invoke(loadedData);
+    }
+
+    private void OnEnable()
+    {
+        onControlSchemeSwapChannel.OnEventRaised += InstantReloadTooltip;
+    }
+
+    private void OnDisable()
+    {
+        onControlSchemeSwapChannel.OnEventRaised -= InstantReloadTooltip;
+    }
+
+    /// <summary>
+    /// Instantly reload the body text with the appropriate input action string
+    /// </summary>
+    /// <param name="c"></param>
+    private void InstantReloadTooltip(InputManager.ControlScheme c)
+    {
+        if (data != null && loadedData.inputReference.Length > 0)
+        {
+            string contentRef = loadedData.GetSavedText();
+            string temp = "";
+            int inputIdx = 0;
+            // iterate through content, adding any input bindings when necessary
+            for (int i = 0; i < contentRef.Length; i++)
+            {
+                if (contentRef[i] == TooltipManager.instance.inputDelimiter)
+                {
+                    temp += InputManager.Instance.ActionKeybindLookup(loadedData.inputReference[inputIdx]);
+                    inputIdx++;
+                }
+                else
+                {
+                    temp += contentRef[i];
+                }
+            }
+            data.text = temp;
+        }
     }
 }

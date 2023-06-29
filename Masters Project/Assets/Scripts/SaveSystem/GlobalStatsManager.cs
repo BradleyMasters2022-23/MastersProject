@@ -47,9 +47,11 @@ public class GlobalStatsManager : MonoBehaviour
     /// </summary>
     public static void SaveData()
     {
-        bool s = DataManager.instance.Save<PlaythroughSaveData>(fileName, data);
+        // only save if non default values
+        if(data.DataChanged())
+            DataManager.instance.Save<PlaythroughSaveData>(fileName, data);
         //Debug.Log($"global stats save successful: {s}");
-        
+
         // only print for testing reasons
         //data?.PrintData();
     }
