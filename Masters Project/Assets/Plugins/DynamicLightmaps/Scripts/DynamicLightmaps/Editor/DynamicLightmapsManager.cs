@@ -51,7 +51,11 @@ namespace DynamicLightmaps
             foreach (var temp in result)
             {
                 if (temp.GetComponent<MapDataAttacher>() == null)
+                {
+                    Debug.Log("Item without attacher " + temp.gameObject.name);
                     return false;
+                }
+                    
             }
             return true;
         }
