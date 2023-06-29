@@ -31,7 +31,9 @@ public class BFLTarget : Target
     /// </summary>
     protected override void KillTarget()
     {
-        //Debug.Log($"{name} has been killed and thus inturrupted");
+        Debug.Log($"{name} has been killed and thus inturrupted");
+
+        //if (_killed) return;
 
         _killed = true;
 
