@@ -2,6 +2,7 @@ using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ArenaInitializer : RoomInitializer
 {
@@ -22,7 +23,16 @@ public class ArenaInitializer : RoomInitializer
 
         base.Init();
 
-        if(encounterData == null)
+        StartCoroutine(WaitForInput());
+    }
+
+    protected IEnumerator WaitForInput()
+    {
+        // wait for any player input before starting
+        InputAction move = InputManager.Controls.PlayerGameplay.Move;
+        yield return new WaitUntil(()=> move.ReadValue<Vector2>().magnitude != 0);
+
+        if (encounterData == null)
         {
             MapLoader.instance.EndRoomEncounter();
         }
@@ -31,6 +41,5 @@ public class ArenaInitializer : RoomInitializer
             SpawnManager.instance.PrepareEncounter(encounterData, allSpawnpoints);
             SpawnManager.instance.BeginEncounter();
         }
-        
     }
 }
