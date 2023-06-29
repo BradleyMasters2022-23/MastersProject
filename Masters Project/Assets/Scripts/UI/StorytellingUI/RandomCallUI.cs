@@ -35,10 +35,14 @@ public class RandomCallUI : MonoBehaviour
 
         // Try to get conversation. If it fails, close immediately
         if (loadedConveration == null)
+        {
             loadedConveration = GetConversation();
+            Debug.Log("Conversation loaded");
+        }
         if (loadedConveration == null)
         {
             GetComponent<GameObjectMenu>().CloseButton();
+            Debug.Log("failed to load conversation");
             return;
         }
 
