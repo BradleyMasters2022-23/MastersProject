@@ -37,7 +37,9 @@ public class AmbientSFXSource : MonoBehaviour
     private void Start()
     {
         if (playOnStart)
+        {
             Play();
+        }
     }
 
     /// <summary>
@@ -84,4 +86,5 @@ public class AmbientSFXSource : MonoBehaviour
         StopAllCoroutines();
         source.Stop();
     }
+
 }
