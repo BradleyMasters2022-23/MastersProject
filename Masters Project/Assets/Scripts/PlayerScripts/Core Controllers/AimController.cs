@@ -19,7 +19,7 @@ public class AimController : MonoBehaviour
     [SerializeField] private ChannelVoid onSettingsChangedChannel;
     [SerializeField] private ChannelVoid resetPlayerLook;
 
-    [SerializeField] private float mouseSensitivity;
+    private float mouseSensitivity;
     private bool mouseXInverted;
     private bool mouseYInverted;
     
@@ -102,9 +102,6 @@ public class AimController : MonoBehaviour
             return;
 
         lookDelta = Vector2.zero;
-        sensitivity = 0;
-        horizontalInversion = 1;
-        verticalInversion = 1;
 
         if (aim.ReadValue<Vector2>() != Vector2.zero)
         {

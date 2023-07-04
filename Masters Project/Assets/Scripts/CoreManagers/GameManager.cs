@@ -545,6 +545,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void ClearPointer()
     {
+        Debug.Log("Trying to clear pointer effects");
+
         PointerEventData pointer = new PointerEventData(EventSystem.current);
         pointer.position = Input.mousePosition;
 
@@ -559,15 +561,15 @@ public class GameManager : MonoBehaviour
                 //Debug.Log(raycastResult.gameObject.name);
                 GameObject hoveredObj = raycastResult.gameObject;
 
-                if (hoveredObj.GetComponent<Button>())
+                if (hoveredObj.GetComponent<Button>() != null)
                 {
                     hoveredObj.GetComponent<Button>().OnPointerExit(pointer);
                 }
-                else if (hoveredObj.GetComponent<Toggle>())
+                else if (hoveredObj.GetComponent<Toggle>() != null)
                 {
                     hoveredObj.GetComponent<Toggle>().OnPointerExit(pointer);
                 }
-                else if (hoveredObj.GetComponent<Slider>())
+                else if (hoveredObj.GetComponent<Slider>() != null)
                 {
                     hoveredObj.GetComponent<Slider>().OnPointerExit(pointer);
                 }

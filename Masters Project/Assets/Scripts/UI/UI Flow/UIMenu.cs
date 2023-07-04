@@ -143,12 +143,15 @@ public abstract class UIMenu : MonoBehaviour
         if (InputManager.CurrControlScheme == InputManager.ControlScheme.KEYBOARD)
         {
             ClearPointer();
+            Debug.Log("Clearing pointer for M&K");
             return;
         }
 
         // If nothing, dont do anything
         if(lastSelected == null && controllerDefault == null)
         {
+            Debug.Log("Nothing selected last, no controller default");
+
             return;
         }
         // If there is a last selectd option, set selection to that
