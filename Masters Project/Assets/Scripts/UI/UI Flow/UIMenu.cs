@@ -109,7 +109,7 @@ public abstract class UIMenu : MonoBehaviour
     /// <summary>
     /// Close the menu and animator, if able
     /// </summary>
-    public void Close()
+    public virtual void Close()
     {
         // If there is an animator, play animation before closing
         if (animator != null)

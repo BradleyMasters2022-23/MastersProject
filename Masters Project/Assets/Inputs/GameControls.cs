@@ -197,15 +197,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""SwapControls"",
-                    ""type"": ""PassThrough"",
-                    ""id"": ""fe128320-8410-41a4-8df6-9308fe84032b"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -247,7 +238,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""id"": ""18ff7e87-01eb-4caa-af69-cee7ded0a014"",
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone,ScaleVector2(x=10,y=10)"",
                     ""groups"": ""Controller;Gamepad"",
                     ""action"": ""Aim"",
                     ""isComposite"": false,
@@ -313,7 +304,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""id"": ""abb30e25-e533-48a6-b421-1ad3fee97d79"",
                     ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""StickDeadzone"",
                     ""groups"": ""Controller;Gamepad"",
                     ""action"": ""Move"",
                     ""isComposite"": false,
@@ -426,226 +417,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Controller;Gamepad"",
                     ""action"": ""DismissTooltip"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""34070b22-5ab9-4b27-95ea-f5d64db48979"",
-                    ""path"": ""<Gamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""383bb7da-9307-4411-8cf1-e67475c13c90"",
-                    ""path"": ""<Gamepad>/rightStickPress"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4950219f-266e-40af-a1a7-fe8594295738"",
-                    ""path"": ""<Gamepad>/rightTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e6a5cda0-fe3b-4864-85d7-db1dc6d26cd7"",
-                    ""path"": ""<Gamepad>/rightShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""50dbf4e7-8058-4e95-be55-be8dac6e50bd"",
-                    ""path"": ""<Gamepad>/dpad"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""ef1138c3-2150-42fc-9ed4-9119be50ed92"",
-                    ""path"": ""<Gamepad>/select"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""2534d06b-b8f7-4e47-b5d3-73a3157bb2c1"",
-                    ""path"": ""<Gamepad>/start"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""20ad7661-194e-483b-aa75-d3b57d837563"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""294ee742-2af5-41ad-b0c2-7fe4787d8c63"",
-                    ""path"": ""<Gamepad>/leftStickPress"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""705e5850-2353-4191-9a19-04bd5a37ceb8"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f9b98ac7-830f-43df-807d-ab29fddd137b"",
-                    ""path"": ""<Gamepad>/leftTrigger"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""FaceButtons"",
-                    ""id"": ""64f67257-b327-496a-a6cb-be8d9b7b8667"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""badfd126-c8da-4bd3-924e-a5f073aaf797"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""6d72ae26-355c-4e6a-959a-6f3260259e5b"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""09fe02e6-1882-4812-9bcf-c70966deb3f8"",
-                    ""path"": ""<Gamepad>/buttonWest"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""acb321b3-dccb-4050-b402-513ae8028ec9"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""4c11af88-9a72-4096-b809-5890564c3349"",
-                    ""path"": ""<Keyboard>/anyKey"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Controller"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""53596a82-953d-4537-a3a5-fc81e3d9a6ff"",
-                    ""path"": ""<Mouse>/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Controller"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""31e13c5a-4fbc-4718-852f-afdeb4dd7d88"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Controller"",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""ee7dcd83-4b51-4dab-a51b-91d15dc1330d"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Controller"",
-                    ""action"": ""SwapControls"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1043,7 +814,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_PlayerGameplay_DamageCheat = m_PlayerGameplay.FindAction("DamageCheat", throwIfNotFound: true);
         m_PlayerGameplay_ResetConversations = m_PlayerGameplay.FindAction("ResetConversations", throwIfNotFound: true);
         m_PlayerGameplay_IncrementConvs = m_PlayerGameplay.FindAction("IncrementConvs", throwIfNotFound: true);
-        m_PlayerGameplay_SwapControls = m_PlayerGameplay.FindAction("SwapControls", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Mouse = m_UI.FindAction("Mouse", throwIfNotFound: true);
@@ -1135,7 +905,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_DamageCheat;
     private readonly InputAction m_PlayerGameplay_ResetConversations;
     private readonly InputAction m_PlayerGameplay_IncrementConvs;
-    private readonly InputAction m_PlayerGameplay_SwapControls;
     public struct PlayerGameplayActions
     {
         private @GameControls m_Wrapper;
@@ -1159,7 +928,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @DamageCheat => m_Wrapper.m_PlayerGameplay_DamageCheat;
         public InputAction @ResetConversations => m_Wrapper.m_PlayerGameplay_ResetConversations;
         public InputAction @IncrementConvs => m_Wrapper.m_PlayerGameplay_IncrementConvs;
-        public InputAction @SwapControls => m_Wrapper.m_PlayerGameplay_SwapControls;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1226,9 +994,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @IncrementConvs.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnIncrementConvs;
                 @IncrementConvs.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnIncrementConvs;
                 @IncrementConvs.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnIncrementConvs;
-                @SwapControls.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnSwapControls;
-                @SwapControls.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnSwapControls;
-                @SwapControls.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnSwapControls;
             }
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -1290,9 +1055,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @IncrementConvs.started += instance.OnIncrementConvs;
                 @IncrementConvs.performed += instance.OnIncrementConvs;
                 @IncrementConvs.canceled += instance.OnIncrementConvs;
-                @SwapControls.started += instance.OnSwapControls;
-                @SwapControls.performed += instance.OnSwapControls;
-                @SwapControls.canceled += instance.OnSwapControls;
             }
         }
     }
@@ -1467,7 +1229,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnDamageCheat(InputAction.CallbackContext context);
         void OnResetConversations(InputAction.CallbackContext context);
         void OnIncrementConvs(InputAction.CallbackContext context);
-        void OnSwapControls(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

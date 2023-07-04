@@ -84,10 +84,6 @@ public class Settings : MonoBehaviour
     /// </summary>
     public static float controllerSensitivity;
     /// <summary>
-    /// multiplier to controller sensitivity [otherwise is too slow]
-    /// </summary>
-    public const float CONTROLLERMULTIPLIER = 50;
-    /// <summary>
     /// Axis inversion for controller
     /// </summary>
     public static bool controllerInvertX;
@@ -117,7 +113,7 @@ public class Settings : MonoBehaviour
         mouseInvertX = IntToBool(PlayerPrefs.GetInt("MouseInvertX", BoolToInt(defaultMouseInvertX)));
         mouseInvertY = IntToBool(PlayerPrefs.GetInt("MouseInvertY", BoolToInt(defaultMouseInvertY)));
 
-        controllerSensitivity = PlayerPrefs.GetFloat("ControllerSensitivity", defaultControllerSensitivity * CONTROLLERMULTIPLIER);
+        controllerSensitivity = PlayerPrefs.GetFloat("ControllerSensitivity", defaultControllerSensitivity);
         controllerInvertX = IntToBool(PlayerPrefs.GetInt("ControllerInvertX", BoolToInt(defaultControllerInvertX)));
         controllerInvertY = IntToBool(PlayerPrefs.GetInt("ControllerInvertY", BoolToInt(defaultControllerInvertY)));
 
@@ -135,7 +131,7 @@ public class Settings : MonoBehaviour
         mouseInvertXToggle.isOn = mouseInvertX;
         mouseInvertYToggle.isOn = mouseInvertY;
 
-        controllerSensitivitySlider.value = controllerSensitivity / CONTROLLERMULTIPLIER;
+        controllerSensitivitySlider.value = controllerSensitivity;
         controllerInvertXToggle.isOn = controllerInvertX;
         controllerInvertYToggle.isOn = controllerInvertY;
     }
@@ -182,7 +178,7 @@ public class Settings : MonoBehaviour
     /// </summary>
     public void ChangeControllerSensitivity()
     {
-        controllerSensitivity = controllerSensitivitySlider.value * CONTROLLERMULTIPLIER;
+        controllerSensitivity = controllerSensitivitySlider.value;
         PlayerPrefs.SetFloat("ControllerSensitivity", controllerSensitivity);
     }
 
@@ -218,7 +214,7 @@ public class Settings : MonoBehaviour
         mouseSensitivity = defaultMouseSensitivity;
         mouseInvertY = defaultMouseInvertY;
         mouseInvertX = defaultMouseInvertX;
-        controllerSensitivity = defaultControllerSensitivity * CONTROLLERMULTIPLIER;
+        controllerSensitivity = defaultControllerSensitivity;
         controllerInvertX = defaultControllerInvertX;
         controllerInvertY = defaultControllerInvertY;
 

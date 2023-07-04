@@ -35,20 +35,18 @@ public partial class @SchemeControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AxisInput"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""fabab959-56c7-44bf-90c2-933d4316c3a5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""f2112d82-f98b-4418-bdb7-fe76cc6fdb0e"",
-                    ""path"": ""<Gamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""b1c2e240-5115-49d1-85b3-84b55ee88e7b"",
@@ -117,17 +115,6 @@ public partial class @SchemeControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""66cdcdd0-b26f-4daf-907a-894664bf95aa"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""aa8301a2-6595-451d-8425-d89e220c02af"",
                     ""path"": ""<Gamepad>/leftStickPress"",
                     ""interactions"": """",
@@ -158,6 +145,28 @@ public partial class @SchemeControls : IInputActionCollection2, IDisposable
                     ""action"": ""SwapControls"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4b18b990-5860-46dc-b0ba-01d565f74f2c"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": ""StickDeadzone,ScaleVector2(x=10,y=10)"",
+                    ""groups"": """",
+                    ""action"": ""AxisInput"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""48aa559c-12eb-45fd-bbe4-0636ae8197d7"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": ""StickDeadzone,ScaleVector2(x=10,y=10)"",
+                    ""groups"": """",
+                    ""action"": ""AxisInput"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -169,6 +178,15 @@ public partial class @SchemeControls : IInputActionCollection2, IDisposable
                     ""name"": ""SwapControls"",
                     ""type"": ""PassThrough"",
                     ""id"": ""7b5155f0-ca53-43f9-8f46-47ab99d4a5b4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AxisInput"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""efea97c2-5af8-480a-bcc5-3b1b9fa61fc3"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -180,17 +198,6 @@ public partial class @SchemeControls : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""7f63b6a5-d335-4c70-8405-732f2106794a"",
                     ""path"": ""<Keyboard>/anyKey"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""SwapControls"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""93fe7aa6-69fb-4b32-89e3-c164afe226d0"",
-                    ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -219,6 +226,17 @@ public partial class @SchemeControls : IInputActionCollection2, IDisposable
                     ""action"": ""SwapControls"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""06e68065-6daf-4bd5-97db-ec8474f655ee"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AxisInput"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -228,9 +246,11 @@ public partial class @SchemeControls : IInputActionCollection2, IDisposable
         // ObserveGamePad
         m_ObserveGamePad = asset.FindActionMap("ObserveGamePad", throwIfNotFound: true);
         m_ObserveGamePad_SwapControls = m_ObserveGamePad.FindAction("SwapControls", throwIfNotFound: true);
+        m_ObserveGamePad_AxisInput = m_ObserveGamePad.FindAction("AxisInput", throwIfNotFound: true);
         // ObserveMK
         m_ObserveMK = asset.FindActionMap("ObserveMK", throwIfNotFound: true);
         m_ObserveMK_SwapControls = m_ObserveMK.FindAction("SwapControls", throwIfNotFound: true);
+        m_ObserveMK_AxisInput = m_ObserveMK.FindAction("AxisInput", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -291,11 +311,13 @@ public partial class @SchemeControls : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_ObserveGamePad;
     private IObserveGamePadActions m_ObserveGamePadActionsCallbackInterface;
     private readonly InputAction m_ObserveGamePad_SwapControls;
+    private readonly InputAction m_ObserveGamePad_AxisInput;
     public struct ObserveGamePadActions
     {
         private @SchemeControls m_Wrapper;
         public ObserveGamePadActions(@SchemeControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @SwapControls => m_Wrapper.m_ObserveGamePad_SwapControls;
+        public InputAction @AxisInput => m_Wrapper.m_ObserveGamePad_AxisInput;
         public InputActionMap Get() { return m_Wrapper.m_ObserveGamePad; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -308,6 +330,9 @@ public partial class @SchemeControls : IInputActionCollection2, IDisposable
                 @SwapControls.started -= m_Wrapper.m_ObserveGamePadActionsCallbackInterface.OnSwapControls;
                 @SwapControls.performed -= m_Wrapper.m_ObserveGamePadActionsCallbackInterface.OnSwapControls;
                 @SwapControls.canceled -= m_Wrapper.m_ObserveGamePadActionsCallbackInterface.OnSwapControls;
+                @AxisInput.started -= m_Wrapper.m_ObserveGamePadActionsCallbackInterface.OnAxisInput;
+                @AxisInput.performed -= m_Wrapper.m_ObserveGamePadActionsCallbackInterface.OnAxisInput;
+                @AxisInput.canceled -= m_Wrapper.m_ObserveGamePadActionsCallbackInterface.OnAxisInput;
             }
             m_Wrapper.m_ObserveGamePadActionsCallbackInterface = instance;
             if (instance != null)
@@ -315,6 +340,9 @@ public partial class @SchemeControls : IInputActionCollection2, IDisposable
                 @SwapControls.started += instance.OnSwapControls;
                 @SwapControls.performed += instance.OnSwapControls;
                 @SwapControls.canceled += instance.OnSwapControls;
+                @AxisInput.started += instance.OnAxisInput;
+                @AxisInput.performed += instance.OnAxisInput;
+                @AxisInput.canceled += instance.OnAxisInput;
             }
         }
     }
@@ -324,11 +352,13 @@ public partial class @SchemeControls : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_ObserveMK;
     private IObserveMKActions m_ObserveMKActionsCallbackInterface;
     private readonly InputAction m_ObserveMK_SwapControls;
+    private readonly InputAction m_ObserveMK_AxisInput;
     public struct ObserveMKActions
     {
         private @SchemeControls m_Wrapper;
         public ObserveMKActions(@SchemeControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @SwapControls => m_Wrapper.m_ObserveMK_SwapControls;
+        public InputAction @AxisInput => m_Wrapper.m_ObserveMK_AxisInput;
         public InputActionMap Get() { return m_Wrapper.m_ObserveMK; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -341,6 +371,9 @@ public partial class @SchemeControls : IInputActionCollection2, IDisposable
                 @SwapControls.started -= m_Wrapper.m_ObserveMKActionsCallbackInterface.OnSwapControls;
                 @SwapControls.performed -= m_Wrapper.m_ObserveMKActionsCallbackInterface.OnSwapControls;
                 @SwapControls.canceled -= m_Wrapper.m_ObserveMKActionsCallbackInterface.OnSwapControls;
+                @AxisInput.started -= m_Wrapper.m_ObserveMKActionsCallbackInterface.OnAxisInput;
+                @AxisInput.performed -= m_Wrapper.m_ObserveMKActionsCallbackInterface.OnAxisInput;
+                @AxisInput.canceled -= m_Wrapper.m_ObserveMKActionsCallbackInterface.OnAxisInput;
             }
             m_Wrapper.m_ObserveMKActionsCallbackInterface = instance;
             if (instance != null)
@@ -348,6 +381,9 @@ public partial class @SchemeControls : IInputActionCollection2, IDisposable
                 @SwapControls.started += instance.OnSwapControls;
                 @SwapControls.performed += instance.OnSwapControls;
                 @SwapControls.canceled += instance.OnSwapControls;
+                @AxisInput.started += instance.OnAxisInput;
+                @AxisInput.performed += instance.OnAxisInput;
+                @AxisInput.canceled += instance.OnAxisInput;
             }
         }
     }
@@ -355,9 +391,11 @@ public partial class @SchemeControls : IInputActionCollection2, IDisposable
     public interface IObserveGamePadActions
     {
         void OnSwapControls(InputAction.CallbackContext context);
+        void OnAxisInput(InputAction.CallbackContext context);
     }
     public interface IObserveMKActions
     {
         void OnSwapControls(InputAction.CallbackContext context);
+        void OnAxisInput(InputAction.CallbackContext context);
     }
 }

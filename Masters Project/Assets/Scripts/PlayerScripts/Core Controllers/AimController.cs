@@ -37,6 +37,8 @@ public class AimController : MonoBehaviour
     [SerializeField] private ChannelGMStates onStateChangedChannel;
     [SerializeField] private ChannelVoid onSceneChangeChannel;
 
+    [SerializeField] private ChannelControlScheme onControllerSwap;
+
     /// <summary>
     /// Core controller map
     /// </summary>
@@ -79,6 +81,7 @@ public class AimController : MonoBehaviour
         controllerYInverted = Settings.controllerInvertY;
 
         Debug.Log("Aim sensitivity set to : " + mouseSensitivity);
+        UpdateInputSettings(InputManager.CurrControlScheme);
     }
 
     private void LateUpdate()
@@ -98,7 +101,6 @@ public class AimController : MonoBehaviour
         if (aim == null)
             return;
 
-
         lookDelta = Vector2.zero;
         sensitivity = 0;
         horizontalInversion = 1;
@@ -106,15 +108,50 @@ public class AimController : MonoBehaviour
 
         if (aim.ReadValue<Vector2>() != Vector2.zero)
         {
-            // TODO - Look up controller vs keyboard here for sensitivity
             lookDelta = aim.ReadValue<Vector2>();
-            sensitivity = mouseSensitivity;
+        }
+    }
 
-            if (mouseXInverted)
-                horizontalInversion *= -1;
-            if (mouseYInverted)
-                verticalInversion *= -1;
+    /// <summary>
+    /// update sensitivity and inversion settings based on the input method
+    /// </summary>
+    /// <param name="controlScheme">Type of input being swapped to</param>
+    private void UpdateInputSettings(InputManager.ControlScheme controlScheme)
+    {
+        switch(controlScheme)
+        {
+            case InputManager.ControlScheme.KEYBOARD:
+                {
+                    sensitivity = mouseSensitivity;
 
+                    if (mouseXInverted)
+                        horizontalInversion *= -1;
+                    if (mouseYInverted)
+                        verticalInversion *= -1;
+
+                    break;
+                }
+            case InputManager.ControlScheme.CONTROLLER:
+                {
+                    sensitivity = controllerSensitivity;
+
+                    if (controllerXInverted)
+                        horizontalInversion *= -1;
+                    if (controllerYInverted)
+                        verticalInversion *= -1;
+
+                    break;
+                }
+            default: // by default, use M&K settings
+                {
+                    sensitivity = mouseSensitivity;
+
+                    if (mouseXInverted)
+                        horizontalInversion *= -1;
+                    if (mouseYInverted)
+                        verticalInversion *= -1;
+                    break;
+                }
         }
     }
 
@@ -126,7 +163,6 @@ public class AimController : MonoBehaviour
         // Manage horizontal rotation
         transform.rotation *= Quaternion.AngleAxis(lookDelta.x * sensitivity * horizontalInversion * Time.deltaTime, Vector3.up);
         
-
         // Manage vertical rotaiton
         Quaternion temp = cameraLook.transform.localRotation *
             Quaternion.AngleAxis(-lookDelta.y * sensitivity * verticalInversion * Time.deltaTime, Vector3.right);
@@ -153,6 +189,8 @@ public class AimController : MonoBehaviour
         resetPlayerLook.OnEventRaised += ResetLook;
 
         onSceneChangeChannel.OnEventRaised += ResetLook;
+
+        onControllerSwap.OnEventRaised += UpdateInputSettings;
     }
 
     /// <summary>
@@ -167,6 +205,8 @@ public class AimController : MonoBehaviour
         resetPlayerLook.OnEventRaised -= ResetLook;
 
         onSceneChangeChannel.OnEventRaised -= ResetLook;
+
+        onControllerSwap.OnEventRaised -= UpdateInputSettings;
 
         if (aim.enabled)
             aim.Disable();

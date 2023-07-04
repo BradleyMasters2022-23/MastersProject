@@ -93,6 +93,8 @@ public class InputManager : MonoBehaviour
 
     [Tooltip("Current control scheme for the player")]
     public static ControlScheme CurrControlScheme;
+    public ControlScheme debugControlScheme;
+
     /// <summary>
     /// Reference to the controls that observe all options
     /// </summary>
@@ -126,7 +128,7 @@ public class InputManager : MonoBehaviour
     /// Swap the controls to the relevant type
     /// </summary>
     /// <param name="c">Context of the input</param>
-    private void SwapControls(InputAction.CallbackContext c)
+    private void SwapControls(InputAction.CallbackContext c = default)
     {
         if(inputCD) // If on cooldown, ignore
         {
@@ -164,18 +166,19 @@ public class InputManager : MonoBehaviour
     /// </summary>
     private void SetToKeyboard()
     {
-        Debug.Log("Switching to keyboard");
+        //Debug.Log("Switching to keyboard");
         CurrControlScheme = ControlScheme.KEYBOARD;
-
+        
         // Update observer to only register gamepad inputs to reduce load
         schemeObserver.ObserveGamePad.Enable();
+        
     }
     /// <summary>
     /// Swap the control scheme to controller and perform any necessary functions
     /// </summary>
     private void SetToController()
     {
-        Debug.Log("Switching to controller");
+        //Debug.Log("Switching to controller");
         CurrControlScheme = ControlScheme.CONTROLLER;
 
         // Update observer to only register M&K inputs to reduce load
@@ -487,7 +490,8 @@ public class InputManager : MonoBehaviour
             case ControlScheme.CONTROLLER:
                 {
                     // shouldnt be any composits for controllers
-                    Debug.Log("Attempting to get gamepad");
+                    //Debug.Log("Attempting to get gamepad");
+
                     temp = ":" + action.GetBindingDisplayString(group: "Gamepad") + ":";
                     break;
                 }
@@ -507,4 +511,34 @@ public class InputManager : MonoBehaviour
     }
 
     #endregion
+
+    private void FixedUpdate()
+    {
+        Vector2 val = Vector2.zero;
+        switch (CurrControlScheme)
+        {
+            case ControlScheme.KEYBOARD:
+                {
+                    // if observing controller, add some deadzone to the threshold
+                    schemeObserver.ObserveGamePad.AxisInput.Enable();
+                    val = schemeObserver.ObserveGamePad.AxisInput.ReadValue<Vector2>();
+                    break;
+                }
+            case ControlScheme.CONTROLLER:
+                {
+                    schemeObserver.ObserveMK.AxisInput.Enable();
+                    val = schemeObserver.ObserveMK.AxisInput.ReadValue<Vector2>();
+                    break;
+                }
+        }
+
+        // if any input, swap controls 
+        if (val.magnitude > 0)
+        {
+            SwapControls();
+        }
+
+        // update the debug variable to easily view in the inspector
+        debugControlScheme = CurrControlScheme;
+    }
 }
