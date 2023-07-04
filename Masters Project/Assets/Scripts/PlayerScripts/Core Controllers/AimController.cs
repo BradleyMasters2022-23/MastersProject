@@ -80,7 +80,7 @@ public class AimController : MonoBehaviour
         controllerXInverted = Settings.controllerInvertX;
         controllerYInverted = Settings.controllerInvertY;
 
-        Debug.Log("Aim sensitivity set to : " + mouseSensitivity);
+        //Debug.Log("Aim sensitivity set to : " + mouseSensitivity);
         UpdateInputSettings(InputManager.CurrControlScheme);
     }
 

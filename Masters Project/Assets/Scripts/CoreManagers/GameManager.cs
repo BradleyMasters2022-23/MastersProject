@@ -339,6 +339,15 @@ public class GameManager : MonoBehaviour
 
     #region Controller & Mouse Swapping
 
+    private void OnEnable()
+    {
+        onControlSchemeSwapChannel.OnEventRaised += UpdateControlScheme;
+    }
+    private void OnDisable()
+    {
+        onControlSchemeSwapChannel.OnEventRaised -= UpdateControlScheme;
+    }
+
     private void OnApplicationFocus(bool focus)
     {
         UpdateMouseMode();
@@ -355,24 +364,25 @@ public class GameManager : MonoBehaviour
     private void HideCursor()
     {
         // Hide the mouse cursor
-        Cursor.lockState = CursorLockMode.None;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
         ClearPointer();
 
         // Set the controller select to the screen
-        menuStack.Peek().TopStackFunction();
+        if (menuStack != null && menuStack.Count > 0)
+            menuStack.Peek().TopStackFunction();
     }
 
     private void ShowCursor()
     {
         // Reenable cursor, set appropriate lock state
-        Cursor.visible = true;
         UpdateMouseMode();
 
         // Save the last thing the controller was on 
-        menuStack.Peek().StackSave();
+        if(menuStack != null && menuStack.Count > 0)
+            menuStack.Peek().StackSave();
+
         // hide the controller's selected option
         EventSystem.current.SetSelectedGameObject(null);
     }
@@ -382,7 +392,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void UpdateMouseMode()
     {
-        Cursor.lockState = CursorLockMode.None;
+        Debug.Log("Mouse mode updated");
 
         // Currently, should be confined for everything except the main gameplay
         switch (currentState)
@@ -390,18 +400,19 @@ public class GameManager : MonoBehaviour
             case States.HUB:
                 {
                     Cursor.lockState = CursorLockMode.Locked;
-
+                    Cursor.visible = false;
                     break;
                 }
             case States.GAMEPLAY:
                 {
                     Cursor.lockState = CursorLockMode.Locked;
-
+                    Cursor.visible = false;
                     break;
                 }
             default:
                 {
                     Cursor.lockState = CursorLockMode.Confined;
+                    Cursor.visible = true;
                     break;
                 }
         }
@@ -543,9 +554,9 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Clear any pointer hover effects
     /// </summary>
-    private void ClearPointer()
+    public void ClearPointer()
     {
-        Debug.Log("Trying to clear pointer effects");
+        //Debug.Log("Trying to clear pointer effects");
 
         PointerEventData pointer = new PointerEventData(EventSystem.current);
         pointer.position = Input.mousePosition;

@@ -142,15 +142,15 @@ public abstract class UIMenu : MonoBehaviour
         // If type is mouse, dont auto assign 
         if (InputManager.CurrControlScheme == InputManager.ControlScheme.KEYBOARD)
         {
-            ClearPointer();
-            Debug.Log("Clearing pointer for M&K");
+            GameManager.instance.ClearPointer();
+            //Debug.Log("Clearing pointer for M&K");
             return;
         }
 
         // If nothing, dont do anything
         if(lastSelected == null && controllerDefault == null)
         {
-            Debug.Log("Nothing selected last, no controller default");
+            //Debug.Log("Nothing selected last, no controller default");
 
             return;
         }
@@ -165,7 +165,7 @@ public abstract class UIMenu : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(controllerDefault);
         }
 
-        Debug.Log($"Set the event select to {EventSystem.current.currentSelectedGameObject.name}");
+        //Debug.Log($"Set the event select to {EventSystem.current.currentSelectedGameObject.name}");
     }
 
 
