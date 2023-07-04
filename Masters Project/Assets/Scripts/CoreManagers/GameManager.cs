@@ -392,8 +392,14 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void UpdateMouseMode()
     {
-        Debug.Log("Mouse mode updated");
+        if(InputManager.CurrControlScheme != InputManager.ControlScheme.KEYBOARD)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            return;
+        }
 
+        //Debug.Log("Mouse mode updated");
         // Currently, should be confined for everything except the main gameplay
         switch (currentState)
         {
