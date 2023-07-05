@@ -139,6 +139,11 @@ public abstract class UIMenu : MonoBehaviour
     /// </summary>
     public void TopStackFunction()
     {
+        // re-enable any interactable options 
+        if(allOptions != null)
+            foreach (var o in allOptions)
+                o.interactable = true;
+
         // If type is mouse, dont auto assign 
         if (InputManager.CurrControlScheme == InputManager.ControlScheme.KEYBOARD)
         {
@@ -170,42 +175,6 @@ public abstract class UIMenu : MonoBehaviour
 
 
     /// <summary>
-    /// Clear any pointer hover effects
-    /// </summary>
-    private void ClearPointer()
-    {
-        PointerEventData pointer = new PointerEventData(EventSystem.current);
-        pointer.position = Input.mousePosition;
-
-        List<RaycastResult> raycastResults = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(pointer, raycastResults);
-
-        if (raycastResults.Count > 0)
-        {
-            // make sure its accurate based on the type
-            foreach (RaycastResult raycastResult in raycastResults)
-            {
-                //Debug.Log(raycastResult.gameObject.name);
-                GameObject hoveredObj = raycastResult.gameObject;
-
-                if (hoveredObj.GetComponent<Button>())
-                {
-                    hoveredObj.GetComponent<Button>().OnPointerExit(pointer);
-                }
-                else if(hoveredObj.GetComponent<Toggle>())
-                {
-                    hoveredObj.GetComponent<Toggle>().OnPointerExit(pointer);
-                }
-                else if (hoveredObj.GetComponent<Slider>())
-                {
-                    hoveredObj.GetComponent<Slider>().OnPointerExit(pointer);
-                }
-            }
-
-        }
-    }
-
-    /// <summary>
     /// Save the currently selected button to this internal manager
     /// </summary>
     public void StackSave()
@@ -220,4 +189,14 @@ public abstract class UIMenu : MonoBehaviour
     /// Call the specific close functionality needed. 
     /// </summary>
     public abstract void CloseFunctionality();
+
+
+    Selectable[] allOptions;
+    public virtual void SetBackground()
+    {
+        allOptions = GetComponentsInChildren<Selectable>();
+        foreach (var o in allOptions)
+            o.interactable = false;
+        Debug.Log("Found " + allOptions.Length + " options to disable");
+    }
 }

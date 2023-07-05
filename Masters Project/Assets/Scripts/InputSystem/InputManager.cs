@@ -111,10 +111,6 @@ public class InputManager : MonoBehaviour
         schemeObserver = new SchemeControls();
         schemeObserver.ObserveGamePad.SwapControls.performed += SwapControls;
         schemeObserver.ObserveMK.SwapControls.performed += SwapControls;
-
-        // Set both enabled so it correctly updates regardless which input they use first
-        //schemeObserver.ObserveGamePad.SwapControls.Enable();
-        //schemeObserver.ObserveMK.SwapControls.Enable();
     }
     private void OnDisable()
     {
@@ -185,7 +181,14 @@ public class InputManager : MonoBehaviour
         schemeObserver.ObserveMK.Enable();
     }
 
+    /// <summary>
+    /// Whether the input swapping system is on cooldown
+    /// </summary>
     private bool inputCD = false;
+    /// <summary>
+    /// Wait for 2 frames to prevent constant flipping
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator FrameCooldown()
     {
         yield return new WaitForEndOfFrame();

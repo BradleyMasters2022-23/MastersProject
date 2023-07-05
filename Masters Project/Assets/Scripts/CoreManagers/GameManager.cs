@@ -439,6 +439,7 @@ public class GameManager : MonoBehaviour
         if(menuStack.Count > 0)
         {
             menuStack.Peek().StackSave();
+            menuStack.Peek().SetBackground();
         }
 
         // initialize it when on top of stack
