@@ -47,13 +47,18 @@ namespace DynamicLightmaps
 
         private static bool CheckDataAttachers()
         {
+            bool issueFound = false;
             var result = FindObjectsOfType<MeshRenderer>().Where(x => x.gameObject.isStatic);
             foreach (var temp in result)
             {
                 if (temp.GetComponent<MapDataAttacher>() == null)
-                    return false;
+                {
+                    Debug.LogError($"Item without attacher {temp.gameObject.name}. Double check its static status!");
+                    issueFound= true;
+                }
+                    
             }
-            return true;
+            return !issueFound;
         }
 
         private static string stateName = "";

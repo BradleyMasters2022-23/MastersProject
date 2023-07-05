@@ -27,7 +27,7 @@ public class Laser : RangeAttack, TimeObserver
     /// <summary>
     /// Tracker for the timed duration of the laser
     /// </summary>
-    private ScaledTimer durationTracker;
+    private LocalTimer durationTracker;
 
     [Header("Laser Effects")]
     [Tooltip("Object playing the laser origin VFX, where the beam starts")]
@@ -84,7 +84,7 @@ public class Laser : RangeAttack, TimeObserver
             originVFX.transform.localPosition = Vector3.forward * originVFXOffset;
         }
         ambientLaserSound.PlayClip(externalSource, false);
-        durationTracker = new ScaledTimer(range, Affected);
+        durationTracker = GetTimer(range);
         hitVFXCooldownTracker = new ScaledTimer(hitVFXCooldown);
     }
 
@@ -100,9 +100,6 @@ public class Laser : RangeAttack, TimeObserver
 
         if (!active)
             return;
-
-        if (Affected)
-            durationTracker?.SetModifier(Timescale);
 
         if (CheckLife())
         {

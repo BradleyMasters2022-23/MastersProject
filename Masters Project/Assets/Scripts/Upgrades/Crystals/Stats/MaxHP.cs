@@ -6,21 +6,25 @@ public class MaxHP : IStat
 {
     private HealthManager hp;
     [Tooltip("Value stat mod multiplies by to get final HP increase")]
-    [SerializeField] private int statBase;
+    [SerializeField] private float statBase;
     public int healthBarIndex = 0;
-
+    private float baseValue;
     public override void LoadStat(PlayerController player, int mod)
     {
+        
+
         hp = player.gameObject.GetComponent<HealthManager>();
-        hp.IncreaseMaxHealth(statBase * mod, healthBarIndex);
+        baseValue = hp.ResourceDataAtIndex(healthBarIndex)._maxValue;
+        hp.IncreaseMaxHealth(baseValue * statBase * mod, healthBarIndex);
         // Debug.Log("HP up " + (statBase * mod).ToString());
     }
 
     public override void UnloadStat(PlayerController player, int mod)
     {
         hp = player.gameObject.GetComponent<HealthManager>();
-
-        hp.DecreaseMaxHealth(statBase*mod, healthBarIndex);
+        baseValue = hp.ResourceDataAtIndex(0)._maxValue;
+        hp.DecreaseMaxHealth(baseValue * statBase * mod, healthBarIndex);
+        
     }
 
     public override float GetStatIncrease(int mod)

@@ -451,6 +451,12 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void GetGroundData()
     {
+        if (!jumpTimer.TimerDone())
+        {
+            grounded = false;
+            return;
+        }
+
         RaycastHit temp = slopeHit;
         Debug.DrawLine(groundCheck.position, groundCheck.position + Vector3.down * groundCheckRadius, Color.red);
         if (Physics.Raycast(groundCheck.position, Vector3.down, out slopeHit, groundCheckRadius, groundMask))

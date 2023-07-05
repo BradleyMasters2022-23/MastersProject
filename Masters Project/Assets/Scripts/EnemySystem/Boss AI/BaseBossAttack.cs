@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using UnityEngine.Events;
 using System.Linq;
 
-public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
+public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInfluencer
 {
     public enum AttackState
     {
@@ -97,7 +98,9 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
 
     public bool AttackDone()
     {
-        return state == AttackState.Ready;
+        return state == AttackState.Cooldown
+            || state == AttackState.Ready
+            || state == AttackState.Recovering;
     }
 
     #endregion
@@ -209,7 +212,7 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
     /// </summary>
     /// <param name="delay">How long to wait before returning</param>
     /// <returns></returns>
-    protected IEnumerator ReturnToBase(float delay)
+    protected IEnumerator ReturnToBase(float delay, UnityAction onComplete = null)
     {
         // process delay, if available
         if (delay > 0)
@@ -218,23 +221,20 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
             yield return new WaitUntil(tracker.TimerDone);
         }
 
-        LocalTimer maxTime = GetTimer(1.5f);
-
-        Vector3 rot = transform.localRotation.eulerAngles;
-        // mod it to prevent it from ALWAYS GOING COUNTERCLOCKWISE
-        if (rot.x > 180)
-            rot.x -= 360;
-        if(rot.y > 180)
-            rot.y -= 360;
-        if (rot.z > 180)
-            rot.z -= 360;
+        LocalTimer maxTime = GetTimer(1f);
 
         // Return to resting position
         while (!maxTime.TimerDone())
         {
-            transform.localRotation = Quaternion.Euler(Vector3.Lerp(rot, Vector3.zero, maxTime.TimerProgress()));
-            yield return null;
+            transform.localRotation = Quaternion.Lerp(
+                transform.localRotation,
+                Quaternion.identity,
+                maxTime.TimerProgress());
+            
+            yield return new WaitForFixedUpdate();
         }
+
+        onComplete?.Invoke();
     }
 
     protected void SetTracker(float delay)
@@ -248,6 +248,7 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
     public void OnStop()
     {
         originalPosVector = target.Center.position;
+
         BonusStop();
     }
 
@@ -282,30 +283,29 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver
     {
         StartCoroutine(RotateToDisable());
     }
-    public void RotateToEnabledState()
+    public void RotateToEnabledState(UnityAction onComplete=null)
     {
         //Debug.Log($"{transform.parent.name} Rotate to enabled state called");
-        StartCoroutine(ReturnToBase(0));
+        StartCoroutine(ReturnToBase(0, onComplete));
     }
     protected IEnumerator RotateToDisable()
     {
         Vector3 tar = new Vector3(90, 0, 0);
         LocalTimer maxTime = GetTimer(1.5f);
-        Vector3 rot = transform.localRotation.eulerAngles;
-        // mod it to prevent it from ALWAYS GOING COUNTERCLOCKWISE
-        if (rot.x > 180)
-            rot.x -= 360;
-        if (rot.y > 180)
-            rot.y -= 360;
-        if (rot.z > 180)
-            rot.z -= 360;
-
 
         // Return to resting position
         while (!maxTime.TimerDone())
         {
-            transform.localRotation = Quaternion.Euler(Vector3.Lerp(rot, tar, maxTime.TimerProgress()));
-            yield return null;
+            transform.localRotation = Quaternion.Slerp(
+                transform.localRotation, 
+                Quaternion.Euler(tar), 
+                maxTime.TimerProgress());
+            yield return new WaitForFixedUpdate();
         }
+    }
+
+    public float GetScale()
+    {
+        return Timescale;
     }
 }
