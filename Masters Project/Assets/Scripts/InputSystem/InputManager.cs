@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Sirenix.OdinInspector;
 using TMPro;
+using System;
 
 [System.Serializable]
 public struct BindingTextOverride
@@ -529,15 +530,39 @@ public class InputManager : MonoBehaviour
             case ControlScheme.CONTROLLER:
                 {
                     temp = "";
-                    for (int i = 0; i < action.controls.Count; i++)
+                    int compositesPassed = 0;
+
+                    // loop through all bindings, looking for the first available gamepad
+                    for (int i = 0; i < action.bindings.Count; i++)
                     {
-                        if (action.bindings[i].groups.Contains("Gamepad"))
+                        try
                         {
-                            temp = "<sprite=" 
-                                + promptSheet.GetSpriteIndexFromName(action.controls[i].name)
-                                + ">";
-                            Debug.Log(action.controls[i].name + "  " + temp);
-                            break;
+                            // if a composite, add to count. composites shouldnt be counted so just go to next
+                            if (action.bindings[i].isComposite)
+                            {
+                                compositesPassed++;
+                                continue;
+                            }
+
+                            // make sure no composite, and check if its a gamepad interaction
+                            if (!action.bindings[i].isComposite && action.bindings[i].groups.Contains("Gamepad"))
+                            {
+                                // add interaction name
+                                if (action.bindings[i].interactions != null)
+                                    temp += action.bindings[i].effectiveInteractions + " ";
+
+                                // on lookup, make sure to subtract the composites passed to convert from bindings to controls properly
+                                temp += "<sprite="
+                                    + promptSheet.GetSpriteIndexFromName(action.controls[i-compositesPassed].name)
+                                    + ">";
+
+                                break;
+                            }
+                        }
+                        catch(Exception e)
+                        {
+                            Debug.Log($"Error while finding input {action.name} : \n{e}");
+                            temp = "ERR";
                         }
                     }
                     break;
