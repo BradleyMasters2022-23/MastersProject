@@ -29,7 +29,7 @@ public class MaxHP : IStat
 
     public override float GetStatIncrease(int mod)
     {
-        float statIncrease = (float)statBase * (float)mod;
+        float statIncrease = (float)statBase * (float)mod * 100;
 
         return statIncrease;
     }
