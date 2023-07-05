@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Sirenix.OdinInspector;
+using TMPro;
 
 [System.Serializable]
 public struct BindingTextOverride
@@ -465,6 +466,8 @@ public class InputManager : MonoBehaviour
 
     [SerializeField] private InputBinding.DisplayStringOptions displayOptions;
 
+    [SerializeField] private TMP_SpriteAsset promptSheet;
+
     /// <summary>
     /// Build the dictionary used for text overrides
     /// </summary>
@@ -525,10 +528,18 @@ public class InputManager : MonoBehaviour
                 }
             case ControlScheme.CONTROLLER:
                 {
-                    // shouldnt be any composits for controllers
-                    //Debug.Log("Attempting to get gamepad");
-
-                    temp = ":" + action.GetBindingDisplayString(group: "Gamepad") + ":";
+                    temp = "";
+                    for (int i = 0; i < action.controls.Count; i++)
+                    {
+                        if (action.bindings[i].groups.Contains("Gamepad"))
+                        {
+                            temp = "<sprite=" 
+                                + promptSheet.GetSpriteIndexFromName(action.controls[i].name)
+                                + ">";
+                            Debug.Log(action.controls[i].name + "  " + temp);
+                            break;
+                        }
+                    }
                     break;
                 }
             default:

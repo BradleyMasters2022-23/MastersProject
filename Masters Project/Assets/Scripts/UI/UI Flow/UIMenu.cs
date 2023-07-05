@@ -10,9 +10,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 using Masters.UI;
+using System.Linq;
 
 public abstract class UIMenu : MonoBehaviour
 {
@@ -148,14 +148,14 @@ public abstract class UIMenu : MonoBehaviour
         if (InputManager.CurrControlScheme == InputManager.ControlScheme.KEYBOARD)
         {
             GameManager.instance.ClearPointer();
-            Debug.Log("Clearing pointer for M&K");
+            //Debug.Log("Clearing pointer for M&K");
             return;
         }
 
         // If nothing, dont do anything
         if(lastSelected == null && controllerDefault == null)
         {
-            Debug.Log("Nothing selected last, no controller default");
+            //Debug.Log("Nothing selected last, no controller default");
 
             return;
         }
@@ -170,7 +170,7 @@ public abstract class UIMenu : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(controllerDefault);
         }
 
-        Debug.Log($"Set the event select to {EventSystem.current.currentSelectedGameObject.name}");
+        //Debug.Log($"Set the event select to {EventSystem.current.currentSelectedGameObject.name}");
     }
 
 
@@ -191,12 +191,19 @@ public abstract class UIMenu : MonoBehaviour
     public abstract void CloseFunctionality();
 
 
-    Selectable[] allOptions;
+    List<Selectable> allOptions;
     public virtual void SetBackground()
     {
-        allOptions = GetComponentsInChildren<Selectable>();
-        foreach (var o in allOptions)
-            o.interactable = false;
-        Debug.Log("Found " + allOptions.Length + " options to disable");
+        allOptions = GetComponentsInChildren<Selectable>().ToList();
+        foreach (var o in allOptions.ToArray())
+        {
+            // make sure it was made interactable to begin with
+            if(o.IsInteractable())
+                o.interactable = false;
+            else
+                allOptions.Remove(o);
+        }
+            
+        Debug.Log("Found " + allOptions.Count + " options to disable");
     }
 }
