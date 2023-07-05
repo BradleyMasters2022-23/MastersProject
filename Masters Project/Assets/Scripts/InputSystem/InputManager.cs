@@ -193,6 +193,39 @@ public class InputManager : MonoBehaviour
 
         inputCD = false;
     }
+
+    /// <summary>
+    /// continually check for relevant axis-based inputs for swapping control scheme
+    /// </summary>
+    private void Update()
+    {
+        Vector2 val = Vector2.zero;
+        switch (CurrControlScheme)
+        {
+            case ControlScheme.KEYBOARD:
+                {
+                    schemeObserver.ObserveGamePad.AxisInput.Enable();
+                    val = schemeObserver.ObserveGamePad.AxisInput.ReadValue<Vector2>();
+                    break;
+                }
+            case ControlScheme.CONTROLLER:
+                {
+                    schemeObserver.ObserveMK.AxisInput.Enable();
+                    val = schemeObserver.ObserveMK.AxisInput.ReadValue<Vector2>();
+                    break;
+                }
+        }
+
+        // if any input, swap controls. Deadzone handled by input system
+        if (val.magnitude > 0)
+        {
+            SwapControls();
+        }
+
+        // update the debug variable to easily view in the inspector
+        debugControlScheme = CurrControlScheme;
+    }
+
     #endregion
 
     #region Rebinding
@@ -512,33 +545,5 @@ public class InputManager : MonoBehaviour
 
     #endregion
 
-    private void FixedUpdate()
-    {
-        Vector2 val = Vector2.zero;
-        switch (CurrControlScheme)
-        {
-            case ControlScheme.KEYBOARD:
-                {
-                    // if observing controller, add some deadzone to the threshold
-                    schemeObserver.ObserveGamePad.AxisInput.Enable();
-                    val = schemeObserver.ObserveGamePad.AxisInput.ReadValue<Vector2>();
-                    break;
-                }
-            case ControlScheme.CONTROLLER:
-                {
-                    schemeObserver.ObserveMK.AxisInput.Enable();
-                    val = schemeObserver.ObserveMK.AxisInput.ReadValue<Vector2>();
-                    break;
-                }
-        }
-
-        // if any input, swap controls 
-        if (val.magnitude > 0)
-        {
-            SwapControls();
-        }
-
-        // update the debug variable to easily view in the inspector
-        debugControlScheme = CurrControlScheme;
-    }
+    
 }
