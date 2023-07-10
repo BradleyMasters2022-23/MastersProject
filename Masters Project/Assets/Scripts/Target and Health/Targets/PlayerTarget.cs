@@ -134,6 +134,8 @@ public class PlayerTarget : Target
     /// <param name="dmg">Damage taken</param>
     private void ApplyDamageImpulse(float dmg)
     {
+        if (godMode) return;
+
         float impactForce = 1;
         // use damage to determine which impulse effect to use
         for (int i = 0; i < impulseRanges.Length; i++)

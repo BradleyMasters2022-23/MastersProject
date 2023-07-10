@@ -48,10 +48,44 @@ public class AimController : MonoBehaviour
     /// </summary>
     private InputAction aim;
 
+    [Header("---Aim Assist---")]
+    [Tooltip("Target layers that can be aimed towards")]
+    [SerializeField] LayerMask targetLayers;
+    [Tooltip("Layers that block line of sight. Other targets should be included")]
+    [SerializeField] LayerMask blockLayers;
+    [Tooltip("The radius around the forward direction to find enemies")]
+    [SerializeField] float assistRadius;
+    [Tooltip("The max distance the assist can target")]
+    [SerializeField] float assistDistance;
+    [Tooltip("The default strength of the aim assist")]
+    [SerializeField] float assistStrength;
+    [Tooltip("The cone threshold needed to assist. Higher values means they need to be more centered.")]
+    [SerializeField, Range(0, 1)] float assistConeThreshold;
+    [Tooltip("The magnitude of player input and an assist strength modifier. Value is multiplied with assist strength")]
+    [SerializeField] AnimationCurve inputMagnitudeToAssist;
+    [Tooltip("The accuracy of the current target and an assist strength modifier. " +
+        "Value is a % based on its DOT accuracy rating and the assist cone threshold. " +
+        "The value is multiplied with assist strength.")]
+    [SerializeField] AnimationCurve accuracyToAssist;
+    [Tooltip("Additional modifier applied (multiplicatively) to horizontal aim assist")]
+    [SerializeField] float horizontalAssistModifier = 1;
+    [Tooltip("Additional modifier applied (multiplicatively) to vertical aim assist")]
+    [SerializeField] float verticalAsssitModifier = 1;
+
+    /// <summary>
+    /// The center of the target that aim assist is looking at. Null if no target. 
+    /// </summary>
+    private Transform targetCenter;
+    /// <summary>
+    /// The DOT accuracy towards the current target
+    /// </summary>
+    private float targetDot;
+
     private void Awake()
     {
         // Initialize aim controls
         StartCoroutine(InitializeControls());
+        aimAssistOptions = new List<Target>();
 
         // Load in settings
         UpdateSettings();
@@ -87,6 +121,7 @@ public class AimController : MonoBehaviour
     private void LateUpdate()
     {
         // Get new delta based on update
+        SearchForTarget();
         ManageCamera();
     }
 
@@ -161,11 +196,40 @@ public class AimController : MonoBehaviour
         transform.rotation *= Quaternion.AngleAxis(lookDelta.x * sensitivity * horizontalInversion * Time.deltaTime, Vector3.up);
         
         // Manage vertical rotaiton
-        Quaternion temp = cameraLook.transform.localRotation *
+        Quaternion newVerticalRot = cameraLook.transform.localRotation *
             Quaternion.AngleAxis(-lookDelta.y * sensitivity * verticalInversion * Time.deltaTime, Vector3.right);
 
+        //Debug.Log("Delta detected : " + lookDelta.magnitude);
+        float assistMag = inputMagnitudeToAssist.Evaluate(lookDelta.magnitude);
+        lookDeltaMag = lookDelta.magnitude;
+        // calculate aim assist rotations, apply
+        if (targetCenter != null && assistMag > 0)
+        {
+            // calculate the mag modifier based on the % of the dot, getting stronger the more center it is
+            float distBasedMag = 1 - assistConeThreshold;
+            distBasedMag = (targetDot - assistConeThreshold) / distBasedMag;
+            distBasedMag = accuracyToAssist.Evaluate(distBasedMag);
+            assistMag *= distBasedMag;
+
+            // calculate the target rotation
+            Quaternion tgtRot = Quaternion.LookRotation(targetCenter.position - cameraLook.position);
+            //Debug.DrawLine(cameraLook.position, cameraLook.position + (targetCenter.position - cameraLook.position), Color.green);
+
+            // make sure its only applying horizontal rotation
+            Vector3 tempEuler = Quaternion.Slerp(transform.rotation, tgtRot, assistStrength * assistMag * horizontalAssistModifier * Time.deltaTime).eulerAngles;
+            tempEuler.x = 0;
+            tempEuler.z = 0;
+            transform.rotation = Quaternion.Euler(tempEuler);
+
+            // do same for vertical rotation using the correct pivot
+            tempEuler = Quaternion.Slerp(newVerticalRot, tgtRot, assistStrength * assistMag * verticalAsssitModifier * Time.deltaTime).eulerAngles;
+            tempEuler.y = 0;
+            tempEuler.z = 0;
+            newVerticalRot = Quaternion.Euler(tempEuler);
+        }
+
         // Make sure to clamp vertical angle first
-        float newYAngle = temp.eulerAngles.x;
+        float newYAngle = newVerticalRot.eulerAngles.x;
         if (newYAngle > 180)
         {
             newYAngle -= 360;
@@ -229,5 +293,83 @@ public class AimController : MonoBehaviour
     private void ResetLook()
     {
         cameraLook.transform.rotation = Quaternion.Euler(0, 0, 0);
+    }
+
+    public float lookDeltaMag;
+
+    private List<Target> aimAssistOptions;
+    /// <summary>
+    /// search for an aim assist target
+    /// </summary>
+    private void SearchForTarget()
+    {
+        // get all targets forwards 
+        RaycastHit[] allTargets = Physics.SphereCastAll(cameraLook.position, assistRadius, cameraLook.forward, assistDistance, targetLayers);
+        //Debug.DrawLine(cameraLook.position, cameraLook.position + (cameraLook.forward * (assistDistance + assistRadius)), Color.red);
+
+        targetCenter = null;
+        targetDot = 0;
+
+        if (allTargets.Length > 0) // if targets found, determine the most 'centered' target
+        {
+            // prepare comparison variables
+            float highestDot = assistConeThreshold;
+            Vector3 forwardDir = cameraLook.forward.normalized;
+
+            // first, filter each raycast hit into target references. Prevents multi-target options
+            aimAssistOptions.Clear();
+            foreach(var tgt in allTargets)
+            {
+                // check for a direct reference
+                Target t = tgt.collider.GetComponent<Target>();
+                // if no direct reference, try getting indirect reference (target hitbox) 
+                if (t == null)
+                {
+                    t = tgt.collider.GetComponent<TargetHitbox>()?.Target();
+
+                    // if still no target, move onto the next option
+                    if (t == null) continue;
+                }
+
+                // make sure no dupes in list
+                if (!aimAssistOptions.Contains(t))
+                    aimAssistOptions.Add(t);
+            }    
+
+            // check each target. Make sure its a target and if so, utilize its center transform
+            foreach (var tgt in aimAssistOptions)
+            {
+                // get dot product of normalized directions.
+                // target with the highest DOT product is the most 'center'  
+                float newDot = Vector3.Dot(forwardDir, (tgt.Center.position - cameraLook.position).normalized);
+                if (newDot > highestDot && newDot > assistConeThreshold)
+                {
+                    // check for direct line of site using blocker layers. only thing it should hit is the target
+                    RaycastHit blockCheck;
+                    if (Physics.Raycast(cameraLook.position, (tgt.Center.position - cameraLook.position), out blockCheck, assistDistance + assistRadius, blockLayers))
+                    {
+                        Target blocker = blockCheck.collider.GetComponent<Target>();
+                        // if no direct reference, try getting indirect reference (target hitbox) 
+                        if (blocker == null)
+                        {
+                            blocker = blockCheck.collider.GetComponent<TargetHitbox>()?.Target();
+                        }
+
+                        // the target is blocked if it was unable to hit itself
+                        if (blocker == null || blocker != tgt)
+                            continue;
+                    }
+
+                    highestDot = newDot;
+                    targetCenter = tgt.Center;
+                    targetDot = newDot;
+                }
+            }
+        }
+        else // if no targets found, no target
+        {
+            targetCenter = null;
+            targetDot = 0;
+        }
     }
 }

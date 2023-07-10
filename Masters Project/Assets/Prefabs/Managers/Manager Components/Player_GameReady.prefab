@@ -369,7 +369,7 @@ MonoBehaviour:
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 0
+  m_UpdateMethod: 1
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
     m_Style: 1
@@ -909,12 +909,90 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onSettingsChangedChannel: {fileID: 11400000, guid: 0c8d55cade4ec7748a24f8fe270230cc, type: 2}
   resetPlayerLook: {fileID: 11400000, guid: 8b0ee066832a06148b8a33d191527054, type: 2}
-  mouseSensitivity: 5
   angleClamp: {x: -80, y: 80}
   cameraLook: {fileID: 8810997312557230426}
   onStateChangedChannel: {fileID: 11400000, guid: 2770aed5fbc083e4d8279c944f0242e2, type: 2}
   onSceneChangeChannel: {fileID: 11400000, guid: 44ac93730b7a0dd49a1e55a1ff27d806, type: 2}
   onControllerSwap: {fileID: 11400000, guid: 96c44305848abd444b49d5b48f1ac04c, type: 2}
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 2654464
+  blockLayers:
+    serializedVersion: 2
+    m_Bits: 2654473
+  assistRadius: 8
+  assistDistance: 50
+  assistStrength: 6.8
+  assistConeThreshold: 0.985
+  inputMagnitudeToAssist:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -3.8228798
+      outSlope: -0.2
+      tangentMode: 65
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.061643835
+    - serializedVersion: 3
+      time: 5
+      value: 0
+      inSlope: -0.2
+      outSlope: -0.122028194
+      tangentMode: 5
+      weightedMode: 0
+      inWeight: 0.09760276
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  accuracyToAssist:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.03
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.823291
+      value: 0.03
+      inSlope: -0
+      outSlope: 0.022027848
+      tangentMode: 5
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.7136984
+    - serializedVersion: 3
+      time: 0.9859664
+      value: 1
+      inSlope: 5.9627957
+      outSlope: 0
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  horizontalAssistModifier: 1.2
+  verticalAsssitModifier: 0.8
+  lookDeltaMag: 0
 --- !u!114 &8810997313966297022
 MonoBehaviour:
   m_ObjectHideFlags: 0
