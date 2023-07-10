@@ -452,6 +452,28 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""GodCheat"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bfaee00f-b65e-4f87-a8e3-630524fbec21"",
+                    ""path"": ""<Keyboard>/minus"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ClearEncounter"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d5097b8e-43db-4dc8-8950-d4b491922b2c"",
+                    ""path"": ""<Keyboard>/slash"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""IncrementConvs"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },

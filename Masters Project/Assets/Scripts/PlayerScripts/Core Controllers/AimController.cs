@@ -22,11 +22,13 @@ public class AimController : MonoBehaviour
     private float mouseSensitivity;
     private bool mouseXInverted;
     private bool mouseYInverted;
-    
+    private bool mouseAimAssist;
+
     private float controllerSensitivity;
     private bool controllerXInverted;
     private bool controllerYInverted;
-    
+    private bool controllerAimAssist;
+
     [Tooltip("The minimum and maximum rotation for the camera's vertical rotation.")]
     [SerializeField] private Vector2 angleClamp;
     [Tooltip("Primary point the camera looks at and pivots from. Should be around the player's shoulders.")]
@@ -109,10 +111,12 @@ public class AimController : MonoBehaviour
         mouseSensitivity = Settings.mouseSensitivity;
         mouseXInverted = Settings.mouseInvertX;
         mouseYInverted = Settings.mouseInvertY;
+        mouseAimAssist= Settings.mouseAimAssist;
 
         controllerSensitivity = Settings.controllerSensitivity;
         controllerXInverted = Settings.controllerInvertX;
         controllerYInverted = Settings.controllerInvertY;
+        controllerAimAssist= Settings.controllerAimAssist;
 
         //Debug.Log("Aim sensitivity set to : " + mouseSensitivity);
         UpdateInputSettings(InputManager.CurrControlScheme);
@@ -120,8 +124,11 @@ public class AimController : MonoBehaviour
 
     private void LateUpdate()
     {
-        // Get new delta based on update
-        SearchForTarget();
+        // search for a new target if assist is enabled
+        if(assist)
+            SearchForTarget();
+
+        // Update camera
         ManageCamera();
     }
 
@@ -130,6 +137,7 @@ public class AimController : MonoBehaviour
     float sensitivity;
     float horizontalInversion = 1;
     float verticalInversion = 1;
+    [SerializeField] bool assist;
 
     private void Update()
     {
@@ -161,6 +169,8 @@ public class AimController : MonoBehaviour
                     if (mouseYInverted)
                         verticalInversion *= -1;
 
+                    assist = mouseAimAssist;
+
                     break;
                 }
             case InputManager.ControlScheme.CONTROLLER:
@@ -172,11 +182,14 @@ public class AimController : MonoBehaviour
                     if (controllerYInverted)
                         verticalInversion *= -1;
 
+                    assist = controllerAimAssist;
+
                     break;
                 }
             default: // by default, use M&K settings
                 {
                     sensitivity = mouseSensitivity;
+                    assist = mouseAimAssist;
 
                     if (mouseXInverted)
                         horizontalInversion *= -1;
@@ -203,7 +216,7 @@ public class AimController : MonoBehaviour
         float assistMag = inputMagnitudeToAssist.Evaluate(lookDelta.magnitude);
         lookDeltaMag = lookDelta.magnitude;
         // calculate aim assist rotations, apply
-        if (targetCenter != null && assistMag > 0)
+        if (assist && targetCenter != null && assistMag > 0)
         {
             // calculate the mag modifier based on the % of the dot, getting stronger the more center it is
             float distBasedMag = 1 - assistConeThreshold;
