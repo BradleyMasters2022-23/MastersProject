@@ -26,6 +26,12 @@ public class CutsceneTrigger : MonoBehaviour
 
     protected virtual void Awake()
     {
+        if(cutscene == null)
+        {
+            enabled = false;
+            return;
+        }
+
         // get saved data
         saveData = DataManager.instance.Load<CutsceneSaveData>(fileName);
         if(saveData == null)

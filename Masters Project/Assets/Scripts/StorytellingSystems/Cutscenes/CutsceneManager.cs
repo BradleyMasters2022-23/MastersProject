@@ -192,10 +192,6 @@ public class CutsceneManager : MonoBehaviour
         playerControls.PlayerGameplay.Pause.Disable();
         playerControls.PlayerGameplay.Interact.Disable();
 
-        // stop music with fade
-        if(BackgroundMusicManager.instance!= null)
-            BackgroundMusicManager.instance.StopMusic();
-
         // turn on the screen
         yield return StartCoroutine(LoadScreen(true, fadeInTime));
         playerControls.Disable();
@@ -204,6 +200,7 @@ public class CutsceneManager : MonoBehaviour
 
         yield return new WaitForSecondsRealtime(startDelay);
         yield return new WaitUntil(() => !pauseScreen.activeInHierarchy);
+
         // Play the video
         videoPlayer.Play();
         yield return new WaitForEndOfFrame();

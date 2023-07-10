@@ -35,6 +35,8 @@ public class VFXTimeScaler : TimeAffectedEntity, IPoolable
 
     public bool keepReserved = false;
 
+    public bool alwaysFastForward = false;
+
     private void Awake()
     {
         // start playing for the VFX that uses them normally
@@ -97,7 +99,7 @@ public class VFXTimeScaler : TimeAffectedEntity, IPoolable
     {
         effectRef.Play();
         float life = lifetime;
-        if (Affected && Slowed)
+        if ((Affected && Slowed) || alwaysFastForward)
         {
             FastForward();
             life -= fastForwardTime;

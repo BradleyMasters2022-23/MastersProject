@@ -30,7 +30,7 @@ public class CallManager : MonoBehaviour
     /// </summary>
     [SerializeField, ReadOnly, HideInEditorMode]
     private List<Character> randomChatOptions = new List<Character>();
-
+    [SerializeField] private Conversation ultimateGenericFailsafe;
     /// <summary>
     /// Cheat controls
     /// </summary>
@@ -109,11 +109,21 @@ public class CallManager : MonoBehaviour
     {
         if(availableConversations.Count > 0) // If new chats available, get this instead
         {
+            Debug.Log("Active call found, loading");
             return availableConversations[Random.Range(0, availableConversations.Count)];
         }
         else // if no options, get a random final choice from list of complete characters
         {
-            return randomChatOptions[Random.Range(0, randomChatOptions.Count)].repeatableConversations.Pull();
+            Debug.Log("No call found, loading misc");
+            if (randomChatOptions.Count > 0)
+            {
+                return randomChatOptions[Random.Range(0, randomChatOptions.Count)].repeatableConversations.Pull();
+            }
+            else
+            {
+                return ultimateGenericFailsafe;
+            }
+
         }
     }
 

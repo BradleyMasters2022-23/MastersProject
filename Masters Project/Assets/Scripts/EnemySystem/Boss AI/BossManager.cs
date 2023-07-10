@@ -59,6 +59,7 @@ public class BossManager : TimeAffectedEntity
             // Try attacking on cooldown 
             if(cooldownTracker.TimerDone() && !disabled)
             {
+                //Debug.Log("Getting attack from phase pool " + currentPhase);
                 BossAttack chosenAttack = phaseAttacks[currentPhase].Pull();
 
                 // if chosen attack on cooldown, do another pull

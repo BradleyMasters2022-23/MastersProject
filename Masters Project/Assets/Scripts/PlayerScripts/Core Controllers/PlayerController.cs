@@ -451,6 +451,12 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void GetGroundData()
     {
+        if (!jumpTimer.TimerDone())
+        {
+            grounded = false;
+            return;
+        }
+
         RaycastHit temp = slopeHit;
         Debug.DrawLine(groundCheck.position, groundCheck.position + Vector3.down * groundCheckRadius, Color.red);
         if (Physics.Raycast(groundCheck.position, Vector3.down, out slopeHit, groundCheckRadius, groundMask))
@@ -620,7 +626,15 @@ public class PlayerController : MonoBehaviour
 
             jumpSound.PlayClip(transform, source, false);
         }
+    }
 
+    /// <summary>
+    /// get the current velocity of the player
+    /// </summary>
+    /// <returns></returns>
+    public Vector3 GetVelocity()
+    {
+        return rb.velocity;
     }
 
     #endregion

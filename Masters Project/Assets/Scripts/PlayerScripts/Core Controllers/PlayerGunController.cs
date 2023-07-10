@@ -9,12 +9,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-public class PlayerGunController : MonoBehaviour
+public class PlayerGunController : TimeAffectedEntity, TimeObserver
 {
     [Header("---Game Flow---")]
     [SerializeField] private ChannelGMStates onStateChangeChannel;
+    [SerializeField] private ChannelVoid onWeaponShoot;
 
     [Header("=====Gameplay=====")]
 
@@ -35,6 +37,8 @@ public class PlayerGunController : MonoBehaviour
     [SerializeField] private float minAimRange;
     [Tooltip("The range of this weapon. Passed through to the bullet")]
     [SerializeField] private float maxRange;
+    private float defaultMaxRange;
+
 
     [Tooltip("Sound that happens when gun go pew pew")]
     [SerializeField] private AudioClipSO gunshotSound;
@@ -114,6 +118,7 @@ public class PlayerGunController : MonoBehaviour
     /// </summary>
     private ScaledTimer fireTimer;
 
+
     /// <summary>
     /// Initialize controls and starting values
     /// </summary>
@@ -130,6 +135,8 @@ public class PlayerGunController : MonoBehaviour
         // Initialize timers
         fireTimer = new ScaledTimer(fireDelay.Current, false);
         bloomRecoveryCDTracker = new ScaledTimer(bloomRecoveryDelay, false);
+
+        defaultMaxRange = maxRange;
     }
 
     private IEnumerator InitializeControls()
@@ -159,9 +166,9 @@ public class PlayerGunController : MonoBehaviour
         }
         
     }
-
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
         // Tell the accuracy to recover over time while not firing
         if(!firing && currBloom != baseBloom && bloomRecoveryCDTracker.TimerDone() && !TimeManager.TimeStopped)
         {
@@ -170,8 +177,6 @@ public class PlayerGunController : MonoBehaviour
             {
                 newAccuracy = baseBloom;
             }
-                
-
             currBloom=newAccuracy;
         }
     }
@@ -203,7 +208,19 @@ public class PlayerGunController : MonoBehaviour
             }
             else
             {
-                Instantiate(muzzleflashVFX, shootPoint.position, shootPoint.rotation);
+                mf = Instantiate(muzzleflashVFX, shootPoint.position, shootPoint.rotation);
+            }
+
+            if(Slowed)
+            {
+                mf.transform.GetChild(0).gameObject.layer = 0;
+                
+                
+            }
+            else
+            {
+                mf.transform.parent = shootPoint;
+                mf.transform.GetChild(0).gameObject.layer = 6;
             }
         }
 
@@ -213,7 +230,7 @@ public class PlayerGunController : MonoBehaviour
         }
 
         // If time is not stopped, fire normal bullets
-        if(!TimeManager.TimeStopped)
+        if(!Slowed)
         {
             for (int i = 0; i < bulletsPerShot; i++)
             {
@@ -283,6 +300,8 @@ public class PlayerGunController : MonoBehaviour
 
         // play sound effect
         gunshotSound.PlayClip(shootPoint, gunshotSource, true);
+        // call any subscribers to this event
+        onWeaponShoot?.RaiseEvent();
     }
 
     private Vector3 ApplySpread(Vector3 rot)
@@ -358,5 +377,24 @@ public class PlayerGunController : MonoBehaviour
     public void SetMaxRange(float newVal)
     {
         maxRange = newVal;
+    }
+
+    public void OnStop()
+    {
+        // on stop, unpack any muzzle flashes and set it back to normal layer
+        for(int i = shootPoint.childCount-1; i >= 0; i--)
+        {
+            VFXPooler.instance.ReturnVFX(shootPoint.GetChild(i).gameObject);
+        }
+    }
+
+    public void OnResume()
+    {
+        return;
+    }
+
+    public float GetOriginalRange()
+    {
+        return defaultMaxRange;
     }
 }

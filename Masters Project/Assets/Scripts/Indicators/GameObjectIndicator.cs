@@ -13,7 +13,6 @@ using UnityEngine;
 public class GameObjectIndicator : IIndicator
 {
     [SerializeField] private GameObject indicator;
-
     private void Awake()
     {
         if(indicator != null)

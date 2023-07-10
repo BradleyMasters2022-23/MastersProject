@@ -7,6 +7,8 @@ public class MineEnemyProjectile : ProjectileAccelerate
     [SerializeField] private Target targetManager;
     [SerializeField] private float shrinkTime;
 
+    bool shrinkStarted = false;
+
     /// <summary>
     /// On mine enemy, detonate the explosive
     /// </summary>
@@ -22,11 +24,21 @@ public class MineEnemyProjectile : ProjectileAccelerate
         return true;
     }
 
+    protected override void ApplyDamage(Transform target, Vector3 damagePoint)
+    {
+        if (target.GetComponent<IDamagable>() != null)
+        {
+            targetManager.RegisterEffect(999);
+        }
+    }
+
     protected override void End()
     {
-        StartCoroutine(ShrinkRoutine());
-
-        //base.End();
+        if (!shrinkStarted)
+        {
+            StartCoroutine(ShrinkRoutine());
+            shrinkStarted = true;
+        }
     }
 
     private IEnumerator ShrinkRoutine()
@@ -44,6 +56,4 @@ public class MineEnemyProjectile : ProjectileAccelerate
 
         yield return null;
     }
-
-
 }

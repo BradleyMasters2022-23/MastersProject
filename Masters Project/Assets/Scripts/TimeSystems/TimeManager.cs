@@ -43,6 +43,8 @@ public class TimeManager : MonoBehaviour
 
     #region Inputs
 
+    [SerializeField] private ChannelBool onActivateTimestopChannel;
+
     /// <summary>
     /// Reference to the game's control scheme
     /// </summary>
@@ -189,7 +191,6 @@ public class TimeManager : MonoBehaviour
     #endregion
 
     public static TimeManager instance;
-
     private bool cheatMode;
 
     /// <summary>
@@ -396,6 +397,8 @@ public class TimeManager : MonoBehaviour
                         source.Stop();
                     stopTime.PlayClip(source);
 
+                    onActivateTimestopChannel.RaiseEvent(true);
+
                     break;
                 }
             case TimeGaugeState.RECHARGING:
@@ -410,6 +413,8 @@ public class TimeManager : MonoBehaviour
                     if (source != null)
                         source.Stop();
                     startTime.PlayClip(source);
+                    onActivateTimestopChannel.RaiseEvent(false);
+
 
                     break;
                 }
@@ -423,6 +428,8 @@ public class TimeManager : MonoBehaviour
                     if (source != null)
                         source.Stop();
                     startTime.PlayClip(source);
+                    onActivateTimestopChannel.RaiseEvent(false);
+
 
                     break;
                 }
