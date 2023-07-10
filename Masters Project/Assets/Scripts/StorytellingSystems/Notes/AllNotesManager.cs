@@ -119,6 +119,11 @@ public class AllNotesManager : MonoBehaviour
             return null;
     }
 
+    public bool FragmentCollected(Fragment frag)
+    {
+        return saveData.FragmentCollected(frag);
+    }
+
 
     /// <summary>
     /// Checks whether a note is completed
