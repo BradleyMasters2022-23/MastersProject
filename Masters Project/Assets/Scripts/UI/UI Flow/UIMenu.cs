@@ -14,10 +14,12 @@ using UnityEngine.UI;
 using Masters.UI;
 using System.Linq;
 
+[RequireComponent(typeof(CanvasGroup))]
 public abstract class UIMenu : MonoBehaviour
 {
-    [Tooltip("On controller, which option is selected when screen is opened?")]
-    [SerializeField] private GameObject controllerDefault;
+    [Tooltip("On controller, which option is selected when screen is opened?" +
+        "Top items will take priority but only activate if they're ENABLED on open")]
+    [SerializeField] private GameObject[] controllerDefaultPriority;
 
     [Tooltip("Sound when Menu is opened")]
     [SerializeField] private AudioClipSO openMenu;
@@ -52,7 +54,6 @@ public abstract class UIMenu : MonoBehaviour
     protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
-
         source = gameObject.AddComponent<AudioSource>();
     }
 
@@ -140,22 +141,33 @@ public abstract class UIMenu : MonoBehaviour
     public void TopStackFunction()
     {
         // re-enable any interactable options 
-        if(allOptions != null)
-            foreach (var o in allOptions)
-                o.interactable = true;
-
-        // If type is mouse, dont auto assign 
-        if (InputManager.CurrControlScheme == InputManager.ControlScheme.KEYBOARD)
+        if(groupManager != null)
         {
-            GameManager.instance.ClearPointer();
-            //Debug.Log("Clearing pointer for M&K");
-            return;
+            groupManager.interactable = true;
         }
 
+        // If type is mouse, dont auto assign 
+        //if (InputManager.CurrControlScheme == InputManager.ControlScheme.KEYBOARD)
+        //{
+        //    GameManager.instance.ClearPointer();
+        //    //Debug.Log("Clearing pointer for M&K");
+        //    return;
+        //}
+
         // If nothing, dont do anything
-        if(lastSelected == null && controllerDefault == null)
+        if(lastSelected == null && controllerDefaultPriority == null)
         {
-            //Debug.Log("Nothing selected last, no controller default");
+            // if nothing is last selected and no controller priority, get the first interactable
+            Selectable[] s = GetComponentsInChildren<Selectable>(false);
+            foreach(var o in s)
+            {
+                if(o.gameObject.activeInHierarchy && o.IsInteractable())
+                {
+                    EventSystem.current.SetSelectedGameObject(o.gameObject);
+                    break;
+                }
+            }
+
 
             return;
         }
@@ -167,7 +179,16 @@ public abstract class UIMenu : MonoBehaviour
         // Otherwise, use the default
         else
         {
-            EventSystem.current.SetSelectedGameObject(controllerDefault);
+            // find the first valid item to use. Valid item is any item that is active and interactable
+            foreach(var o in controllerDefaultPriority)
+            {
+                if(o.activeInHierarchy && o.GetComponent<Selectable>() != null && o.GetComponent<Selectable>().IsInteractable())
+                {
+                    EventSystem.current.SetSelectedGameObject(o);
+                    break;
+
+                }
+            }
         }
 
         //Debug.Log($"Set the event select to {EventSystem.current.currentSelectedGameObject.name}");
@@ -190,20 +211,26 @@ public abstract class UIMenu : MonoBehaviour
     /// </summary>
     public abstract void CloseFunctionality();
 
-
-    List<Selectable> allOptions;
+    /// <summary>
+    /// canvas group that enables and disables all interactions 
+    /// </summary>
+    CanvasGroup groupManager;
+    /// <summary>
+    /// set the menu to background, preventing it from being selectable via UI navigation
+    /// </summary>
     public virtual void SetBackground()
     {
-        allOptions = GetComponentsInChildren<Selectable>().ToList();
-        foreach (var o in allOptions.ToArray())
-        {
-            // make sure it was made interactable to begin with
-            if(o.IsInteractable())
-                o.interactable = false;
-            else
-                allOptions.Remove(o);
-        }
-            
-        Debug.Log("Found " + allOptions.Count + " options to disable");
+        if(groupManager == null)
+            groupManager = GetComponent<CanvasGroup>();
+
+        //groupManager.interactable = false;
+    }
+
+    /// <summary>
+    /// Call game manager to close every screen up until this menu
+    /// </summary>
+    public void CloseToThisScreen()
+    {
+        GameManager.instance.CloseToMenu(this);
     }
 }

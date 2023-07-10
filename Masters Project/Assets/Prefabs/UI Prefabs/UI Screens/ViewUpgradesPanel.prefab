@@ -180,6 +180,7 @@ GameObject:
   - component: {fileID: 6814775534346491063}
   - component: {fileID: 476393929119482494}
   - component: {fileID: 1893104003476353890}
+  - component: {fileID: 4390575760548575823}
   m_Layer: 5
   m_Name: ViewUpgradesPanel
   m_TagString: Untagged
@@ -259,8 +260,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d000aab3d0e8f364c8d476eb59c02d17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controllerDefault: {fileID: 4603229661865400842}
-  openMenu: {fileID: 8300000, guid: ad6a146003cae7b4a92f67ce117ba1d3, type: 3}
+  controllerDefaultPriority:
+  - {fileID: 4603229661865400842}
+  openMenu: {fileID: 11400000, guid: 633ac39f64614ce4e9413468777f1172, type: 2}
   closable: 1
   backButton: {fileID: 0}
   onCloseActions:
@@ -283,6 +285,18 @@ MonoBehaviour:
   - {fileID: 8360473431377864399}
   - {fileID: 1585764751064319749}
   allStatsDisplay: {fileID: 3843537186613445808}
+--- !u!225 &4390575760548575823
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6814775534346491061}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &6814775534837976727
 GameObject:
   m_ObjectHideFlags: 0
@@ -916,7 +930,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 932981078255004886, guid: 9fb1845eb80e3cc44936482188bdda76, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 6
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 932981078255004886, guid: 9fb1845eb80e3cc44936482188bdda76, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
@@ -1088,7 +1102,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 932981078255004886, guid: 9fb1845eb80e3cc44936482188bdda76, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 6
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 932981078255004886, guid: 9fb1845eb80e3cc44936482188bdda76, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
@@ -1268,7 +1282,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 932981078255004886, guid: 9fb1845eb80e3cc44936482188bdda76, type: 3}
       propertyPath: m_Navigation.m_Mode
-      value: 6
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 932981078255004886, guid: 9fb1845eb80e3cc44936482188bdda76, type: 3}
       propertyPath: m_Navigation.m_SelectOnUp
@@ -1537,6 +1551,10 @@ PrefabInstance:
     - target: {fileID: 430342160513685565, guid: 77da07a13571f6f4aa8d98be1d20e83b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1799733926088497341, guid: 77da07a13571f6f4aa8d98be1d20e83b, type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1799733926088497341, guid: 77da07a13571f6f4aa8d98be1d20e83b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size

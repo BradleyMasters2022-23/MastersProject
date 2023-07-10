@@ -114,12 +114,19 @@ public class InputManager : MonoBehaviour
         schemeObserver.ObserveGamePad.SwapControls.performed += SwapControls;
         schemeObserver.ObserveMK.SwapControls.performed += SwapControls;
     }
+
+    /// <summary>
+    /// remove input controls and save bindings. Only do if it was properly initialized
+    /// </summary>
     private void OnDisable()
     {
-        schemeObserver.ObserveGamePad.SwapControls.performed -= SwapControls;
-        schemeObserver.ObserveMK.SwapControls.performed -= SwapControls;
+        if (Instance == this)
+        {
+            schemeObserver.ObserveGamePad.SwapControls.performed -= SwapControls;
+            schemeObserver.ObserveMK.SwapControls.performed -= SwapControls;
 
-        SaveKeybindings();
+            SaveKeybindings();
+        }
     }
 
     /// <summary>

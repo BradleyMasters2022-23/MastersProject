@@ -384,7 +384,7 @@ public class GameManager : MonoBehaviour
             menuStack.Peek().StackSave();
 
         // hide the controller's selected option
-        EventSystem.current.SetSelectedGameObject(null);
+        //EventSystem.current.SetSelectedGameObject(null);
     }
 
     /// <summary>
@@ -480,6 +480,7 @@ public class GameManager : MonoBehaviour
         // Tell the stack below it to load its select
         if (menuStack.Count > 0)
         {
+            Debug.Log($"Calling top stack on {menuStack.Peek().name}");
             menuStack.Peek().TopStackFunction();
         }
 
@@ -495,6 +496,20 @@ public class GameManager : MonoBehaviour
                 // Change it back to its previous state (Gameplay or HUB)
                 ChangeState(lastState);
             }
+        }
+    }
+
+    /// <summary>
+    /// continually close menus until it reaches the target
+    /// </summary>
+    /// <param name="target">target menu to close UNTIL</param>
+    public void CloseToMenu(UIMenu target)
+    {
+        if (target == null) return;
+
+        while (menuStack.Count > 0 && menuStack.Peek().Closable && menuStack.Peek() != target)
+        {
+            CloseTopMenu();
         }
     }
 

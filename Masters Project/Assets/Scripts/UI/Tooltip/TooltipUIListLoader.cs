@@ -102,6 +102,12 @@ public class TooltipUIListLoader : MonoBehaviour
         if (scroll != null)
             scroll.value = 1;
             
+        // go through and initialize each scroll system now that all objects are spawned
+        foreach(GameObject o in spawned)
+        {
+            o.GetComponent<ScrollingSelect>()?.InitScrollSelect();
+        }
+
         // return reference to all objects
         return spawned;
     }
