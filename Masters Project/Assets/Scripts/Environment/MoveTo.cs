@@ -61,9 +61,11 @@ public class MoveTo : MonoBehaviour
                 break;
             }
             // Move towards the end target, bottled by max speed and accounting for its current dist ratio
-            transform.Translate(
-                (endingTarget.position - transform.position).normalized * 
-                (maxSpeed * accelerationRate.Evaluate(distRatio)));
+            Vector3 moveVec = (endingTarget.position - transform.position).normalized * (maxSpeed * accelerationRate.Evaluate(distRatio));
+            transform.position += moveVec;
+
+            Debug.DrawLine(transform.position, endingTarget.position, Color.red, 1f);
+            Debug.DrawRay(transform.position, (endingTarget.position - transform.position).normalized, Color.green, 1f);
 
             yield return new WaitForFixedUpdate();
         }

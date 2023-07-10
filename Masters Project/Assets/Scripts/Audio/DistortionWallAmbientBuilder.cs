@@ -20,6 +20,7 @@ public class DistortionWallAmbientBuilder : MonoBehaviour
     [Button]
     public void BuildWall()
     {
+        /*
         float dist = 0;
 
         for(int i = transform.childCount-1; i >= 0; i--)
@@ -91,6 +92,7 @@ public class DistortionWallAmbientBuilder : MonoBehaviour
         {
             DestroyImmediate(allCols[i]);
         }
+        */
     }
 
     private void Awake()

@@ -66,7 +66,7 @@ public class GenericRadar<T> : MonoBehaviour where T : Component
         targetList.TrimExcess();
 
         // get all targets
-        T[] targets = FindObjectsOfType<T>();
+        T[] targets = FindObjectsOfType<T>(false);
 
         // Check list for new targets. Add new pointers for each new target
         foreach (T t in targets)
