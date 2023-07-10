@@ -670,6 +670,17 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""Tactical"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1f4c9d69-1a40-43a4-865a-0dae36a2d554"",
+                    ""path"": ""<Keyboard>/slash"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""IncrementConvs"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
