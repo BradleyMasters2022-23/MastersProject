@@ -212,9 +212,8 @@ public class AimController : MonoBehaviour
         Quaternion newVerticalRot = cameraLook.transform.localRotation *
             Quaternion.AngleAxis(-lookDelta.y * sensitivity * verticalInversion * Time.deltaTime, Vector3.right);
 
-        //Debug.Log("Delta detected : " + lookDelta.magnitude);
         float assistMag = inputMagnitudeToAssist.Evaluate(lookDelta.magnitude);
-        lookDeltaMag = lookDelta.magnitude;
+
         // calculate aim assist rotations, apply
         if (assist && targetCenter != null && assistMag > 0)
         {
@@ -308,8 +307,6 @@ public class AimController : MonoBehaviour
         cameraLook.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
-    public float lookDeltaMag;
-
     private List<Target> aimAssistOptions;
     /// <summary>
     /// search for an aim assist target
@@ -344,8 +341,8 @@ public class AimController : MonoBehaviour
                     if (t == null) continue;
                 }
 
-                // make sure no dupes in list
-                if (!aimAssistOptions.Contains(t))
+                // make sure no dupes in list and that its alive
+                if (!t.Killed() && !aimAssistOptions.Contains(t))
                     aimAssistOptions.Add(t);
             }    
 
