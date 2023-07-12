@@ -13,6 +13,8 @@ using UnityEngine.InputSystem.LowLevel;
 
 public class ControllerCursor : MonoBehaviour
 {
+    public static ControllerCursor instance;
+
     [Tooltip("The movement speed of the cursor")]
     [SerializeField] float cursorMoveSpeed = 1000;
     /// <summary>
@@ -36,42 +38,39 @@ public class ControllerCursor : MonoBehaviour
     /// </summary>
     public float padding = 30f;
 
+    [Tooltip("Channel called when the controller scheme swaps. Used to determine when to show cursor")]
     [SerializeField] ChannelControlScheme onSchemeSwap;
 
+    /// <summary>
+    /// The previous input state
+    /// </summary>
     bool previousMouseState;
 
     /// <summary>
-    /// Get all necessary references
+    /// Reference to the original mouse cursor
     /// </summary>
+    Mouse originalMouse;
+
     private void Awake()
     {
-        cursorMove = InputManager.Controls.UI.CursorMove;
-        cursorMove.Enable();
-    }
+        if(instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(this);
+            return;
+        }
 
-    /// <summary>
-    /// Prepare virtual mouse system on enable
-    /// </summary>
-    private void OnEnable()
-    {
+        cursorMove = InputManager.Controls.UI.CursorMove;
         originalMouse = Mouse.current;
 
-        // Get and prepare the virtual mouse if not already
-        if (virtualMouse == null)
-        {
-            virtualMouse = (Mouse) InputSystem.AddDevice("VirtualMouse");
-        }
-        else if (!virtualMouse.added)
-        {
-            InputSystem.AddDevice(virtualMouse);
-        }
-
-        InputState.Change(virtualMouse.position, rectRef.anchoredPosition);
-
-        // subscribe to the input move system
-        InputSystem.onAfterUpdate += MoveCursor;
 
         onSchemeSwap.OnEventRaised += DetermineCursorMode;
+
+        DisableControllerCursor();
     }
 
     /// <summary>
@@ -79,10 +78,8 @@ public class ControllerCursor : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        InputSystem.RemoveDevice(virtualMouse);
-        InputSystem.onAfterUpdate -= MoveCursor;
-
-        onSchemeSwap.OnEventRaised -= DetermineCursorMode;
+        // dont do disable actions if not the instance
+        if (instance != this) return;
     }
 
     /// <summary>
@@ -90,7 +87,7 @@ public class ControllerCursor : MonoBehaviour
     /// </summary>
     private void MoveCursor()
     {
-        Vector2 delta = Gamepad.current.rightStick.ReadValue();
+        Vector2 delta = Gamepad.current.leftStick.ReadValue();
         delta *= Time.unscaledDeltaTime * cursorMoveSpeed;
         Vector2 newPos = virtualMouse.position.ReadValue();
         newPos += delta;
@@ -125,8 +122,11 @@ public class ControllerCursor : MonoBehaviour
         rectRef.anchoredPosition = anchoredPos;
     }
 
-    
-    private void DetermineCursorMode(InputManager.ControlScheme scheme)
+    /// <summary>
+    /// Determine whether to show or hide the cursor. This assumes that its already in a UI mode
+    /// </summary>
+    /// <param name="scheme"></param>
+    public void DetermineCursorMode(InputManager.ControlScheme scheme)
     {
         switch (scheme)
         {
@@ -143,25 +143,55 @@ public class ControllerCursor : MonoBehaviour
         }
     }
 
-    Mouse originalMouse;
-
-    private void DisableControllerCursor()
-    {
-        originalMouse.WarpCursorPosition(virtualMouse.position.ReadValue());
-        rectRef.gameObject.SetActive(false);
-        
-        Cursor.visible = true;
-        //Cursor.lockState = CursorLockMode.Confined;
-    }
-
-
+    /// <summary>
+    /// Activate the controller cursor. Starts from the original location of the cursor
+    /// </summary>
     private void EnableControllerCursor()
     {
-        //Cursor.lockState = CursorLockMode.Locked;
+        if (cursorMove == null)
+            cursorMove = InputManager.Controls.UI.CursorMove;
+        cursorMove.Enable();
+
+        // Get and prepare the virtual mouse if not already
+        if (virtualMouse == null)
+        {
+            virtualMouse = (Mouse)InputSystem.AddDevice("VirtualMouse");
+        }
+        else if (!virtualMouse.added)
+        {
+            InputSystem.AddDevice(virtualMouse);
+        }
+        //InputState.Change(virtualMouse.position, rectRef.anchoredPosition);
+        // subscribe to the input move system
+        InputSystem.onAfterUpdate += MoveCursor;
+
+
         Cursor.visible = false;
         rectRef.gameObject.SetActive(true);
 
         InputState.Change(virtualMouse.position, originalMouse.position.ReadValue());
         AnchorCursorVisual(virtualMouse.position.ReadValue());
+    }
+
+    /// <summary>
+    /// Deactivate the controller cursor. Will return cursor to the current position
+    /// </summary>
+    private void DisableControllerCursor()
+    {
+        // if it was never enabled, then stop
+        if (virtualMouse == null) return;
+
+        if(cursorMove != null)
+            cursorMove.Disable();
+
+        originalMouse.WarpCursorPosition(virtualMouse.position.ReadValue());
+        rectRef.gameObject.SetActive(false);
+
+        InputSystem.RemoveDevice(virtualMouse);
+        InputSystem.onAfterUpdate -= MoveCursor;
+        onSchemeSwap.OnEventRaised -= DetermineCursorMode;
+
+        //Cursor.visible = true;
+        GameManager.instance.UpdateMouseMode();
     }
 }

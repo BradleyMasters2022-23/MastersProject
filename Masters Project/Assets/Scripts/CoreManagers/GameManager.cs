@@ -308,8 +308,6 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void Pause()
     {
-        Cursor.lockState = CursorLockMode.None;
-
         Cursor.lockState = CursorLockMode.Confined;
         Time.timeScale = 0;
     }
@@ -318,10 +316,13 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void UnPause()
     {
-        Cursor.lockState = CursorLockMode.None;
-
         Cursor.lockState = CursorLockMode.Locked;
         Time.timeScale = 1;
+    }
+
+    private void EnableUICursor()
+    {
+        ControllerCursor.instance.DetermineCursorMode(InputManager.CurrControlScheme);
     }
 
     /// <summary>
@@ -390,7 +391,7 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Update the cursor lock status
     /// </summary>
-    private void UpdateMouseMode()
+    public void UpdateMouseMode()
     {
         //Debug.Log("Mouse mode updated");
         // Currently, should be confined for everything except the main gameplay
@@ -411,12 +412,12 @@ public class GameManager : MonoBehaviour
             default:
                 {
                     Cursor.lockState = CursorLockMode.Confined;
-                    Cursor.visible = true;
+                    EnableUICursor();
+
                     break;
                 }
         }
-    }
-
+    } 
     #endregion
 
     #region Menu Management
