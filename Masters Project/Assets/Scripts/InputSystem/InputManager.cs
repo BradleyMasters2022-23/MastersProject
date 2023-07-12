@@ -33,6 +33,10 @@ public class InputManager : MonoBehaviour
     /// Global instance of the controls
     /// </summary>
     public static GameControls Controls;
+    /// <summary>
+    /// reference to the main player input system. Should be attached
+    /// </summary>
+    private PlayerInput playerInput;
 
     /// <summary>
     /// Prepare singleton
@@ -51,16 +55,21 @@ public class InputManager : MonoBehaviour
         }
 
         Controls = new GameControls();
+        playerInput = GetComponent<PlayerInput>();
         GenerateOverrideDict(textOverrides);
 
     }
-    #endregion
 
+    /// <summary>
+    /// Call all starts.
+    /// For organization, I moved all region starts into their own functions and have them all called here.
+    /// </summary>
     private void Start()
     {
         SchemeSwapStart();
-        
     }
+
+    #endregion
 
     #region Action Map Swapping
 
@@ -95,13 +104,16 @@ public class InputManager : MonoBehaviour
 
     [Tooltip("Current control scheme for the player")]
     public static ControlScheme CurrControlScheme;
-    public ControlScheme debugControlScheme;
-
     /// <summary>
-    /// Reference to the controls that observe all options
+    /// The string name of the mouse and keyboard scheme. Should match whats in GameplayControls.
     /// </summary>
-    private SchemeControls schemeObserver;
+    private const string mouseKeyboardSchemeName = "KeyboardMouse";
+    /// <summary>
+    /// The string name of the controller scheme. Should match whats in GameplayControls.
+    /// </summary>
+    private const string controllerSchemeName = "Gamepad";
 
+    [Tooltip("Channel thats called when controller inputs and devices are changed.")]
     [SerializeField] private ChannelControlScheme controlSchemeSwapChannel;
 
     /// <summary>
@@ -110,9 +122,8 @@ public class InputManager : MonoBehaviour
     private void SchemeSwapStart()
     {
         // Prepare controls
-        schemeObserver = new SchemeControls();
-        schemeObserver.ObserveGamePad.SwapControls.performed += SwapControls;
-        schemeObserver.ObserveMK.SwapControls.performed += SwapControls;
+        playerInput.onControlsChanged += OnControlsChanged;
+        controlSchemeSwapChannel?.RaiseEvent(CurrControlScheme);
     }
 
     /// <summary>
@@ -122,50 +133,42 @@ public class InputManager : MonoBehaviour
     {
         if (Instance == this)
         {
-            schemeObserver.ObserveGamePad.SwapControls.performed -= SwapControls;
-            schemeObserver.ObserveMK.SwapControls.performed -= SwapControls;
-
+            playerInput.onControlsChanged -= OnControlsChanged;
             SaveKeybindings();
         }
     }
 
     /// <summary>
-    /// Swap the controls to the relevant type
+    /// Swap the control schemes based on the current device. 
     /// </summary>
-    /// <param name="c">Context of the input</param>
-    private void SwapControls(InputAction.CallbackContext c = default)
+    /// <param name="input">Input data</param>
+    private void OnControlsChanged(PlayerInput input)
     {
-        if(inputCD) // If on cooldown, ignore
+        // do something for each input type. 
+        switch(input.currentControlScheme)
         {
-            return;
-        }
-        else // Otherwise, reset cooldown
-        {
-            inputCD = true;
-            StartCoroutine(FrameCooldown());
-        }
-
-        bool swapped = false;
-
-        schemeObserver.Disable();
-
-        //Debug.Log("Swap control checking for : " + c.control.displayName);
-        // If currently using controller and M&K detected, switch to keyboard
-        if (CurrControlScheme == ControlScheme.CONTROLLER)
-        {
-            swapped = true;
-            SetToKeyboard();
-        }
-        else if (CurrControlScheme == ControlScheme.KEYBOARD)
-        {
-            swapped = true;
-            SetToController();
+            case controllerSchemeName:
+                {
+                    SetToController();
+                    break;
+                }
+            case mouseKeyboardSchemeName:
+                {
+                    SetToKeyboard();
+                    break;
+                }
+            default:
+                {
+                    Debug.LogError($"[INPUTMANAGER] Controls were swapped to a new control scheme, but OnControlsChanged" +
+                        $" does not have a case for it yet! The scheme is {input.currentControlScheme}");
+                    break;
+                }
         }
 
-        // If controls were swapped, trigger the channel
-        if (swapped)
-            controlSchemeSwapChannel?.RaiseEvent(CurrControlScheme);
+        // raise event to update game based on controls
+        controlSchemeSwapChannel?.RaiseEvent(CurrControlScheme);
     }
+
     /// <summary>
     /// Swap the control scheme to keyboard and perform any necessary functions
     /// </summary>
@@ -173,9 +176,6 @@ public class InputManager : MonoBehaviour
     {
         //Debug.Log("Switching to keyboard");
         CurrControlScheme = ControlScheme.KEYBOARD;
-        
-        // Update observer to only register gamepad inputs to reduce load
-        schemeObserver.ObserveGamePad.Enable();
         
     }
     /// <summary>
@@ -185,57 +185,6 @@ public class InputManager : MonoBehaviour
     {
         //Debug.Log("Switching to controller");
         CurrControlScheme = ControlScheme.CONTROLLER;
-
-        // Update observer to only register M&K inputs to reduce load
-        schemeObserver.ObserveMK.Enable();
-    }
-
-    /// <summary>
-    /// Whether the input swapping system is on cooldown
-    /// </summary>
-    private bool inputCD = false;
-    /// <summary>
-    /// Wait for 2 frames to prevent constant flipping
-    /// </summary>
-    /// <returns></returns>
-    private IEnumerator FrameCooldown()
-    {
-        yield return new WaitForEndOfFrame();
-        yield return new WaitForEndOfFrame();
-
-        inputCD = false;
-    }
-
-    /// <summary>
-    /// continually check for relevant axis-based inputs for swapping control scheme
-    /// </summary>
-    private void Update()
-    {
-        Vector2 val = Vector2.zero;
-        switch (CurrControlScheme)
-        {
-            case ControlScheme.KEYBOARD:
-                {
-                    schemeObserver.ObserveGamePad.AxisInput.Enable();
-                    val = schemeObserver.ObserveGamePad.AxisInput.ReadValue<Vector2>();
-                    break;
-                }
-            case ControlScheme.CONTROLLER:
-                {
-                    schemeObserver.ObserveMK.AxisInput.Enable();
-                    val = schemeObserver.ObserveMK.AxisInput.ReadValue<Vector2>();
-                    break;
-                }
-        }
-
-        // if any input, swap controls. Deadzone handled by input system
-        if (val.magnitude > 0)
-        {
-            SwapControls();
-        }
-
-        // update the debug variable to easily view in the inspector
-        debugControlScheme = CurrControlScheme;
     }
 
     #endregion

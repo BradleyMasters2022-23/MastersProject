@@ -142,7 +142,9 @@ public abstract class UIMenu : MonoBehaviour
         {
             groupManager.interactable = true;
         }
-        
+
+        return;
+
         // if last object was set and enabled, go to it
         if (lastSelected != null && lastSelected.isActiveAndEnabled && lastSelected.IsInteractable())
         {
