@@ -615,6 +615,17 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""96def7b6-7da1-4996-845a-dfd47e782dd1"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Back"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""bb07a02c-0dca-4548-8e0f-e6dff3e6012e"",
                     ""path"": ""<Keyboard>/enter"",
                     ""interactions"": """",
@@ -659,8 +670,8 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""9441c3e9-f837-40cd-83c9-7b111db392ba"",
-                    ""path"": ""<VirtualMouse>/position"",
+                    ""id"": ""23f93f39-5b1a-430e-bf07-dc072dbc1a7d"",
+                    ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -694,6 +705,17 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""e84a9ced-5e05-4abf-ae64-67e507b73f68"",
                     ""path"": ""<VirtualMouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b8e670c0-5b87-487d-8dd8-bf82a1006309"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",

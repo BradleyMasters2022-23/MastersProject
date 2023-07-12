@@ -1,17 +1,10 @@
-/* 
- * ================================================================================================
- * Author - Ben Schuster
- * Date Created - July 12thm 2023
- * Last Edited - July 12thm 2023 by Ben Schuster
- * Description - Virtual mouse for controller UI navigation. Do this bc its faster than redoing 
- * Unity UI navigation
- * ================================================================================================
- */
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.InputSystem;
 
-public class ControllerCursor : MonoBehaviour
+public class TestNewScript : MonoBehaviour
 {
     [Tooltip("The movement speed of the cursor")]
     [SerializeField] float cursorMoveSpeed = 1000;
@@ -36,16 +29,17 @@ public class ControllerCursor : MonoBehaviour
     /// </summary>
     public float padding = 30f;
 
-    [SerializeField] ChannelControlScheme onSchemeSwap;
-
     bool previousMouseState;
+
+    GameControls c;
 
     /// <summary>
     /// Get all necessary references
     /// </summary>
     private void Awake()
     {
-        cursorMove = InputManager.Controls.UI.CursorMove;
+        c = new GameControls();
+        cursorMove = c.UI.CursorMove;
         cursorMove.Enable();
     }
 
@@ -54,12 +48,10 @@ public class ControllerCursor : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        originalMouse = Mouse.current;
-
         // Get and prepare the virtual mouse if not already
         if (virtualMouse == null)
         {
-            virtualMouse = (Mouse) InputSystem.AddDevice("VirtualMouse");
+            virtualMouse = (Mouse)InputSystem.AddDevice("VirtualMouse");
         }
         else if (!virtualMouse.added)
         {
@@ -70,8 +62,6 @@ public class ControllerCursor : MonoBehaviour
 
         // subscribe to the input move system
         InputSystem.onAfterUpdate += MoveCursor;
-
-        onSchemeSwap.OnEventRaised += DetermineCursorMode;
     }
 
     /// <summary>
@@ -79,10 +69,8 @@ public class ControllerCursor : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        InputSystem.RemoveDevice(virtualMouse);
         InputSystem.onAfterUpdate -= MoveCursor;
-
-        onSchemeSwap.OnEventRaised -= DetermineCursorMode;
+        InputSystem.RemoveDevice(virtualMouse);
     }
 
     /// <summary>
@@ -123,45 +111,5 @@ public class ControllerCursor : MonoBehaviour
         Vector2 anchoredPos;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectRef, position, null, out anchoredPos);
         rectRef.anchoredPosition = anchoredPos;
-    }
-
-    
-    private void DetermineCursorMode(InputManager.ControlScheme scheme)
-    {
-        switch (scheme)
-        {
-            case InputManager.ControlScheme.KEYBOARD:
-                {
-                    DisableControllerCursor();
-                    break;
-                }
-            case InputManager.ControlScheme.CONTROLLER:
-                {
-                    EnableControllerCursor(); 
-                    break;
-                }
-        }
-    }
-
-    Mouse originalMouse;
-
-    private void DisableControllerCursor()
-    {
-        originalMouse.WarpCursorPosition(virtualMouse.position.ReadValue());
-        rectRef.gameObject.SetActive(false);
-        
-        Cursor.visible = true;
-        //Cursor.lockState = CursorLockMode.Confined;
-    }
-
-
-    private void EnableControllerCursor()
-    {
-        //Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        rectRef.gameObject.SetActive(true);
-
-        InputState.Change(virtualMouse.position, originalMouse.position.ReadValue());
-        AnchorCursorVisual(virtualMouse.position.ReadValue());
     }
 }
