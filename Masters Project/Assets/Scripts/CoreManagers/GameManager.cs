@@ -320,11 +320,6 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    private void EnableUICursor()
-    {
-        ControllerCursor.instance.DetermineCursorMode(InputManager.CurrControlScheme);
-    }
-
     /// <summary>
     /// Close all menus possible
     /// </summary>
@@ -389,7 +384,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Update the cursor lock status
+    /// Update the cursor lock status. Update the controller cursor manager
     /// </summary>
     public void UpdateMouseMode()
     {
@@ -401,19 +396,24 @@ public class GameManager : MonoBehaviour
                 {
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
+
+                    ControllerCursor.instance.SetUIState(false);
                     break;
                 }
             case States.GAMEPLAY:
                 {
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
+
+                    ControllerCursor.instance.SetUIState(false);
                     break;
                 }
             default:
                 {
+                    Cursor.visible = true;
                     Cursor.lockState = CursorLockMode.Confined;
-                    EnableUICursor();
 
+                    ControllerCursor.instance.SetUIState(true);
                     break;
                 }
         }

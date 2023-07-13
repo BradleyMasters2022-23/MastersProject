@@ -51,6 +51,13 @@ public class ControllerCursor : MonoBehaviour
     /// </summary>
     Mouse originalMouse;
 
+    /// <summary>
+    /// Whether or not the game is currently in a UI state. Managed by Game Manager
+    /// </summary>
+    private bool inUIState;
+
+    private bool cursorActive;
+
     private void Awake()
     {
         if(instance == null)
@@ -67,6 +74,15 @@ public class ControllerCursor : MonoBehaviour
         cursorMove = InputManager.Controls.UI.CursorMove;
         originalMouse = Mouse.current;
 
+        // Prepare the virtual mouse if its not already prepared
+        if (virtualMouse == null)
+        {
+            virtualMouse = (Mouse)InputSystem.AddDevice("VirtualMouse");
+        }
+        else if (!virtualMouse.added)
+        {
+            InputSystem.AddDevice(virtualMouse);
+        }
 
         onSchemeSwap.OnEventRaised += DetermineCursorMode;
 
@@ -80,6 +96,9 @@ public class ControllerCursor : MonoBehaviour
     {
         // dont do disable actions if not the instance
         if (instance != this) return;
+
+        InputSystem.RemoveDevice(virtualMouse);
+        onSchemeSwap.OnEventRaised -= DetermineCursorMode;
     }
 
     /// <summary>
@@ -128,6 +147,9 @@ public class ControllerCursor : MonoBehaviour
     /// <param name="scheme"></param>
     public void DetermineCursorMode(InputManager.ControlScheme scheme)
     {
+        // if not in a UI state, then dont do anything. 
+        if (!inUIState) return;
+
         switch (scheme)
         {
             case InputManager.ControlScheme.KEYBOARD:
@@ -148,29 +170,21 @@ public class ControllerCursor : MonoBehaviour
     /// </summary>
     private void EnableControllerCursor()
     {
-        if (cursorMove == null)
-            cursorMove = InputManager.Controls.UI.CursorMove;
+        if (cursorActive) return;
+
+        cursorActive = true;
         cursorMove.Enable();
 
-        // Get and prepare the virtual mouse if not already
-        if (virtualMouse == null)
-        {
-            virtualMouse = (Mouse)InputSystem.AddDevice("VirtualMouse");
-        }
-        else if (!virtualMouse.added)
-        {
-            InputSystem.AddDevice(virtualMouse);
-        }
-        //InputState.Change(virtualMouse.position, rectRef.anchoredPosition);
-        // subscribe to the input move system
-        InputSystem.onAfterUpdate += MoveCursor;
-
-
+        // set invisible to hide cursor and instead show custom cursor
         Cursor.visible = false;
         rectRef.gameObject.SetActive(true);
 
+        // move the controller cursor to current location of the main mouse
         InputState.Change(virtualMouse.position, originalMouse.position.ReadValue());
         AnchorCursorVisual(virtualMouse.position.ReadValue());
+
+        // subscribe VM to move function
+        InputSystem.onAfterUpdate += MoveCursor;
     }
 
     /// <summary>
@@ -179,19 +193,48 @@ public class ControllerCursor : MonoBehaviour
     private void DisableControllerCursor()
     {
         // if it was never enabled, then stop
-        if (virtualMouse == null) return;
+        if (!cursorActive || virtualMouse == null) return;
 
-        if(cursorMove != null)
-            cursorMove.Disable();
+        // update states
+        cursorActive = false;
+        cursorMove.Disable();
 
+        // set main cursor to position of the controller cursor
         originalMouse.WarpCursorPosition(virtualMouse.position.ReadValue());
         rectRef.gameObject.SetActive(false);
 
+        // remove active virtual mouse
         InputSystem.RemoveDevice(virtualMouse);
         InputSystem.onAfterUpdate -= MoveCursor;
-        onSchemeSwap.OnEventRaised -= DetermineCursorMode;
 
-        //Cursor.visible = true;
+        // show the mouse again. call to update the mouse via game manager to ensure cursor is 
+        // set to its correct state
+        Cursor.visible = true;
         GameManager.instance.UpdateMouseMode();
+    }
+
+    /// <summary>
+    /// Set whether the game is in a UI state or not. Will activate gamepad controller
+    /// if gamepad is detected
+    /// </summary>
+    /// <param name="inUI">Whether the game is in a UI state</param>
+    public void SetUIState(bool inUI)
+    {
+        // dont bother doing another check if its already in the new state
+        if(inUIState == inUI) return;
+
+        //Debug.Log("Setting UI state to " + inUI);
+        inUIState = inUI;
+
+        // If set to true and input mode is controller, enable the cursor
+        if(inUIState && InputManager.CurrControlScheme == InputManager.ControlScheme.CONTROLLER)
+        {
+            EnableControllerCursor();
+        }
+        // otherwise if not in a UI state but the cursor is enabled, disable it
+        else if (!inUIState && cursorActive)
+        {
+            DisableControllerCursor();
+        }
     }
 }
