@@ -637,17 +637,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""25299faa-afde-4572-ad06-8fb54404d5e0"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Submit"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""d816baa9-d606-4d63-bbf6-348925b31f04"",
                     ""path"": ""*/{Cancel}"",
                     ""interactions"": """",

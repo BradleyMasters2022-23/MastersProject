@@ -127,10 +127,11 @@ public class ControllerCursor : MonoBehaviour
         bool aButtPressed = Gamepad.current.aButton.isPressed;
         if (previousMouseState != aButtPressed)
         {
-            Debug.Log("Calling VM press I think?");
             virtualMouse.CopyState<MouseState>(out var mouseState);
-            mouseState.WithButton(MouseButton.Left, aButtPressed);
-            InputState.Change(virtualMouse, mouseState);
+            Debug.Log("A button pressed detected");
+            mouseState.WithButton(MouseButton.Left, !aButtPressed);
+            
+
             previousMouseState = aButtPressed;
         }
     }
