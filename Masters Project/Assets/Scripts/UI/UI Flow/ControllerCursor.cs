@@ -67,7 +67,7 @@ public class ControllerCursor : MonoBehaviour
         }
         else
         {
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
 
@@ -97,7 +97,11 @@ public class ControllerCursor : MonoBehaviour
         // dont do disable actions if not the instance
         if (instance != this) return;
 
-        InputSystem.RemoveDevice(virtualMouse);
+        instance = null;
+
+        if(virtualMouse.added)
+            InputSystem.RemoveDevice(virtualMouse);
+
         onSchemeSwap.OnEventRaised -= DetermineCursorMode;
     }
 
@@ -123,6 +127,7 @@ public class ControllerCursor : MonoBehaviour
         bool aButtPressed = Gamepad.current.aButton.isPressed;
         if (previousMouseState != aButtPressed)
         {
+            Debug.Log("Calling VM press I think?");
             virtualMouse.CopyState<MouseState>(out var mouseState);
             mouseState.WithButton(MouseButton.Left, aButtPressed);
             InputState.Change(virtualMouse, mouseState);
@@ -204,7 +209,6 @@ public class ControllerCursor : MonoBehaviour
         rectRef.gameObject.SetActive(false);
 
         // remove active virtual mouse
-        InputSystem.RemoveDevice(virtualMouse);
         InputSystem.onAfterUpdate -= MoveCursor;
 
         // show the mouse again. call to update the mouse via game manager to ensure cursor is 

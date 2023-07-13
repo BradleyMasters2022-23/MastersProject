@@ -45,7 +45,7 @@ public class InputManager : MonoBehaviour
     {
         if (Instance != null)
         {
-            Destroy(this);
+            Destroy(gameObject);
             return;
         }
         else
@@ -57,7 +57,6 @@ public class InputManager : MonoBehaviour
         Controls = new GameControls();
         playerInput = GetComponent<PlayerInput>();
         GenerateOverrideDict(textOverrides);
-
     }
 
     /// <summary>
@@ -104,6 +103,7 @@ public class InputManager : MonoBehaviour
 
     [Tooltip("Current control scheme for the player")]
     public static ControlScheme CurrControlScheme;
+    [ReadOnly] public ControlScheme debugControlScheme;
     /// <summary>
     /// The string name of the mouse and keyboard scheme. Should match whats in GameplayControls.
     /// </summary>
@@ -144,6 +144,7 @@ public class InputManager : MonoBehaviour
     /// <param name="input">Input data</param>
     private void OnControlsChanged(PlayerInput input)
     {
+        Debug.Log("Trying to change controls");
         // do something for each input type. 
         switch(input.currentControlScheme)
         {
@@ -176,7 +177,7 @@ public class InputManager : MonoBehaviour
     {
         //Debug.Log("Switching to keyboard");
         CurrControlScheme = ControlScheme.KEYBOARD;
-        
+        debugControlScheme = CurrControlScheme;
     }
     /// <summary>
     /// Swap the control scheme to controller and perform any necessary functions
@@ -185,6 +186,7 @@ public class InputManager : MonoBehaviour
     {
         //Debug.Log("Switching to controller");
         CurrControlScheme = ControlScheme.CONTROLLER;
+        debugControlScheme = CurrControlScheme;
     }
 
     #endregion
