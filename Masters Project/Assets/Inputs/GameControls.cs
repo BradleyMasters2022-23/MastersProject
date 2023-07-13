@@ -584,7 +584,16 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""name"": ""CursorMove"",
                     ""type"": ""PassThrough"",
                     ""id"": ""c933a963-b514-4720-8a46-2fc9749ba079"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CursorScroll"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""f0652c5d-898a-411b-a3fb-be7e2cc12a0f"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
@@ -725,8 +734,8 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""6b5a7cb1-bb0c-4310-9316-09c090715da0"",
-                    ""path"": ""<VirtualMouse>/scroll"",
+                    ""id"": ""4955318d-284a-42ad-a892-0a5d8fc3a95c"",
+                    ""path"": ""<Mouse>/scroll"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -777,72 +786,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""TrackedDeviceOrientation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""94e8afad-39cd-4378-9735-f4d36ee5b504"",
-                    ""path"": ""<Gamepad>/dpad"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""Joystick"",
-                    ""id"": ""57e7c4d2-ec5d-4720-8de2-5a355c9679a5"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""ee9fa744-df2f-4f13-b185-03f22685d7dd"",
-                    ""path"": ""<Joystick>/stick/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""9c938199-53da-4e0e-a938-1e68b6a12b1b"",
-                    ""path"": ""<Joystick>/stick/down"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""c65c6747-af20-40f5-b24f-8b6d471fa0ab"",
-                    ""path"": ""<Joystick>/stick/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""08f35cb5-323d-416a-8bbf-e9e3c3f52a2a"",
-                    ""path"": ""<Joystick>/stick/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Navigate"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
                 },
                 {
                     ""name"": ""Keyboard"",
@@ -944,17 +887,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""bbbdc43b-339f-41b3-b2ff-af3e48b8f170"",
-                    ""path"": ""<Joystick>/stick/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""CursorMove"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
                     ""name"": ""Movement"",
                     ""id"": ""702df40c-5159-48c3-ad02-1296c3d4491e"",
                     ""path"": ""2DVector"",
@@ -1052,6 +984,28 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""CursorMove"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""46c030a1-220c-441d-96e8-76d4e4b0676b"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CursorMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8a3c7ee2-68d3-45c3-b0f0-5565246293ca"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""CursorScroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -1343,6 +1297,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
         m_UI_CursorMove = m_UI.FindAction("CursorMove", throwIfNotFound: true);
+        m_UI_CursorScroll = m_UI.FindAction("CursorScroll", throwIfNotFound: true);
         // Dialogue
         m_Dialogue = asset.FindActionMap("Dialogue", throwIfNotFound: true);
         m_Dialogue_Advance = m_Dialogue.FindAction("Advance", throwIfNotFound: true);
@@ -1599,6 +1554,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_TrackedDevicePosition;
     private readonly InputAction m_UI_TrackedDeviceOrientation;
     private readonly InputAction m_UI_CursorMove;
+    private readonly InputAction m_UI_CursorScroll;
     public struct UIActions
     {
         private @GameControls m_Wrapper;
@@ -1615,6 +1571,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @TrackedDevicePosition => m_Wrapper.m_UI_TrackedDevicePosition;
         public InputAction @TrackedDeviceOrientation => m_Wrapper.m_UI_TrackedDeviceOrientation;
         public InputAction @CursorMove => m_Wrapper.m_UI_CursorMove;
+        public InputAction @CursorScroll => m_Wrapper.m_UI_CursorScroll;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1660,6 +1617,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @CursorMove.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCursorMove;
                 @CursorMove.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCursorMove;
                 @CursorMove.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCursorMove;
+                @CursorScroll.started -= m_Wrapper.m_UIActionsCallbackInterface.OnCursorScroll;
+                @CursorScroll.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnCursorScroll;
+                @CursorScroll.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnCursorScroll;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -1700,6 +1660,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @CursorMove.started += instance.OnCursorMove;
                 @CursorMove.performed += instance.OnCursorMove;
                 @CursorMove.canceled += instance.OnCursorMove;
+                @CursorScroll.started += instance.OnCursorScroll;
+                @CursorScroll.performed += instance.OnCursorScroll;
+                @CursorScroll.canceled += instance.OnCursorScroll;
             }
         }
     }
@@ -1840,6 +1803,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnTrackedDevicePosition(InputAction.CallbackContext context);
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
         void OnCursorMove(InputAction.CallbackContext context);
+        void OnCursorScroll(InputAction.CallbackContext context);
     }
     public interface IDialogueActions
     {
