@@ -541,13 +541,17 @@ public class InputManager : MonoBehaviour
                             }
 
                             // make sure no composite, and check if its a gamepad interaction
-                            if (!action.bindings[i].isComposite && action.bindings[i].groups.Contains("Gamepad"))
+                            if (action.bindings[i].groups.Contains("Gamepad"))
                             {
                                 // add interaction name
                                 if (action.bindings[i].interactions != null)
                                     temp += action.bindings[i].effectiveInteractions + " ";
 
-                                Debug.Log("Trying to get control named : " + action.controls[i - compositesPassed].name + " at index " + (i - compositesPassed));
+                                // if it is a virtual mouse that was inserted, then move over one since it should be the next one
+                                // this works for now but it may have fuckery if there are multiple 'virtual mouse' things added.
+                                // if that happens, this needs to be expanded to count the # of virtual mice controls and step forward that amount
+                                if (action.controls[i - compositesPassed].device.displayName == "VirtualMouse")
+                                    i++;
 
                                 // on lookup, make sure to subtract the composites passed to convert from bindings to controls properly
                                 temp += "<sprite="
