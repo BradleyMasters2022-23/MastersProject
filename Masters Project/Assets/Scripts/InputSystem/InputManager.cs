@@ -13,6 +13,7 @@ using UnityEngine.InputSystem;
 using Sirenix.OdinInspector;
 using TMPro;
 using System;
+using UnityEngine.Windows;
 
 [System.Serializable]
 public struct BindingTextOverride
@@ -147,23 +148,56 @@ public class InputManager : MonoBehaviour
         if (GameManager.instance.CurrentState == GameManager.States.LOADING) return;
         Debug.Log("Trying to change controls : " + input.currentControlScheme);
 
-        // do something for each input type. 
-        switch (input.currentControlScheme)
+        // prepare target. use keyboard as default
+        ControlScheme target = ControlScheme.KEYBOARD;
+
+        // parse scheme name to get relevant enum
+        switch(input.currentControlScheme)
         {
             case controllerSchemeName:
+                {
+                    target = ControlScheme.CONTROLLER;
+                    break;
+                }
+            case mouseKeyboardSchemeName:
+                {
+                    target = ControlScheme.KEYBOARD;
+                    break;
+                }
+            default:
+                {
+                    Debug.LogError($"[INPUTMANAGER] Controls change detected but the scheme wasn't recognized" +
+                        $". Scheme is: {input.currentControlScheme}");
+                    break;
+                }
+        }
+
+        // set the target directily. 
+        SetDirectControlscheme( target );
+    }
+    /// <summary>
+    /// Directly set the control scheme. Should rarely be called by anything aside from input manager. 
+    /// </summary>
+    /// <param name="scheme">The enuim scheme to set</param>
+    public void SetDirectControlscheme(ControlScheme scheme)
+    {
+        // do something for each input type. 
+        switch (scheme)
+        {
+            case ControlScheme.CONTROLLER:
                 {
                     SetToController();
                     break;
                 }
-            case mouseKeyboardSchemeName:
+            case ControlScheme.KEYBOARD:
                 {
                     SetToKeyboard();
                     break;
                 }
             default:
                 {
-                    Debug.LogError($"[INPUTMANAGER] Controls were swapped to a new control scheme, but OnControlsChanged" +
-                        $" does not have a case for it yet! The scheme is {input.currentControlScheme}");
+                    Debug.LogError($"[INPUTMANAGER] Direct control scheme was set but no setting was prepared!" +
+                        $"Was set to {scheme}");
                     break;
                 }
         }

@@ -266,7 +266,7 @@ public class ControllerCursor : MonoBehaviour
     private void EnableControllerCursor()
     {
         if (cursorActive) return;
-        Debug.Log("Enabling cursor");
+        //Debug.Log("Enabling cursor");
 
         cursorActive = true;
         cursorMove.Enable();
@@ -296,7 +296,7 @@ public class ControllerCursor : MonoBehaviour
         // if it was never enabled, then stop
         if (!cursorActive || virtualMouse == null) return;
         
-        Debug.Log("Disabling cursor");
+        //Debug.Log("Disabling cursor");
 
         // update states
         cursorActive = false;
