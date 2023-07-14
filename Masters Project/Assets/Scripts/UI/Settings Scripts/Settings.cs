@@ -154,13 +154,6 @@ public class Settings : MonoBehaviour
 
     #region ChangeFunctions
 
-    //public void ChangeMasterVolume()
-    //{
-    //    masterVolume = masterVolumeSlider.value;
-    //    PlayerPrefs.SetFloat("MasterVolume", masterVolume);
-    //    SettingsConfirmed();
-    //}
-
     /// <summary>
     /// changing mouse sensitivity
     /// </summary>

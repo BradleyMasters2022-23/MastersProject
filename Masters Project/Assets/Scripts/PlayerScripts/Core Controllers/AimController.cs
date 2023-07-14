@@ -108,6 +108,7 @@ public class AimController : MonoBehaviour
 
     private void UpdateSettings()
     {
+        Debug.Log("Updating settings");
         mouseSensitivity = Settings.mouseSensitivity;
         mouseXInverted = Settings.mouseInvertX;
         mouseYInverted = Settings.mouseInvertY;
@@ -158,7 +159,11 @@ public class AimController : MonoBehaviour
     /// <param name="controlScheme">Type of input being swapped to</param>
     private void UpdateInputSettings(InputManager.ControlScheme controlScheme)
     {
-        switch(controlScheme)
+        // reset inversion settings
+        horizontalInversion = 1;
+        verticalInversion = 1;
+
+        switch (controlScheme)
         {
             case InputManager.ControlScheme.KEYBOARD:
                 {
@@ -195,6 +200,7 @@ public class AimController : MonoBehaviour
                         horizontalInversion *= -1;
                     if (mouseYInverted)
                         verticalInversion *= -1;
+
                     break;
                 }
         }
