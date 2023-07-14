@@ -464,6 +464,7 @@ GameObject:
   - component: {fileID: 4808427934631538493}
   - component: {fileID: 4808427934631538490}
   - component: {fileID: 4785931104396595149}
+  - component: {fileID: 4787742088224349209}
   m_Layer: 5
   m_Name: UI_Slider_Base
   m_TagString: Untagged
@@ -563,9 +564,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 4808427934631538490}
-          m_TargetAssemblyTypeName: UnityEngine.UI.Selectable, UnityEngine.UI
-          m_MethodName: Select
+        - m_Target: {fileID: 4787742088224349209}
+          m_TargetAssemblyTypeName: ButtonAudioManager, Assembly-CSharp
+          m_MethodName: PlayHoverSound
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -575,3 +576,33 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  - eventID: 4
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4787742088224349209}
+          m_TargetAssemblyTypeName: ButtonAudioManager, Assembly-CSharp
+          m_MethodName: PlayClickSound
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &4787742088224349209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4808427934631538491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6520b50f036522e41ab75aab1d3d94a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onHoverSound: {fileID: 11400000, guid: 22d7047ef02be1e4aa8e4ca5b1ffe0c6, type: 2}
+  onPressSound: {fileID: 11400000, guid: 7c841ae060922df49b025076f8273a12, type: 2}

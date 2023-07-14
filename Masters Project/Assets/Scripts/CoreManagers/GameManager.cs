@@ -433,7 +433,7 @@ public class GameManager : MonoBehaviour
         // Tell the stack below it to load its select
         if (menuStack.Count > 0)
         {
-            Debug.Log($"Calling top stack on {menuStack.Peek().name}");
+            //Debug.Log($"Calling top stack on {menuStack.Peek().name}");
             menuStack.Peek().TopStackFunction();
         }
 

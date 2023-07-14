@@ -100,7 +100,7 @@ public class ControllerCursor : MonoBehaviour
 
         // set up controls
         cursorMove = InputManager.Controls.UI.CursorMove;
-        pressButton = InputManager.Controls.UI.Click;
+        pressButton = InputManager.Controls.UI.CursorClick;
         scrollUI = InputManager.Controls.UI.CursorScroll;
 
         // get reference to original mouse
@@ -116,10 +116,9 @@ public class ControllerCursor : MonoBehaviour
             InputSystem.AddDevice(virtualMouse);
         }
 
+        // prepare systems that allow for swapping and clicking
         onSchemeSwap.OnEventRaised += DetermineCursorMode;
         pressButton.started += HandleInput;
-
-        DisableControllerCursor();
     }
 
     /// <summary>
@@ -130,14 +129,18 @@ public class ControllerCursor : MonoBehaviour
         // dont do disable actions if not the instance
         if (instance != this) return;
 
+        // remove from input system.
+        // Otherwise will cause lots of unity editor errors outside of playmode
         InputSystem.onAfterUpdate -= MoveCursor;
         InputSystem.onAfterUpdate -= ScrollCursor;
 
         instance = null;
 
+        // if its still added, remove it
         if(virtualMouse.added)
             InputSystem.RemoveDevice(virtualMouse);
 
+        // unsub from remaining events
         onSchemeSwap.OnEventRaised -= DetermineCursorMode;
         pressButton.started -= HandleInput;
     }
@@ -183,7 +186,7 @@ public class ControllerCursor : MonoBehaviour
     /// <param name="c"></param>
     private void HandleInput(InputAction.CallbackContext c)
     {
-        //Debug.Log("Calling handle input : " + c);
+        Debug.Log("Calling handle input : " + c);
 
         if (!cursorActive) return;
 
@@ -241,10 +244,10 @@ public class ControllerCursor : MonoBehaviour
     /// <param name="scheme"></param>
     public void DetermineCursorMode(InputManager.ControlScheme scheme)
     {
-        Debug.Log("Cursor check called");
         // if not in a UI state, then dont do anything. 
         if (!inUIState) return;
 
+        // enable and disable based on the new scheme
         switch (scheme)
         {
             case InputManager.ControlScheme.KEYBOARD:
@@ -266,22 +269,20 @@ public class ControllerCursor : MonoBehaviour
     private void EnableControllerCursor()
     {
         if (cursorActive) return;
-        //Debug.Log("Enabling cursor");
 
+        // set active and enable controls 
         cursorActive = true;
         cursorMove.Enable();
         pressButton.Enable();
         scrollUI.Enable();
 
         // set invisible to hide cursor and instead show custom cursor
-        
         Cursor.visible = false;
         rectRef.gameObject.SetActive(true);
 
         // move the controller cursor to current location of the main mouse
         InputState.Change(virtualMouse.position, originalMouse.position.ReadValue());
         AnchorCursorVisual(virtualMouse.position.ReadValue());
-
 
         // subscribe VM to move function
         InputSystem.onAfterUpdate += MoveCursor;
@@ -295,10 +296,8 @@ public class ControllerCursor : MonoBehaviour
     {
         // if it was never enabled, then stop
         if (!cursorActive || virtualMouse == null) return;
-        
-        //Debug.Log("Disabling cursor");
 
-        // update states
+        // update state and disable controls
         cursorActive = false;
         cursorMove.Disable();
         pressButton.Disable();

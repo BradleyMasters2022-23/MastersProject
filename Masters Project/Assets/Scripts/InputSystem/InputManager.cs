@@ -146,7 +146,7 @@ public class InputManager : MonoBehaviour
     private void OnControlsChanged(PlayerInput input)
     {
         if (GameManager.instance.CurrentState == GameManager.States.LOADING) return;
-        Debug.Log("Trying to change controls : " + input.currentControlScheme);
+        //Debug.Log("Trying to change controls : " + input.currentControlScheme);
 
         // prepare target. use keyboard as default
         ControlScheme target = ControlScheme.KEYBOARD;
