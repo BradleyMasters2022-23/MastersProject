@@ -16,10 +16,6 @@ using System.Linq;
 
 public abstract class UIMenu : MonoBehaviour
 {
-    [Tooltip("On controller, which option is selected when screen is opened?" +
-        "Top items will take priority but only activate if they're ENABLED on open")]
-    [SerializeField] private GameObject[] controllerDefaultPriority;
-
     [Tooltip("Sound when Menu is opened")]
     [SerializeField] private AudioClipSO openMenu;
 
@@ -38,12 +34,15 @@ public abstract class UIMenu : MonoBehaviour
     /// What was the last gameobject selected, if any?
     /// </summary>
     private Selectable lastSelected;
-
     /// <summary>
     /// Animator for this UI menu as a whole.
     /// Can be used to animate the open and close events
     /// </summary>
     protected Animator animator;
+    /// <summary>
+    /// canvas group that enables and disables all interactions 
+    /// </summary>
+    CanvasGroup groupManager;
 
     /// <summary>
     /// Try get animator reference
@@ -137,85 +136,8 @@ public abstract class UIMenu : MonoBehaviour
     /// </summary>
     public void TopStackFunction()
     {
-        // re-enable any interactable options 
-        if(groupManager != null)
-        {
-            groupManager.interactable = true;
-        }
-
+        // old function.
         return;
-
-        // if last object was set and enabled, go to it
-        if (lastSelected != null && lastSelected.isActiveAndEnabled && lastSelected.IsInteractable())
-        {
-            EventSystem.current.SetSelectedGameObject(lastSelected.gameObject);
-        }
-        else // otherwise, choose the first available one
-        {
-            Selectable[] allOptions = GetComponentsInChildren<Selectable>();
-            foreach (Selectable option in allOptions)
-            {
-                if(option.IsInteractable())
-                {
-                    EventSystem.current.SetSelectedGameObject(option.gameObject);
-                    break;
-                }
-            }
-
-            if(EventSystem.current.currentSelectedGameObject == null)
-            {
-                Debug.LogError($"[UI] On menu named {name}, there is no gameobject available for the UI to select!");
-            }
-        }
-
-        /*   Old Settings. Was too jank and too much work to keep up with default options
-        // If type is mouse, dont auto assign 
-        if (InputManager.CurrControlScheme == InputManager.ControlScheme.KEYBOARD)
-        {
-            GameManager.instance.ClearPointer();
-            //Debug.Log("Clearing pointer for M&K");
-            return;
-        }
-
-        // If nothing, dont do anything
-        if (lastSelected == null && controllerDefaultPriority == null)
-        {
-            // if nothing is last selected and no controller priority, get the first interactable
-            Selectable[] s = GetComponentsInChildren<Selectable>(false);
-            foreach (var o in s)
-            {
-                if (o.gameObject.activeInHierarchy && o.IsInteractable())
-                {
-                    EventSystem.current.SetSelectedGameObject(o.gameObject);
-                    break;
-                }
-            }
-
-
-            return;
-        }
-        // If there is a last selectd option, set selection to that
-        else if (lastSelected != null)
-        {
-            EventSystem.current.SetSelectedGameObject(lastSelected);
-        }
-        // Otherwise, use the default
-        else
-        {
-            // find the first valid item to use. Valid item is any item that is active and interactable
-            foreach (var o in controllerDefaultPriority)
-            {
-                if (o.activeInHierarchy && o.GetComponent<Selectable>() != null && o.GetComponent<Selectable>().IsInteractable())
-                {
-                    EventSystem.current.SetSelectedGameObject(o);
-                    break;
-
-                }
-            }
-        }
-
-        Debug.Log($"Set the event select to {EventSystem.current.currentSelectedGameObject.name}");
-        */
     }
 
 
@@ -224,10 +146,10 @@ public abstract class UIMenu : MonoBehaviour
     /// </summary>
     public void StackSave()
     {
-        if(EventSystem.current.currentSelectedGameObject != null)
-        {
-            lastSelected = EventSystem.current.currentSelectedGameObject.GetComponent<Selectable>();
-        }
+        //if(EventSystem.current.currentSelectedGameObject != null)
+        //{
+        //    lastSelected = EventSystem.current.currentSelectedGameObject.GetComponent<Selectable>();
+        //}
     }
 
     /// <summary>
@@ -235,10 +157,7 @@ public abstract class UIMenu : MonoBehaviour
     /// </summary>
     public abstract void CloseFunctionality();
 
-    /// <summary>
-    /// canvas group that enables and disables all interactions 
-    /// </summary>
-    CanvasGroup groupManager;
+    
     /// <summary>
     /// set the menu to background, preventing it from being selectable via UI navigation
     /// </summary>

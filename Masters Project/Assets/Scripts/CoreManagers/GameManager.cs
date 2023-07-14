@@ -335,52 +335,9 @@ public class GameManager : MonoBehaviour
 
     #region Controller & Mouse Swapping
 
-    private void OnEnable()
-    {
-        onControlSchemeSwapChannel.OnEventRaised += UpdateControlScheme;
-    }
-    private void OnDisable()
-    {
-        onControlSchemeSwapChannel.OnEventRaised -= UpdateControlScheme;
-    }
-
     private void OnApplicationFocus(bool focus)
     {
         UpdateMouseMode();
-    }
-
-    private void UpdateControlScheme(InputManager.ControlScheme scheme)
-    {
-        //if (scheme == InputManager.ControlScheme.KEYBOARD)
-        //    ShowCursor();
-        //else if(scheme == InputManager.ControlScheme.CONTROLLER)
-        //    HideCursor();
-    }
-
-    private void HideCursor()
-    {
-        // Hide the mouse cursor
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        ClearPointer();
-
-        // Set the controller select to the screen
-        if (menuStack != null && menuStack.Count > 0)
-            menuStack.Peek().TopStackFunction();
-    }
-
-    private void ShowCursor()
-    {
-        // Reenable cursor, set appropriate lock state
-        UpdateMouseMode();
-
-        // Save the last thing the controller was on 
-        if(menuStack != null && menuStack.Count > 0)
-            menuStack.Peek().StackSave();
-
-        // hide the controller's selected option
-        //EventSystem.current.SetSelectedGameObject(null);
     }
 
     /// <summary>
@@ -410,6 +367,8 @@ public class GameManager : MonoBehaviour
                 }
             default:
                 {
+                    //Debug.Log("GM enabling visibility");
+
                     Cursor.visible = true;
                     Cursor.lockState = CursorLockMode.Confined;
 
@@ -665,6 +624,7 @@ public class GameManager : MonoBehaviour
         UnPause();
         menuStack.Clear();
         controls.UI.Disable();
+        ControllerCursor.instance.SetUIState(false);
 
         // if loading to tutorial, don't enable controls on load complete
         if(name == tutorialScene)

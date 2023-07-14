@@ -12,8 +12,18 @@ using UnityEngine.InputSystem;
 
 public class ErrorClearer : MonoBehaviour
 {
+    PlayerInput p;
+    void Awake()
+    {
+        p = GetComponent<PlayerInput>();
+    }
+
     private void OnDisable()
     {
-        GetComponent<PlayerInput>().actions = null;
+        if (p != null)
+        {
+            p.actions = null;
+            p.enabled = false;
+        }
     }
 }

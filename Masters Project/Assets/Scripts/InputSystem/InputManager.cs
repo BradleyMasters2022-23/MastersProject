@@ -43,15 +43,15 @@ public class InputManager : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        else
+        if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
         }
 
         Controls = new GameControls();
@@ -144,9 +144,11 @@ public class InputManager : MonoBehaviour
     /// <param name="input">Input data</param>
     private void OnControlsChanged(PlayerInput input)
     {
-        Debug.Log("Trying to change controls");
+        if (GameManager.instance.CurrentState == GameManager.States.LOADING) return;
+        Debug.Log("Trying to change controls : " + input.currentControlScheme);
+
         // do something for each input type. 
-        switch(input.currentControlScheme)
+        switch (input.currentControlScheme)
         {
             case controllerSchemeName:
                 {

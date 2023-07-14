@@ -130,6 +130,9 @@ public class ControllerCursor : MonoBehaviour
         // dont do disable actions if not the instance
         if (instance != this) return;
 
+        InputSystem.onAfterUpdate -= MoveCursor;
+        InputSystem.onAfterUpdate -= ScrollCursor;
+
         instance = null;
 
         if(virtualMouse.added)
@@ -238,6 +241,7 @@ public class ControllerCursor : MonoBehaviour
     /// <param name="scheme"></param>
     public void DetermineCursorMode(InputManager.ControlScheme scheme)
     {
+        Debug.Log("Cursor check called");
         // if not in a UI state, then dont do anything. 
         if (!inUIState) return;
 
@@ -262,6 +266,7 @@ public class ControllerCursor : MonoBehaviour
     private void EnableControllerCursor()
     {
         if (cursorActive) return;
+        Debug.Log("Enabling cursor");
 
         cursorActive = true;
         cursorMove.Enable();
@@ -269,6 +274,7 @@ public class ControllerCursor : MonoBehaviour
         scrollUI.Enable();
 
         // set invisible to hide cursor and instead show custom cursor
+        
         Cursor.visible = false;
         rectRef.gameObject.SetActive(true);
 
@@ -289,6 +295,8 @@ public class ControllerCursor : MonoBehaviour
     {
         // if it was never enabled, then stop
         if (!cursorActive || virtualMouse == null) return;
+        
+        Debug.Log("Disabling cursor");
 
         // update states
         cursorActive = false;
