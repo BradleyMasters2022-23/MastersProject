@@ -526,6 +526,8 @@ public class InputManager : MonoBehaviour
                     temp = "";
                     int compositesPassed = 0;
 
+                    Debug.Log("Trying to get : " + action.name);
+
                     // loop through all bindings, looking for the first available gamepad
                     for (int i = 0; i < action.bindings.Count; i++)
                     {
@@ -544,6 +546,8 @@ public class InputManager : MonoBehaviour
                                 // add interaction name
                                 if (action.bindings[i].interactions != null)
                                     temp += action.bindings[i].effectiveInteractions + " ";
+
+                                Debug.Log("Trying to get control named : " + action.controls[i - compositesPassed].name + " at index " + (i - compositesPassed));
 
                                 // on lookup, make sure to subtract the composites passed to convert from bindings to controls properly
                                 temp += "<sprite="

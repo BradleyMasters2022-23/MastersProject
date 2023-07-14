@@ -319,6 +319,8 @@ public class CutsceneManager : MonoBehaviour
         pausePrompt.SetActive(false);
         continueText.color = new Color(continueText.color.r, continueText.color.g, continueText.color.b, 0);
         videoRenderImg.enabled = false;
+        
+        ControllerCursor.instance.SetUIState(false);
         Cursor.lockState= CursorLockMode.Locked;
 
         onVideoFinishEvents?.Invoke();
@@ -363,6 +365,8 @@ public class CutsceneManager : MonoBehaviour
     public void PauseCutscene()
     {
         Cursor.lockState = CursorLockMode.Confined;
+        ControllerCursor.instance.SetUIState(true);
+
         settingScreen.SetActive(false);
         pauseScreen.SetActive(true);
         if(playState)
@@ -382,6 +386,7 @@ public class CutsceneManager : MonoBehaviour
     /// </summary>
     public void ResumeCutscene()
     {
+        ControllerCursor.instance.SetUIState(false);
         Cursor.lockState = CursorLockMode.Locked;
         pauseScreen.SetActive(false);
         if(playState)

@@ -1114,6 +1114,17 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""881e12fa-8eb2-4eaa-90b1-6146024377d0"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""840218c1-53fa-446b-9a60-f8d4c70d24a8"",
                     ""path"": ""<Keyboard>/anyKey"",
                     ""interactions"": """",
