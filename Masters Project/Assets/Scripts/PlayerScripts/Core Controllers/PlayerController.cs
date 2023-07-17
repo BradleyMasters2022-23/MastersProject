@@ -122,10 +122,6 @@ public class PlayerController : MonoBehaviour
     /// Current target max speed
     /// </summary>
     private float targetMaxSpeed;
-    /// <summary>
-    /// Current speed of the player
-    /// </summary>
-    private float currSpeed;
 
     private bool sprintHeld;
 
@@ -488,7 +484,7 @@ public class PlayerController : MonoBehaviour
         // if not midair or slopped, then just use normal grounded force
         else if (currentState != PlayerState.MIDAIR)
         {
-            rb.AddForce(inputDirection.normalized * accelerationSpeed, ForceMode.Force);
+            rb.AddForce(inputDirection * accelerationSpeed, ForceMode.Force);
             //Debug.Log("Applying ground force");
         }
            
@@ -497,7 +493,7 @@ public class PlayerController : MonoBehaviour
         else if (currentState == PlayerState.MIDAIR)
         {
             //Debug.Log("Applying midair force");
-            rb.AddForce(inputDirection.normalized * accelerationSpeed * airModifier.Current, ForceMode.Force);
+            rb.AddForce(inputDirection * accelerationSpeed * airModifier.Current, ForceMode.Force);
         }
 
         rb.velocity = AdjustVelocityToSlope(rb.velocity);
@@ -610,7 +606,7 @@ public class PlayerController : MonoBehaviour
             if (jumpPivot)
             {
                 // Calculate inputDirection velocity, set vertical velocity to 0
-                Vector3 airDir = inputDirection.normalized * targetMaxSpeed;
+                Vector3 airDir = inputDirection * targetMaxSpeed;
 
                 // Set new velocity to inputDirection
                 newVelocity = airDir;
