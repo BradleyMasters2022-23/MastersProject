@@ -312,9 +312,9 @@ public class CutsceneManager : MonoBehaviour
 
     public void SkipCutscene()
     {
+        Debug.Log("Skipping cutscene");
         // hide all prompts
         StopAllCoroutines();
-        playerControls.Cutscene.Disable();
         pauseScreen.SetActive(false);
         pausePrompt.SetActive(false);
         continueText.color = new Color(continueText.color.r, continueText.color.g, continueText.color.b, 0);
@@ -330,6 +330,7 @@ public class CutsceneManager : MonoBehaviour
         StartCoroutine(LoadScreen(false, skippedFadeOutTime));
 
         // Reneable gameplay controls
+        playerControls.Cutscene.Disable();
         playerControls.PlayerGameplay.Enable();
         playerControls.PlayerGameplay.Pause.Enable();
         playerControls.PlayerGameplay.Interact.Enable();
@@ -346,8 +347,6 @@ public class CutsceneManager : MonoBehaviour
     /// <param name="c">input context</param>
     private void TogglePause(InputAction.CallbackContext c)
     {
-        //Debug.Log("Pausing cutscene " + c.action.name);
-
         if(pauseScreen.activeInHierarchy)
         {
             if (settingScreen.activeInHierarchy)
@@ -389,6 +388,7 @@ public class CutsceneManager : MonoBehaviour
         ControllerCursor.instance.SetUIState(false);
         Cursor.lockState = CursorLockMode.Locked;
         pauseScreen.SetActive(false);
+        Debug.Log("Resuming cutscene");
         if(playState)
             videoPlayer.Play();
     }

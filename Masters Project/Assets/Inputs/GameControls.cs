@@ -1072,12 +1072,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Any"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Value"",
                     ""id"": ""8f276b82-006d-4552-9a10-4a9717dfd544"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""Continue"",
