@@ -178,6 +178,7 @@ public class MapLoader : MonoBehaviour
         while (GameManager.controls == null)
             yield return null;
         GameControls controls = GameManager.controls;
+        InputManager.ControlScheme scheme = InputManager.CurrControlScheme;
         if (controls != null)
         {
             controls.Disable();
@@ -234,9 +235,10 @@ public class MapLoader : MonoBehaviour
         {
             controls.PlayerGameplay.Enable();
         }
+        InputManager.Instance.SetDirectControlscheme(scheme);
 
         // tell stat manager that a run has begun
-        if(incrementSaveRuns)
+        if (incrementSaveRuns)
         {
             GlobalStatsManager.data.runsAttempted++;
             if (CallManager.instance != null)
