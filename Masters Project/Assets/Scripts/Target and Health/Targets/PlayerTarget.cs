@@ -70,6 +70,9 @@ public class PlayerTarget : Target
         healCheat.performed += CheatHeal;
         damageCheat.performed += CheatDamage;
 
+        tiedye = c.PlayerGameplay.TieDye;
+        tiedye.performed += Tiedye;
+
         if (godCheatNotification != null)
             godCheatNotification.SetActive(_healthManager.God);
     }
@@ -159,6 +162,10 @@ public class PlayerTarget : Target
     private InputAction godCheat;
     private InputAction damageCheat;
     private InputAction healCheat;
+    private InputAction tiedye;
+
+    public Material tieDyeMat;
+
     private bool godMode = false;
     protected override void OnDisable()
     {
@@ -167,6 +174,8 @@ public class PlayerTarget : Target
         godCheat.performed -= ToggleGodmode;
         healCheat.performed -= CheatHeal;
         damageCheat.performed -= CheatDamage;
+        tiedye.performed -= Tiedye;
+
         p = null;
     }
 
@@ -200,5 +209,23 @@ public class PlayerTarget : Target
     {
         _healthManager.Damage(cheatDamage);
     }
+
+    public void Tiedye(InputAction.CallbackContext ctx = default)
+    {
+        MeshRenderer[] beegTemp = FindObjectsOfType<MeshRenderer>(true);
+        Debug.Log($"Got {beegTemp.Length} items to tiedye");
+
+        foreach(var ren in beegTemp)
+        {
+            ren.material = tieDyeMat;
+        }
+
+        SkinnedMeshRenderer[] temp = FindObjectsOfType<SkinnedMeshRenderer>(true);
+        foreach(var ren in temp)
+        {
+            ren.material = tieDyeMat;
+        }
+    }
+
     #endregion
 }
