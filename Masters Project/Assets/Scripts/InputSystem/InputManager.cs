@@ -565,6 +565,11 @@ public class InputManager : MonoBehaviour
                                     + promptSheet.GetSpriteIndexFromName(action.controls[i-compositesPassed].name)
                                     + ">";
 
+                                if(promptSheet.GetSpriteIndexFromName(action.controls[i - compositesPassed].name) == -1)
+                                {
+                                    Debug.Log("Did not find index for input type: " + action.controls[i - compositesPassed].name);
+                                }
+
                                 break;
                             }
                         }
