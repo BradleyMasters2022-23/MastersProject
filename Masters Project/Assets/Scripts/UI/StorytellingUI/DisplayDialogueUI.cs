@@ -93,6 +93,7 @@ public class DisplayDialogueUI : MonoBehaviour
         // If its still loading, instantly stop it
         if (currentActive != null && !currentActive.LoadingDone() && loadingRoutine != null)
         {
+            //Debug.Log("Calling to halt routine");
             StopCoroutine(loadingRoutine);
             loadingRoutine = null;
             currentActive.InstantLoad();
@@ -113,11 +114,13 @@ public class DisplayDialogueUI : MonoBehaviour
 
             if (conversation.lines[activeLineIndex].character.characterName == "Penny")
             {
+                //Debug.Log("Going to penny screen");
                 currentActive = pennyScreen;
                 loadingRoutine = pennyScreen.LoadInDialogue(conversation.nonPennyCharacter, conversation.lines[activeLineIndex], true);
             }
             else
             {
+                //Debug.Log("Going to NPC screen");
                 currentActive = NPCScreen;
                 loadingRoutine = NPCScreen.LoadInDialogue(conversation.nonPennyCharacter, conversation.lines[activeLineIndex], false);
             }
