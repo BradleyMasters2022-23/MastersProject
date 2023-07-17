@@ -16,7 +16,6 @@ public class PlayerController : MonoBehaviour
     public enum PlayerState
     {
         GROUNDED,
-        SPRINTING,
         MIDAIR,
         FROZEN
     }
@@ -82,10 +81,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private InputAction jump;
     /// <summary>
-    /// Input for sprinting
-    /// </summary>
-    private InputAction sprint;
-    /// <summary>
     /// Input for special Q abilioty
     /// </summary>
     private InputAction qInput;
@@ -106,9 +101,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float groundDrag;
     [Tooltip("Amount of drag player experiences when in the air")]
     [SerializeField] private float airDrag;
-
-    [Tooltip("Speed modifier for player when sprinting")]
-    [SerializeField] private UpgradableFloat sprintModifier;
     [Tooltip("Speed modifier for player when midair")]
     [SerializeField] private UpgradableFloat airModifier;
 
@@ -122,8 +114,6 @@ public class PlayerController : MonoBehaviour
     /// Current target max speed
     /// </summary>
     private float targetMaxSpeed;
-
-    private bool sprintHeld;
 
     #endregion
 
@@ -214,7 +204,6 @@ public class PlayerController : MonoBehaviour
     {
         // Initialize upgradable variables
         maxMoveSpeed.Initialize();
-        sprintModifier.Initialize();
         airModifier.Initialize();
         jumps.Initialize();
         jumpMultiplier.Initialize();
@@ -260,11 +249,6 @@ public class PlayerController : MonoBehaviour
         jump = controller.PlayerGameplay.Jump;
         jump.performed += Jump;
         jump.Enable();
-
-        sprint = controller.PlayerGameplay.Sprint;
-        sprint.started += ToggleSprint;
-        sprint.canceled += ToggleSprint;
-        sprint.Enable();
 
         qInput = controller.PlayerGameplay.Tactical;
         qInput.performed += ActivateQAbility;
@@ -312,32 +296,12 @@ public class PlayerController : MonoBehaviour
                         return;
                     }
 
-                    if (sprintHeld)
-                    {
-                        ChangeState(PlayerState.SPRINTING);
-                        return;
-                    }
-
                     HorizontalMovement();
 
                     if (currentJumps != jumps.Current && OnJumpableGround())
                     {
                         currentJumps = jumps.Current;
                     }
-
-                    break;
-                }
-            case PlayerState.SPRINTING:
-                {
-                    HorizontalMovement();
-                    // If not on ground, set state to midair. Disable sprint
-                    if (!grounded)
-                    {
-                        ChangeState(PlayerState.MIDAIR);
-                    }
-
-                    if (!sprintHeld)
-                        ChangeState(PlayerState.GROUNDED);
 
                     break;
                 }
@@ -389,14 +353,6 @@ public class PlayerController : MonoBehaviour
 
                     break;
                 }
-            case PlayerState.SPRINTING:
-                {
-                    // When entering sprint state, increase target max move speed
-                    targetMaxSpeed = maxMoveSpeed.Current * sprintModifier.Current;
-
-
-                    break;
-                }
             case PlayerState.MIDAIR:
                 {
                     rb.drag = airDrag;
@@ -417,26 +373,6 @@ public class PlayerController : MonoBehaviour
         currentState = _newState;
     }
 
-    /// <summary>
-    /// Change states based on sprint input
-    /// </summary>
-    /// <param name="ctx">Input callback context [ignorable]</param>
-    private void ToggleSprint(InputAction.CallbackContext ctx)
-    {
-        // If player is grounded and started input, start sprinting
-        if (ctx.started)
-        {
-            sprintHeld = true;
-
-            ChangeState(PlayerState.SPRINTING);
-        }
-        // If player is sprinting and canceled input, stop sprinting
-        else if (ctx.canceled)
-        {
-            sprintHeld = false;
-            ChangeState(PlayerState.GROUNDED);
-        }
-    }
 
     #endregion
 
@@ -705,8 +641,6 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         jump.performed -= Jump;
-        sprint.started -= ToggleSprint;
-        sprint.canceled -= ToggleSprint;
         qInput.performed-= ActivateQAbility;
         onSceneChangeChannel.OnEventRaised -= GroundPlayer;
     }

@@ -28,15 +28,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
             ""id"": ""30ea3d81-5b23-4ec2-96a5-76eac299db6f"",
             ""actions"": [
                 {
-                    ""name"": ""Tactical"",
-                    ""type"": ""Button"",
-                    ""id"": ""43833b58-0f0f-460c-8195-a2b48cb722b3"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Move"",
                     ""type"": ""Value"",
                     ""id"": ""2fc8805c-0641-4fb0-80db-46e9b64f2fe9"",
@@ -82,6 +73,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Tactical"",
+                    ""type"": ""Button"",
+                    ""id"": ""43833b58-0f0f-460c-8195-a2b48cb722b3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Pause"",
                     ""type"": ""Button"",
                     ""id"": ""8f07292b-5ac2-44ca-9df7-341212313021"",
@@ -103,42 +103,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""name"": ""DismissTooltip"",
                     ""type"": ""Button"",
                     ""id"": ""58b69633-e91a-42ad-b987-4eceb3b615ee"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Reset"",
-                    ""type"": ""Button"",
-                    ""id"": ""f702e2c2-4cca-446a-93f7-7ed8894ba32d"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Heal"",
-                    ""type"": ""Button"",
-                    ""id"": ""7c9564a8-0417-45cf-9266-ff126ab532a3"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Kill"",
-                    ""type"": ""Button"",
-                    ""id"": ""605f4127-32d8-486b-807d-c58ed7c027f6"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Sprint"",
-                    ""type"": ""Button"",
-                    ""id"": ""f3cc9741-fe76-44ce-bd41-15e27d28781b"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -422,28 +386,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ba1c79c5-0447-4802-af9c-a7d946f6e458"",
-                    ""path"": ""<Keyboard>/q"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
-                    ""action"": ""Tactical"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""daf87aa2-9acf-46c7-95fc-28a55a575c9c"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Tactical"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""257c81bc-c176-4429-8dcd-5be8014c95b2"",
                     ""path"": ""<Keyboard>/equals"",
                     ""interactions"": """",
@@ -472,6 +414,61 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""IncrementConvs"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f6ad9de9-0e4c-4f65-8613-8bd5ddbce5d3"",
+                    ""path"": ""<Keyboard>/backslash"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ResetConversations"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b5ec927a-52f6-4c90-b501-799feb080601"",
+                    ""path"": ""<Keyboard>/leftBracket"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HealCheat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a86e6f8d-3ff1-440c-b125-d1bee9ba21fc"",
+                    ""path"": ""<Keyboard>/rightBracket"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DamageCheat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ba1c79c5-0447-4802-af9c-a7d946f6e458"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KeyboardMouse"",
+                    ""action"": ""Tactical"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""daf87aa2-9acf-46c7-95fc-28a55a575c9c"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Tactical"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -865,7 +862,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""46c030a1-220c-441d-96e8-76d4e4b0676b"",
-                    ""path"": ""<Gamepad>/rightStick"",
+                    ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -887,7 +884,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""3131a007-e8c0-4182-bb29-95050d5cb401"",
-                    ""path"": ""<Gamepad>/leftStick"",
+                    ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -1196,19 +1193,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
 }");
         // PlayerGameplay
         m_PlayerGameplay = asset.FindActionMap("PlayerGameplay", throwIfNotFound: true);
-        m_PlayerGameplay_Tactical = m_PlayerGameplay.FindAction("Tactical", throwIfNotFound: true);
         m_PlayerGameplay_Move = m_PlayerGameplay.FindAction("Move", throwIfNotFound: true);
         m_PlayerGameplay_Jump = m_PlayerGameplay.FindAction("Jump", throwIfNotFound: true);
         m_PlayerGameplay_Aim = m_PlayerGameplay.FindAction("Aim", throwIfNotFound: true);
         m_PlayerGameplay_Shoot = m_PlayerGameplay.FindAction("Shoot", throwIfNotFound: true);
         m_PlayerGameplay_SlowTime = m_PlayerGameplay.FindAction("SlowTime", throwIfNotFound: true);
+        m_PlayerGameplay_Tactical = m_PlayerGameplay.FindAction("Tactical", throwIfNotFound: true);
         m_PlayerGameplay_Pause = m_PlayerGameplay.FindAction("Pause", throwIfNotFound: true);
         m_PlayerGameplay_Interact = m_PlayerGameplay.FindAction("Interact", throwIfNotFound: true);
         m_PlayerGameplay_DismissTooltip = m_PlayerGameplay.FindAction("DismissTooltip", throwIfNotFound: true);
-        m_PlayerGameplay_Reset = m_PlayerGameplay.FindAction("Reset", throwIfNotFound: true);
-        m_PlayerGameplay_Heal = m_PlayerGameplay.FindAction("Heal", throwIfNotFound: true);
-        m_PlayerGameplay_Kill = m_PlayerGameplay.FindAction("Kill", throwIfNotFound: true);
-        m_PlayerGameplay_Sprint = m_PlayerGameplay.FindAction("Sprint", throwIfNotFound: true);
         m_PlayerGameplay_ClearEncounter = m_PlayerGameplay.FindAction("ClearEncounter", throwIfNotFound: true);
         m_PlayerGameplay_GodCheat = m_PlayerGameplay.FindAction("GodCheat", throwIfNotFound: true);
         m_PlayerGameplay_HealCheat = m_PlayerGameplay.FindAction("HealCheat", throwIfNotFound: true);
@@ -1298,19 +1291,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     // PlayerGameplay
     private readonly InputActionMap m_PlayerGameplay;
     private IPlayerGameplayActions m_PlayerGameplayActionsCallbackInterface;
-    private readonly InputAction m_PlayerGameplay_Tactical;
     private readonly InputAction m_PlayerGameplay_Move;
     private readonly InputAction m_PlayerGameplay_Jump;
     private readonly InputAction m_PlayerGameplay_Aim;
     private readonly InputAction m_PlayerGameplay_Shoot;
     private readonly InputAction m_PlayerGameplay_SlowTime;
+    private readonly InputAction m_PlayerGameplay_Tactical;
     private readonly InputAction m_PlayerGameplay_Pause;
     private readonly InputAction m_PlayerGameplay_Interact;
     private readonly InputAction m_PlayerGameplay_DismissTooltip;
-    private readonly InputAction m_PlayerGameplay_Reset;
-    private readonly InputAction m_PlayerGameplay_Heal;
-    private readonly InputAction m_PlayerGameplay_Kill;
-    private readonly InputAction m_PlayerGameplay_Sprint;
     private readonly InputAction m_PlayerGameplay_ClearEncounter;
     private readonly InputAction m_PlayerGameplay_GodCheat;
     private readonly InputAction m_PlayerGameplay_HealCheat;
@@ -1321,19 +1310,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     {
         private @GameControls m_Wrapper;
         public PlayerGameplayActions(@GameControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Tactical => m_Wrapper.m_PlayerGameplay_Tactical;
         public InputAction @Move => m_Wrapper.m_PlayerGameplay_Move;
         public InputAction @Jump => m_Wrapper.m_PlayerGameplay_Jump;
         public InputAction @Aim => m_Wrapper.m_PlayerGameplay_Aim;
         public InputAction @Shoot => m_Wrapper.m_PlayerGameplay_Shoot;
         public InputAction @SlowTime => m_Wrapper.m_PlayerGameplay_SlowTime;
+        public InputAction @Tactical => m_Wrapper.m_PlayerGameplay_Tactical;
         public InputAction @Pause => m_Wrapper.m_PlayerGameplay_Pause;
         public InputAction @Interact => m_Wrapper.m_PlayerGameplay_Interact;
         public InputAction @DismissTooltip => m_Wrapper.m_PlayerGameplay_DismissTooltip;
-        public InputAction @Reset => m_Wrapper.m_PlayerGameplay_Reset;
-        public InputAction @Heal => m_Wrapper.m_PlayerGameplay_Heal;
-        public InputAction @Kill => m_Wrapper.m_PlayerGameplay_Kill;
-        public InputAction @Sprint => m_Wrapper.m_PlayerGameplay_Sprint;
         public InputAction @ClearEncounter => m_Wrapper.m_PlayerGameplay_ClearEncounter;
         public InputAction @GodCheat => m_Wrapper.m_PlayerGameplay_GodCheat;
         public InputAction @HealCheat => m_Wrapper.m_PlayerGameplay_HealCheat;
@@ -1349,9 +1334,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_PlayerGameplayActionsCallbackInterface != null)
             {
-                @Tactical.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
-                @Tactical.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
-                @Tactical.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
                 @Move.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnMove;
@@ -1367,6 +1349,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @SlowTime.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnSlowTime;
                 @SlowTime.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnSlowTime;
                 @SlowTime.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnSlowTime;
+                @Tactical.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
+                @Tactical.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
+                @Tactical.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTactical;
                 @Pause.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnPause;
@@ -1376,18 +1361,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @DismissTooltip.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDismissTooltip;
                 @DismissTooltip.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDismissTooltip;
                 @DismissTooltip.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnDismissTooltip;
-                @Reset.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnReset;
-                @Reset.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnReset;
-                @Reset.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnReset;
-                @Heal.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnHeal;
-                @Heal.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnHeal;
-                @Heal.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnHeal;
-                @Kill.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnKill;
-                @Kill.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnKill;
-                @Kill.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnKill;
-                @Sprint.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnSprint;
-                @Sprint.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnSprint;
-                @Sprint.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnSprint;
                 @ClearEncounter.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnClearEncounter;
                 @ClearEncounter.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnClearEncounter;
                 @ClearEncounter.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnClearEncounter;
@@ -1410,9 +1383,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Tactical.started += instance.OnTactical;
-                @Tactical.performed += instance.OnTactical;
-                @Tactical.canceled += instance.OnTactical;
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
@@ -1428,6 +1398,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @SlowTime.started += instance.OnSlowTime;
                 @SlowTime.performed += instance.OnSlowTime;
                 @SlowTime.canceled += instance.OnSlowTime;
+                @Tactical.started += instance.OnTactical;
+                @Tactical.performed += instance.OnTactical;
+                @Tactical.canceled += instance.OnTactical;
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
@@ -1437,18 +1410,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @DismissTooltip.started += instance.OnDismissTooltip;
                 @DismissTooltip.performed += instance.OnDismissTooltip;
                 @DismissTooltip.canceled += instance.OnDismissTooltip;
-                @Reset.started += instance.OnReset;
-                @Reset.performed += instance.OnReset;
-                @Reset.canceled += instance.OnReset;
-                @Heal.started += instance.OnHeal;
-                @Heal.performed += instance.OnHeal;
-                @Heal.canceled += instance.OnHeal;
-                @Kill.started += instance.OnKill;
-                @Kill.performed += instance.OnKill;
-                @Kill.canceled += instance.OnKill;
-                @Sprint.started += instance.OnSprint;
-                @Sprint.performed += instance.OnSprint;
-                @Sprint.canceled += instance.OnSprint;
                 @ClearEncounter.started += instance.OnClearEncounter;
                 @ClearEncounter.performed += instance.OnClearEncounter;
                 @ClearEncounter.canceled += instance.OnClearEncounter;
@@ -1710,19 +1671,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     }
     public interface IPlayerGameplayActions
     {
-        void OnTactical(InputAction.CallbackContext context);
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnSlowTime(InputAction.CallbackContext context);
+        void OnTactical(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnDismissTooltip(InputAction.CallbackContext context);
-        void OnReset(InputAction.CallbackContext context);
-        void OnHeal(InputAction.CallbackContext context);
-        void OnKill(InputAction.CallbackContext context);
-        void OnSprint(InputAction.CallbackContext context);
         void OnClearEncounter(InputAction.CallbackContext context);
         void OnGodCheat(InputAction.CallbackContext context);
         void OnHealCheat(InputAction.CallbackContext context);

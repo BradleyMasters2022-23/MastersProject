@@ -26,6 +26,8 @@ public class CutsceneManager : MonoBehaviour
     /// </summary>
     private bool allowedToPlay = true;
 
+    private readonly float playbackSpeed = 2f;
+
     [Header("Transitions")]
     [Tooltip("Image used as the background of the video")]
     [SerializeField] private Image background;
@@ -206,10 +208,11 @@ public class CutsceneManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
         videoRenderImg.enabled = true;
         playState = true;
+        videoPlayer.playbackSpeed= playbackSpeed;
 
         // Track time only if its playing. Dont if its paused
         float timeElapsed = 0;
-        while (timeElapsed < videoPlayer.length)
+        while (timeElapsed < videoPlayer.length / playbackSpeed)
         {
             if (!videoPlayer.isPaused)
                 timeElapsed += Time.unscaledDeltaTime;
@@ -312,7 +315,6 @@ public class CutsceneManager : MonoBehaviour
 
     public void SkipCutscene()
     {
-        Debug.Log("Skipping cutscene");
         // hide all prompts
         StopAllCoroutines();
         pauseScreen.SetActive(false);
@@ -388,7 +390,6 @@ public class CutsceneManager : MonoBehaviour
         ControllerCursor.instance.SetUIState(false);
         Cursor.lockState = CursorLockMode.Locked;
         pauseScreen.SetActive(false);
-        Debug.Log("Resuming cutscene");
         if(playState)
             videoPlayer.Play();
     }
