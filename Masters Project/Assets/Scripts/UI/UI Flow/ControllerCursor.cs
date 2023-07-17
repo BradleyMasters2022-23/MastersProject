@@ -59,6 +59,9 @@ public class ControllerCursor : MonoBehaviour
 
     [Tooltip("Channel called when the controller scheme swaps. Used to determine when to show cursor")]
     [SerializeField] ChannelControlScheme onSchemeSwap;
+    [Tooltip("The object containing input tips")]
+    [SerializeField] GameObject tipsObject;
+
     /// <summary>
     /// Whether or not the game is currently in a UI state. Managed by Game Manager
     /// </summary>
@@ -275,6 +278,7 @@ public class ControllerCursor : MonoBehaviour
         cursorMove.Enable();
         pressButton.Enable();
         scrollUI.Enable();
+        tipsObject.SetActive(true);
 
         // set invisible to hide cursor and instead show custom cursor
         Cursor.visible = false;
@@ -302,6 +306,7 @@ public class ControllerCursor : MonoBehaviour
         cursorMove.Disable();
         pressButton.Disable();
         scrollUI.Disable();
+        tipsObject.SetActive(false);
 
         // set main cursor to position of the controller cursor
         originalMouse.WarpCursorPosition(virtualMouse.position.ReadValue());

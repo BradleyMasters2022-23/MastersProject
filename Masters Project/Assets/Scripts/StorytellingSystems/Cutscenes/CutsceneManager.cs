@@ -316,7 +316,7 @@ public class CutsceneManager : MonoBehaviour
         // hide all prompts
         StopAllCoroutines();
         pauseScreen.SetActive(false);
-        pausePrompt.SetActive(false);
+        promptText.color = new Color(continueText.color.r, continueText.color.g, continueText.color.b, 0);
         continueText.color = new Color(continueText.color.r, continueText.color.g, continueText.color.b, 0);
         videoRenderImg.enabled = false;
         

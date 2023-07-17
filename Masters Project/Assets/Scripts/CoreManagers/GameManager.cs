@@ -345,7 +345,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void UpdateMouseMode()
     {
-        Debug.Log("Mouse mode being checked");
+        //Debug.Log("Mouse mode being checked");
         // Currently, should be confined for everything except the main gameplay
         switch (currentState)
         {
@@ -428,12 +428,12 @@ public class GameManager : MonoBehaviour
         // Close the top menu and remove from stack
         UIMenu menu = menuStack.Pop();
         menu.Close();
-        Debug.Log($"Closing menu named {menu.name}");
+        //Debug.Log($"Closing menu named {menu.name}");
 
         // Tell the stack below it to load its select
         if (menuStack.Count > 0)
         {
-            Debug.Log($"Calling top stack on {menuStack.Peek().name}");
+            //Debug.Log($"Calling top stack on {menuStack.Peek().name}");
             menuStack.Peek().TopStackFunction();
         }
 

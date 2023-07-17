@@ -39,6 +39,8 @@ public class InputManager : MonoBehaviour
     /// </summary>
     private PlayerInput playerInput;
 
+
+
     /// <summary>
     /// Prepare singleton
     /// </summary>
@@ -462,6 +464,11 @@ public class InputManager : MonoBehaviour
     [SerializeField] private InputBinding.DisplayStringOptions displayOptions;
 
     [SerializeField] private TMP_SpriteAsset promptSheet;
+
+    /// <summary>
+    /// delimiter used to indicate that a input action lookup is requested
+    /// </summary>
+    public readonly char inputDelimiter = '#';
 
     /// <summary>
     /// Build the dictionary used for text overrides

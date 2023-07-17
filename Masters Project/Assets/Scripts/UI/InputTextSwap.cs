@@ -36,7 +36,7 @@ public class InputTextSwap : MonoBehaviour
         // iterate through content, adding any input bindings when necessary
         for (int i = 0; i < displayString.Length; i++)
         {
-            if (displayString[i] == TooltipManager.instance.inputDelimiter)
+            if (displayString[i] == InputManager.Instance.inputDelimiter)
             {
                 temp += InputManager.Instance.ActionKeybindLookup(action);
                 //Debug.Log($"Retrieved input: {InputManager.Instance.ActionKeybindLookup(action)}");
