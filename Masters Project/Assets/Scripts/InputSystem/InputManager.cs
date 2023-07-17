@@ -526,7 +526,7 @@ public class InputManager : MonoBehaviour
                     temp = "";
                     int compositesPassed = 0;
 
-                    Debug.Log("Trying to get : " + action.name);
+                    //Debug.Log("Trying to get : " + action.name);
 
                     // loop through all bindings, looking for the first available gamepad
                     for (int i = 0; i < action.bindings.Count; i++)

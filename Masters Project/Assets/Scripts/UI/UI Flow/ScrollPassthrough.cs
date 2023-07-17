@@ -29,7 +29,6 @@ public class ScrollPassthrough : MonoBehaviour, IScrollHandler
 
     public void OnScroll(PointerEventData eventData)
     {
-        Debug.Log("Scrolling");
         parent.OnScroll(eventData);
     }
 }
