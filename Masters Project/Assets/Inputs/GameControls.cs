@@ -215,6 +215,15 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""clearcollectiondata"",
+                    ""type"": ""Button"",
+                    ""id"": ""94bee36f-9cb5-4d16-9143-482a572094f5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -701,6 +710,17 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""action"": ""TieDye"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""596de8d1-1bc2-4c08-848d-247d15dd6816"",
+                    ""path"": ""<Keyboard>/m"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""clearcollectiondata"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -1076,6 +1096,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_PlayerGameplay_IncrementConvs = m_PlayerGameplay.FindAction("IncrementConvs", throwIfNotFound: true);
         m_PlayerGameplay_SwapControls = m_PlayerGameplay.FindAction("SwapControls", throwIfNotFound: true);
         m_PlayerGameplay_TieDye = m_PlayerGameplay.FindAction("TieDye", throwIfNotFound: true);
+        m_PlayerGameplay_clearcollectiondata = m_PlayerGameplay.FindAction("clearcollectiondata", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Mouse = m_UI.FindAction("Mouse", throwIfNotFound: true);
@@ -1169,6 +1190,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_IncrementConvs;
     private readonly InputAction m_PlayerGameplay_SwapControls;
     private readonly InputAction m_PlayerGameplay_TieDye;
+    private readonly InputAction m_PlayerGameplay_clearcollectiondata;
     public struct PlayerGameplayActions
     {
         private @GameControls m_Wrapper;
@@ -1194,6 +1216,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @IncrementConvs => m_Wrapper.m_PlayerGameplay_IncrementConvs;
         public InputAction @SwapControls => m_Wrapper.m_PlayerGameplay_SwapControls;
         public InputAction @TieDye => m_Wrapper.m_PlayerGameplay_TieDye;
+        public InputAction @clearcollectiondata => m_Wrapper.m_PlayerGameplay_clearcollectiondata;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1266,6 +1289,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @TieDye.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTieDye;
                 @TieDye.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTieDye;
                 @TieDye.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTieDye;
+                @clearcollectiondata.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnClearcollectiondata;
+                @clearcollectiondata.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnClearcollectiondata;
+                @clearcollectiondata.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnClearcollectiondata;
             }
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -1333,6 +1359,9 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @TieDye.started += instance.OnTieDye;
                 @TieDye.performed += instance.OnTieDye;
                 @TieDye.canceled += instance.OnTieDye;
+                @clearcollectiondata.started += instance.OnClearcollectiondata;
+                @clearcollectiondata.performed += instance.OnClearcollectiondata;
+                @clearcollectiondata.canceled += instance.OnClearcollectiondata;
             }
         }
     }
@@ -1509,6 +1538,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnIncrementConvs(InputAction.CallbackContext context);
         void OnSwapControls(InputAction.CallbackContext context);
         void OnTieDye(InputAction.CallbackContext context);
+        void OnClearcollectiondata(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

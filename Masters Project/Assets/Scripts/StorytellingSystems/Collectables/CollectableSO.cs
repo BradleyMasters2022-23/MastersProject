@@ -1,9 +1,130 @@
+/* ================================================================================================
+ * Author - Ben Schuster   
+ * Date Created - July 18th, 2023
+ * Last Edited - July 18th, 2023 by Ben Schuster
+ * Description - Main data object for fragments.
+ * ================================================================================================
+ */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
+[System.Serializable]
+public struct CollectableFragment
+{
+    [SerializeField, Tooltip("Main image that shows up on pickup")]
+    private Image image;
+    [SerializeField, Tooltip("Opposite side of the image used when flipped")]
+    private Image altImage;
+    [SerializeField, TextArea, Tooltip("Main image that shows up on pickup")]
+    private string text;
+    /// <summary>
+    /// Get main image for this fragment
+    /// </summary>
+    /// <returns></returns>
+    public Image Image()
+    {
+        return image;
+    }
+    /// <summary>
+    /// Get alt image for this fragment
+    /// </summary>
+    /// <returns></returns>
+    public Image AltImage()
+    {
+        return altImage;
+    }
+    /// <summary>
+    /// Get text description for this item
+    /// </summary>
+    /// <returns></returns>
+    public string Text()
+    {
+        return text;
+    }
+}
 
 [CreateAssetMenu(menuName = "Storytelling/Collectable Data", fileName = "New Collectable Item")]
 public class CollectableSO : ScriptableObject
 {
-    
+    [SerializeField] string collectableName;
+    [SerializeField] CollectableFragment[] allFragments;
+
+    /// <summary>
+    /// Get the name of this collectable
+    /// </summary>
+    /// <returns></returns>
+    public string Name()
+    {
+        return collectableName;
+    }
+
+    /// <summary>
+    /// Get a ref to a concrete collectable
+    /// </summary>
+    /// <param name="index">Index to use</param>
+    /// <returns>Collectable data. If nothing, will return default values</returns>
+    public CollectableFragment GetFragment(int index)
+    {
+        if (index > allFragments.Length || index < 0)
+        {
+            Debug.LogError($"Collectable Data {collectableName} had a fragment request outside its bounds!" +
+                $" It has {allFragments.Length} objects but was asked for {index}");
+            return default;
+        }
+        else
+        {
+            return allFragments[index];
+        }
+    }
+    /// <summary>
+    /// Get number of fragments for this collectable
+    /// </summary>
+    /// <returns></returns>
+    public int GetFragmentCount()
+    {
+        return allFragments.Length;
+    }
+
+    /// <summary>
+    /// Get the description of this collectable. 
+    /// </summary>
+    /// <returns>The combined description of items</returns>
+    public virtual string GetDesc()
+    {
+        string data = "";
+        foreach(CollectableFragment fragment in allFragments)
+        {
+            // TODO - check against save data
+            data += fragment.Text() + " ";
+        }
+        return data;
+    }
+    /// <summary>
+    /// Get all images from this collectable
+    /// </summary>
+    /// <returns>All images found [NOT DONE, RETURNS ALL]</returns>
+    public Image[] GetImages()
+    {
+        Image[] foundImgs = new Image[allFragments.Length];
+        for(int i = 0; i < allFragments.Length; i++)
+        {
+            foundImgs[i] = allFragments[i].Image();
+        }
+        return foundImgs;
+    }
+    /// <summary>
+    /// Get all alt images from this collectable
+    /// </summary>
+    /// <returns>All alt images found [NOT DONE, RETURNS ALL]</returns>
+    public Image[] GetAltTextures()
+    {
+        Image[] foundImgs = new Image[allFragments.Length];
+        for (int i = 0; i < allFragments.Length; i++)
+        {
+            foundImgs[i] = allFragments[i].AltImage();
+        }
+        return foundImgs;
+    }
 }
