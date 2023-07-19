@@ -10,7 +10,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LoadCollectableInstance : MonoBehaviour
+public class LoadCollectableInstance : MonoBehaviour, Interactable
 {
     [Tooltip("The collectable data this instance represents")]
     [SerializeField] CollectableSO collectableData;
@@ -52,5 +52,21 @@ public class LoadCollectableInstance : MonoBehaviour
             }
             gameObject.SetActive(false);
         }
+    }
+
+    public bool CanInteract()
+    {
+        return true;
+    }
+
+    public void OnInteract()
+    {
+        List<CollectableFragment> collectedFrags = new List<CollectableFragment>();
+        for(int i = 0; i < fragmentProps.Length; i++)
+        {
+            if (fragmentProps[i].activeInHierarchy)
+                collectedFrags.Add(collectableData.GetFragment(i));
+        }
+        PlayerTarget.p.GetComponentInChildren<CollectableViewUI>(true).OpenUI(collectedFrags);
     }
 }

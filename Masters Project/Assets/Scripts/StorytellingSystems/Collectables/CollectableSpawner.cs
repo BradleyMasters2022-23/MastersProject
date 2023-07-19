@@ -46,6 +46,8 @@ public class CollectableSpawner : MonoBehaviour, Interactable
     /// The chosen fragment this interactable rewards
     /// </summary>
     [SerializeField, ReadOnly] private int chosenFragmentIndex;
+    private CollectableFragment loadedFragment;
+
     private bool collected;
 
     private void Start()
@@ -115,7 +117,8 @@ public class CollectableSpawner : MonoBehaviour, Interactable
         if (fragmentOverrideIndex >= 0 && collectableOverride != null &&
             fragmentOverrideIndex < chosenCollectable.GetFragmentCount()) 
         {
-            chosenFragmentIndex = fragmentOverrideIndex;
+            if(!CollectableSaveManager.instance.FragmentObtained(collectableOverride, fragmentOverrideIndex))
+                chosenFragmentIndex = fragmentOverrideIndex;
         }
         // if a whitelist is set, set buffer list to whitelist
         else if(collectableOverride != null && utilizeFragmentWhitelist
@@ -164,6 +167,20 @@ public class CollectableSpawner : MonoBehaviour, Interactable
         }
 
         collected = false;
+
+        // load prepared fragment
+        loadedFragment = chosenCollectable.GetFragment(chosenFragmentIndex);
+        if(loadedFragment.GetSpawnProp() != null)
+        {
+            // spawn as child, apply new scale
+            GameObject prop = Instantiate(loadedFragment.GetSpawnProp(), transform);
+            prop.transform.localScale *= loadedFragment.objectPropScaleMultiplier;
+
+            // make sure all colliders are disabled for pickup
+            Collider[] cols = prop.GetComponentsInChildren<Collider>();
+            foreach (Collider c in cols)
+                c.enabled = false;
+        }
     }
 
     private void OnValidate()
@@ -191,9 +208,11 @@ public class CollectableSpawner : MonoBehaviour, Interactable
 
     public void OnInteract()
     {
-        // TODO - take into hubworld
+        // TODO - zoom to player. Open UI
         collected = true;
         CollectableSaveManager.instance.SaveNewFragment(chosenCollectable, chosenFragmentIndex);
+
+        PlayerTarget.p.GetComponentInChildren<CollectableViewUI>(true).OpenUI(chosenCollectable.GetFragment(chosenFragmentIndex));
         DestroyCollectable();
     }
 

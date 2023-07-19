@@ -14,16 +14,22 @@ using UnityEngine.UI;
 public struct CollectableFragment
 {
     [SerializeField, Tooltip("Main image that shows up on pickup")]
-    private Image image;
+    private Sprite image;
     [SerializeField, Tooltip("Opposite side of the image used when flipped")]
-    private Image altImage;
+    private Sprite altImage;
     [SerializeField, TextArea, Tooltip("Main image that shows up on pickup")]
     private string text;
+    private string altText;
+    [SerializeField, Tooltip("Prefab of how this object is represented as a pickup")]
+    private GameObject interactableGameObjectProp;
+    [Tooltip("Scale to apply to the gameobject when it spawns as a pickup")]
+    public float objectPropScaleMultiplier;
+
     /// <summary>
     /// Get main image for this fragment
     /// </summary>
     /// <returns></returns>
-    public Image Image()
+    public Sprite Sprite()
     {
         return image;
     }
@@ -31,7 +37,7 @@ public struct CollectableFragment
     /// Get alt image for this fragment
     /// </summary>
     /// <returns></returns>
-    public Image AltImage()
+    public Sprite AltSprite()
     {
         return altImage;
     }
@@ -42,6 +48,18 @@ public struct CollectableFragment
     public string Text()
     {
         return text;
+    }
+    public string AltText()
+    {
+        return altText;
+    }
+    /// <summary>
+    /// Get reference to prefab of the spawn prop
+    /// </summary>
+    /// <returns></returns>
+    public GameObject GetSpawnProp()
+    {
+        return interactableGameObjectProp;
     }
 }
 
@@ -105,12 +123,12 @@ public class CollectableSO : ScriptableObject
     /// Get all images from this collectable
     /// </summary>
     /// <returns>All images found [NOT DONE, RETURNS ALL]</returns>
-    public Image[] GetImages()
+    public Sprite[] GetImages()
     {
-        Image[] foundImgs = new Image[allFragments.Length];
+        Sprite[] foundImgs = new Sprite[allFragments.Length];
         for(int i = 0; i < allFragments.Length; i++)
         {
-            foundImgs[i] = allFragments[i].Image();
+            foundImgs[i] = allFragments[i].Sprite();
         }
         return foundImgs;
     }
@@ -118,12 +136,12 @@ public class CollectableSO : ScriptableObject
     /// Get all alt images from this collectable
     /// </summary>
     /// <returns>All alt images found [NOT DONE, RETURNS ALL]</returns>
-    public Image[] GetAltTextures()
+    public Sprite[] GetAltTextures()
     {
-        Image[] foundImgs = new Image[allFragments.Length];
+        Sprite[] foundImgs = new Sprite[allFragments.Length];
         for (int i = 0; i < allFragments.Length; i++)
         {
-            foundImgs[i] = allFragments[i].AltImage();
+            foundImgs[i] = allFragments[i].AltSprite();
         }
         return foundImgs;
     }
