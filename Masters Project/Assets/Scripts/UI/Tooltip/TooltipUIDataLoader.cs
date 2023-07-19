@@ -55,7 +55,7 @@ public class TooltipUIDataLoader : MonoBehaviour
                 // iterate through content, adding any input bindings when necessary
                 for (int i = 0; i < contentRef.Length; i++)
                 {
-                    if (contentRef[i] == TooltipManager.instance.inputDelimiter)
+                    if (contentRef[i] == InputManager.Instance.inputDelimiter)
                     {
                         temp += InputManager.Instance.ActionKeybindLookup(d.inputReference[inputIdx]);
                         inputIdx++;
@@ -125,7 +125,7 @@ public class TooltipUIDataLoader : MonoBehaviour
             // iterate through content, adding any input bindings when necessary
             for (int i = 0; i < contentRef.Length; i++)
             {
-                if (contentRef[i] == TooltipManager.instance.inputDelimiter)
+                if (contentRef[i] == InputManager.Instance.inputDelimiter)
                 {
                     temp += InputManager.Instance.ActionKeybindLookup(loadedData.inputReference[inputIdx]);
                     inputIdx++;

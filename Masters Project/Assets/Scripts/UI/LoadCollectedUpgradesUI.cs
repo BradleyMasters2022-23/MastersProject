@@ -21,15 +21,18 @@ public class LoadCollectedUpgradesUI : MonoBehaviour
     {
         source = CrystalManager.instance;
 
-        if (source == null)
-            return;
-
         PopulateList();
     }
 
 
     private void PopulateList()
     {
+        if(source == null)
+        {
+            OnDisable();
+            return;
+        }
+
         // Load in UI for each upgrade
         for(int i = 0; i < source.MaxSlots(); i++)
         {

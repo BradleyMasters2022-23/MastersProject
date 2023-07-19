@@ -52,6 +52,7 @@ public class ConversationLoaderUI : MonoBehaviour
     /// </summary>
     public void ResetScreen()
     {
+        StopAllCoroutines();
         gameObject.SetActive(false);
         other = null;
         dialogueBox.text = "";

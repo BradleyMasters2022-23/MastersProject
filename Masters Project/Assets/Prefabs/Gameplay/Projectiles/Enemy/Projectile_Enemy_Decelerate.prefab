@@ -51,12 +51,12 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1958592662228434136}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
-  m_LightProbeUsage: 1
+  m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
@@ -159,12 +159,12 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2864900440127664262}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
-  m_LightProbeUsage: 1
+  m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
@@ -324,6 +324,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef9a8a007c9c93488ebdb35b7868fbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
   dealDamage: 1
   damage: 5
   playerDamage: 5
@@ -334,11 +340,10 @@ MonoBehaviour:
   verticalKnockback: 0
   playerHorizontalKnockback: 0
   playerVerticalKnockback: 0
-  affectedByTimestop: 1
   shotByPlayer: 0
   hitLayers:
     serializedVersion: 2
-    m_Bits: 2359360
+    m_Bits: 262208
   worldLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -356,6 +361,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   fadeVFX: {fileID: 0}
+  normalSizeOnStop: 1
   acceleratingRate: 0.34
   targetEndVelocity: 0
   projectileLifetime: 15
@@ -408,12 +414,12 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5105302778671605131}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
-  m_LightProbeUsage: 1
+  m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
@@ -491,12 +497,12 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8630081312121120438}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
-  m_LightProbeUsage: 1
+  m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0

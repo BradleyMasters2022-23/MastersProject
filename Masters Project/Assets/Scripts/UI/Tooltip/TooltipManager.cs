@@ -270,11 +270,6 @@ public class TooltipManager : MonoBehaviour
 
     [SerializeField] ChannelControlScheme onSchemeChangeChannel;
 
-    /// <summary>
-    /// delimiter used to indicate that a input action lookup is requested
-    /// </summary>
-    public readonly char inputDelimiter = '#';
-
     private IEnumerator LoadTooltipText(TooltipSO data)
     {
         // create delay here to minimize 'new' keyword
@@ -285,6 +280,8 @@ public class TooltipManager : MonoBehaviour
         string text = data.GetPromptText();
         string fullTxt = "";
         int inputIdx = 0;
+        char delimiter = InputManager.Instance.inputDelimiter;
+
         for (int i = 0; i < text.Length; i++)
         {
             // Check for a richtext tag
@@ -310,7 +307,7 @@ public class TooltipManager : MonoBehaviour
                 yield return null;
             }
             // If an input, get lookup and add here
-            else if (text[i] == inputDelimiter && inputIdx < data.inputReference.Length)
+            else if (text[i] == delimiter && inputIdx < data.inputReference.Length)
             {
                 fullTxt += InputManager.Instance.ActionKeybindLookup(data.inputReference[inputIdx]);
                 inputIdx++;
@@ -348,7 +345,7 @@ public class TooltipManager : MonoBehaviour
         // iterate through content, adding any input bindings when necessary
         for (int i = 0; i < contentRef.Length; i++)
         {
-            if (contentRef[i] == inputDelimiter)
+            if (contentRef[i] == InputManager.Instance.inputDelimiter)
             {
                 temp += InputManager.Instance.ActionKeybindLookup(currentTooltip.inputReference[inputIdx]);
                 inputIdx++;

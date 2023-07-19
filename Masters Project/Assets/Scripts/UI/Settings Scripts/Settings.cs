@@ -46,6 +46,8 @@ public class Settings : MonoBehaviour
     [SerializeField] private bool defaultMouseInvertX;
     [Tooltip("Default value for mouse y inversion")]
     [SerializeField] private bool defaultMouseInvertY;
+    [Tooltip("Default value for mouse having aimassist")]
+    [SerializeField] private bool defaultMouseAimAssist;
 
     /// <summary>
     /// sensitivity of the mouse
@@ -56,6 +58,7 @@ public class Settings : MonoBehaviour
     /// </summary>
     public static bool mouseInvertX;
     public static bool mouseInvertY;
+    public static bool mouseAimAssist;
 
     [Header("--- Setup ---")]
     [Tooltip("Slider element for mouse sensitivity")]
@@ -64,6 +67,8 @@ public class Settings : MonoBehaviour
     [SerializeField] private Toggle mouseInvertXToggle;
     [Tooltip("Toggle element for mouse Invert Y")]
     [SerializeField] private Toggle mouseInvertYToggle;
+    [Tooltip("Toggle element for mouse aim assist")]
+    [SerializeField] private Toggle mouseAimAssistToggle;
 
     #endregion
 
@@ -78,20 +83,19 @@ public class Settings : MonoBehaviour
     [SerializeField] private bool defaultControllerInvertX;
     [Tooltip("Default value for controller y inversion")]
     [SerializeField] private bool defaultControllerInvertY;
+    [Tooltip("Default value for controller aim assist")]
+    [SerializeField] private bool defaultControllerAimAssist;
 
     /// <summary>
     /// sensitivity of the controller
     /// </summary>
     public static float controllerSensitivity;
     /// <summary>
-    /// multiplier to controller sensitivity [otherwise is too slow]
-    /// </summary>
-    public const float CONTROLLERMULTIPLIER = 50;
-    /// <summary>
     /// Axis inversion for controller
     /// </summary>
     public static bool controllerInvertX;
     public static bool controllerInvertY;
+    public static bool controllerAimAssist;
 
     [Header("--- Setup ---")]
     [Tooltip("Slider element for controller sensitivity")]
@@ -100,7 +104,8 @@ public class Settings : MonoBehaviour
     [SerializeField] private Toggle controllerInvertXToggle;
     [Tooltip("Toggle element for controller Invert Y")]
     [SerializeField] private Toggle controllerInvertYToggle;
-
+    [Tooltip("Toggle element for controller aim assist")]
+    [SerializeField] private Toggle controllerAimAssistToggle;
     #endregion
 
     #region Initialization
@@ -116,10 +121,12 @@ public class Settings : MonoBehaviour
         mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", defaultMouseSensitivity);
         mouseInvertX = IntToBool(PlayerPrefs.GetInt("MouseInvertX", BoolToInt(defaultMouseInvertX)));
         mouseInvertY = IntToBool(PlayerPrefs.GetInt("MouseInvertY", BoolToInt(defaultMouseInvertY)));
+        mouseAimAssist = IntToBool(PlayerPrefs.GetInt("MouseAimAssist", BoolToInt(defaultMouseAimAssist)));
 
-        controllerSensitivity = PlayerPrefs.GetFloat("ControllerSensitivity", defaultControllerSensitivity * CONTROLLERMULTIPLIER);
+        controllerSensitivity = PlayerPrefs.GetFloat("ControllerSensitivity", defaultControllerSensitivity);
         controllerInvertX = IntToBool(PlayerPrefs.GetInt("ControllerInvertX", BoolToInt(defaultControllerInvertX)));
         controllerInvertY = IntToBool(PlayerPrefs.GetInt("ControllerInvertY", BoolToInt(defaultControllerInvertY)));
+        controllerAimAssist = IntToBool(PlayerPrefs.GetInt("ControllerAimAssist", BoolToInt(defaultControllerAimAssist)));
 
         UpdateUI();
     }
@@ -134,22 +141,18 @@ public class Settings : MonoBehaviour
         mouseSensitivitySlider.value = mouseSensitivity;
         mouseInvertXToggle.isOn = mouseInvertX;
         mouseInvertYToggle.isOn = mouseInvertY;
+        mouseAimAssistToggle.isOn = mouseAimAssist;
 
-        controllerSensitivitySlider.value = controllerSensitivity / CONTROLLERMULTIPLIER;
+        controllerSensitivitySlider.value = controllerSensitivity;
         controllerInvertXToggle.isOn = controllerInvertX;
         controllerInvertYToggle.isOn = controllerInvertY;
+        controllerAimAssistToggle.isOn = controllerAimAssist;
+
     }
 
     #endregion
 
     #region ChangeFunctions
-
-    //public void ChangeMasterVolume()
-    //{
-    //    masterVolume = masterVolumeSlider.value;
-    //    PlayerPrefs.SetFloat("MasterVolume", masterVolume);
-    //    SettingsConfirmed();
-    //}
 
     /// <summary>
     /// changing mouse sensitivity
@@ -175,6 +178,14 @@ public class Settings : MonoBehaviour
         mouseInvertY = mouseInvertYToggle.isOn;
         PlayerPrefs.SetInt("MouseInvertY", BoolToInt(mouseInvertY));
     }
+    /// <summary>
+    /// Inverts the aim assist for mouse
+    /// </summary>
+    public void ToggleMouseAimAssist()
+    {
+        mouseAimAssist = mouseAimAssistToggle.isOn;
+        PlayerPrefs.SetInt("MouseAimAssist", BoolToInt(mouseAimAssist));
+    }
 
 
     /// <summary>
@@ -182,7 +193,7 @@ public class Settings : MonoBehaviour
     /// </summary>
     public void ChangeControllerSensitivity()
     {
-        controllerSensitivity = controllerSensitivitySlider.value * CONTROLLERMULTIPLIER;
+        controllerSensitivity = controllerSensitivitySlider.value;
         PlayerPrefs.SetFloat("ControllerSensitivity", controllerSensitivity);
     }
 
@@ -203,6 +214,14 @@ public class Settings : MonoBehaviour
         controllerInvertY = controllerInvertYToggle.isOn;
         PlayerPrefs.SetInt("ControllerInvertY", BoolToInt(controllerInvertY));
     }
+    /// <summary>
+    /// Inverts the aim assist for controller
+    /// </summary>
+    public void ToggleControllerAimAssist()
+    {
+        controllerAimAssist = controllerAimAssistToggle.isOn;
+        PlayerPrefs.SetInt("ControllerAimAssist", BoolToInt(controllerAimAssist));
+    }
 
     #endregion
 
@@ -218,20 +237,22 @@ public class Settings : MonoBehaviour
         mouseSensitivity = defaultMouseSensitivity;
         mouseInvertY = defaultMouseInvertY;
         mouseInvertX = defaultMouseInvertX;
-        controllerSensitivity = defaultControllerSensitivity * CONTROLLERMULTIPLIER;
+        mouseAimAssist = defaultMouseAimAssist;
+        controllerSensitivity = defaultControllerSensitivity;
         controllerInvertX = defaultControllerInvertX;
         controllerInvertY = defaultControllerInvertY;
-
-        // Save playerprefs
-        //PlayerPrefs.SetFloat("MasterVolume", masterVolume);
+        controllerAimAssist = defaultControllerAimAssist;
 
         PlayerPrefs.SetFloat("MouseSensitivity", mouseSensitivity);
         PlayerPrefs.SetInt("MouseInvertX", BoolToInt(mouseInvertX));
         PlayerPrefs.SetInt("MouseInvertY", BoolToInt(mouseInvertY));
+        PlayerPrefs.SetInt("MouseAimAssist", BoolToInt(mouseAimAssist));
 
         PlayerPrefs.SetFloat("ControllerSensitivity", controllerSensitivity);
         PlayerPrefs.SetInt("ControllerInvertX", BoolToInt(controllerInvertX));
         PlayerPrefs.SetInt("ControllerInvertY", BoolToInt(controllerInvertY));
+        PlayerPrefs.SetInt("ControllerAimAssist", BoolToInt(controllerAimAssist));
+
 
         // Update UI elements
         UpdateUI();
