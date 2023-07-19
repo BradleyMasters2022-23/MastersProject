@@ -1,0 +1,209 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4879403287132122215
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4879403287132122210}
+  - component: {fileID: 4879403287132122209}
+  - component: {fileID: 4879403287132122208}
+  - component: {fileID: 4879403287132122220}
+  - component: {fileID: 4879403287132122211}
+  m_Layer: 13
+  m_Name: CollectableContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4879403287132122210
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4879403287132122215}
+  m_LocalRotation: {x: -0, y: -0.2921943, z: -0, w: 0.956359}
+  m_LocalPosition: {x: 4.372, y: 53.136, z: 1.378}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: -33.979, z: 0}
+--- !u!114 &4879403287132122209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4879403287132122215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9563813daee73498a29c7ff8e3f677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  randomized: 1
+  baseSpawnChance: 30
+  collectableOverride: {fileID: 0}
+  utilizeCollectableWhitelist: 0
+  collectableWhitelist: []
+  fragmentOverrideIndex: -1
+  utilizeFragmentWhitelist: 0
+  fragmentWhitelist: 
+  chosenCollectable: {fileID: 0}
+  chosenFragmentIndex: 0
+--- !u!135 &4879403287132122208
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4879403287132122215}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.24890494
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!2083052967 &4879403287132122220
+VisualEffect:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4879403287132122215}
+  m_Enabled: 1
+  m_Asset: {fileID: 8926484042661614526, guid: 8ef257a36fb2d1741913750cdef6c624, type: 3}
+  m_InitialEventName: OnPlay
+  m_InitialEventNameOverriden: 0
+  m_StartSeed: 0
+  m_ResetSeedOnPlay: 1
+  m_ResourceVersion: 1
+  m_PropertySheet:
+    m_Float:
+      m_Array:
+      - m_Value: 0
+        m_Name: Inner Lines Spawn Rate
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Tube Size
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Tube Rotation Speed
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Tube Movement Speed
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Tube Bottom Transparency
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Inner Lines Spawn Height
+        m_Overridden: 1
+      - m_Value: 0
+        m_Name: Inner Lines Spawn Radius
+        m_Overridden: 1
+      - m_Value: 5
+        m_Name: Outer Lines Spawn Rate
+        m_Overridden: 1
+      - m_Value: 0.1
+        m_Name: Outer Lines Spawn Radius
+        m_Overridden: 1
+    m_Vector2f:
+      m_Array:
+      - m_Value: {x: 0, y: 0}
+        m_Name: Tube Cell Edge Strength (Min / Max)
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0}
+        m_Name: Tube Cell Tiling
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0}
+        m_Name: Tube Edges Transparency (Min / Max)
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0}
+        m_Name: Inner Lines Lifetime (Min / Max)
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0}
+        m_Name: Inner Lines Scale (Width / Height)
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0}
+        m_Name: Inner Lines Velocity
+        m_Overridden: 1
+      - m_Value: {x: 0.1, y: 3}
+        m_Name: Outer Lines Scale (Width / Height)
+        m_Overridden: 1
+      - m_Value: {x: 2, y: 3}
+        m_Name: Outer Lines Lifetime (Min / Max)
+        m_Overridden: 1
+    m_Vector3f:
+      m_Array:
+      - m_Value: {x: 0, y: 0, z: 0}
+        m_Name: Tube Scale
+        m_Overridden: 1
+    m_Vector4f:
+      m_Array:
+      - m_Value: {x: 0, y: 1, z: 0.68126154, w: 1}
+        m_Name: Inner Lines Color
+        m_Overridden: 1
+      - m_Value: {x: 0.088679194, y: 0.7376486, z: 1, w: 1}
+        m_Name: Outer Lines Color
+        m_Overridden: 1
+    m_Uint:
+      m_Array: []
+    m_Int:
+      m_Array: []
+    m_Matrix4x4f:
+      m_Array: []
+    m_AnimationCurve:
+      m_Array: []
+    m_Gradient:
+      m_Array: []
+    m_NamedObject:
+      m_Array: []
+    m_Bool:
+      m_Array: []
+--- !u!73398921 &4879403287132122211
+VFXRenderer:
+  serializedVersion: 1
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4879403287132122215}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0

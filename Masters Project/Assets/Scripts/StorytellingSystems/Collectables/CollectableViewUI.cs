@@ -12,6 +12,8 @@ public class CollectableViewUI : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI descText;
 
+    [SerializeField] Animator animator;
+
     private List<Image> imageBuffer;
     bool front;
 
@@ -21,18 +23,23 @@ public class CollectableViewUI : MonoBehaviour
 
         fragmentsToload = fragments;
         template.gameObject.SetActive(true);
+        string tempBuffer = "";
         foreach (CollectableFragment fragment in fragmentsToload)
         {
             Image cont = Instantiate(template, imageContainer).GetComponent<Image>();
             cont.gameObject.transform.localPosition= Vector3.zero;
             cont.sprite = fragment.Sprite();
             imageBuffer.Add(cont);
-            //descText.text += fragment.Text();
+            tempBuffer += fragment.Text();
         }
+        descText.text = tempBuffer;
         template.gameObject.SetActive(false);
+
+        front = true;
+        animator.SetBool("Front", front);
+
         gameObject.SetActive(true);
         GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
-        front = true;
         imageContainer.transform.localScale = new Vector3(1, 1, 1);
     }
     public void OpenUI(CollectableFragment fragment)
@@ -45,12 +52,17 @@ public class CollectableViewUI : MonoBehaviour
         cont.gameObject.transform.localPosition = Vector3.zero;
         cont.sprite = fragment.Sprite();
         imageBuffer.Add(cont);
+
+        front = true;
+        animator.SetBool("Front", front);
+
         template.gameObject.SetActive(false);
         gameObject.SetActive(true);
         GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
-        front = true;
+        
+
         imageContainer.transform.localScale = new Vector3(1, 1, 1);
-        //descText.text = fragment.Text();
+        descText.text = fragment.Text();
 
     }
 
@@ -64,30 +76,42 @@ public class CollectableViewUI : MonoBehaviour
                 Destroy(i.gameObject);
             }
         }
+        animator.SetBool("Front", true);
+        front = true;
         descText.text = "";
     }
 
+    /// <summary>
+    /// Call animator to flip. Called via UI
+    /// </summary>
     public void Flip()
     {
-        Debug.Log("Flip Called");
         front = !front;
+        animator.SetBool("Front", front);
+    }
 
-        for(int i = 0; i < imageBuffer.Count; i++)
+    /// <summary>
+    /// Swap data between normal and alt. Called via animator
+    /// </summary>
+    public void SwapData()
+    {
+        string newStr = "";
+
+        for (int i = 0; i < imageBuffer.Count; i++)
         {
-            if(front)
+            if (front)
             {
                 imageBuffer[i].sprite = fragmentsToload[i].Sprite();
-                imageContainer.transform.localScale = new Vector3(1, 1, 1);
-
-                //descText.text += fragmentsToload[i].Text();
+                newStr += fragmentsToload[i].Text();
             }
             else
             {
                 imageBuffer[i].sprite = fragmentsToload[i].AltSprite();
-                imageContainer.transform.localScale = new Vector3(-1, 1, 1);
-
-                //descText.text += fragmentsToload[i].AltText();
+                newStr += fragmentsToload[i].AltText();
             }
         }
+
+        // apply new text
+        descText.text = newStr;
     }
 }

@@ -17,8 +17,9 @@ public struct CollectableFragment
     private Sprite image;
     [SerializeField, Tooltip("Opposite side of the image used when flipped")]
     private Sprite altImage;
-    [SerializeField, TextArea, Tooltip("Main image that shows up on pickup")]
+    [SerializeField, TextArea, Tooltip("Main text that shows up on pickup")]
     private string text;
+    [SerializeField, TextArea, Tooltip("Alt text that shows when flipped")]
     private string altText;
     [SerializeField, Tooltip("Prefab of how this object is represented as a pickup")]
     private GameObject interactableGameObjectProp;
@@ -49,6 +50,10 @@ public struct CollectableFragment
     {
         return text;
     }
+    /// <summary>
+    /// Get the alternate text
+    /// </summary>
+    /// <returns></returns>
     public string AltText()
     {
         return altText;

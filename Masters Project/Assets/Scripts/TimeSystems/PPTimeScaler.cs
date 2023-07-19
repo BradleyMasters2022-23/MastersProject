@@ -26,6 +26,8 @@ public class PPTimeScaler : TimeAffectedEntity
     // Update is called once per frame
     void Update()
     {
-        renderingVolume.weight = Mathf.Lerp(stoppedTimeTarget, normalTimeTarget, Timescale);
+        if(GameManager.instance.CurrentState == GameManager.States.HUB
+            || GameManager.instance.CurrentState == GameManager.States.GAMEPLAY)
+            renderingVolume.weight = Mathf.Lerp(stoppedTimeTarget, normalTimeTarget, Timescale);
     }
 }
