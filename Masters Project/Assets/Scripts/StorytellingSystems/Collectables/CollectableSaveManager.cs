@@ -56,7 +56,7 @@ public class CollectableSaveManager : MonoBehaviour
             data = new CollectableSaveData();
         }
 
-        clearDataCheat = InputManager.Controls.PlayerGameplay.clearcollectiondata;
+        clearDataCheat = InputManager.Controls.PlayerGameplay.ClearCollectionData;
         clearDataCheat.performed += ClearDataCheat;
         clearDataCheat.Enable();
     }
