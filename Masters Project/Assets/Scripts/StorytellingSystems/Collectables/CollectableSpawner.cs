@@ -110,7 +110,6 @@ public class CollectableSpawner : MonoBehaviour, Interactable
         }
 
         // Get collectable fragment
-        List<int> fragmentOptionsBuffer = null;
         chosenFragmentIndex = -1;
 
         // if override is valid, use that instead
@@ -120,43 +119,16 @@ public class CollectableSpawner : MonoBehaviour, Interactable
             if(!CollectableSaveManager.instance.FragmentObtained(collectableOverride, fragmentOverrideIndex))
                 chosenFragmentIndex = fragmentOverrideIndex;
         }
-        // if a whitelist is set, set buffer list to whitelist
+        // if a whitelist is set, get random fragment with whitelist
         else if(collectableOverride != null && utilizeFragmentWhitelist
             && fragmentWhitelist.Count > 0)
         {
-            fragmentOptionsBuffer = new List<int>(fragmentWhitelist);
+            chosenFragmentIndex = chosenCollectable.GetRandomFragment(fragmentWhitelist);
         }
-        // otherwise, set buffer list to all fragments
+        // otherwise, request new fragment
         else
         {
-            // prepare a pool of options. fragmentID's are indexes so we can just load via for loop
-            fragmentOptionsBuffer = new List<int>();
-            for(int i = 0; i < chosenCollectable.GetFragmentCount(); i++)
-            {
-                fragmentOptionsBuffer.Add(i);
-            }
-        }
-
-        // if buffer is set, filter it and choose from it. 
-        // only case this doesnt trigger is if a direct override was applied
-        if (fragmentOptionsBuffer != null)
-        {
-            List<int> foundOptions = CollectableSaveManager.instance.GetSavedFragments(chosenCollectable);
-            // remove fragments already found
-            if(foundOptions != null)
-            {
-                foreach(var f in foundOptions.ToArray())
-            {
-                    if (fragmentOptionsBuffer.Contains(f))
-                        fragmentOptionsBuffer.Remove(f);
-                }
-            }
-
-            // roll die if any are left
-            if (fragmentOptionsBuffer.Count > 0)
-            {
-                chosenFragmentIndex = fragmentOptionsBuffer[Random.Range(0, fragmentOptionsBuffer.Count)];
-            }
+            chosenFragmentIndex = chosenCollectable.GetRandomFragment();
         }
 
         // if still its original value, self destruct
@@ -170,11 +142,13 @@ public class CollectableSpawner : MonoBehaviour, Interactable
 
         // load prepared fragment
         loadedFragment = chosenCollectable.GetFragment(chosenFragmentIndex);
-        if(loadedFragment.GetSpawnProp() != null)
+        if(loadedFragment.ObjectPrefab != null)
         {
-            // spawn as child, apply new scale
-            GameObject prop = Instantiate(loadedFragment.GetSpawnProp(), transform);
-            prop.transform.localScale *= loadedFragment.objectPropScaleMultiplier;
+            // spawn as child, apply new scale and reposition
+            GameObject prop = Instantiate(loadedFragment.ObjectPrefab, transform);
+            prop.transform.localScale *= loadedFragment.PropInteractableScaleMod;
+            if (loadedFragment.CenterPropChild)
+                prop.transform.GetChild(0).localPosition = Vector3.zero;
 
             // make sure all colliders are disabled for pickup
             Collider[] cols = prop.GetComponentsInChildren<Collider>();
@@ -208,11 +182,10 @@ public class CollectableSpawner : MonoBehaviour, Interactable
 
     public void OnInteract()
     {
-        // TODO - zoom to player. Open UI
+        // TODO - zoom to player instead of just deleting
         collected = true;
         CollectableSaveManager.instance.SaveNewFragment(chosenCollectable, chosenFragmentIndex);
-
-        PlayerTarget.p.GetComponentInChildren<CollectableViewUI>(true).OpenUI(chosenCollectable.GetFragment(chosenFragmentIndex));
+        PlayerTarget.p.GetComponentInChildren<CollectableViewUI>(true).OpenUI(chosenCollectable, chosenFragmentIndex);
         DestroyCollectable();
     }
 

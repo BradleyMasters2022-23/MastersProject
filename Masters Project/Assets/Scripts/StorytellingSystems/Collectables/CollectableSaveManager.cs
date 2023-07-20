@@ -164,7 +164,7 @@ public class CollectableSaveManager : MonoBehaviour
     public bool ShouldSpawn(float baseChance)
     {
         baseChance += data.savedBonusLuck;
-        bool success = Random.Range(0.001f, 100f) <= baseChance;
+        bool success = Random.Range(0.00001f, 100f) <= baseChance;
 
         // reset luck on success, increment on fail.
         // TODO - move reset luck to pickup instead to not punish missing them

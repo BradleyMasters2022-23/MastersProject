@@ -61,12 +61,14 @@ public class LoadCollectableInstance : MonoBehaviour, Interactable
 
     public void OnInteract()
     {
-        List<CollectableFragment> collectedFrags = new List<CollectableFragment>();
+        List<int> collectedFrags = new List<int>();
         for(int i = 0; i < fragmentProps.Length; i++)
         {
             if (fragmentProps[i].activeInHierarchy)
-                collectedFrags.Add(collectableData.GetFragment(i));
+                collectedFrags.Add(i);
         }
-        PlayerTarget.p.GetComponentInChildren<CollectableViewUI>(true).OpenUI(collectedFrags);
+        CollectableViewUI ui = FindObjectOfType<CollectableViewUI>(true);
+        
+        ui.OpenUI(collectableData, collectedFrags);
     }
 }
