@@ -74,6 +74,10 @@ public class CollectableSO : ScriptableObject
         get { return propUIScaleMod; }
     }
 
+    [Tooltip("Rotation override applied when spawning as a pickup")]
+    [SerializeField] Vector3 pickupRotationOverride;
+    public Vector3 PickupRotationOverride { get { return pickupRotationOverride; } }
+
     [Header("Text Settings")]
     [Tooltip("Normal text displayed before any fragment text")]
     [SerializeField] string preTextDesc;
@@ -186,7 +190,7 @@ public class CollectableSO : ScriptableObject
             // if a whitelist is not passed in, only add items not already saved
             else
             {
-                if (!foundFragments.Contains(i))
+                if (foundFragments == null || !foundFragments.Contains(i))
                 {
                     pool.Add(i);
                 }

@@ -28,6 +28,6 @@ public class GameObjectCamOverlayMenu : GameObjectMenu
         Camera.main.GetUniversalAdditionalCameraData().cameraStack.Remove(renderCam);
         PlayerTarget.p.MainUI.enabled = true;
 
-        base.Close();
+        base.CloseFunctionality();
     }
 }

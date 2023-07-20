@@ -18,7 +18,7 @@ public class CollectableSpawner : MonoBehaviour, Interactable
     [SerializeField] bool randomized;
     [Tooltip("Chance of this one spawning. Think % based"), HideIf("@!this.randomized")]
     [SerializeField, Range(0, 100)] float baseSpawnChance;
-    
+
     [Header("Collectable Settings")]
     [Tooltip("Manual override for a collectable")]
     [SerializeField] CollectableSO collectableOverride;
@@ -147,6 +147,7 @@ public class CollectableSpawner : MonoBehaviour, Interactable
             // spawn as child, apply new scale and reposition
             GameObject prop = Instantiate(loadedFragment.ObjectPrefab, transform);
             prop.transform.localScale *= chosenCollectable.PropInteractableScaleMod;
+            prop.transform.localRotation = Quaternion.Euler(chosenCollectable.PickupRotationOverride);
             if (loadedFragment.CenterPropChild)
                 prop.transform.GetChild(0).localPosition = Vector3.zero;
 
@@ -185,7 +186,10 @@ public class CollectableSpawner : MonoBehaviour, Interactable
         // TODO - zoom to player instead of just deleting
         collected = true;
         CollectableSaveManager.instance.SaveNewFragment(chosenCollectable, chosenFragmentIndex);
-        PlayerTarget.p.GetComponentInChildren<CollectableViewUI>(true).OpenUI(chosenCollectable, chosenFragmentIndex);
+        
+        CollectableViewUI ui = FindObjectOfType<CollectableViewUI>(true);
+        ui.OpenUI(chosenCollectable, chosenFragmentIndex);
+
         DestroyCollectable();
     }
 

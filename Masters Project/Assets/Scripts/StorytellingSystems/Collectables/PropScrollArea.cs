@@ -31,7 +31,7 @@ public class PropScrollArea : MonoBehaviour, IDragHandler, IBeginDragHandler, IS
     /// </summary>
     private void OnDisable()
     {
-        prop.localRotation = originalPropRot;
+        prop.rotation = originalPropRot;
         prop.localScale = Vector3.one * originalScale;
         front = true;
     }

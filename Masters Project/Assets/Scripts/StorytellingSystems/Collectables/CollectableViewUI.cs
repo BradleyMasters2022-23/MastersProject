@@ -102,7 +102,8 @@ public class CollectableViewUI : MonoBehaviour
         }
 
         // if flip desc set, make sure to unsub
-        if (loadedCollectable.FlipDescription)
+        if (loadedCollectable != null && 
+            loadedCollectable.FlipDescription)
             propDisplayArea.UnSubscribeToFlip(Flip);
 
         StopAllCoroutines();

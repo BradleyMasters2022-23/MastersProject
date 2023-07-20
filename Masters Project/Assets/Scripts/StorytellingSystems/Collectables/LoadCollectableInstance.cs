@@ -13,11 +13,11 @@ using UnityEngine;
 public class LoadCollectableInstance : MonoBehaviour, Interactable
 {
     [Tooltip("The collectable data this instance represents")]
-    [SerializeField] CollectableSO collectableData;
+    [SerializeField] protected CollectableSO collectableData;
 
     [Tooltip("all props for this collectable. Organize the same way" +
         "the fragments are listed in the SO.")]
-    [SerializeField] GameObject[] fragmentProps;
+    [SerializeField] protected GameObject[] fragmentProps;
 
     private void Start()
     {
@@ -59,7 +59,7 @@ public class LoadCollectableInstance : MonoBehaviour, Interactable
         return true;
     }
 
-    public void OnInteract()
+    public virtual void OnInteract()
     {
         List<int> collectedFrags = new List<int>();
         for(int i = 0; i < fragmentProps.Length; i++)
@@ -68,7 +68,6 @@ public class LoadCollectableInstance : MonoBehaviour, Interactable
                 collectedFrags.Add(i);
         }
         CollectableViewUI ui = FindObjectOfType<CollectableViewUI>(true);
-        
         ui.OpenUI(collectableData, collectedFrags);
     }
 }

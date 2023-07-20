@@ -180,10 +180,13 @@ public class PlayerTarget : Target
     {
         base.OnDisable();
 
-        godCheat.performed -= ToggleGodmode;
-        healCheat.performed -= CheatHeal;
-        damageCheat.performed -= CheatDamage;
-        tiedye.performed -= Tiedye;
+        if (p == this)
+        {
+            godCheat.performed -= ToggleGodmode;
+            healCheat.performed -= CheatHeal;
+            damageCheat.performed -= CheatDamage;
+            tiedye.performed -= Tiedye;
+        }
 
         p = null;
     }
