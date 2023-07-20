@@ -14,14 +14,21 @@ using UnityEngine.Rendering.Universal;
 
 public class CollectableViewUI : MonoBehaviour
 {
+    /// <summary>
+    /// the loaded collectable
+    /// </summary>
     private CollectableSO loadedCollectable;
-    [Tooltip("All fragment indexes to load"), SerializeField]
-    private List<int> fragmentsToLoad;
+    /// <summary>
+    /// All fragment indexes to load
+    /// </summary>
+    private List<int> fragmentsToLoad = new List<int>();
     [Tooltip("Spawnpoint for collectable props in UI"), SerializeField]
     private Transform objectSpawnpoint;
     [Tooltip("Textbox that displays description"), SerializeField]
     private TextMeshProUGUI descTextbox;
-    
+    [Tooltip("The display area tracking whether prop is front or back"), SerializeField] 
+    private PropScrollArea propDisplayArea;
+
     /// <summary>
     /// List of props spawned
     /// </summary>
@@ -48,9 +55,8 @@ public class CollectableViewUI : MonoBehaviour
         fragmentsToLoad = fragments;
         foreach (var fragment in fragments)
         {
-            CollectableFragment f = loadedCollectable.GetFragment(fragment);
-            GameObject cont = Instantiate(f.ObjectPrefab, objectSpawnpoint);
-            cont.gameObject.transform.localScale *= f.PropUIScaleMod;
+            GameObject cont = Instantiate(loadedCollectable.GetFragment(fragment).ObjectPrefab, objectSpawnpoint);
+            cont.gameObject.transform.localScale *= loadedCollectable.PropUIScaleMod;
 
             // set prop's children to UI so it renders correctly
             foreach(var part in cont.GetComponentsInChildren<Transform>())
@@ -59,6 +65,10 @@ public class CollectableViewUI : MonoBehaviour
             spawnedPropList.Add(cont);
         }
         descTextbox.text = loadedCollectable.GetDesc(true, fragments);
+
+        // if theres a flip description, subsctibe to it 
+        if (coreData.FlipDescription)
+            propDisplayArea.SubscribeToFlip(Flip);
 
         // Open the screen
         front = true;
@@ -91,6 +101,13 @@ public class CollectableViewUI : MonoBehaviour
                 Destroy(obj);
         }
 
+        // if flip desc set, make sure to unsub
+        if (loadedCollectable.FlipDescription)
+            propDisplayArea.UnSubscribeToFlip(Flip);
+
+        StopAllCoroutines();
+        descTextbox.alpha = 1;
+
         loadedCollectable = null;
         fragmentsToLoad = null;
 
@@ -98,19 +115,35 @@ public class CollectableViewUI : MonoBehaviour
     }
 
     /// <summary>
-    /// flip the front, reload description text
+    /// flip the front, reload description text if set
     /// </summary>
-    public void Flip()
+    public void Flip(bool newFront)
     {
-        front = !front;
-        SwapData();
+        if (front == newFront) return;
+
+        front = newFront;
+        StopAllCoroutines();
+        StartCoroutine(SwapText());
     }
 
     /// <summary>
-    /// Swap data between normal and alt. Called via animator
+    /// Swap data between normal and alt
     /// </summary>
-    public void SwapData()
+    private void SwapData()
     {
         descTextbox.text = loadedCollectable.GetDesc(front, fragmentsToLoad);
+    }
+
+    /// <summary>
+    /// Swap the text out for the relevant side
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator SwapText()
+    {
+        descTextbox.CrossFadeAlpha(0, .3f, true);
+        yield return new WaitForSecondsRealtime(.6f);
+        SwapData();
+        descTextbox.CrossFadeAlpha(1, .3f, true);
+        yield return new WaitForSecondsRealtime(.3f);
     }
 }

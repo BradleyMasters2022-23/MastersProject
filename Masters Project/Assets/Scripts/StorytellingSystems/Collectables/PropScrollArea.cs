@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public class PropScrollArea : MonoBehaviour, IDragHandler, IBeginDragHandler, IScrollHandler
 {
@@ -32,6 +33,7 @@ public class PropScrollArea : MonoBehaviour, IDragHandler, IBeginDragHandler, IS
     {
         prop.localRotation = originalPropRot;
         prop.localScale = Vector3.one * originalScale;
+        front = true;
     }
 
     #endregion
@@ -44,6 +46,22 @@ public class PropScrollArea : MonoBehaviour, IDragHandler, IBeginDragHandler, IS
     [SerializeField] Vector2 pitchAngleRange;
     [Tooltip("Drag sensitivity")]
     [SerializeField] float dragSensitivity;
+    private bool front;
+    private  UnityEvent<bool> onFlipEvent;
+
+    public void SubscribeToFlip(UnityAction<bool> act)
+    {
+        if(onFlipEvent == null)
+            onFlipEvent= new UnityEvent<bool>();
+
+        onFlipEvent.AddListener(act);
+    }
+
+    public void UnSubscribeToFlip(UnityAction<bool> act)
+    {
+        if(onFlipEvent != null)
+            onFlipEvent.RemoveListener(act);
+    }
 
     /// <summary>
     /// original rotation of the prop
@@ -65,19 +83,28 @@ public class PropScrollArea : MonoBehaviour, IDragHandler, IBeginDragHandler, IS
         // get rotation based on delta
         Quaternion tempRot =
             Quaternion.AngleAxis(-eventData.delta.x * dragSensitivity * Time.unscaledDeltaTime, Vector3.up) * 
-            Quaternion.AngleAxis(-eventData.delta.y * dragSensitivity * invertVerticalDrag * Time.unscaledDeltaTime, Vector3.left);
+            Quaternion.AngleAxis(-eventData.delta.y * invertVerticalDrag * dragSensitivity * Time.unscaledDeltaTime, Vector3.left);
         
         // apply todation
         prop.rotation *= tempRot;
 
         // clamp pitch rotation, prevent roll
-        Vector3 eulerRot = prop.localRotation.eulerAngles;
+        Vector3 eulerRot = prop.rotation.eulerAngles;
         if (eulerRot.x > 180)
             eulerRot.x -= 360;
         eulerRot.x = Mathf.Clamp(eulerRot.x, pitchAngleRange.x, pitchAngleRange.y);
         eulerRot.z = 0;
         prop.rotation = Quaternion.Euler(eulerRot);
+
+        // trigger flip event if active
+        bool newFront = Vector3.Dot(prop.forward, renderCam.transform.forward) < 0;
+        if (front != newFront)
+        {
+            onFlipEvent?.Invoke(newFront);
+            front = newFront;
+        }
     }
+
 
     /// <summary>
     /// Decide how to invert the vertical rotation

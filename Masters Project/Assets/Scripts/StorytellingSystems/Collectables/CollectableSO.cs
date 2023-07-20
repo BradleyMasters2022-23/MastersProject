@@ -24,10 +24,7 @@ public class CollectableFragment
     [SerializeField, TextArea, Tooltip("Altenate text that shows up when flipped over")]
     private string altText;
 
-    [SerializeField, Tooltip("Scale to apply to prop when in-world pickup")]
-    private float propInteractableScaleMod = 1;
-    [SerializeField, Tooltip("Scale to apply to prop when viewed in UI")]
-    private float propUIScaleMod = 1;
+    
 
     #region Getters
 
@@ -42,15 +39,6 @@ public class CollectableFragment
     public string AltText
     {
         get { return altText; }
-    }
-
-    public float PropInteractableScaleMod
-    {
-        get { return propInteractableScaleMod; }
-    }
-    public float PropUIScaleMod
-    {
-        get { return propUIScaleMod; }
     }
 
     public bool CenterPropChild
@@ -72,6 +60,20 @@ public class CollectableSO : ScriptableObject
     [Tooltip("All fragments of this collectable. ")]
     [SerializeField] CollectableFragment[] allFragments;
 
+    [Header("Scaling")]
+    [SerializeField, Tooltip("Scale to apply to prop when in-world pickup")]
+    private float propInteractableScaleMod = 1;
+    [SerializeField, Tooltip("Scale to apply to prop when viewed in UI")]
+    private float propUIScaleMod = 1;
+    public float PropInteractableScaleMod
+    {
+        get { return propInteractableScaleMod; }
+    }
+    public float PropUIScaleMod
+    {
+        get { return propUIScaleMod; }
+    }
+
     [Header("Text Settings")]
     [Tooltip("Normal text displayed before any fragment text")]
     [SerializeField] string preTextDesc;
@@ -87,6 +89,8 @@ public class CollectableSO : ScriptableObject
     [Tooltip("Flipped text displayed after any fragment text")]
     [SerializeField] string flippedPostTextDesc;
     
+    public bool FlipDescription {  get { return flipDescription; } }
+
     /// <summary>
     /// Get the name of this collectable
     /// </summary>

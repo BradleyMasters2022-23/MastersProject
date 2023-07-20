@@ -146,7 +146,7 @@ public class CollectableSpawner : MonoBehaviour, Interactable
         {
             // spawn as child, apply new scale and reposition
             GameObject prop = Instantiate(loadedFragment.ObjectPrefab, transform);
-            prop.transform.localScale *= loadedFragment.PropInteractableScaleMod;
+            prop.transform.localScale *= chosenCollectable.PropInteractableScaleMod;
             if (loadedFragment.CenterPropChild)
                 prop.transform.GetChild(0).localPosition = Vector3.zero;
 
