@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class PropScrollArea : MonoBehaviour, IDragHandler, IBeginDragHandler, IScrollHandler
@@ -11,7 +10,7 @@ public class PropScrollArea : MonoBehaviour, IDragHandler, IBeginDragHandler, IS
     [Tooltip("Prop container to rotate")]
     [SerializeField] Transform prop;
     [Tooltip("Camera that renders this UI")]
-    [SerializeField] Transform forwardRef;
+    [SerializeField] Camera renderCam;
 
     [SerializeField] bool rotate;
     [SerializeField] bool scale;
@@ -88,7 +87,7 @@ public class PropScrollArea : MonoBehaviour, IDragHandler, IBeginDragHandler, IS
     {
         if (!rotate) return;
 
-        invertVerticalDrag = (Vector3.Dot(prop.forward, forwardRef.forward) < 0) ? -1 : 1;
+        invertVerticalDrag = (Vector3.Dot(prop.forward, renderCam.transform.forward) < 0) ? -1 : 1;
     }
 
     #endregion

@@ -21,6 +21,8 @@ public class CollectableViewUI : MonoBehaviour
     private Transform objectSpawnpoint;
     [Tooltip("Textbox that displays description"), SerializeField]
     private TextMeshProUGUI descTextbox;
+    [Tooltip("Camera that renders this UI"), SerializeField]
+    private Camera renderCam;
 
     /// <summary>
     /// List of props spawned
@@ -60,6 +62,8 @@ public class CollectableViewUI : MonoBehaviour
         }
         descTextbox.text = loadedCollectable.GetDesc(true, fragments);
 
+        Camera.main.GetUniversalAdditionalCameraData().cameraStack.Add(renderCam);
+
         // Open the screen
         front = true;
         gameObject.SetActive(true);
@@ -72,12 +76,13 @@ public class CollectableViewUI : MonoBehaviour
     }
 
     /// <summary>
-    /// Reset UI to base state so it can re-open easily
+    /// Reset UI to base state
     /// </summary>
     public void ResetUI()
     {
         front = true;
         descTextbox.text = "";
+        Camera.main.GetUniversalAdditionalCameraData().cameraStack.Remove(renderCam);
 
         foreach (var obj in spawnedPropList.ToArray())
         {
