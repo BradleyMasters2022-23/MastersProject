@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2892137143077433925}
   - component: {fileID: 3957999888795934667}
   - component: {fileID: 1103803134371029359}
+  - component: {fileID: 7304976120890999430}
   m_Layer: 5
   m_Name: Continue Notificaiton
   m_TagString: Untagged
@@ -135,6 +136,22 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7304976120890999430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 186691237110877725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18db7bbd25bb1c54e82045a4a0d94ca7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayString: Press # to continue
+  displayArea: {fileID: 1103803134371029359}
+  action: {fileID: 2451026749992262560, guid: 013fc02a8f6ca504ea67bbb1397ce115, type: 3}
+  onSchemeChange: {fileID: 11400000, guid: 96c44305848abd444b49d5b48f1ac04c, type: 2}
 --- !u!1 &4694996753494116203
 GameObject:
   m_ObjectHideFlags: 0
@@ -802,6 +819,7 @@ GameObject:
   - component: {fileID: 4694996754982316655}
   - component: {fileID: 4694996754982316657}
   - component: {fileID: 4694996754982316656}
+  - component: {fileID: 8163100010962002335}
   m_Layer: 5
   m_Name: PauseScreen
   m_TagString: Untagged
@@ -870,6 +888,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8163100010962002335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4694996754982316654}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d000aab3d0e8f364c8d476eb59c02d17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  openMenu: {fileID: 11400000, guid: 633ac39f64614ce4e9413468777f1172, type: 2}
+  closable: 1
+  backButton: {fileID: 0}
+  onCloseActions:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &6106326219250897184
 GameObject:
   m_ObjectHideFlags: 0
@@ -881,6 +917,7 @@ GameObject:
   - component: {fileID: 6823367106426185216}
   - component: {fileID: 7079119008687201229}
   - component: {fileID: 2207258763700226516}
+  - component: {fileID: 9135888004499724654}
   m_Layer: 5
   m_Name: Skip Notification
   m_TagString: Untagged
@@ -936,7 +973,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press ESC to Pause/Skip
+  m_text: Press # to Pause/Skip
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 79459bb72fc5d764cb361fa835afec97, type: 2}
   m_sharedMaterial: {fileID: 3796318030083652573, guid: 79459bb72fc5d764cb361fa835afec97, type: 2}
@@ -1005,6 +1042,22 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &9135888004499724654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6106326219250897184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18db7bbd25bb1c54e82045a4a0d94ca7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayString: Press # to Pause
+  displayArea: {fileID: 2207258763700226516}
+  action: {fileID: 1833175746406816345, guid: 013fc02a8f6ca504ea67bbb1397ce115, type: 3}
+  onSchemeChange: {fileID: 11400000, guid: 96c44305848abd444b49d5b48f1ac04c, type: 2}
 --- !u!1001 &4116272590656064767
 PrefabInstance:
   m_ObjectHideFlags: 0

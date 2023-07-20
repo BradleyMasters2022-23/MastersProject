@@ -41,6 +41,9 @@ public class Loader : MonoBehaviour
         loading = true;
         onSceneChange?.RaiseEvent();
 
+        // save the input scheme before loading
+        InputManager.ControlScheme originalScheme = InputManager.CurrControlScheme;
+
         c = GameManager.controls;
 
         if (c != null)
@@ -59,10 +62,13 @@ public class Loader : MonoBehaviour
 
         mainFrame.SetActive(false);
 
+        // reemable controls if possible
         if (c != null && enableControls)
         {
             c.PlayerGameplay.Enable();
         }
+        // set the scheme back to what it was so it stays consistent between loads
+        InputManager.Instance.SetDirectControlscheme(originalScheme);
         Time.timeScale = 1f;
 
         loading = false;

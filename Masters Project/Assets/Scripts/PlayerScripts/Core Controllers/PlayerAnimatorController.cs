@@ -40,7 +40,9 @@ public class PlayerAnimatorController : MonoBehaviour
     private float sway;
     [Tooltip("Speed of the sway"), SerializeField]
     private float smoothness;
-    
+    [SerializeField] float maxHorizontalMag;
+    [SerializeField] float maxVerticalMag;
+
     /// <summary>
     /// default look angle for the weapon
     /// </summary>
@@ -112,12 +114,14 @@ public class PlayerAnimatorController : MonoBehaviour
     public void UpdateMovement()
     {
         // Player is walking if they're grounded and moving at all
-        bool playerMoving =
-            moveController.CurrentState == PlayerController.PlayerState.GROUNDED
-            && moveController.GetVelocity().magnitude > minVelocityMag;
+        bool playerGrounded =
+            moveController.CurrentState == PlayerController.PlayerState.GROUNDED;
 
-        anim.SetBool("Is Walking", playerMoving);
-        anim.SetFloat("Velocity", Mathf.Clamp((moveController.GetVelocity().magnitude / maxPlayerVelocity), 0.10f, 1));
+        // slow down the swap if the player isnt grounded
+        if (playerGrounded)
+            anim.SetFloat("Velocity", Mathf.Clamp((moveController.GetVelocity().magnitude / maxPlayerVelocity), 0.10f, 1));
+        else
+            anim.SetFloat("Velocity", 0.20f);
     }
 
 
@@ -139,14 +143,21 @@ public class PlayerAnimatorController : MonoBehaviour
         anim.SetTrigger("TimeResumed");
     }
 
+    /// <summary>
+    /// Sway the weapon based on the input
+    /// </summary>
     private void WeaponSway()
     {
         Vector2 data = InputManager.Controls.PlayerGameplay.Aim.ReadValue<Vector2>();
-        Quaternion rotX = Quaternion.AngleAxis(data.y * sway, Vector3.forward);
-        Quaternion rotY = Quaternion.AngleAxis(-data.x * sway, Vector3.up);
 
+        // calculate angles
+        float horRot = Mathf.Clamp(data.y * sway, -maxHorizontalMag, maxHorizontalMag);
+        float verRot = Mathf.Clamp(data.x * sway, -maxVerticalMag, maxVerticalMag);
+        Quaternion rotX = Quaternion.AngleAxis(horRot, Vector3.forward);
+        Quaternion rotY = Quaternion.AngleAxis(-verRot, Vector3.up);
+
+        // combine values and apply
         Quaternion tgtRot = defaultLookAng * rotY * rotX;
-
         transform.localRotation = Quaternion.Lerp(transform.localRotation, tgtRot, smoothness * Time.deltaTime);
     }
 }

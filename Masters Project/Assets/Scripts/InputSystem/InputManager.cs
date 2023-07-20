@@ -11,6 +11,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Sirenix.OdinInspector;
+using TMPro;
+using System;
+using UnityEngine.Windows;
 
 [System.Serializable]
 public struct BindingTextOverride
@@ -31,34 +34,44 @@ public class InputManager : MonoBehaviour
     /// Global instance of the controls
     /// </summary>
     public static GameControls Controls;
+    /// <summary>
+    /// reference to the main player input system. Should be attached
+    /// </summary>
+    private PlayerInput playerInput;
+
+
 
     /// <summary>
     /// Prepare singleton
     /// </summary>
     private void Awake()
     {
-        if (Instance != null)
-        {
-            Destroy(this);
-            return;
-        }
-        else
+        if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
 
         Controls = new GameControls();
+        playerInput = GetComponent<PlayerInput>();
         GenerateOverrideDict(textOverrides);
-
     }
-    #endregion
 
+    /// <summary>
+    /// Call all starts.
+    /// For organization, I moved all region starts into their own functions and have them all called here.
+    /// </summary>
     private void Start()
     {
         SchemeSwapStart();
-        
     }
+
+    #endregion
 
     #region Action Map Swapping
 
@@ -93,11 +106,17 @@ public class InputManager : MonoBehaviour
 
     [Tooltip("Current control scheme for the player")]
     public static ControlScheme CurrControlScheme;
+    [ReadOnly] public ControlScheme debugControlScheme;
     /// <summary>
-    /// Reference to the controls that observe all options
+    /// The string name of the mouse and keyboard scheme. Should match whats in GameplayControls.
     /// </summary>
-    private SchemeControls schemeObserver;
+    private const string mouseKeyboardSchemeName = "KeyboardMouse";
+    /// <summary>
+    /// The string name of the controller scheme. Should match whats in GameplayControls.
+    /// </summary>
+    private const string controllerSchemeName = "Gamepad";
 
+    [Tooltip("Channel thats called when controller inputs and devices are changed.")]
     [SerializeField] private ChannelControlScheme controlSchemeSwapChannel;
 
     /// <summary>
@@ -106,90 +125,108 @@ public class InputManager : MonoBehaviour
     private void SchemeSwapStart()
     {
         // Prepare controls
-        schemeObserver = new SchemeControls();
-        schemeObserver.ObserveGamePad.SwapControls.performed += SwapControls;
-        schemeObserver.ObserveMK.SwapControls.performed += SwapControls;
-
-        // Set both enabled so it correctly updates regardless which input they use first
-        //schemeObserver.ObserveGamePad.SwapControls.Enable();
-        //schemeObserver.ObserveMK.SwapControls.Enable();
-    }
-    private void OnDisable()
-    {
-        schemeObserver.ObserveGamePad.SwapControls.performed -= SwapControls;
-        schemeObserver.ObserveMK.SwapControls.performed -= SwapControls;
-
-        SaveKeybindings();
+        playerInput.onControlsChanged += OnControlsChanged;
+        controlSchemeSwapChannel?.RaiseEvent(CurrControlScheme);
     }
 
     /// <summary>
-    /// Swap the controls to the relevant type
+    /// remove input controls and save bindings. Only do if it was properly initialized
     /// </summary>
-    /// <param name="c">Context of the input</param>
-    private void SwapControls(InputAction.CallbackContext c)
+    private void OnDisable()
     {
-        if(inputCD) // If on cooldown, ignore
+        if (Instance == this)
         {
-            return;
+            playerInput.onControlsChanged -= OnControlsChanged;
+            SaveKeybindings();
         }
-        else // Otherwise, reset cooldown
-        {
-            inputCD = true;
-            StartCoroutine(FrameCooldown());
-        }
-
-        bool swapped = false;
-
-        schemeObserver.Disable();
-
-        //Debug.Log("Swap control checking for : " + c.control.displayName);
-        // If currently using controller and M&K detected, switch to keyboard
-        if (CurrControlScheme == ControlScheme.CONTROLLER)
-        {
-            swapped = true;
-            SetToKeyboard();
-        }
-        else if (CurrControlScheme == ControlScheme.KEYBOARD)
-        {
-            swapped = true;
-            SetToController();
-        }
-
-        // If controls were swapped, trigger the channel
-        if (swapped)
-            controlSchemeSwapChannel?.RaiseEvent(CurrControlScheme);
     }
+
+    /// <summary>
+    /// Swap the control schemes based on the current device. 
+    /// </summary>
+    /// <param name="input">Input data</param>
+    private void OnControlsChanged(PlayerInput input)
+    {
+        if (GameManager.instance.CurrentState == GameManager.States.LOADING) return;
+        //Debug.Log("Trying to change controls : " + input.currentControlScheme);
+
+        // prepare target. use keyboard as default
+        ControlScheme target = ControlScheme.KEYBOARD;
+
+        // parse scheme name to get relevant enum
+        switch(input.currentControlScheme)
+        {
+            case controllerSchemeName:
+                {
+                    target = ControlScheme.CONTROLLER;
+                    break;
+                }
+            case mouseKeyboardSchemeName:
+                {
+                    target = ControlScheme.KEYBOARD;
+                    break;
+                }
+            default:
+                {
+                    Debug.LogError($"[INPUTMANAGER] Controls change detected but the scheme wasn't recognized" +
+                        $". Scheme is: {input.currentControlScheme}");
+                    break;
+                }
+        }
+
+        // set the target directily. 
+        SetDirectControlscheme( target );
+    }
+    /// <summary>
+    /// Directly set the control scheme. Should rarely be called by anything aside from input manager. 
+    /// </summary>
+    /// <param name="scheme">The enuim scheme to set</param>
+    public void SetDirectControlscheme(ControlScheme scheme)
+    {
+        // do something for each input type. 
+        switch (scheme)
+        {
+            case ControlScheme.CONTROLLER:
+                {
+                    SetToController();
+                    break;
+                }
+            case ControlScheme.KEYBOARD:
+                {
+                    SetToKeyboard();
+                    break;
+                }
+            default:
+                {
+                    Debug.LogError($"[INPUTMANAGER] Direct control scheme was set but no setting was prepared!" +
+                        $"Was set to {scheme}");
+                    break;
+                }
+        }
+
+        // raise event to update game based on controls
+        controlSchemeSwapChannel?.RaiseEvent(CurrControlScheme);
+    }
+
     /// <summary>
     /// Swap the control scheme to keyboard and perform any necessary functions
     /// </summary>
     private void SetToKeyboard()
     {
-        Debug.Log("Switching to keyboard");
+        //Debug.Log("Switching to keyboard");
         CurrControlScheme = ControlScheme.KEYBOARD;
-
-        // Update observer to only register gamepad inputs to reduce load
-        schemeObserver.ObserveGamePad.Enable();
+        debugControlScheme = CurrControlScheme;
     }
     /// <summary>
     /// Swap the control scheme to controller and perform any necessary functions
     /// </summary>
     private void SetToController()
     {
-        Debug.Log("Switching to controller");
+        //Debug.Log("Switching to controller");
         CurrControlScheme = ControlScheme.CONTROLLER;
-
-        // Update observer to only register M&K inputs to reduce load
-        schemeObserver.ObserveMK.Enable();
+        debugControlScheme = CurrControlScheme;
     }
 
-    private bool inputCD = false;
-    private IEnumerator FrameCooldown()
-    {
-        yield return new WaitForEndOfFrame();
-        yield return new WaitForEndOfFrame();
-
-        inputCD = false;
-    }
     #endregion
 
     #region Rebinding
@@ -426,6 +463,13 @@ public class InputManager : MonoBehaviour
 
     [SerializeField] private InputBinding.DisplayStringOptions displayOptions;
 
+    [SerializeField] private TMP_SpriteAsset promptSheet;
+
+    /// <summary>
+    /// delimiter used to indicate that a input action lookup is requested
+    /// </summary>
+    public readonly char inputDelimiter = '#';
+
     /// <summary>
     /// Build the dictionary used for text overrides
     /// </summary>
@@ -486,9 +530,55 @@ public class InputManager : MonoBehaviour
                 }
             case ControlScheme.CONTROLLER:
                 {
-                    // shouldnt be any composits for controllers
-                    Debug.Log("Attempting to get gamepad");
-                    temp = ":" + action.GetBindingDisplayString(group: "Gamepad") + ":";
+                    temp = "";
+                    int compositesPassed = 0;
+
+                    //Debug.Log("Trying to get : " + action.name);
+
+                    // loop through all bindings, looking for the first available gamepad
+                    for (int i = 0; i < action.bindings.Count; i++)
+                    {
+                        try
+                        {
+                            // if a composite, add to count. composites shouldnt be counted so just go to next
+                            if (action.bindings[i].isComposite)
+                            {
+                                compositesPassed++;
+                                continue;
+                            }
+
+                            // make sure no composite, and check if its a gamepad interaction
+                            if (action.bindings[i].groups.Contains("Gamepad"))
+                            {
+                                // add interaction name
+                                if (action.bindings[i].interactions != null)
+                                    temp += action.bindings[i].effectiveInteractions + " ";
+
+                                // if it is a virtual mouse that was inserted, then move over one since it should be the next one
+                                // this works for now but it may have fuckery if there are multiple 'virtual mouse' things added.
+                                // if that happens, this needs to be expanded to count the # of virtual mice controls and step forward that amount
+                                if (action.controls[i - compositesPassed].device.displayName == "VirtualMouse")
+                                    i++;
+
+                                // on lookup, make sure to subtract the composites passed to convert from bindings to controls properly
+                                temp += "<sprite="
+                                    + promptSheet.GetSpriteIndexFromName(action.controls[i-compositesPassed].name)
+                                    + ">";
+
+                                if(promptSheet.GetSpriteIndexFromName(action.controls[i - compositesPassed].name) == -1)
+                                {
+                                    Debug.Log("Did not find index for input type: " + action.controls[i - compositesPassed].name);
+                                }
+
+                                break;
+                            }
+                        }
+                        catch(Exception e)
+                        {
+                            Debug.Log($"Error while finding input {action.name} : \n{e}");
+                            temp = "ERR";
+                        }
+                    }
                     break;
                 }
             default:

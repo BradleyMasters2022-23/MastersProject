@@ -6,25 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    /// <summary>
-    /// Controls
-    /// </summary>
-    private GameControls controls;
-    private InputAction reset;
-
     [Tooltip("Frame of the pause menu")]
     [SerializeField] private GameObject pauseScreen;
 
     [Tooltip("On state change channel to listen for when to pause")]
     [SerializeField] private ChannelGMStates onStateChangeChannel;
 
-    private void Awake()
-    {
-        controls = new GameControls();
-        
-        reset = controls.PlayerGameplay.Reset;
-        reset.Enable();
-    }
 
     /// <summary>
     /// Toggle the pause screen menu
@@ -65,20 +52,10 @@ public class PauseMenu : MonoBehaviour
     private void OnEnable()
     {
         onStateChangeChannel.OnEventRaised += TogglePause;
-        reset.performed += Reload;
     }
 
     private void OnDisable()
     {
         onStateChangeChannel.OnEventRaised -= TogglePause;
-
-        reset.Disable();
-        reset.performed -= Reload;
-    }
-
-    public void Reload(InputAction.CallbackContext c)
-    {
-        Scene currScene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(currScene.name);
     }
 }
