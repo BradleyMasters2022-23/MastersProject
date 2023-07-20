@@ -308,8 +308,6 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void Pause()
     {
-        Cursor.lockState = CursorLockMode.None;
-
         Cursor.lockState = CursorLockMode.Confined;
         Time.timeScale = 0;
     }
@@ -318,8 +316,6 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void UnPause()
     {
-        Cursor.lockState = CursorLockMode.None;
-
         Cursor.lockState = CursorLockMode.Locked;
         Time.timeScale = 1;
     }
@@ -344,69 +340,43 @@ public class GameManager : MonoBehaviour
         UpdateMouseMode();
     }
 
-    private void UpdateControlScheme(InputManager.ControlScheme scheme)
-    {
-        if (scheme == InputManager.ControlScheme.KEYBOARD)
-            ShowCursor();
-        else if(scheme == InputManager.ControlScheme.CONTROLLER)
-            HideCursor();
-    }
-
-    private void HideCursor()
-    {
-        // Hide the mouse cursor
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        ClearPointer();
-
-        // Set the controller select to the screen
-        menuStack.Peek().TopStackFunction();
-    }
-
-    private void ShowCursor()
-    {
-        // Reenable cursor, set appropriate lock state
-        Cursor.visible = true;
-        UpdateMouseMode();
-
-        // Save the last thing the controller was on 
-        menuStack.Peek().StackSave();
-        // hide the controller's selected option
-        EventSystem.current.SetSelectedGameObject(null);
-    }
-
     /// <summary>
-    /// Update the cursor lock status
+    /// Update the cursor lock status. Update the controller cursor manager
     /// </summary>
-    private void UpdateMouseMode()
+    public void UpdateMouseMode()
     {
-        Cursor.lockState = CursorLockMode.None;
-
+        //Debug.Log("Mouse mode being checked");
         // Currently, should be confined for everything except the main gameplay
         switch (currentState)
         {
             case States.HUB:
                 {
                     Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = false;
 
+                    ControllerCursor.instance.SetUIState(false);
                     break;
                 }
             case States.GAMEPLAY:
                 {
                     Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = false;
 
+                    ControllerCursor.instance.SetUIState(false);
                     break;
                 }
             default:
                 {
+                    //Debug.Log("GM enabling visibility");
+
+                    Cursor.visible = true;
                     Cursor.lockState = CursorLockMode.Confined;
+
+                    ControllerCursor.instance.SetUIState(true);
                     break;
                 }
         }
-    }
-
+    } 
     #endregion
 
     #region Menu Management
@@ -422,6 +392,7 @@ public class GameManager : MonoBehaviour
         if(menuStack.Count > 0)
         {
             menuStack.Peek().StackSave();
+            menuStack.Peek().SetBackground();
         }
 
         // initialize it when on top of stack
@@ -462,6 +433,7 @@ public class GameManager : MonoBehaviour
         // Tell the stack below it to load its select
         if (menuStack.Count > 0)
         {
+            //Debug.Log($"Calling top stack on {menuStack.Peek().name}");
             menuStack.Peek().TopStackFunction();
         }
 
@@ -477,6 +449,20 @@ public class GameManager : MonoBehaviour
                 // Change it back to its previous state (Gameplay or HUB)
                 ChangeState(lastState);
             }
+        }
+    }
+
+    /// <summary>
+    /// continually close menus until it reaches the target
+    /// </summary>
+    /// <param name="target">target menu to close UNTIL</param>
+    public void CloseToMenu(UIMenu target)
+    {
+        if (target == null) return;
+
+        while (menuStack.Count > 0 && menuStack.Peek().Closable && menuStack.Peek() != target)
+        {
+            CloseTopMenu();
         }
     }
 
@@ -543,8 +529,10 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Clear any pointer hover effects
     /// </summary>
-    private void ClearPointer()
+    public void ClearPointer()
     {
+        //Debug.Log("Trying to clear pointer effects");
+
         PointerEventData pointer = new PointerEventData(EventSystem.current);
         pointer.position = Input.mousePosition;
 
@@ -559,15 +547,15 @@ public class GameManager : MonoBehaviour
                 //Debug.Log(raycastResult.gameObject.name);
                 GameObject hoveredObj = raycastResult.gameObject;
 
-                if (hoveredObj.GetComponent<Button>())
+                if (hoveredObj.GetComponent<Button>() != null)
                 {
                     hoveredObj.GetComponent<Button>().OnPointerExit(pointer);
                 }
-                else if (hoveredObj.GetComponent<Toggle>())
+                else if (hoveredObj.GetComponent<Toggle>() != null)
                 {
                     hoveredObj.GetComponent<Toggle>().OnPointerExit(pointer);
                 }
-                else if (hoveredObj.GetComponent<Slider>())
+                else if (hoveredObj.GetComponent<Slider>() != null)
                 {
                     hoveredObj.GetComponent<Slider>().OnPointerExit(pointer);
                 }
@@ -636,6 +624,7 @@ public class GameManager : MonoBehaviour
         UnPause();
         menuStack.Clear();
         controls.UI.Disable();
+        ControllerCursor.instance.SetUIState(false);
 
         // if loading to tutorial, don't enable controls on load complete
         if(name == tutorialScene)

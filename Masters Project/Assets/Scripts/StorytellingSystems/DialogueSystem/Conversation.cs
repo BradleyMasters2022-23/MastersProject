@@ -26,9 +26,9 @@ public class Conversation : ScriptableObject
     // runs after last unlocked dependency OR total runs if no dependencies
     public int runReq;
 
-    public bool soloDialogue = false;
+    //public bool soloDialogue = false;
 
-
+    public Fragment frag;
 
     public Line[] lines;
     public enum ConversationState 

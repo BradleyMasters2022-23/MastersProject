@@ -93,6 +93,7 @@ public class DisplayDialogueUI : MonoBehaviour
         // If its still loading, instantly stop it
         if (currentActive != null && !currentActive.LoadingDone() && loadingRoutine != null)
         {
+            //Debug.Log("Calling to halt routine");
             StopCoroutine(loadingRoutine);
             loadingRoutine = null;
             currentActive.InstantLoad();
@@ -113,17 +114,27 @@ public class DisplayDialogueUI : MonoBehaviour
 
             if (conversation.lines[activeLineIndex].character.characterName == "Penny")
             {
+                //Debug.Log("Going to penny screen");
                 currentActive = pennyScreen;
                 loadingRoutine = pennyScreen.LoadInDialogue(conversation.nonPennyCharacter, conversation.lines[activeLineIndex], true);
             }
             else
             {
+                //Debug.Log("Going to NPC screen");
                 currentActive = NPCScreen;
                 loadingRoutine = NPCScreen.LoadInDialogue(conversation.nonPennyCharacter, conversation.lines[activeLineIndex], false);
             }
         }
         else // otherwise, no more, close screen, perform any on finish functionality
         {
+            // this is extremely sloppy code but if i want to have time to get any writing in today i need to just leave it
+            // if i need another conversation to give a note i'll make it a proper system and not just a few lines of spaghetti
+            // but for now this works so i'll leave it. let me know if for some reason it breaks something and i'll fix it then too
+            if (conversation.frag != null && !AllNotesManager.instance.FragmentCollected(conversation.frag))
+            {
+                AllNotesManager.instance.FragmentFound(conversation.frag);
+                SamTooltipTrigger.instance.TriggerTooltip();
+            }
             loadedFinishFunc?.Invoke();
             CloseScreen();
         }
@@ -135,7 +146,6 @@ public class DisplayDialogueUI : MonoBehaviour
     /// </summary>
     public void CloseScreen()
     {
-        
         click.Disable();
         GameManager.instance.CloseTopMenu();
     }

@@ -22,12 +22,17 @@ public class LoadSettings : MonoBehaviour
     [SerializeField] private bool defaultMouseInvertX;
     [Tooltip("Default value for y inversion")]
     [SerializeField] private bool defaultMouseInvertY;
+    [Tooltip("Default value for mouse having aimassist")]
+    [SerializeField] private bool defaultMouseAimAssist;
+
     [Tooltip("Default value for mouse sensitivity")]
     [SerializeField] private float defaultControllerSensitivity;
     [Tooltip("Default value for x inversion")]
     [SerializeField] private bool defaultControllerInvertX;
     [Tooltip("Default value for y inversion")]
     [SerializeField] private bool defaultControllerInvertY;
+    [Tooltip("Default value for controller aim assist")]
+    [SerializeField] private bool defaultControllerAimAssist;
 
     /// <summary>
     /// Load in the saved player settings
@@ -40,12 +45,14 @@ public class LoadSettings : MonoBehaviour
         Settings.mouseSensitivity = PlayerPrefs.GetFloat("MouseSensitivity", defaultMouseSensitivity);
         Settings.mouseInvertX = IntToBool(PlayerPrefs.GetInt("MouseInvertX", BoolToInt(defaultMouseInvertX)));
         Settings.mouseInvertY = IntToBool(PlayerPrefs.GetInt("MouseInvertY", BoolToInt(defaultMouseInvertY)));
+        Settings.mouseAimAssist = IntToBool(PlayerPrefs.GetInt("MouseAimAssist", BoolToInt(defaultMouseAimAssist)));
 
-        Settings.controllerSensitivity = PlayerPrefs.GetFloat("ControllerSensitivity", defaultControllerSensitivity * Settings.CONTROLLERMULTIPLIER);
+        Settings.controllerSensitivity = PlayerPrefs.GetFloat("ControllerSensitivity", defaultControllerSensitivity);
         Settings.controllerInvertX = IntToBool(PlayerPrefs.GetInt("ControllerInvertX", BoolToInt(defaultControllerInvertX)));
         Settings.controllerInvertY = IntToBool(PlayerPrefs.GetInt("ControllerInvertY", BoolToInt(defaultControllerInvertY)));
+        Settings.controllerAimAssist = IntToBool(PlayerPrefs.GetInt("ControllerAimAssist", BoolToInt(defaultControllerAimAssist)));
 
-        Debug.Log("Settings loaded by " + gameObject.name);
+        //Debug.Log("Settings loaded by " + gameObject.name);
 
         // Self destruct once complete
         Destroy(this);

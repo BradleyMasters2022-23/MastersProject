@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class LoadCollectedNoteUI : MonoBehaviour
 {
-    [SerializeField] private List<NoteObject> collectedNotes;
+    private List<NoteObject> collectedNotes;
 
     [SerializeField] private UnpackNoteUI[] options;
 
@@ -45,8 +45,11 @@ public class LoadCollectedNoteUI : MonoBehaviour
             options[i].ClearUI();
             options[i].gameObject.SetActive(false);
         }
+        if(contentDrawer!= null)
+        {
+            contentDrawer.CalculateHeight();
 
-        contentDrawer.CalculateHeight();
+        }
     }
 
     private void OnDisable()

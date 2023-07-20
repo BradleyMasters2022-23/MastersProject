@@ -26,6 +26,8 @@ public class CutsceneManager : MonoBehaviour
     /// </summary>
     private bool allowedToPlay = true;
 
+    private readonly float playbackSpeed = 2f;
+
     [Header("Transitions")]
     [Tooltip("Image used as the background of the video")]
     [SerializeField] private Image background;
@@ -206,10 +208,11 @@ public class CutsceneManager : MonoBehaviour
         yield return new WaitForEndOfFrame();
         videoRenderImg.enabled = true;
         playState = true;
+        videoPlayer.playbackSpeed= playbackSpeed;
 
         // Track time only if its playing. Dont if its paused
         float timeElapsed = 0;
-        while (timeElapsed < videoPlayer.length)
+        while (timeElapsed < videoPlayer.length / playbackSpeed)
         {
             if (!videoPlayer.isPaused)
                 timeElapsed += Time.unscaledDeltaTime;
@@ -314,11 +317,12 @@ public class CutsceneManager : MonoBehaviour
     {
         // hide all prompts
         StopAllCoroutines();
-        playerControls.Cutscene.Disable();
         pauseScreen.SetActive(false);
-        pausePrompt.SetActive(false);
+        promptText.color = new Color(continueText.color.r, continueText.color.g, continueText.color.b, 0);
         continueText.color = new Color(continueText.color.r, continueText.color.g, continueText.color.b, 0);
         videoRenderImg.enabled = false;
+        
+        ControllerCursor.instance.SetUIState(false);
         Cursor.lockState= CursorLockMode.Locked;
 
         onVideoFinishEvents?.Invoke();
@@ -328,6 +332,7 @@ public class CutsceneManager : MonoBehaviour
         StartCoroutine(LoadScreen(false, skippedFadeOutTime));
 
         // Reneable gameplay controls
+        playerControls.Cutscene.Disable();
         playerControls.PlayerGameplay.Enable();
         playerControls.PlayerGameplay.Pause.Enable();
         playerControls.PlayerGameplay.Interact.Enable();
@@ -344,8 +349,6 @@ public class CutsceneManager : MonoBehaviour
     /// <param name="c">input context</param>
     private void TogglePause(InputAction.CallbackContext c)
     {
-        //Debug.Log("Pausing cutscene " + c.action.name);
-
         if(pauseScreen.activeInHierarchy)
         {
             if (settingScreen.activeInHierarchy)
@@ -363,6 +366,8 @@ public class CutsceneManager : MonoBehaviour
     public void PauseCutscene()
     {
         Cursor.lockState = CursorLockMode.Confined;
+        ControllerCursor.instance.SetUIState(true);
+
         settingScreen.SetActive(false);
         pauseScreen.SetActive(true);
         if(playState)
@@ -382,6 +387,7 @@ public class CutsceneManager : MonoBehaviour
     /// </summary>
     public void ResumeCutscene()
     {
+        ControllerCursor.instance.SetUIState(false);
         Cursor.lockState = CursorLockMode.Locked;
         pauseScreen.SetActive(false);
         if(playState)

@@ -3,21 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class PPTimeScaler : MonoBehaviour
+public class PPTimeScaler : TimeAffectedEntity
 {
-    private Volume renderingVolume;
+    [Tooltip("Target rendering volume")]
+    [SerializeField] Volume renderingVolume;
+    [Tooltip("Target weight in normal time")]
+    [SerializeField] float normalTimeTarget;
+    [Tooltip("Target weight in frozen time")]
+    [SerializeField] float stoppedTimeTarget;
 
     // Start is called before the first frame update
     void Start()
     {
-        renderingVolume = GetComponent<Volume>();
         if (renderingVolume == null)
+        {
+            Debug.LogError($"[PPTimeScaler] No rendering volume assigned!" +
+                $" Double check the processor named {name}");
             Destroy(this);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        renderingVolume.weight = 1 - TimeManager.WorldTimeScale;
+        if(GameManager.instance.CurrentState == GameManager.States.HUB
+            || GameManager.instance.CurrentState == GameManager.States.GAMEPLAY)
+            renderingVolume.weight = Mathf.Lerp(stoppedTimeTarget, normalTimeTarget, Timescale);
     }
 }
