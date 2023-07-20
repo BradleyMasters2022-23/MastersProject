@@ -21,9 +21,7 @@ public class CollectableViewUI : MonoBehaviour
     private Transform objectSpawnpoint;
     [Tooltip("Textbox that displays description"), SerializeField]
     private TextMeshProUGUI descTextbox;
-    [Tooltip("Camera that renders this UI"), SerializeField]
-    private Camera renderCam;
-
+    
     /// <summary>
     /// List of props spawned
     /// </summary>
@@ -62,14 +60,17 @@ public class CollectableViewUI : MonoBehaviour
         }
         descTextbox.text = loadedCollectable.GetDesc(true, fragments);
 
-        Camera.main.GetUniversalAdditionalCameraData().cameraStack.Add(renderCam);
-
         // Open the screen
         front = true;
         gameObject.SetActive(true);
         GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
     }
 
+    /// <summary>
+    /// Load a single fragment into the UI
+    /// </summary>
+    /// <param name="coreData">refernece to collectable being loaded</param>
+    /// <param name="fragment">fragment index to load</param>
     public void OpenUI(CollectableSO coreData, int fragment)
     {
         OpenUI(coreData, new List<int>() { fragment });
@@ -80,9 +81,9 @@ public class CollectableViewUI : MonoBehaviour
     /// </summary>
     public void ResetUI()
     {
+        // reset specific UI screen
         front = true;
         descTextbox.text = "";
-        Camera.main.GetUniversalAdditionalCameraData().cameraStack.Remove(renderCam);
 
         foreach (var obj in spawnedPropList.ToArray())
         {
