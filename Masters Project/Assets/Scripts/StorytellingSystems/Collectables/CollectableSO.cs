@@ -54,7 +54,7 @@ public class CollectableSO : ScriptableObject
     [Tooltip("Name of this collectable")]
     [SerializeField] string collectableName;
     [Tooltip("Prop of this collectable")]
-    [SerializeField, PreviewField] private GameObject collectableProp;
+    [SerializeField, PreviewField(Alignment = ObjectFieldAlignment.Left, Height = 125f)] private GameObject collectableProp;
     [Tooltip("Whether this collectable's drop order is ordered by allFragments or random")]
     [SerializeField] bool dropInOrder = false;
     [Tooltip("All fragments of this collectable. ")]
