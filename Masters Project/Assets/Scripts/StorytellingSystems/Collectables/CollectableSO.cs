@@ -15,16 +15,13 @@ public class CollectableFragment
     [SerializeField, Tooltip("Prefab of this collectable")]
     private GameObject objectPrefab;
 
-    [SerializeField, Tooltip("Whether to center the interactable prop on spawn." +
-        " Useful for fragment prefabs.")] 
-    private bool centerPropChild;
+    [SerializeField, Tooltip("Position override applied when spawned as a interactbale prop")]
+    private Vector3 interactablePositionOverride;
 
     [SerializeField, TextArea, Tooltip("Main text that shows up on pickup")]
     private string text;
     [SerializeField, TextArea, Tooltip("Altenate text that shows up when flipped over")]
     private string altText;
-
-    
 
     #region Getters
 
@@ -41,9 +38,9 @@ public class CollectableFragment
         get { return altText; }
     }
 
-    public bool CenterPropChild
+    public Vector3 InteractablePositionOverride
     {
-        get { return centerPropChild; }
+        get { return interactablePositionOverride; }
     }
     #endregion
 }

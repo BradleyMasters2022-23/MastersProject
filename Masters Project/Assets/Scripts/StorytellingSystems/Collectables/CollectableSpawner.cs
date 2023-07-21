@@ -56,7 +56,7 @@ public class CollectableSpawner : MonoBehaviour, Interactable
     }
 
     /// <summary>
-    /// Spawn this collectable. Is success, will initialize itself.
+    /// Spawn this collectable. If success, will initialize itself.
     /// </summary>
     public void SpawnCollectable()
     {
@@ -64,7 +64,6 @@ public class CollectableSpawner : MonoBehaviour, Interactable
         {
             if (!CollectableSaveManager.instance.ShouldSpawn(baseSpawnChance))
             {
-                Debug.Log("Failed spawn chance");
                 DestroyCollectable();
                 return;
             }
@@ -148,8 +147,7 @@ public class CollectableSpawner : MonoBehaviour, Interactable
             GameObject prop = Instantiate(loadedFragment.ObjectPrefab, transform);
             prop.transform.localScale *= chosenCollectable.PropInteractableScaleMod;
             prop.transform.localRotation = Quaternion.Euler(chosenCollectable.PickupRotationOverride);
-            if (loadedFragment.CenterPropChild)
-                prop.transform.GetChild(0).localPosition = Vector3.zero;
+            prop.transform.localPosition = loadedFragment.InteractablePositionOverride;
 
             // make sure all colliders are disabled for pickup
             Collider[] cols = prop.GetComponentsInChildren<Collider>();
