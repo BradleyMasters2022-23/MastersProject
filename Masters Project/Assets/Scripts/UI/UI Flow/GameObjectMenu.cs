@@ -15,7 +15,6 @@ using UnityEngine.Events;
 
 public class GameObjectMenu : UIMenu
 {
-    [SerializeField] Button backButton;
     [SerializeField] UnityEvent onCloseActions;
 
     /// <summary>
