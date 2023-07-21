@@ -24,6 +24,8 @@ public class CollectableViewUI : MonoBehaviour
     private List<int> fragmentsToLoad = new List<int>();
     [Tooltip("Spawnpoint for collectable props in UI"), SerializeField]
     private Transform objectSpawnpoint;
+    [Tooltip("Textbox that displays title"), SerializeField]
+    private TextMeshProUGUI titleTextBox;
     [Tooltip("Textbox that displays description"), SerializeField]
     private TextMeshProUGUI descTextbox;
     [Tooltip("The display area tracking whether prop is front or back"), SerializeField] 
@@ -64,6 +66,8 @@ public class CollectableViewUI : MonoBehaviour
 
             spawnedPropList.Add(cont);
         }
+        // load text data
+        titleTextBox.text = loadedCollectable.Name();
         descTextbox.text = loadedCollectable.GetDesc(true, fragments);
 
         // if theres a flip description, subsctibe to it 
@@ -94,6 +98,7 @@ public class CollectableViewUI : MonoBehaviour
         // reset specific UI screen
         front = true;
         descTextbox.text = "";
+        titleTextBox.text = "";
 
         foreach (var obj in spawnedPropList.ToArray())
         {
