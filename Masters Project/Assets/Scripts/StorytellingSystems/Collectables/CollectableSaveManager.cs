@@ -11,7 +11,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 
-public class CollectableSaveManager : MonoBehaviour
+public class CollectableSaveManager : SaveDataContainer
 {
     /// <summary>
     /// Collectable save manager instance. Middleman for save data reading and writing
@@ -124,10 +124,9 @@ public class CollectableSaveManager : MonoBehaviour
     /// <summary>
     /// reset save data for collectable save data
     /// </summary>
-    public void ClearSaveData()
+    public override void ResetData()
     {
         data = new CollectableSaveData();
-        SaveData();
     }
 
     /// <summary>
@@ -179,6 +178,7 @@ public class CollectableSaveManager : MonoBehaviour
 
     public void ClearDataCheat(InputAction.CallbackContext c)
     {
-        ClearSaveData();
+        ResetData();
+        SaveData();
     }
 }

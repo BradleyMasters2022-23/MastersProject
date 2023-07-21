@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-
+using TMPro;
 
 public class PropScrollArea : MonoBehaviour, IDragHandler, IScrollHandler
 {
@@ -23,6 +23,27 @@ public class PropScrollArea : MonoBehaviour, IDragHandler, IScrollHandler
     [Tooltip("Whether or not the player can scale the prop")]
     private bool scale = true;
 
+    [Header("Interact Tooltip")]
+
+    [Tooltip("Textbox displaying interact tooltip")]
+    [SerializeField] private TextMeshProUGUI tooltipText;
+    /// <summary>
+    /// Whether or not the tooltip is being displayed
+    /// </summary>
+    private bool showingTooltip;
+    /// <summary>
+    /// Whether the scroll area has been interacted with
+    /// </summary>
+    private bool interactedWith;
+    /// <summary>
+    /// Time since it was interacted with
+    /// </summary>
+    private float timeSinceInteract;
+    /// <summary>
+    /// Time threshold before showing the tooltip
+    /// </summary>
+    private float tooltipTimeThreshold = 6.5f;
+
     #region Setup
 
     /// <summary>
@@ -37,6 +58,8 @@ public class PropScrollArea : MonoBehaviour, IDragHandler, IScrollHandler
         currentPitch = pitchJoint.eulerAngles.x;
         if (currentPitch >= 180)
             currentPitch -= 360;
+
+        tooltipText.CrossFadeAlpha(0, 0f, true);
     }
 
     /// <summary>
@@ -64,6 +87,11 @@ public class PropScrollArea : MonoBehaviour, IDragHandler, IScrollHandler
         front = true;
         rotate = true;
         scale = true;
+
+        interactedWith = false;
+        showingTooltip = false;
+        timeSinceInteract = 0;
+        tooltipText.CrossFadeAlpha(0, 0f, true);
     }
 
     /// <summary>
@@ -94,6 +122,24 @@ public class PropScrollArea : MonoBehaviour, IDragHandler, IScrollHandler
         prop.localScale = Vector3.one * tgtScale;
         rotate = true;
         scale = true;
+    }
+
+    private void Update()
+    {
+        if(!interactedWith && !showingTooltip)
+        {
+            // if threshold not met, just track time
+            if(timeSinceInteract <= tooltipTimeThreshold)
+            {
+                timeSinceInteract += Time.unscaledDeltaTime;
+            }
+            // otherwise, crossfade if not done yet
+            else if(!showingTooltip)
+            {
+                showingTooltip = true;
+                tooltipText.CrossFadeAlpha(1, 0.4f, true);
+            }
+        }
     }
 
     #endregion
@@ -155,6 +201,14 @@ public class PropScrollArea : MonoBehaviour, IDragHandler, IScrollHandler
     {
         if(!rotate) return;
 
+        interactedWith = true;
+        if (showingTooltip)
+        {
+            showingTooltip= false;
+            tooltipText.CrossFadeAlpha(0, 0.4f, true);
+        }
+            
+
         // prepare rotational values
         float yawRot = -eventData.delta.x * dragSensitivity * Time.unscaledDeltaTime;
         float pitchRot = eventData.delta.y * dragSensitivity * Time.unscaledDeltaTime;
@@ -212,6 +266,13 @@ public class PropScrollArea : MonoBehaviour, IDragHandler, IScrollHandler
     public void OnScroll(PointerEventData eventData)
     {
         if(!scale) return;
+
+        interactedWith = true;
+        if (showingTooltip)
+        {
+            showingTooltip = false;
+            tooltipText.CrossFadeAlpha(0, 0.4f, true);
+        }
 
         float currScale = prop.localScale.x / originalScale;
         currScale += (eventData.scrollDelta.y * -1 * scrollSensitivity * Time.unscaledDeltaTime);
