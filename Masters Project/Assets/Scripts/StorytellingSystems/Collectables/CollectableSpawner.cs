@@ -141,13 +141,19 @@ public class CollectableSpawner : MonoBehaviour, Interactable
 
         // load prepared fragment
         loadedFragment = chosenCollectable.GetFragment(chosenFragmentIndex);
-        if(loadedFragment.ObjectPrefab != null)
+        if(chosenCollectable.Prop() != null)
         {
             // spawn as child, apply new scale and reposition
-            GameObject prop = Instantiate(loadedFragment.ObjectPrefab, transform);
+            GameObject prop = Instantiate(chosenCollectable.Prop(), transform);
             prop.transform.localScale *= chosenCollectable.PropInteractableScaleMod;
             prop.transform.localRotation = Quaternion.Euler(chosenCollectable.PickupRotationOverride);
             prop.transform.localPosition = loadedFragment.InteractablePositionOverride;
+
+            // disable each fragment thats not this fragment
+            for(int i = 0; i < prop.transform.childCount; i++)
+            {
+                prop.transform.GetChild(i).gameObject.SetActive(i == loadedFragment.PropIndex);
+            }
 
             // make sure all colliders are disabled for pickup
             Collider[] cols = prop.GetComponentsInChildren<Collider>();

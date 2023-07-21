@@ -21,7 +21,7 @@ public class CollectableViewUI : MonoBehaviour
     /// <summary>
     /// All fragment indexes to load
     /// </summary>
-    private List<int> fragmentsToLoad = new List<int>();
+    [SerializeField] private List<int> fragmentsToLoad = new List<int>();
     [Tooltip("Spawnpoint for collectable props in UI"), SerializeField]
     private Transform objectSpawnpoint;
     [Tooltip("Textbox that displays title"), SerializeField]
@@ -34,7 +34,7 @@ public class CollectableViewUI : MonoBehaviour
     /// <summary>
     /// List of props spawned
     /// </summary>
-    private List<GameObject> spawnedPropList;
+    private GameObject spawnedProp;
     /// <summary>
     /// Whether the front is currently displayed
     /// </summary>
@@ -47,28 +47,36 @@ public class CollectableViewUI : MonoBehaviour
     /// <param name="fragments">fragment indexes to load</param>
     public void OpenUI(CollectableSO coreData, List<int> fragments)
     {
-        if(spawnedPropList == null)
-            spawnedPropList = new List<GameObject>();
-        else
-            spawnedPropList.Clear();
-
-        // Spawn in each fragment passed in
+        // Set data
         loadedCollectable = coreData;
         fragmentsToLoad = fragments;
-        foreach (var fragment in fragments)
+
+        // spawn in prop, set scale
+        spawnedProp = Instantiate(loadedCollectable.Prop(), objectSpawnpoint);
+        spawnedProp.gameObject.transform.localScale *= loadedCollectable.PropUIScaleMod;
+
+        // convert list of fragments to indexes, excluding repeats
+        List<int> targetChildIndexs = new List<int>();
+        foreach(int i in fragmentsToLoad)
         {
-            GameObject cont = Instantiate(loadedCollectable.GetFragment(fragment).ObjectPrefab, objectSpawnpoint);
-            cont.gameObject.transform.localScale *= loadedCollectable.PropUIScaleMod;
-
-            // set prop's children to UI so it renders correctly
-            foreach(var part in cont.GetComponentsInChildren<Transform>())
-                part.gameObject.layer = LayerMask.NameToLayer("UI");
-
-            spawnedPropList.Add(cont);
+            int tgt = loadedCollectable.GetFragment(i).PropIndex;
+            if(!targetChildIndexs.Contains(tgt))
+                targetChildIndexs.Add(tgt);
         }
+
+        // enable/disable fragments not found, if they exist
+        for (int i = 0; i < spawnedProp.transform.childCount; i++)
+        {
+            spawnedProp.transform.GetChild(i).gameObject.SetActive(targetChildIndexs.Contains(i) );
+        }
+
+        // set prop's children to UI so it renders correctly
+        foreach (var part in spawnedProp.GetComponentsInChildren<Transform>())
+            part.gameObject.layer = LayerMask.NameToLayer("UI");
+
         // load text data
         titleTextBox.text = loadedCollectable.Name();
-        descTextbox.text = loadedCollectable.GetDesc(true, fragments);
+        SwapData();
 
         // if theres a flip description, subsctibe to it 
         if (coreData.FlipDescription)
@@ -100,11 +108,9 @@ public class CollectableViewUI : MonoBehaviour
         descTextbox.text = "";
         titleTextBox.text = "";
 
-        foreach (var obj in spawnedPropList.ToArray())
-        {
-            if(obj != null)
-                Destroy(obj);
-        }
+        // destroy prop if possible
+        if (spawnedProp != null)
+            Destroy(spawnedProp);
 
         // if flip desc set, make sure to unsub
         if (loadedCollectable != null && 
@@ -116,8 +122,6 @@ public class CollectableViewUI : MonoBehaviour
 
         loadedCollectable = null;
         fragmentsToLoad = null;
-
-        spawnedPropList.Clear();
     }
 
     /// <summary>
@@ -137,7 +141,10 @@ public class CollectableViewUI : MonoBehaviour
     /// </summary>
     private void SwapData()
     {
-        descTextbox.text = loadedCollectable.GetDesc(front, fragmentsToLoad);
+        if (fragmentsToLoad.Count > 1)
+            descTextbox.text = loadedCollectable.GetDesc(front, fragmentsToLoad);
+        else
+            descTextbox.text = loadedCollectable.GetDesc(front, fragmentsToLoad[0]);
     }
 
     /// <summary>

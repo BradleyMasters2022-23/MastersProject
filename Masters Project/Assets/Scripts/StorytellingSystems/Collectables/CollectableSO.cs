@@ -8,12 +8,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Sirenix.OdinInspector;
 
 [System.Serializable]
 public class CollectableFragment
 {
-    [SerializeField, Tooltip("Prefab of this collectable")]
-    private GameObject objectPrefab;
+    [SerializeField, Tooltip("Child index of the prop representing this fragment")]
+    private int propIndex;
 
     [SerializeField, Tooltip("Position override applied when spawned as a interactbale prop")]
     private Vector3 interactablePositionOverride;
@@ -25,9 +26,9 @@ public class CollectableFragment
 
     #region Getters
 
-    public GameObject ObjectPrefab
+    public int PropIndex
     {
-        get { return objectPrefab; }
+        get { return propIndex; }
     }
     public string Text
     {
@@ -50,8 +51,10 @@ public class CollectableSO : ScriptableObject
 {
     [Header("Core")]
 
-    [Tooltip("Name of this collectable. Can be displayed in UI (not implemented)")]
+    [Tooltip("Name of this collectable")]
     [SerializeField] string collectableName;
+    [Tooltip("Prop of this collectable")]
+    [SerializeField, PreviewField] private GameObject collectableProp;
     [Tooltip("Whether this collectable's drop order is ordered by allFragments or random")]
     [SerializeField] bool dropInOrder = false;
     [Tooltip("All fragments of this collectable. ")]
@@ -101,6 +104,11 @@ public class CollectableSO : ScriptableObject
         return collectableName;
     }
 
+    public GameObject Prop()
+    {
+        return collectableProp;
+    }
+
     /// <summary>
     /// Get a ref to a concrete collectable
     /// </summary>
@@ -134,6 +142,7 @@ public class CollectableSO : ScriptableObject
     /// </summary>
     /// <param name="front">whether its the front side</param>
     /// <param name="targetFragments">fragments to include</param>
+    /// <param name="pool">all fragments to search from. Allows for reducing missing fragment texts</param>
     /// <returns>text description of current collectable</returns>
     public virtual string GetDesc(bool front, List<int> targetFragments)
     {
@@ -147,11 +156,35 @@ public class CollectableSO : ScriptableObject
         // get found fragments, filling in blanks
         for (int i = 0; i < allFragments.Length; i++)
         {
-            if(targetFragments.Contains(i))
+            if (targetFragments.Contains(i))
                 data += (front) ? allFragments[i].Text : allFragments[i].AltText;
-            else
+            else 
                 data += missingFragmentText;
         }
+
+        // append post-text
+        data += " " + ((front) ? postTextDesc : flippedPostTextDesc);
+
+        return data;
+    }
+
+    /// <summary>
+    /// Get the description of only a single fragment, with pre/post text included and no missing text
+    /// </summary>
+    /// <param name="front">whether its the front or backside</param>
+    /// <param name="singleFragment">single fragment to load. No missing text added</param>
+    /// <returns></returns>
+    public virtual string GetDesc(bool front, int singleFragment)
+    {
+        // If set to not change description, treat it as front
+        if (!flipDescription)
+            front = true;
+
+        // prepare pre-text
+        string data = ((front) ? preTextDesc : flippedPreTextDesc) + " ";
+
+        // print found index
+        data += (front) ? allFragments[singleFragment].Text : allFragments[singleFragment].AltText;
 
         // append post-text
         data += " " + ((front) ? postTextDesc : flippedPostTextDesc);
