@@ -5,7 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEngine.Video;
 using UnityEngine.Events;
 
-public class CutsceneTrigger : MonoBehaviour
+public class CutsceneTrigger : SaveDataContainer
 {
     [Tooltip("Cutscene manager to trigger")]
     [SerializeField, ReadOnly] CutsceneManager cutscenePlayer;
@@ -134,5 +134,10 @@ public class CutsceneTrigger : MonoBehaviour
     protected virtual bool CanPlay()
     {
         return playable;
+    }
+
+    public override void ResetData()
+    {
+        saveData = new CutsceneSaveData();
     }
 }

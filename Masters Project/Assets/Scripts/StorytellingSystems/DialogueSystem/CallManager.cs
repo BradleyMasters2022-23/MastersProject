@@ -13,7 +13,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Sirenix.OdinInspector;
 
-public class CallManager : MonoBehaviour
+public class CallManager : SaveDataContainer
 {
     /// <summary>
     /// manager instance
@@ -178,7 +178,7 @@ public class CallManager : MonoBehaviour
         //saveData.SeeAllReads();
     }
 
-    public void ResetData()
+    public override void ResetData()
     {
         saveData = new DialogueSaveData();
         UpdateCalls();

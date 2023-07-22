@@ -11,7 +11,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 
-public class CollectableSaveManager : MonoBehaviour
+public class CollectableSaveManager : SaveDataContainer
 {
     /// <summary>
     /// Collectable save manager instance. Middleman for save data reading and writing
@@ -124,10 +124,9 @@ public class CollectableSaveManager : MonoBehaviour
     /// <summary>
     /// reset save data for collectable save data
     /// </summary>
-    public void ClearSaveData()
+    public override void ResetData()
     {
         data = new CollectableSaveData();
-        SaveData();
     }
 
     /// <summary>
@@ -164,7 +163,7 @@ public class CollectableSaveManager : MonoBehaviour
     public bool ShouldSpawn(float baseChance)
     {
         baseChance += data.savedBonusLuck;
-        bool success = Random.Range(0.001f, 100f) <= baseChance;
+        bool success = Random.Range(0.00001f, 100f) <= baseChance;
 
         // reset luck on success, increment on fail.
         // TODO - move reset luck to pickup instead to not punish missing them
@@ -179,6 +178,7 @@ public class CollectableSaveManager : MonoBehaviour
 
     public void ClearDataCheat(InputAction.CallbackContext c)
     {
-        ClearSaveData();
+        ResetData();
+        SaveData();
     }
 }
