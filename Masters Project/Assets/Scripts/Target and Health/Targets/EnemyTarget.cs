@@ -177,6 +177,8 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
         catch { }
     }
 
+    private Quaternion originalRotation;
+
     /// <summary>
     /// Remain in a knockback duration until landing
     /// </summary>
@@ -184,6 +186,7 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
     /// <returns></returns>
     private IEnumerator KnockbackDuration(float dur)
     {
+        originalRotation = transform.rotation;
         inKnockbackState = true;
 
         DisableAI();
@@ -215,22 +218,26 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
 
         // rotate back upright
         //_rb.constraints = RigidbodyConstraints.FreezeAll;
-        //knockdownTracker.ResetTimer(0.3f);
+        knockdownTracker.ResetTimer(1f);
+        _rb.constraints = RigidbodyConstraints.FreezeAll;
 
-        //Vector3 ogRot = transform.rotation.eulerAngles;
-        //Vector3 rot = transform.rotation.eulerAngles;
-        //while (!knockdownTracker.TimerDone())
-        //{
-        //    rot.x = Mathf.LerpAngle(ogRot.x, 0, knockdownTracker.TimerProgress());
-        //    rot.z = Mathf.LerpAngle(ogRot.z, 0, knockdownTracker.TimerProgress());
-        //    transform.rotation = Quaternion.Euler(rot);
-        //    yield return null;
-        //}
+        RaycastHit data;
+        NavMeshHit navmeshPoint;
+        Physics.Raycast(_center.position, Vector3.down,out data, Mathf.Infinity, groundMask);
+        Vector3 targetPos = data.point;
+        NavMesh.SamplePosition(targetPos, out navmeshPoint, Mathf.Infinity, _agentRef.areaMask);
 
+        while (!knockdownTracker.TimerDone())
+        {
+            transform.position = Vector3.Lerp(transform.position, navmeshPoint.position, knockdownTracker.TimerProgress());
+            transform.rotation = Quaternion.Lerp(transform.rotation, originalRotation, knockdownTracker.TimerProgress());
+            yield return null;
+        }
         EnableAI();
         inKnockbackState = false;
         knockbackRoutine = null;
     }
+
     /// <summary>
     /// Disable the AI
     /// </summary>
@@ -321,10 +328,6 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
     #endregion
 
     #region Pooling
-    /// <summary>
-    /// Core data used by enemy
-    /// </summary>
-    private EnemySO enemyData;
 
     public void PoolInit()
     {

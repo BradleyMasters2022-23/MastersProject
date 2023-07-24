@@ -49,10 +49,12 @@ public class DefaultEnemyHealthbar : ResourceBarUI
     /// Reference to player gun
     /// </summary>
     [SerializeField] private PlayerGunController gunRef;
+    float verticalOffset;
 
     protected override void Awake()
     {
         base.Awake();
+        verticalOffset = transform.localPosition.y;
 
         timer = new ScaledTimer(onDamagedDuration, false);
     }
@@ -71,6 +73,7 @@ public class DefaultEnemyHealthbar : ResourceBarUI
         CheckDistance();
         CheckRecentlyDamaged();
 
+
         if(_targetData != null && _targetData.IsEmptied())
         {
             if (coreReference.gameObject.activeInHierarchy)
@@ -88,6 +91,13 @@ public class DefaultEnemyHealthbar : ResourceBarUI
             {
                 coreReference.gameObject.SetActive(inRange);
             }
+        }
+
+        // keep upright around its center
+        if(coreReference.gameObject.activeInHierarchy)
+        {
+            Vector3 pos = transform.parent.position + Vector3.up * verticalOffset;
+            transform.position = pos;
         }
     }
 
