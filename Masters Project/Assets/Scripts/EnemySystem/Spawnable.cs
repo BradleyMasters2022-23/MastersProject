@@ -30,7 +30,9 @@ public class Spawnable : MonoBehaviour
     public void StartSpawning(float speedMod = 1, UnityAction onComplete = null)
     {
         onAnimationFinish = onComplete;
-        spawnAnimator.speed *= speedMod;
+        spawnAnimator.Play("anim_spawnBuildup");
+
+        spawnAnimator.speed = speedMod;
         spawnAnimator.enabled = true;
     }
 
@@ -39,6 +41,7 @@ public class Spawnable : MonoBehaviour
     /// </summary>
     public void AnimationFinish()
     {
+        Debug.Log("Event called");
         onAnimationFinish?.Invoke();
         standardOnComplete?.Invoke();
     }

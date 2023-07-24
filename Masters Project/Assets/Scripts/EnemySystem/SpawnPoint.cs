@@ -96,17 +96,10 @@ public class SpawnPoint : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        // Get internal references
-        s = gameObject.AddComponent<AudioSource>();
-
         // Initialize timers
         spawnDelayTimer = new ScaledTimer(spawnDelay);
         spawnOverrideTimer = new ScaledTimer(spawnOverrideDelay);
-
-
-        s.playOnAwake = false;
-        // Prepare sound
-        
+        s = GetComponent<AudioSource>();
     }
 
     /// <summary>
@@ -114,13 +107,12 @@ public class SpawnPoint : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        player = FindObjectOfType<PlayerController>().transform;
+        player = PlayerTarget.p.transform;
         spawnManager = SpawnManager.instance;
 
         if(spawnParticles!= null)
         {
             spawnParticles.Stop();
-            spawnParticles.Reinit();
             spawnParticles.playRate *= VFXSpeedScalar;
         }
 
@@ -296,6 +288,9 @@ public class SpawnPoint : MonoBehaviour
         spawnMesh.transform.LookAt(transform.position + toPlayer);
         spawnMesh.transform.Rotate(Vector3.up, enemy.rotationOverride);
         spawnMesh.gameObject.SetActive(true);
+
+        if (spawnParticles != null)
+            spawnParticles.Play();
 
         // start spawn effects, wait for them to finish spawning
         spawnSound.PlayClip(s);
