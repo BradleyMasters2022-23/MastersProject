@@ -26,6 +26,7 @@ public class TurretTarget : EnemyTarget
     protected override void KillTarget()
     {
         turretStand.gameObject.SetActive(false);
+        turretStand.localRotation= Quaternion.identity;
         base.KillTarget();
     }
 
