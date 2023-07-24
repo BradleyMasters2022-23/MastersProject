@@ -87,6 +87,10 @@ public class SpawnPoint : MonoBehaviour
 
     private GameObject lastSpawnedEnemy;
 
+    [Header("Spawn Effects")]
+    [SerializeField] MeshFilter spawnMesh;
+    [SerializeField] Spawnable spawnEffectController;
+
     /// <summary>
     /// Initialize settings
     /// </summary>
@@ -281,20 +285,22 @@ public class SpawnPoint : MonoBehaviour
         lastSpawnedEnemy.transform.position = transform.position;
         lastSpawnedEnemy.SetActive(false);
 
-        // Prepare indicators
+        bool spawnComplete = false;
+
+        // get direction to player, flatten it
+        Vector3 toPlayer = (player.position - transform.position).normalized;
+        toPlayer.y = 0;
+
+        // get spawn effects, make them look at player
+        spawnMesh.mesh = enemy.enemySpawnMesh;
+        spawnMesh.transform.LookAt(transform.position + toPlayer);
+        spawnMesh.transform.Rotate(Vector3.up, enemy.rotationOverride);
+        spawnMesh.gameObject.SetActive(true);
+
+        // start spawn effects, wait for them to finish spawning
         spawnSound.PlayClip(s);
-
-        if(spawnParticles != null)
-        {
-            spawnParticles.Reinit();
-            spawnParticles.Play();
-        }
-            
-
-        // Reset the timer and wait for the delay
-        spawnDelayTimer.ResetTimer();
-        while (!spawnDelayTimer.TimerDone())
-            yield return null;
+        spawnEffectController.StartSpawning(enemy.playbackSpeedModifier, () => spawnComplete = true);
+        yield return new WaitUntil(() => spawnComplete);
 
         // If missing, then enemy is gone so stop. Only happens in unload of the tutorial
         if (lastSpawnedEnemy == null)

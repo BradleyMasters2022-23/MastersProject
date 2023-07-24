@@ -23,7 +23,12 @@ public class EnemySO : ScriptableObject
 {
     [Tooltip("The enemy associated with this SO")]
     [AssetsOnly] public GameObject enemyPrefab;
-    
+
+    [Tooltip("The enemy spawn VFX")]
+    [AssetsOnly] public Mesh enemySpawnMesh;
+    public float rotationOverride;
+    public float playbackSpeedModifier;
+
     public EnemyType enemyType;
 
     [Tooltip("Cost to spawn this enemy type")]
