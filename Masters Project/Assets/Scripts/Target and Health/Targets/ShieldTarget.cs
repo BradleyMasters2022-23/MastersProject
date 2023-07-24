@@ -24,9 +24,9 @@ public class ShieldTarget : Target
         base.Awake();
     }
 
-    public override void RegisterEffect(float dmg)
+    public override void RegisterEffect(float dmg, Vector3 origin)
     {
-        base.RegisterEffect(dmg);
+        base.RegisterEffect(dmg, origin);
 
         if(ShieldTooltipTrigger.instance != null && !_healthManager.God)
             ShieldTooltipTrigger.instance.ShieldHit();

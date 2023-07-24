@@ -140,7 +140,7 @@ public abstract class Attack : TimeAffectedEntity
             }
 
             if(dealDamage)
-                target.RegisterEffect(dmg);
+                target.RegisterEffect(dmg, transform.position);
 
             if (knockback)
             {

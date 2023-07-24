@@ -475,6 +475,11 @@ public class EnemyManager : TimeAffectedEntity, TimeObserver
         return DeltaTime;
     }
 
+    public void HaltAI()
+    {
+        StopAllCoroutines();
+    }
+
     public void OnStop()
     {
         //if (agent != null)

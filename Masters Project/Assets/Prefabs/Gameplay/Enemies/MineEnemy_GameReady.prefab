@@ -390,7 +390,7 @@ MonoBehaviour:
   _unkillable: 0
   immuneToKnockback: 0
   knockbackModifier: 5
-  maxKnockback: 60
+  maxKnockback: 90
   invincibilityShield: {fileID: 0}
   _deathVFX: {fileID: 7428150280865193490, guid: 52202a5140c1c0a438fae66d4b85c181, type: 3}
   damagedSound: {fileID: 11400000, guid: 4ba21dac44b2634469d022e7027035df, type: 2}
@@ -400,6 +400,10 @@ MonoBehaviour:
   - spawnObject: {fileID: 3071240432754548792, guid: 2001e4aa90ac76a47866171fcaafdf7f, type: 3}
     quantityRange: {x: 4, y: 5}
     dropChance: 70
+  deathStateDuration: {x: 0.4, y: 0.8}
+  deathStateDamageThreshold: 80
+  deathStateHorKnockback: 0.15
+  deathStateVerKnockback: 0.3
   minKnockbackDuration: 0.5
   groundMask:
     serializedVersion: 2

@@ -48,7 +48,6 @@ namespace Masters.AI
             // Determine if it landed on the target
             if(landed)
             {
-                Debug.Log($"Landed! hit {hit.collider.name} with tag {hit.collider.tag} vs {target.tag}");
                 return hit.collider.tag == target.tag;
             }
             else

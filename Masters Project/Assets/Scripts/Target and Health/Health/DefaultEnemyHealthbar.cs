@@ -71,6 +71,13 @@ public class DefaultEnemyHealthbar : ResourceBarUI
         CheckDistance();
         CheckRecentlyDamaged();
 
+        if(_targetData != null && _targetData.IsEmptied())
+        {
+            if (coreReference.gameObject.activeInHierarchy)
+                coreReference.gameObject.SetActive(false);
+            return;
+        }
+
         if(hideOutOfRange)
         {
             if(enableShowOnDamaged)

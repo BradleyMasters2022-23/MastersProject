@@ -18,7 +18,7 @@ public class MineEnemyProjectile : ProjectileAccelerate
         // only detonate if it impacted with a damagable entity
         if(_targetObj.GetComponent<IDamagable>() != null)
         {
-            targetManager.RegisterEffect(999);
+            targetManager.RegisterEffect(999, transform.position);
         }    
 
         return true;
@@ -28,7 +28,7 @@ public class MineEnemyProjectile : ProjectileAccelerate
     {
         if (target.GetComponent<IDamagable>() != null)
         {
-            targetManager.RegisterEffect(999);
+            targetManager.RegisterEffect(999, transform.position);
         }
     }
 
