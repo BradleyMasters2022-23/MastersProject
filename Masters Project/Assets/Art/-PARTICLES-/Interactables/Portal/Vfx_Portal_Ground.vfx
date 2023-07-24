@@ -16,10 +16,10 @@ MonoBehaviour:
   - title: Bottom Swirl
     position:
       serializedVersion: 2
-      x: -265
+      x: -272
       y: -167
-      width: 777
-      height: 1510
+      width: 784
+      height: 1658
     contents:
     - model: {fileID: 8926484042661614558}
       id: 0
@@ -54,13 +54,16 @@ MonoBehaviour:
     - model: {fileID: 8926484042661615395}
       id: 0
       isStickyNote: 0
+    - model: {fileID: 8926484042661615617}
+      id: 0
+      isStickyNote: 0
   - title: Inner Swirl
     position:
       serializedVersion: 2
-      x: 572
+      x: 549
       y: -176
-      width: 794
-      height: 1666
+      width: 817
+      height: 1781
     contents:
     - model: {fileID: 8926484042661614838}
       id: 0
@@ -96,6 +99,9 @@ MonoBehaviour:
       id: 0
       isStickyNote: 0
     - model: {fileID: 8926484042661614867}
+      id: 0
+      isStickyNote: 0
+    - model: {fileID: 8926484042661615621}
       id: 0
       isStickyNote: 0
   - title: Vertical Tube Cells
@@ -323,9 +329,9 @@ MonoBehaviour:
     textSize: Huge
   categories:
   - name: Bot Swirl
-    collapsed: 1
+    collapsed: 0
   - name: Inn Swirl
-    collapsed: 1
+    collapsed: 0
   - name: Tube Cells
     collapsed: 1
   - name: Spinning Lines
@@ -336,10 +342,10 @@ MonoBehaviour:
     collapsed: 1
   uiBounds:
     serializedVersion: 2
-    x: -265
+    x: -272
     y: -562
-    width: 6654
-    height: 2569
+    width: 6686
+    height: 2594
 --- !u!114 &114350483966674976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -438,6 +444,8 @@ MonoBehaviour:
   - {fileID: 8926484042661615599}
   - {fileID: 8926484042661615601}
   - {fileID: 8926484042661615607}
+  - {fileID: 8926484042661615617}
+  - {fileID: 8926484042661615621}
   m_UIPosition: {x: 0, y: 0}
   m_UICollapsed: 1
   m_UISuperCollapsed: 0
@@ -550,6 +558,20 @@ MonoBehaviour:
         m_SerializableType: UnityEngine.Vector2, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       m_SerializableObject: '{"x":1.0,"y":2.0}'
+    min: -Infinity
+    max: Infinity
+    enumValues: []
+    descendantCount: 0
+  - name: Bot Swirl Strength (Min / Max)
+    path: Bot Swirl Strength (Min / Max)
+    tooltip: 
+    sheetType: m_Vector2f
+    realType: Vector2
+    defaultValue:
+      m_Type:
+        m_SerializableType: UnityEngine.Vector2, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      m_SerializableObject: '{"x":0.0,"y":1.0}'
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -675,6 +697,20 @@ MonoBehaviour:
         m_SerializableType: UnityEngine.Vector2, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       m_SerializableObject: '{"x":0.9700000286102295,"y":2.7100000381469728}'
+    min: -Infinity
+    max: Infinity
+    enumValues: []
+    descendantCount: 0
+  - name: Inn Swirl Strength (Min / Max) 1
+    path: Inn Swirl Strength (Min / Max) 1
+    tooltip: 
+    sheetType: m_Vector2f
+    realType: Vector2
+    defaultValue:
+      m_Type:
+        m_SerializableType: UnityEngine.Vector2, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      m_SerializableObject: '{"x":0.0,"y":1.0}'
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -1753,6 +1789,8 @@ MonoBehaviour:
   - {fileID: 8926484042661614618}
   - {fileID: 8926484042661614623}
   - {fileID: 8926484042661614624}
+  - {fileID: 8926484042661615613}
+  - {fileID: 8926484042661615614}
   m_OutputSlots: []
   m_Label: 
   m_Data: {fileID: 8926484042661614568}
@@ -5274,6 +5312,8 @@ MonoBehaviour:
   - {fileID: 8926484042661614868}
   - {fileID: 8926484042661614884}
   - {fileID: 8926484042661614885}
+  - {fileID: 8926484042661615615}
+  - {fileID: 8926484042661615616}
   - {fileID: 8926484042661614876}
   - {fileID: 8926484042661614877}
   m_OutputSlots: []
@@ -12132,7 +12172,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615143}
   m_ExposedName: Spin Lines Velocity
   m_Exposed: 1
-  m_Order: 15
+  m_Order: 21
   m_Category: Spinning Lines
   m_Min:
     m_Type:
@@ -15341,7 +15381,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615331}
   m_ExposedName: Tube Cells Color
   m_Exposed: 1
-  m_Order: 1
+  m_Order: 2
   m_Category: Tube Cells
   m_Min:
     m_Type:
@@ -15557,7 +15597,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615394}
   m_ExposedName: Bot Swirl Size
   m_Exposed: 1
-  m_Order: 4
+  m_Order: 7
   m_Category: Bot Swirl
   m_Min:
     m_Type:
@@ -15637,7 +15677,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615396}
   m_ExposedName: Bot Swirl Spin Speed
   m_Exposed: 1
-  m_Order: 10
+  m_Order: 17
   m_Category: Bot Swirl
   m_Min:
     m_Type:
@@ -15717,7 +15757,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615398}
   m_ExposedName: Bot Swirl Cell Movment Speed
   m_Exposed: 1
-  m_Order: 21
+  m_Order: 26
   m_Category: Bot Swirl
   m_Min:
     m_Type:
@@ -15797,7 +15837,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615402}
   m_ExposedName: Bot Swirl Twirl Intensity
   m_Exposed: 1
-  m_Order: 16
+  m_Order: 22
   m_Category: Bot Swirl
   m_Min:
     m_Type:
@@ -15877,7 +15917,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615404}
   m_ExposedName: Bot Swirl Cell Density
   m_Exposed: 1
-  m_Order: 27
+  m_Order: 31
   m_Category: Bot Swirl
   m_Min:
     m_Type:
@@ -15957,7 +15997,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615408}
   m_ExposedName: Bot Swirl Fill (Out / In)
   m_Exposed: 1
-  m_Order: 33
+  m_Order: 36
   m_Category: Bot Swirl
   m_Min:
     m_Type:
@@ -16109,7 +16149,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615412}
   m_ExposedName: Inn Swirl Scale
   m_Exposed: 1
-  m_Order: 2
+  m_Order: 1
   m_Category: Inn Swirl
   m_Min:
     m_Type:
@@ -16291,7 +16331,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615419}
   m_ExposedName: Inn Swirl Size
   m_Exposed: 1
-  m_Order: 5
+  m_Order: 3
   m_Category: Inn Swirl
   m_Min:
     m_Type:
@@ -16371,7 +16411,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615421}
   m_ExposedName: Inn Swirl Spin Speed
   m_Exposed: 1
-  m_Order: 11
+  m_Order: 4
   m_Category: Inn Swirl
   m_Min:
     m_Type:
@@ -16451,7 +16491,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615425}
   m_ExposedName: Inn Swirl Cell Movment Speed
   m_Exposed: 1
-  m_Order: 17
+  m_Order: 5
   m_Category: Inn Swirl
   m_Min:
     m_Type:
@@ -16531,7 +16571,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615427}
   m_ExposedName: Inn Swirl Twirl Strength
   m_Exposed: 1
-  m_Order: 22
+  m_Order: 8
   m_Category: Inn Swirl
   m_Min:
     m_Type:
@@ -16611,7 +16651,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615429}
   m_ExposedName: Inn Swirl Cell Density
   m_Exposed: 1
-  m_Order: 28
+  m_Order: 9
   m_Category: Inn Swirl
   m_Min:
     m_Type:
@@ -16691,7 +16731,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615431}
   m_ExposedName: Inn Swirl Color
   m_Exposed: 1
-  m_Order: 34
+  m_Order: 10
   m_Category: Inn Swirl
   m_Min:
     m_Type:
@@ -16907,7 +16947,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615437}
   m_ExposedName: Inn Swirl Fill (Out / In)
   m_Exposed: 1
-  m_Order: 39
+  m_Order: 12
   m_Category: Inn Swirl
   m_Min:
     m_Type:
@@ -17059,7 +17099,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615443}
   m_ExposedName: Tube Cells Rotation Speed
   m_Exposed: 1
-  m_Order: 29
+  m_Order: 32
   m_Category: Tube Cells
   m_Min:
     m_Type:
@@ -17139,7 +17179,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615445}
   m_ExposedName: Tube Cells Movment Direction
   m_Exposed: 1
-  m_Order: 23
+  m_Order: 27
   m_Category: Tube Cells
   m_Min:
     m_Type:
@@ -17219,7 +17259,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615447}
   m_ExposedName: Tube Cells Bot Transparency
   m_Exposed: 1
-  m_Order: 35
+  m_Order: 37
   m_Category: Tube Cells
   m_Min:
     m_Type:
@@ -17299,7 +17339,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615449}
   m_ExposedName: Tube Edge Transparency (Min / Max)
   m_Exposed: 1
-  m_Order: 12
+  m_Order: 18
   m_Category: Tube Cells
   m_Min:
     m_Type:
@@ -17451,7 +17491,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615457}
   m_ExposedName: Tube Cells Edge Transparency (Min / Max)
   m_Exposed: 1
-  m_Order: 18
+  m_Order: 23
   m_Category: Tube Cells
   m_Min:
     m_Type:
@@ -17603,7 +17643,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615461}
   m_ExposedName: Tube Cells Tiling
   m_Exposed: 1
-  m_Order: 40
+  m_Order: 41
   m_Category: Tube Cells
   m_Min:
     m_Type:
@@ -17751,7 +17791,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615465}
   m_ExposedName: Tube Cells Scale
   m_Exposed: 1
-  m_Order: 6
+  m_Order: 11
   m_Category: Tube Cells
   m_Min:
     m_Type:
@@ -17933,7 +17973,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615472}
   m_ExposedName: Spin Lines Spawn Rate
   m_Exposed: 1
-  m_Order: 7
+  m_Order: 13
   m_Category: Spinning Lines
   m_Min:
     m_Type:
@@ -18013,7 +18053,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615474}
   m_ExposedName: Spin Lines Gravity
   m_Exposed: 1
-  m_Order: 36
+  m_Order: 38
   m_Category: Spinning Lines
   m_Min:
     m_Type:
@@ -18093,7 +18133,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615476}
   m_ExposedName: Spin Lines Life (Min / Max)
   m_Exposed: 1
-  m_Order: 41
+  m_Order: 42
   m_Category: Spinning Lines
   m_Min:
     m_Type:
@@ -18245,7 +18285,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615485}
   m_ExposedName: Spin Lines Scale (Width / Height)
   m_Exposed: 1
-  m_Order: 44
+  m_Order: 45
   m_Category: Spinning Lines
   m_Min:
     m_Type:
@@ -18397,7 +18437,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615489}
   m_ExposedName: Spin Lines Spawn Radius
   m_Exposed: 1
-  m_Order: 13
+  m_Order: 19
   m_Category: Spinning Lines
   m_Min:
     m_Type:
@@ -18477,7 +18517,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615491}
   m_ExposedName: Spin Lines Spawn Height
   m_Exposed: 1
-  m_Order: 30
+  m_Order: 33
   m_Category: Spinning Lines
   m_Min:
     m_Type:
@@ -18557,7 +18597,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615495}
   m_ExposedName: Spin Lines Rotation Speed (Min / Max)
   m_Exposed: 1
-  m_Order: 24
+  m_Order: 28
   m_Category: Spinning Lines
   m_Min:
     m_Type:
@@ -18709,7 +18749,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615499}
   m_ExposedName: Spin Lines Size (Min / Max)
   m_Exposed: 1
-  m_Order: 47
+  m_Order: 48
   m_Category: Spinning Lines
   m_Min:
     m_Type:
@@ -18861,7 +18901,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615503}
   m_ExposedName: Spin Lines Size Over Life
   m_Exposed: 1
-  m_Order: 49
+  m_Order: 50
   m_Category: Spinning Lines
   m_Min:
     m_Type:
@@ -18941,7 +18981,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615505}
   m_ExposedName: Spin Lines Color
   m_Exposed: 1
-  m_Order: 51
+  m_Order: 52
   m_Category: Spinning Lines
   m_Min:
     m_Type:
@@ -19157,7 +19197,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615511}
   m_ExposedName: Spin Lines Color Over Life
   m_Exposed: 1
-  m_Order: 52
+  m_Order: 53
   m_Category: Spinning Lines
   m_Min:
     m_Type:
@@ -19237,7 +19277,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615515}
   m_ExposedName: Pull Lines Spawn Rate
   m_Exposed: 1
-  m_Order: 8
+  m_Order: 14
   m_Category: Pulling Lines
   m_Min:
     m_Type:
@@ -19317,7 +19357,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615517}
   m_ExposedName: Pull Lines Spawn Sphere Radius
   m_Exposed: 1
-  m_Order: 14
+  m_Order: 20
   m_Category: Pulling Lines
   m_Min:
     m_Type:
@@ -19397,7 +19437,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615524}
   m_ExposedName: Pull Lines Scale (Width / Height)
   m_Exposed: 1
-  m_Order: 19
+  m_Order: 24
   m_Category: Pulling Lines
   m_Min:
     m_Type:
@@ -19549,7 +19589,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615528}
   m_ExposedName: Pull Lines Life (Min / Max)
   m_Exposed: 1
-  m_Order: 25
+  m_Order: 29
   m_Category: Pulling Lines
   m_Min:
     m_Type:
@@ -19701,7 +19741,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615532}
   m_ExposedName: Pull Lines Attraction Speed
   m_Exposed: 1
-  m_Order: 31
+  m_Order: 34
   m_Category: Pulling Lines
   m_Min:
     m_Type:
@@ -19781,7 +19821,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615534}
   m_ExposedName: Pull Lines Attraction Force
   m_Exposed: 1
-  m_Order: 37
+  m_Order: 39
   m_Category: Pulling Lines
   m_Min:
     m_Type:
@@ -19861,7 +19901,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615536}
   m_ExposedName: Pull Lines Length Over Life
   m_Exposed: 1
-  m_Order: 42
+  m_Order: 43
   m_Category: Pulling Lines
   m_Min:
     m_Type:
@@ -19976,7 +20016,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615539}
   m_ExposedName: Pull Lines Color Over Life
   m_Exposed: 1
-  m_Order: 45
+  m_Order: 46
   m_Category: Pulling Lines
   m_Min:
     m_Type:
@@ -20091,7 +20131,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615544}
   m_ExposedName: Vert Lines Spawn Rate
   m_Exposed: 1
-  m_Order: 20
+  m_Order: 25
   m_Category: Verticle Lines
   m_Min:
     m_Type:
@@ -20171,7 +20211,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615546}
   m_ExposedName: Vert Lines Velocity (Min / Max)
   m_Exposed: 1
-  m_Order: 43
+  m_Order: 44
   m_Category: Verticle Lines
   m_Min:
     m_Type:
@@ -20323,7 +20363,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615586}
   m_ExposedName: Vert Lines Spawn Height
   m_Exposed: 1
-  m_Order: 26
+  m_Order: 30
   m_Category: Verticle Lines
   m_Min:
     m_Type:
@@ -20403,7 +20443,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615588}
   m_ExposedName: Vert Lines Spawn Radius
   m_Exposed: 1
-  m_Order: 32
+  m_Order: 35
   m_Category: Verticle Lines
   m_Min:
     m_Type:
@@ -20483,7 +20523,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615590}
   m_ExposedName: Vert Lines Spawn Radius Thickness
   m_Exposed: 1
-  m_Order: 38
+  m_Order: 40
   m_Category: Verticle Lines
   m_Min:
     m_Type:
@@ -20563,7 +20603,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615592}
   m_ExposedName: Vert Lines Scale (Width / Height)
   m_Exposed: 1
-  m_Order: 46
+  m_Order: 47
   m_Category: Verticle Lines
   m_Min:
     m_Type:
@@ -20715,7 +20755,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615596}
   m_ExposedName: Vert Lines Life (Min / Max)
   m_Exposed: 1
-  m_Order: 48
+  m_Order: 49
   m_Category: Verticle Lines
   m_Min:
     m_Type:
@@ -20867,7 +20907,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615600}
   m_ExposedName: Vert Lines Size Over Life
   m_Exposed: 1
-  m_Order: 50
+  m_Order: 51
   m_Category: Verticle Lines
   m_Min:
     m_Type:
@@ -20947,7 +20987,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615602}
   m_ExposedName: Vert Lines Color
   m_Exposed: 1
-  m_Order: 3
+  m_Order: 6
   m_Category: Verticle Lines
   m_Min:
     m_Type:
@@ -21163,7 +21203,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615608}
   m_ExposedName: Vert Lines Color Over Life
   m_Exposed: 1
-  m_Order: 9
+  m_Order: 16
   m_Category: Verticle Lines
   m_Min:
     m_Type:
@@ -21220,3 +21260,447 @@ MonoBehaviour:
   m_Direction: 1
   m_LinkedSlots:
   - {fileID: 8926484042661615211}
+--- !u!114 &8926484042661615613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 0}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661615613}
+  m_MasterData:
+    m_Owner: {fileID: 8926484042661614585}
+    m_Value:
+      m_Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: 0
+    m_Space: 2147483647
+  m_Property:
+    name: _Strength_Min
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 0
+  m_LinkedSlots:
+  - {fileID: 8926484042661615619}
+--- !u!114 &8926484042661615614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 0}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661615614}
+  m_MasterData:
+    m_Owner: {fileID: 8926484042661614585}
+    m_Value:
+      m_Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: 1
+    m_Space: 2147483647
+  m_Property:
+    name: _Strength_Max
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 0
+  m_LinkedSlots:
+  - {fileID: 8926484042661615620}
+--- !u!114 &8926484042661615615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 0}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661615615}
+  m_MasterData:
+    m_Owner: {fileID: 8926484042661614867}
+    m_Value:
+      m_Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: 0
+    m_Space: 2147483647
+  m_Property:
+    name: _Strength_Min
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 0
+  m_LinkedSlots:
+  - {fileID: 8926484042661615623}
+--- !u!114 &8926484042661615616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 0}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661615616}
+  m_MasterData:
+    m_Owner: {fileID: 8926484042661614867}
+    m_Value:
+      m_Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: 1
+    m_Space: 2147483647
+  m_Property:
+    name: _Strength_Max
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 0
+  m_LinkedSlots:
+  - {fileID: 8926484042661615624}
+--- !u!114 &8926484042661615617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 330e0fca1717dde4aaa144f48232aa64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 114350483966674976}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_InputSlots: []
+  m_OutputSlots:
+  - {fileID: 8926484042661615618}
+  m_ExposedName: Bot Swirl Strength (Min / Max)
+  m_Exposed: 1
+  m_Order: 54
+  m_Category: Bot Swirl
+  m_Min:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_Max:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_IsOutput: 0
+  m_EnumValues: []
+  m_ValueFilter: 0
+  m_Tooltip: 
+  m_Nodes:
+  - m_Id: 0
+    linkedSlots:
+    - outputSlot: {fileID: 8926484042661615619}
+      inputSlot: {fileID: 8926484042661615613}
+    - outputSlot: {fileID: 8926484042661615620}
+      inputSlot: {fileID: 8926484042661615614}
+    position: {x: -247, y: 1347}
+    expandedSlots:
+    - {fileID: 8926484042661615618}
+    expanded: 1
+--- !u!114 &8926484042661615618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b2b751071c7fc14f9fa503163991826, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 0}
+  m_Children:
+  - {fileID: 8926484042661615619}
+  - {fileID: 8926484042661615620}
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661615618}
+  m_MasterData:
+    m_Owner: {fileID: 8926484042661615617}
+    m_Value:
+      m_Type:
+        m_SerializableType: UnityEngine.Vector2, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      m_SerializableObject: '{"x":0.0,"y":1.0}'
+    m_Space: 2147483647
+  m_Property:
+    name: o
+    m_serializedType:
+      m_SerializableType: UnityEngine.Vector2, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  m_Direction: 1
+  m_LinkedSlots: []
+--- !u!114 &8926484042661615619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 8926484042661615618}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661615618}
+  m_MasterData:
+    m_Owner: {fileID: 0}
+    m_Value:
+      m_Type:
+        m_SerializableType: 
+      m_SerializableObject: 
+    m_Space: 2147483647
+  m_Property:
+    name: x
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 1
+  m_LinkedSlots:
+  - {fileID: 8926484042661615613}
+--- !u!114 &8926484042661615620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 8926484042661615618}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661615618}
+  m_MasterData:
+    m_Owner: {fileID: 0}
+    m_Value:
+      m_Type:
+        m_SerializableType: 
+      m_SerializableObject: 
+    m_Space: 2147483647
+  m_Property:
+    name: y
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 1
+  m_LinkedSlots:
+  - {fileID: 8926484042661615614}
+--- !u!114 &8926484042661615621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 330e0fca1717dde4aaa144f48232aa64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 114350483966674976}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_InputSlots: []
+  m_OutputSlots:
+  - {fileID: 8926484042661615622}
+  m_ExposedName: Inn Swirl Strength (Min / Max) 1
+  m_Exposed: 1
+  m_Order: 15
+  m_Category: Inn Swirl
+  m_Min:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_Max:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_IsOutput: 0
+  m_EnumValues: []
+  m_ValueFilter: 0
+  m_Tooltip: 
+  m_Nodes:
+  - m_Id: 0
+    linkedSlots:
+    - outputSlot: {fileID: 8926484042661615623}
+      inputSlot: {fileID: 8926484042661615615}
+    - outputSlot: {fileID: 8926484042661615624}
+      inputSlot: {fileID: 8926484042661615616}
+    position: {x: 574, y: 1461}
+    expandedSlots:
+    - {fileID: 8926484042661615622}
+    expanded: 1
+--- !u!114 &8926484042661615622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b2b751071c7fc14f9fa503163991826, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 0}
+  m_Children:
+  - {fileID: 8926484042661615623}
+  - {fileID: 8926484042661615624}
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661615622}
+  m_MasterData:
+    m_Owner: {fileID: 8926484042661615621}
+    m_Value:
+      m_Type:
+        m_SerializableType: UnityEngine.Vector2, UnityEngine.CoreModule, Version=0.0.0.0,
+          Culture=neutral, PublicKeyToken=null
+      m_SerializableObject: '{"x":0.0,"y":1.0}'
+    m_Space: 2147483647
+  m_Property:
+    name: o
+    m_serializedType:
+      m_SerializableType: UnityEngine.Vector2, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+  m_Direction: 1
+  m_LinkedSlots: []
+--- !u!114 &8926484042661615623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 8926484042661615622}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661615622}
+  m_MasterData:
+    m_Owner: {fileID: 0}
+    m_Value:
+      m_Type:
+        m_SerializableType: 
+      m_SerializableObject: 
+    m_Space: 2147483647
+  m_Property:
+    name: x
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 1
+  m_LinkedSlots:
+  - {fileID: 8926484042661615615}
+--- !u!114 &8926484042661615624
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 8926484042661615622}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661615622}
+  m_MasterData:
+    m_Owner: {fileID: 0}
+    m_Value:
+      m_Type:
+        m_SerializableType: 
+      m_SerializableObject: 
+    m_Space: 2147483647
+  m_Property:
+    name: y
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 1
+  m_LinkedSlots:
+  - {fileID: 8926484042661615616}
