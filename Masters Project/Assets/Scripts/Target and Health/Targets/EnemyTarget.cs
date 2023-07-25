@@ -24,8 +24,102 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
         _agentRef= GetComponent<NavMeshAgent>();
         _managerRef= GetComponent<EnemyManager>();
         groundDist = Vector3.Distance(transform.position, _center.position) + 0.2f;
+        defaultLookAngle = flinchRoot.localRotation;
     }
 
+    #region Flinching
+
+    [Header("Flinching")]
+
+    [Tooltip("Max angle that can be applied due to flinch in any direction")]
+    [SerializeField] float maxFlinch;
+    [Tooltip("Transform container holding the main enemy body")]
+    [SerializeField] Transform flinchRoot;
+
+    [Tooltip("How fast the enemy returns to normal orientation after being hit by flinch. Higher this is, the faster they recover.")]
+    [SerializeField] float flinchRecoveryRate = 3;
+    [Tooltip("For each point of damage taken, how much flinch is applied")]
+    [SerializeField] float flinchSensitivity = 1;
+    /// <summary>
+    /// Default look angle for the enemy flinch root
+    /// </summary>
+    private Quaternion defaultLookAngle;
+    /// <summary>
+    /// Current angle applied to the flinch root
+    /// </summary>
+    private float currentFlinchAngle;
+
+    /// <summary>
+    /// After taking damage, apply flinch
+    /// </summary>
+    /// <param name="dmg"></param>
+    /// <param name="origin"></param>
+    public override void RegisterEffect(float dmg, Vector3 origin)
+    {
+        base.RegisterEffect(dmg, origin);
+
+
+        Flinch(dmg, origin);
+    }
+
+    /// <summary>
+    /// Apply flinch to the enemy model. Does not work if in a knockback state
+    /// </summary>
+    /// <param name="magnitude">Magnitude of the flinch to apply. Stacks.</param>
+    /// <param name="origin">Origin of the flinch source</param>
+    private void Flinch(float magnitude, Vector3 origin)
+    {
+        // don't flinch if already in knockback
+        if (inKnockbackState) return;
+
+        // calculate cross product for perpendicular axis
+        Vector3 dir = flinchRoot.position - origin;
+        Vector3 newAxis = Vector3.Cross(dir, _center.up);
+
+        // invert based on height so its properly vertical
+        float invert = (dir.y <= 0) ? -1 : 1;
+
+        // calculate angle. Clamp it in a way that adjusts current flinch angle properly
+        float amount = magnitude * flinchSensitivity * invert;
+        if(currentFlinchAngle + amount <= -maxFlinch)
+        {
+            amount = -maxFlinch - currentFlinchAngle;
+            currentFlinchAngle = -maxFlinch;
+
+        }
+        else if(currentFlinchAngle + amount >= maxFlinch)
+        {
+            amount = maxFlinch - currentFlinchAngle;
+            currentFlinchAngle = maxFlinch;
+        }
+        else
+        {
+            currentFlinchAngle += amount;
+        }
+
+        // apply
+        flinchRoot.Rotate(newAxis, amount, Space.World);
+    }
+
+    /// <summary>
+    /// Continually attempt to recover from the flinch
+    /// </summary>
+    protected override void Update()
+    {
+        base.Update();
+
+        if(flinchRoot.localRotation != defaultLookAngle && !Slowed)
+        {
+            flinchRoot.localRotation = Quaternion.Lerp(flinchRoot.localRotation, defaultLookAngle, flinchRecoveryRate * DeltaTime);
+            currentFlinchAngle = Mathf.Lerp(currentFlinchAngle, 0, flinchRecoveryRate * DeltaTime);
+
+            // if now upright, refresh current flinch angle
+            if (flinchRoot.localRotation == defaultLookAngle)
+                currentFlinchAngle = 0;
+        }
+    }
+
+    #endregion
 
     #region Death State
 
@@ -147,7 +241,6 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
     [ShowIf("@this.immuneToKnockback == false")]
     [SerializeField] private LayerMask groundMask;
     private float groundDist;
-
     [SerializeField] private float onGroundTime = 1f;
 
     private bool inKnockbackState;

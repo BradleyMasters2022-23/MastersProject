@@ -289,6 +289,7 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
     {
         if (!AffectedByAttacks())
         {
+            Debug.Log("Could not apply knockback to target bc marked not affected by attacks " + gameObject.name);
             return;
         }
             
@@ -296,6 +297,7 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
         // make sure knockback can be applied
         if (immuneToKnockback || _rb == null || _rb.isKinematic || (force + verticalForce <= 0))
         {
+            Debug.Log("Could not apply knockback to target for another reason " + gameObject.name);
             return;
         }
 
