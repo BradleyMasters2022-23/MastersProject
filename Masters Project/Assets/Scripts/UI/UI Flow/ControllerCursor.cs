@@ -10,6 +10,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.UI;
 
 public class ControllerCursor : MonoBehaviour
 {
@@ -52,7 +53,10 @@ public class ControllerCursor : MonoBehaviour
     /// reference to the virtual mouse used in this
     /// </summary>
     private Mouse virtualMouse;
-
+    /// <summary>
+    /// Reference to the sprite used for the cursor
+    /// </summary>
+    private Image cursorImage;
     #endregion
 
     #region UI Flow Variables
@@ -105,7 +109,7 @@ public class ControllerCursor : MonoBehaviour
         cursorMove = InputManager.Controls.UI.CursorMove;
         pressButton = InputManager.Controls.UI.CursorClick;
         scrollUI = InputManager.Controls.UI.CursorScroll;
-
+        cursorImage = rectRef.GetComponent<Image>();
         // get reference to original mouse
         originalMouse = Mouse.current;
 
@@ -320,6 +324,20 @@ public class ControllerCursor : MonoBehaviour
         // set to its correct state
         Cursor.visible = true;
         GameManager.instance.UpdateMouseMode();
+    }
+
+    #endregion
+
+    #region Bonus Functionality
+
+    public void HideCursorUI()
+    {
+        cursorImage.enabled = false;
+    }
+
+    public void ShowCursorUI()
+    {
+        cursorImage.enabled = true;
     }
 
     #endregion

@@ -9,7 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GlobalStatsManager : MonoBehaviour
+public class GlobalStatsManager : SaveDataContainer
 {
     public static GlobalStatsManager Instance;
     public static PlaythroughSaveData data;
@@ -68,7 +68,7 @@ public class GlobalStatsManager : MonoBehaviour
     /// <summary>
     /// Reset the data with a new object. Do this when data gets cleared
     /// </summary>
-    public void ResetData()
+    public override void ResetData()
     {
         data = new PlaythroughSaveData();
         //Debug.Log("Global data reset");

@@ -34,6 +34,9 @@ public class DataManager : MonoBehaviour
 
     [HideInInspector] public bool hasSaveData;
 
+    [Tooltip("Channel called when resetting save data")]
+    [SerializeField] ChannelVoid ResetSaveChannel;
+
     private void Awake()
     {
         if (instance == null)
@@ -110,14 +113,7 @@ public class DataManager : MonoBehaviour
             {
                 Directory.Delete(Application.persistentDataPath + saveFolderPath, true);
 
-                if(GlobalStatsManager.Instance != null)
-                    GlobalStatsManager.Instance.ResetData();
-
-                if(CallManager.instance != null)
-                    CallManager.instance.ResetData();
-
-                if(AllNotesManager.instance != null)
-                    AllNotesManager.instance.ResetData();
+                ResetSaveChannel.RaiseEvent();
 
                 hasSaveData = false;
             }

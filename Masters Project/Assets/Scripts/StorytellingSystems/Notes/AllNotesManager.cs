@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-public class AllNotesManager : MonoBehaviour
+public class AllNotesManager : SaveDataContainer
 {
     [Tooltip("All notes in the game to reference. Some may be handled independently.")]
     [SerializeField] private List<NoteObject> allNotes;
@@ -181,7 +181,7 @@ public class AllNotesManager : MonoBehaviour
         //saveData.PrintData();
     }
 
-    public void ResetData()
+    public override void ResetData()
     {
         saveData = new NoteSaveData();
         UpdateNotes();

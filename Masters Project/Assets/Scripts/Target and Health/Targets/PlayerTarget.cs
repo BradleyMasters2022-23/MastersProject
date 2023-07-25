@@ -32,6 +32,11 @@ public class PlayerTarget : Target
     /// Current player instance
     /// </summary>
     public static PlayerTarget p;
+    /// <summary>
+    /// Main UI canvas being used
+    /// </summary>
+    private Canvas mainUI;
+    public Canvas MainUI { get { return mainUI; }}
 
     [Header("Player Damage Flinch")]
     [Tooltip("Lookup table for damages and impulse strength")]
@@ -43,6 +48,7 @@ public class PlayerTarget : Target
     /// </summary>
     private float frameDamage;
     private ScaledTimer impulseCD;
+
     /// <summary>
     /// Init instance, apply cheat inputs
     /// </summary>
@@ -51,6 +57,7 @@ public class PlayerTarget : Target
         if (p == null)
         {
             p = this;
+            mainUI = GetComponentInChildren<Canvas>();
         }
         else
         {
@@ -173,10 +180,13 @@ public class PlayerTarget : Target
     {
         base.OnDisable();
 
-        godCheat.performed -= ToggleGodmode;
-        healCheat.performed -= CheatHeal;
-        damageCheat.performed -= CheatDamage;
-        tiedye.performed -= Tiedye;
+        if (p == this)
+        {
+            godCheat.performed -= ToggleGodmode;
+            healCheat.performed -= CheatHeal;
+            damageCheat.performed -= CheatDamage;
+            tiedye.performed -= Tiedye;
+        }
 
         p = null;
     }
