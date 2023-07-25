@@ -292,9 +292,13 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
         // start minimum knockback duration while enemy lifts up
         yield return new WaitUntil(knockdownTracker.TimerDone);
 
+        float timePassed = 0;
         // Wait until enemy returns to ground
         while (true)
         {
+            timePassed += DeltaTime;
+
+
             if (TimeManager.TimeStopped)
             {
                 yield return new WaitForFixedUpdate();
@@ -302,6 +306,11 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
             }
             else if (LandedOnGround())
                 break;
+            else if(timePassed > 8f) // if stuck in knockback state for 8 seconds, die to prevent breaks
+            {
+                base.KillTarget();
+                yield break;
+            }
 
             yield return null;
         }

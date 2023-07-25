@@ -480,18 +480,19 @@ public class EnemyManager : TimeAffectedEntity, TimeObserver
         StopAllCoroutines();
     }
 
+    Vector3 lastKnownPlayerPos;
+    float loseTargetMinDist = 5f;
+
     public void OnStop()
     {
-        //if (agent != null)
-        //{
-        //    agent.isStopped = true;
-        //}
+        lastKnownPlayerPos = player.transform.position;
     }
     public void OnResume()
     {
-        //if(agent != null)
-        //{
-        //    agent.isStopped = false;
-        //}
+        if (Vector3.Distance(player.transform.position, lastKnownPlayerPos) > loseTargetMinDist
+            && !transform.InVisionCone(player.transform, 20))
+        {
+            Debug.Log("Enemy should lose target now");
+        }
     }
 }

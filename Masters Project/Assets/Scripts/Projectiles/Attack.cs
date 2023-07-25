@@ -58,7 +58,7 @@ public class TeamDamage
 
 public abstract class Attack : TimeAffectedEntity
 {
-    [Header("===== Core Info =====")]
+    [Header("===== Damage =====")]
 
     [Tooltip("Damage this attack deals")]
     [SerializeField] protected bool dealDamage;
@@ -68,15 +68,18 @@ public abstract class Attack : TimeAffectedEntity
     [SerializeField] protected float playerDamage;
 
     [Space(5)]
-    [Tooltip("Whether or not this spawns another object on end")]
-    [SerializeField] protected bool spawnProjectileOnEnd;
-    [HideIf("@this.spawnProjectileOnEnd == false")]
-    [Tooltip("Projectile to spawn on end")]
-    [SerializeField] protected GameObject onEndPrefab;
+    
+
+    [Header("===== Knockback =====")]
+
 
     [Space(5)]
     [Tooltip("Amount of knockback this attack does")]
     [SerializeField] protected bool knockback;
+
+    [Tooltip("Can this enable an enemy's knockback state?")]
+    [SerializeField] protected bool triggersKnockbackState;
+
     [HideIf("@this.knockback == false")]
     [SerializeField] private float horizontalKnockback;
     [HideIf("@this.knockback == false")]
@@ -85,6 +88,14 @@ public abstract class Attack : TimeAffectedEntity
     [SerializeField] private float playerHorizontalKnockback;
     [HideIf("@this.knockback == false")]
     [SerializeField] private float playerVerticalKnockback;
+
+    [Header("===== Bonus =====")]
+
+    [Tooltip("Whether or not this spawns another object on end")]
+    [SerializeField] protected bool spawnProjectileOnEnd;
+    [HideIf("@this.spawnProjectileOnEnd == false")]
+    [Tooltip("Projectile to spawn on end")]
+    [SerializeField] protected GameObject onEndPrefab;
 
     /// <summary>
     /// Keep track of hit targets

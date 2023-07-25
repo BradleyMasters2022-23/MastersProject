@@ -107,6 +107,38 @@ MonoBehaviour:
   target: {fileID: 4607616419769618728}
   damageMultiplier: 0.9
   impactVFX: {fileID: 5028213672476139401, guid: f86612e1349e5d2429164cb8341b2733, type: 3}
+--- !u!1 &5099270780095613731
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3990662660081987154}
+  m_Layer: 0
+  m_Name: FlinchPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3990662660081987154
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5099270780095613731}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.8, z: -0.37000084}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3962037356537622020}
+  m_Father: {fileID: 3157863991490307576}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5851429651645590636
 GameObject:
   m_ObjectHideFlags: 0
@@ -131,7 +163,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5851429651645590636}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.9, z: -0.37}
+  m_LocalPosition: {x: 0, y: 1.8, z: -0.37}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -180,7 +212,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5940177062539629436}
-  - {fileID: 3962037356537622020}
+  - {fileID: 3990662660081987154}
   - {fileID: 7462146391020688223}
   - {fileID: 4513353920264541414}
   m_Father: {fileID: 0}
@@ -258,6 +290,10 @@ MonoBehaviour:
   - spawnObject: {fileID: 3071240432754548792, guid: 2001e4aa90ac76a47866171fcaafdf7f, type: 3}
     quantityRange: {x: 4, y: 6}
     dropChance: 100
+  maxFlinch: 25
+  flinchRoot: {fileID: 3990662660081987154}
+  flinchRecoveryRate: 3
+  flinchSensitivity: 0.3
   deathStateDuration: {x: 0.3, y: 1}
   deathStateDamageThreshold: 80
   deathStateHorKnockback: 0.2
@@ -1144,7 +1180,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5195177933527420643, guid: deabab1230b973c428b02ce67c8bb042, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.3000002
+      value: 1.52
       objectReference: {fileID: 0}
     - target: {fileID: 5195177933527420643, guid: deabab1230b973c428b02ce67c8bb042, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1182,7 +1218,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 3157863991490307576}
+    m_TransformParent: {fileID: 3990662660081987154}
     m_Modifications:
     - target: {fileID: 1053376474052666777, guid: fb508180db179684aab13560ae54f22d, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -1230,7 +1266,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7481244171217644973, guid: fb508180db179684aab13560ae54f22d, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7481244171217644973, guid: fb508180db179684aab13560ae54f22d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1238,11 +1274,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7481244171217644973, guid: fb508180db179684aab13560ae54f22d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.559
+      value: -2.359
       objectReference: {fileID: 0}
     - target: {fileID: 7481244171217644973, guid: fb508180db179684aab13560ae54f22d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.37
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7481244171217644973, guid: fb508180db179684aab13560ae54f22d, type: 3}
       propertyPath: m_LocalRotation.w
