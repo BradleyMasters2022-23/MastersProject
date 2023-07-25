@@ -87,22 +87,19 @@ public class SpawnPoint : MonoBehaviour
 
     private GameObject lastSpawnedEnemy;
 
+    [Header("Spawn Effects")]
+    [SerializeField] MeshFilter spawnMesh;
+    [SerializeField] Spawnable spawnEffectController;
+
     /// <summary>
     /// Initialize settings
     /// </summary>
     private void Awake()
     {
-        // Get internal references
-        s = gameObject.AddComponent<AudioSource>();
-
         // Initialize timers
         spawnDelayTimer = new ScaledTimer(spawnDelay);
         spawnOverrideTimer = new ScaledTimer(spawnOverrideDelay);
-
-
-        s.playOnAwake = false;
-        // Prepare sound
-        
+        s = GetComponent<AudioSource>();
     }
 
     /// <summary>
@@ -110,13 +107,12 @@ public class SpawnPoint : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        player = FindObjectOfType<PlayerController>().transform;
+        player = PlayerTarget.p.transform;
         spawnManager = SpawnManager.instance;
 
         if(spawnParticles!= null)
         {
             spawnParticles.Stop();
-            spawnParticles.Reinit();
             spawnParticles.playRate *= VFXSpeedScalar;
         }
 
@@ -281,20 +277,25 @@ public class SpawnPoint : MonoBehaviour
         lastSpawnedEnemy.transform.position = transform.position;
         lastSpawnedEnemy.SetActive(false);
 
-        // Prepare indicators
-        spawnSound.PlayClip(s);
+        bool spawnComplete = false;
 
-        if(spawnParticles != null)
-        {
-            spawnParticles.Reinit();
+        // get direction to player, flatten it
+        Vector3 toPlayer = (player.position - transform.position).normalized;
+        toPlayer.y = 0;
+
+        // get spawn effects, make them look at player
+        spawnMesh.mesh = enemy.enemySpawnMesh;
+        spawnMesh.transform.LookAt(transform.position + toPlayer);
+        spawnMesh.transform.Rotate(Vector3.up, enemy.rotationOverride);
+        spawnMesh.gameObject.SetActive(true);
+
+        if (spawnParticles != null)
             spawnParticles.Play();
-        }
-            
 
-        // Reset the timer and wait for the delay
-        spawnDelayTimer.ResetTimer();
-        while (!spawnDelayTimer.TimerDone())
-            yield return null;
+        // start spawn effects, wait for them to finish spawning
+        spawnSound.PlayClip(s);
+        spawnEffectController.StartSpawning(enemy.playbackSpeedModifier, () => spawnComplete = true);
+        yield return new WaitUntil(() => spawnComplete);
 
         // If missing, then enemy is gone so stop. Only happens in unload of the tutorial
         if (lastSpawnedEnemy == null)
