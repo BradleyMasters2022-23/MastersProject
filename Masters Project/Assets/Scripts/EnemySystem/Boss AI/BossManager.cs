@@ -146,6 +146,7 @@ public class BossManager : TimeAffectedEntity
 
     public void DisableBoss()
     {
+        StopCoroutine(MainAIController());
         disabled = true;
         if(currAttack!= null)
         {
