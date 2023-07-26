@@ -26,6 +26,9 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
         _managerRef= GetComponent<EnemyManager>();
         groundDist = Vector3.Distance(transform.position, _center.position) + 0.2f;
         defaultLookAngle = flinchRoot.localRotation;
+
+        originalKinematicSetting = _rb.isKinematic;
+        originalKnockbackImmunitySetting = immuneToKnockback;
     }
 
     #region Flinching
@@ -142,9 +145,15 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
     [SerializeField] float deathStateVFXSpeed = 1;
     [Tooltip("SFX that plays when entering the death state")]
     [SerializeField] AudioClipSO deathStateSFX;
-
+    /// <summary>
+    /// Whether the enemy is currently in a death state
+    /// </summary>
     private bool inDeathState;
 
+    /// <summary>
+    /// On collision in death state, immediately detondate
+    /// </summary>
+    /// <param name="collision"></param>
     void OnCollisionEnter(Collision collision)
     {
         if (inDeathState && _rb.velocity.magnitude >= instantImpactThreshold)
@@ -159,12 +168,26 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
     /// Timer tracking death state
     /// </summary>
     LocalTimer deathTimer;
+    /// <summary>
+    /// original isKinematic setting without any tampering
+    /// </summary>
+    private bool originalKinematicSetting;
+    /// <summary>
+    /// original knockback immunity setting without any tampering
+    /// </summary>
+    private bool originalKnockbackImmunitySetting;
 
     /// <summary>
     /// Kill the current target, modified to work with enemies
     /// </summary>
     protected override void KillTarget()
     {
+        // inturrupt any acctive knockback routine
+        if (knockbackRoutine != null)
+        {
+            StopCoroutine(knockbackRoutine);
+        }
+
         StartCoroutine(DeathState());
     }
     
@@ -197,6 +220,9 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
         {
             inDeathState = true;
 
+            _rb.isKinematic = false;
+            immuneToKnockback = false;
+
             if (deathStateVFX != null)
             {
                 deathStateVFX.gameObject.SetActive(true);
@@ -225,6 +251,9 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
                 deathStateVFX.Stop();
                 deathStateVFX.gameObject.SetActive(false);
             }
+
+            _rb.isKinematic = originalKinematicSetting;
+            immuneToKnockback = originalKnockbackImmunitySetting;
         }
 
         DestroyEnemy();
@@ -294,11 +323,18 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
         if (immuneToKnockback || !AffectedByAttacks() || _killed || !gameObject.activeInHierarchy)
             return;
 
+
         try
         {
-            if(!inKnockbackState)
-                knockbackRoutine = StartCoroutine(KnockbackDuration(minKnockbackDuration));
+            if (!inKnockbackState && !inDeathState)
+            {
+                // inturrupt the last knockback routine if possible
+                if (knockbackRoutine != null)
+                    StopCoroutine(knockbackRoutine);
 
+                knockbackRoutine = StartCoroutine(KnockbackDuration(minKnockbackDuration));
+            }
+                
             base.Knockback(force, verticalForce, origin);
         }
         catch { }
@@ -352,6 +388,10 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
         knockdownTracker.ResetTimer(onGroundTime);
         yield return new WaitUntil(knockdownTracker.TimerDone);
 
+
+        // exit knockback state during recovery, that way it can be inturrupted properly
+        inKnockbackState = false;
+
         // rotate back upright
         //_rb.constraints = RigidbodyConstraints.FreezeAll;
         knockdownTracker.ResetTimer(1f);
@@ -370,7 +410,7 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
             yield return null;
         }
         EnableAI();
-        inKnockbackState = false;
+
         knockbackRoutine = null;
     }
 
@@ -502,6 +542,9 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
 
         inKnockbackState = false;
         inDeathState = false;
+
+        _rb.isKinematic = originalKinematicSetting;
+        immuneToKnockback = originalKnockbackImmunitySetting;
 
         audioSource.Stop();
 
