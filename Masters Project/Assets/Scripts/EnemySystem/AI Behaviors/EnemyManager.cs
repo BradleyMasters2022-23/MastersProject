@@ -230,7 +230,7 @@ public class EnemyManager : TimeAffectedEntity, TimeObserver
             // calculate distance if needed
             float distToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
-            bool lineOfSight = transform.HasLineOfSight(player.transform, visionLayer);
+            bool lineOfSight = transform.HasLineOfSight(player.transform, visionLayer, 1.5f);
 
             // determine line of sight
             if (noLineOfSightDelay > 0 && lineOfSight)
