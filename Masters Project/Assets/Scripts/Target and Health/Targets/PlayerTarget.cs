@@ -130,11 +130,11 @@ public class PlayerTarget : Target
     /// In addition to taking damage, also log damage taken
     /// </summary>
     /// <param name="dmg">damage to apply</param>
-    public override void RegisterEffect(float dmg)
+    public override void RegisterEffect(float dmg, Vector3 origin)
     {
         // log damage taken to damage taken this frame
         frameDamage += dmg;
-        base.RegisterEffect(dmg);
+        base.RegisterEffect(dmg, origin);
 
     }
 

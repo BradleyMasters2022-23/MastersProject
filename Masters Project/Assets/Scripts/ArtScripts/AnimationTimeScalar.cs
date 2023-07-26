@@ -14,6 +14,6 @@ public class AnimationTimeScalar : TimeAffectedEntity
 
     private void Update()
     {
-        animator.SetFloat("time", Timescale);
+        animator.speed = Timescale;
     }
 }

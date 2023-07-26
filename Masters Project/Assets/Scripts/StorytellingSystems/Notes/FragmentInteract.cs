@@ -45,6 +45,13 @@ public class FragmentInteract : MonoBehaviour, Interactable
         if (fragment != null)
             return;
 
+        // if no note manager, just stop
+        if (AllNotesManager.instance == null)
+        {
+            DestroyFrag();
+            return;
+        }
+
         // If fragment override assigned, apply them both
         if(fragmentOverride != null)
         {

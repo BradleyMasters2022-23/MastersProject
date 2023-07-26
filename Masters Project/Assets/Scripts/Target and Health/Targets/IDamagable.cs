@@ -6,7 +6,7 @@ public interface IDamagable
 {
     public Target Target();
 
-    public void RegisterEffect(float dmg);
+    public void RegisterEffect(float dmg, Vector3 orgin);
 
-    public void RegisterEffect(TeamDamage data, float dmgMultiplier = 1);
+    public void RegisterEffect(TeamDamage data, Vector3 origin, float dmgMultiplier = 1);
 }

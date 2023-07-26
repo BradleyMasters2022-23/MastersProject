@@ -214,9 +214,9 @@ public class Explosive : MonoBehaviour
             }
                 
             if (target.CompareTag("Player"))
-                target.RegisterEffect(playerDamage);
+                target.RegisterEffect(playerDamage, transform.position);
             else
-                target.RegisterEffect(damage);
+                target.RegisterEffect(damage, transform.position);
 
             // Apply knockback on target
             float targetDist = Vector3.Distance(transform.position, target.Center.position);
