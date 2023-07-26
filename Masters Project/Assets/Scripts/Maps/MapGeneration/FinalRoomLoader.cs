@@ -6,6 +6,12 @@ public class FinalRoomLoader : RoomInitializer
 {
     [SerializeField] List<GameObject> stuffToDisable;
 
+    private void Awake()
+    {
+        if (MapLoader.instance == null)
+            Init();
+    }
+
     public override void Init()
     {
         base.Init();
