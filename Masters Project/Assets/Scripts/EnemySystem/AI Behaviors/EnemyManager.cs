@@ -492,7 +492,7 @@ public class EnemyManager : TimeAffectedEntity, TimeObserver
         if (Vector3.Distance(player.transform.position, lastKnownPlayerPos) > loseTargetMinDist
             && !transform.InVisionCone(player.transform, 20))
         {
-            Debug.Log("Enemy should lose target now");
+            //Debug.Log("Enemy should lose target now");
         }
     }
 }
