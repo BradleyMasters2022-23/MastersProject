@@ -9,6 +9,9 @@ public class BossManager : TimeAffectedEntity
     [Tooltip("Sets of attack that can be used by phase")]
     [SerializeField] private GenericWeightedList<BossAttack>[] phaseAttacks = new GenericWeightedList<BossAttack>[3];
 
+    [Tooltip("Attack triggered in retaliation of being in timestop too long")]
+    [SerializeField] private BossAttack timeRetaliateAttack;
+
     /// <summary>
     /// Current phase to use attacks from
     /// </summary>
@@ -59,8 +62,18 @@ public class BossManager : TimeAffectedEntity
             // Try attacking on cooldown 
             if(cooldownTracker.TimerDone() && !disabled)
             {
-                //Debug.Log("Getting attack from phase pool " + currentPhase);
-                BossAttack chosenAttack = phaseAttacks[currentPhase].Pull();
+                BossAttack chosenAttack; 
+
+                // if not slowed, do a normal attack
+                if (!TimeManager.TimeStopped)
+                {
+                    chosenAttack = phaseAttacks[currentPhase].Pull();
+                }
+                // otherwise, do the retaliate attack
+                else
+                {
+                    chosenAttack = timeRetaliateAttack;
+                }
 
                 // if chosen attack on cooldown, do another pull
                 if(!chosenAttack.CanDoAttack())
