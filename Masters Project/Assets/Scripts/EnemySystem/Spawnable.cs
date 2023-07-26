@@ -41,7 +41,6 @@ public class Spawnable : MonoBehaviour
     /// </summary>
     public void AnimationFinish()
     {
-        Debug.Log("Event called");
         onAnimationFinish?.Invoke();
         standardOnComplete?.Invoke();
     }
