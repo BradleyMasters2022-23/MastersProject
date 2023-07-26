@@ -195,6 +195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 2783499131424098863}
   damageMultiplier: 1.1
+  impactVFX: {fileID: 0}
 --- !u!1 &978491405701371576
 GameObject:
   m_ObjectHideFlags: 0
@@ -529,8 +530,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36029488bc65e76448e35dba872a1fec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VFXPrefab: {fileID: 8183131743095800119, guid: 5cc9edc6864c8bc47acf13efec812593, type: 3}
-  scale: 4
+  VFXPrefab: {fileID: 138006299146495897, guid: f6fbfbbe47f9eb5489fe169528d99133, type: 3}
+  scale: 1
 --- !u!1 &2287082976657556326
 GameObject:
   m_ObjectHideFlags: 0
@@ -645,6 +646,131 @@ MonoBehaviour:
   laserOffset: 0
   powerUpSFX: {fileID: 11400000, guid: 0f23461c4d8c95c409051233463fac4b, type: 2}
   powerDownSFX: {fileID: 11400000, guid: 022d65b631db64e4f9c37608a397451e, type: 2}
+--- !u!1 &2908512112264389068
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1494051890980711697}
+  m_Layer: 0
+  m_Name: Retaliation Barrage Indicators
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1494051890980711697
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2908512112264389068}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.00000023841858, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5709931602014905113}
+  - {fileID: 261587647080676878}
+  m_Father: {fileID: 1752576230841229807}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2949399176700123139
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 261587647080676878}
+  - component: {fileID: 7429987650493221063}
+  m_Layer: 0
+  m_Name: Buildup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &261587647080676878
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2949399176700123139}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1494051890980711697}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7429987650493221063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2949399176700123139}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36029488bc65e76448e35dba872a1fec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VFXPrefab: {fileID: 1552065595262604136, guid: 817905fd3fc7a0c4396ea5c8215240db, type: 3}
+  scale: 1
+--- !u!1 &3285546567289745804
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5709931602014905113}
+  - component: {fileID: 8415093122148005592}
+  m_Layer: 0
+  m_Name: Flash
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5709931602014905113
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3285546567289745804}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1494051890980711697}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8415093122148005592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3285546567289745804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36029488bc65e76448e35dba872a1fec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  VFXPrefab: {fileID: 3196314115292336438, guid: e7f565140fbff6f4186fd387c704766c, type: 3}
+  scale: 1
 --- !u!1 &3531638558679596493
 GameObject:
   m_ObjectHideFlags: 0
@@ -757,6 +883,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 2783499131424098863}
   damageMultiplier: 0.5
+  impactVFX: {fileID: 0}
 --- !u!1 &4695307324438622773
 GameObject:
   m_ObjectHideFlags: 0
@@ -1051,6 +1178,7 @@ Transform:
   m_Children:
   - {fileID: 935571382848000926}
   - {fileID: 4990055574022226414}
+  - {fileID: 1494051890980711697}
   m_Father: {fileID: 2594099354691722710}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1750,7 +1878,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36029488bc65e76448e35dba872a1fec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  VFXPrefab: {fileID: 3643986148463086779, guid: 77ae4a452f0b22c4b80d2bd1698d6e00, type: 3}
+  VFXPrefab: {fileID: 1094296839475020931, guid: 1c14602e5f09b944499ddbe913e7f5f5, type: 3}
   scale: 1
 --- !u!1 &8305288051679903464
 GameObject:
@@ -1866,6 +1994,7 @@ GameObject:
   - component: {fileID: 6713327429234463587}
   - component: {fileID: 6283914014403922551}
   - component: {fileID: 1018100002563838802}
+  - component: {fileID: 3502843638222433604}
   m_Layer: 8
   m_Name: Boss Entity
   m_TagString: Enemy
@@ -3114,7 +3243,9 @@ MonoBehaviour:
     - option: {fileID: 1018100002563838802}
       weight: 1
       estimateProbability: 33.333336
-  cooldownRange: {x: 5, y: 8}
+  timeRetaliateAttack: {fileID: 3502843638222433604}
+  minimumRetaliateTime: 1
+  cooldownRange: {x: 0.9, y: 1.3}
 --- !u!114 &6713327429234463587
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3156,7 +3287,7 @@ MonoBehaviour:
   attackCoolown: 0
   indicatorDuration: 2
   rotateDuringIndication: 1
-  finishDuration: 2
+  finishDuration: 0.5
   rotateDuringFinish: 1
   rotationSpeed: 0
   attackConeRadius: 999
@@ -3168,8 +3299,8 @@ MonoBehaviour:
   projectile: {fileID: 4730330725648419445, guid: dcb911f8d81f78c45af36fc091ee6636, type: 3}
   shootPoints:
   - {fileID: 6258999557895173705}
-  numOfShots: 50
-  delayBetweenShots: 0.075
+  numOfShots: 15
+  delayBetweenShots: 0.14
   leadStrength: {x: 0, y: 1.5}
   firstShotAccuracy: {x: 0, y: 0}
   normalAccuracyRange: {x: 0, y: 2}
@@ -3199,9 +3330,9 @@ MonoBehaviour:
   rotate: 0
   attackReady: 0
   attackCoolown: 0
-  indicatorDuration: 3
+  indicatorDuration: 1.2
   rotateDuringIndication: 1
-  finishDuration: 2
+  finishDuration: 0.9
   rotateDuringFinish: 1
   rotationSpeed: 5
   attackConeRadius: 999
@@ -3213,14 +3344,58 @@ MonoBehaviour:
   projectile: {fileID: 8727397786430278917, guid: b14737358aa0fdb44aff22428b427497, type: 3}
   shootPoints:
   - {fileID: 6258999557895173705}
-  numOfShots: 150
-  delayBetweenShots: 0.005
-  leadStrength: {x: 0, y: 1.5}
-  firstShotAccuracy: {x: 0, y: 45}
-  normalAccuracyRange: {x: 0, y: 45}
+  numOfShots: 100
+  delayBetweenShots: 0
+  leadStrength: {x: 0.5, y: 0.5}
+  firstShotAccuracy: {x: 0, y: 40}
+  normalAccuracyRange: {x: 0, y: 40}
   rotateDuringAttack: 1
   prefireIndicator:
   - {fileID: 1099414168829488698}
+  shootVFXPrefab: {fileID: 9110516864071591092, guid: ec203b2698600254f98a117f8e27f2e4, type: 3}
+  shootVFXScale: 10
+  indicatorSFX: {fileID: 11400000, guid: fe9d9dd416d226648ac1310b201c960e, type: 2}
+  playShootOnce: 1
+  shootSFX: {fileID: 11400000, guid: 894715c79a3ec6846b323edcba7796e4, type: 2}
+--- !u!114 &3502843638222433604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8946657770966084955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b352d5856a8f35a4a8d1de8665c9e3f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentAttackState: 0
+  rotationSource: {fileID: 6258999557895173705}
+  rotate: 0
+  attackReady: 0
+  attackCoolown: 0
+  indicatorDuration: 1.5
+  rotateDuringIndication: 1
+  finishDuration: 0.8
+  rotateDuringFinish: 1
+  rotationSpeed: 5
+  attackConeRadius: 999
+  lineOfSightReq: 0
+  lineOfSightWidth: 0
+  autoLoopAttack: 0
+  target: {fileID: 0}
+  lineOfSightOrigin: {fileID: 6258999557895173705}
+  projectile: {fileID: 4730330725648419445, guid: 496ea0da2fa50d249b136bdf7046da8c, type: 3}
+  shootPoints:
+  - {fileID: 6258999557895173705}
+  numOfShots: 70
+  delayBetweenShots: 0.003
+  leadStrength: {x: 1, y: 1}
+  firstShotAccuracy: {x: 0, y: 35}
+  normalAccuracyRange: {x: 0, y: 350}
+  rotateDuringAttack: 1
+  prefireIndicator:
+  - {fileID: 7429987650493221063}
   shootVFXPrefab: {fileID: 9110516864071591092, guid: ec203b2698600254f98a117f8e27f2e4, type: 3}
   shootVFXScale: 10
   indicatorSFX: {fileID: 11400000, guid: fe9d9dd416d226648ac1310b201c960e, type: 2}

@@ -11,6 +11,10 @@ public class BossManager : TimeAffectedEntity
 
     [Tooltip("Attack triggered in retaliation of being in timestop too long")]
     [SerializeField] private BossAttack timeRetaliateAttack;
+    [Tooltip("Time it takes in timestop for retaliation to be usable")]
+    [SerializeField] private float minimumRetaliateTime;
+    [SerializeField] private float timeInTimestop;
+
 
     /// <summary>
     /// Current phase to use attacks from
@@ -45,7 +49,20 @@ public class BossManager : TimeAffectedEntity
         cooldownTracker = new ScaledTimer(0f, false);
     }
 
-    
+    private void Update()
+    {
+        // track how long timestop has been used recently
+        if (TimeManager.TimeStopped)
+        {
+            timeInTimestop += Time.deltaTime;
+        }
+        else
+        {
+            timeInTimestop -= TimeManager.WorldDeltaTime;
+        }
+        timeInTimestop = Mathf.Clamp(timeInTimestop, 0, minimumRetaliateTime);
+    }
+
     /// <summary>
     /// Main controller routine for AI
     /// </summary>
@@ -59,24 +76,24 @@ public class BossManager : TimeAffectedEntity
             // update cooldown tracker
             cooldownTracker.SetModifier(Timescale);
 
-            // Try attacking on cooldown 
-            if(cooldownTracker.TimerDone() && !disabled)
-            {
-                BossAttack chosenAttack; 
+            BossAttack chosenAttack = null;
 
+            // Try attacking on cooldown 
+            if (cooldownTracker.TimerDone() && !disabled)
+            {
                 // if not slowed, do a normal attack
                 if (!TimeManager.TimeStopped)
                 {
                     chosenAttack = phaseAttacks[currentPhase].Pull();
                 }
                 // otherwise, do the retaliate attack
-                else
+                else if(timeInTimestop >= minimumRetaliateTime)
                 {
                     chosenAttack = timeRetaliateAttack;
                 }
 
                 // if chosen attack on cooldown, do another pull
-                if(!chosenAttack.CanDoAttack())
+                if(chosenAttack == null || !chosenAttack.CanDoAttack())
                 {
                     yield return tick;
                     continue;
@@ -85,6 +102,7 @@ public class BossManager : TimeAffectedEntity
                 else
                 {
                     yield return StartCoroutine(HandleAttack(chosenAttack));
+                    chosenAttack = null;
                     cooldownTracker.ResetTimer(Random.Range(cooldownRange.x, cooldownRange.y));
                 }
             }
@@ -136,6 +154,8 @@ public class BossManager : TimeAffectedEntity
         // If attack exists, reset it.
         currAttack?.ResetAttack();
         cooldownTracker.ResetTimer(cooldownRange.y);
+        timeInTimestop = 0;
+
         // Do anything else like audio here
     }
 
