@@ -36,7 +36,7 @@ public class DefaultEnemyHealthbar : ResourceBarUI
     /// <summary>
     /// Reference to target to hide UI from
     /// </summary>
-    [SerializeField] private Transform target;
+    private Transform target;
     /// <summary>
     /// Range to load within
     /// </summary>
@@ -48,7 +48,9 @@ public class DefaultEnemyHealthbar : ResourceBarUI
     /// <summary>
     /// Reference to player gun
     /// </summary>
-    [SerializeField] private PlayerGunController gunRef;
+    private PlayerGunController gunRef;
+
+    [SerializeField] protected bool preserveOffset = true;
     float verticalOffset;
 
     protected override void Awake()
@@ -94,7 +96,7 @@ public class DefaultEnemyHealthbar : ResourceBarUI
         }
 
         // keep upright around its center
-        if(coreReference.gameObject.activeInHierarchy)
+        if(preserveOffset && coreReference.gameObject.activeInHierarchy)
         {
             Vector3 pos = transform.parent.position + Vector3.up * verticalOffset;
             transform.position = pos;

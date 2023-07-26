@@ -58,9 +58,9 @@ public class BossManager : TimeAffectedEntity
         }
         else
         {
-            timeInTimestop -= TimeManager.WorldDeltaTime;
+            timeInTimestop -= TimeManager.WorldDeltaTime * 0.5f;
         }
-        timeInTimestop = Mathf.Clamp(timeInTimestop, 0, minimumRetaliateTime);
+        timeInTimestop = Mathf.Clamp(timeInTimestop, 0, minimumRetaliateTime*2);
     }
 
     /// <summary>
