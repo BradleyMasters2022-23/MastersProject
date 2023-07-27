@@ -10,7 +10,7 @@ public class LinearInitializer : RoomInitializer
     private bool unlocked;
 
     // Start is called before the first frame update
-    public override void Init(Cubemap nextCubemap)
+    public override void Init(Cubemap nextCubemap, float intensity)
     {
         // init all fields
         foreach (var field in combatFields)
@@ -18,7 +18,7 @@ public class LinearInitializer : RoomInitializer
             field.Init();
         }
 
-        base.Init(nextCubemap);
+        base.Init(nextCubemap, intensity);
 
         // tell each one to load their waves 
         foreach (var field in combatFields)

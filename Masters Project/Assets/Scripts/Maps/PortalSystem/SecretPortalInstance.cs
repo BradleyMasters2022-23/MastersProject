@@ -35,17 +35,14 @@ public class SecretPortalInstance : MonoBehaviour
     {
         yield return new WaitUntil(() => SecretRoomInitializer.instance != null);
 
-        SecretRoomInitializer.instance.Init(null);
+        SecretRoomInitializer.instance.Init(null, 1);
         LinkToSecretRoom(SecretRoomInitializer.instance);
 
         // load in next room previews
         MapSegmentSO secretRm = MapLoader.instance.GetCurrentSecretRoom();
         MapSegmentSO currentRm = MapLoader.instance.GetRoomData();
-
-        secretPortalRef.LoadNewCubemap(secretRm.portalViewMat);
-
-        Debug.Log((secretRoomPortal != null) + " | " + (currentRm != null));
-        secretRoomPortal.LoadNewCubemap(currentRm.portalViewMat);
+        secretPortalRef.LoadNewCubemap(secretRm.portalViewMat, secretRm.probeIntensityLevel);
+        secretRoomPortal.LoadNewCubemap(currentRm.portalViewMat, currentRm.probeIntensityLevel);
 
         // keep secret room portal summon but dismiss the one in the level itself until its found
         secretPortalRef.DismissPortal();
@@ -84,7 +81,6 @@ public class SecretPortalInstance : MonoBehaviour
     /// <param name="secretRoom"></param>
     private void LinkToSecretRoom(SecretRoomInitializer secretRoom)
     {
-        Debug.Log("Linking to secret room");
         secretRoomPortal = secretRoom.LinkPortals(secretPortalRef);
     }
 }

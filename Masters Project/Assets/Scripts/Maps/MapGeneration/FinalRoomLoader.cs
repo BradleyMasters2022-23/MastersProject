@@ -9,13 +9,13 @@ public class FinalRoomLoader : RoomInitializer
     private void Awake()
     {
         if (MapLoader.instance == null)
-            Init(null);
+            Init(null, 1);
     }
 
-    public override void Init(Cubemap cubemap)
+    public override void Init(Cubemap cubemap, float intensity)
     {
         Debug.Log("Boss room init");
-        base.Init(cubemap);
+        base.Init(cubemap, intensity);
         foreach(var obj in stuffToDisable)
         {
             obj.SetActive(false);

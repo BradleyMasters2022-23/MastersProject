@@ -202,12 +202,15 @@ public class PortalTrigger : MonoBehaviour, Interactable
     /// Load a new cubemap into the renderer
     /// </summary>
     /// <param name="newMap"></param>
-    public void LoadNewCubemap(Cubemap newMap)
+    public void LoadNewCubemap(Cubemap newMap, float intensity)
     {
         if (newMap != null)
         {
             nextRoomProbe.customBakedTexture = newMap;
+            nextRoomProbe.intensity = intensity;
         }
+        else
+            nextRoomProbe.intensity = 1;
     }
 
     

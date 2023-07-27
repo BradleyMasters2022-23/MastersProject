@@ -37,22 +37,19 @@ public class MapLoader : MonoBehaviour
 
     #region Initialization Variables 
 
-    //[Tooltip("Hallways that can be used"), AssetsOnly]
-    //[SerializeField] private List<MapSegmentSO> allHallways;
     [Tooltip("Rooms that can be used"), AssetsOnly]
     [SerializeField] private List<MapSegmentSO> allRooms;
 
     [Tooltip("How many rooms to complete before loading ")]
     [SerializeField] private int maxFloorLength;
 
-    //[Tooltip("Root of the starting room"), SceneObjectsOnly, Required]
-    //[SerializeField] private GameObject startingRoom;
-
     [Tooltip("Final boss room"), AssetsOnly]
     [SerializeField] private MapSegmentSO finalRoom;
 
+    /// <summary>
+    /// List of rooms possible to be pulled from
+    /// </summary>
     private List<MapSegmentSO> availableRooms;
-    //private List<MapSegmentSO> availableHalls;
 
     [Tooltip("The current order of maps to be played. Randomized at runtime")]
     [SerializeField, ReadOnly, HideInEditorMode] private List<MapSegmentSO> mapOrder;
@@ -65,8 +62,9 @@ public class MapLoader : MonoBehaviour
     [Tooltip("Channel called when any scene change happens. Used to tell poolers to reset.")]
     [SerializeField] ChannelVoid onSceneChange;
 
+    [Tooltip("Hub world portal probe for the final room")]
     [SerializeField] Cubemap hubworldReflectionMap;
-
+    [SerializeField] float hubworldReflectionProbeIntensity;
     /// <summary>
     /// Navmesh for overall map
     /// </summary>
@@ -78,24 +76,6 @@ public class MapLoader : MonoBehaviour
     private UnityEvent onEncounterComplete;
 
     [SerializeField] private AudioSource source;
-
-    #endregion
-
-    #region Big Map Variables
-
-    /*
-    /// <summary>
-    /// All segments loaded into the scene, in order
-    /// </summary>
-    private List<SegmentLoader> loadedMap;
-
-    /// <summary>
-    /// Current index for looking through rooms
-    /// </summary>
-    [SerializeField] private int roomIndex;
-
-    [SerializeField] private bool testShowAll;
-    */
 
     #endregion
 
@@ -226,7 +206,7 @@ public class MapLoader : MonoBehaviour
         DontDestroyOnLoad(PlayerTarget.p);
 
         // Debug.Log("[MAPLOADER] Map arrangement prepared, order can be viewed in inspector");
-        startingRoomInitializer.Init(mapOrder[portalDepth+1].portalViewMat);
+        startingRoomInitializer.Init(mapOrder[0].portalViewMat, mapOrder[0].probeIntensityLevel);
 
         loadState = LoadState.Done;
         loadingScreen.SetActive(false);
@@ -378,19 +358,21 @@ public class MapLoader : MonoBehaviour
         }
         else
         {
-            Cubemap nextRoomMap = null;
+            Cubemap nextRoomMap;
+            float intensity = 1;
             int nextRoom = portalDepth + 1;
             if (nextRoom >= mapOrder.Count)
             {
                 nextRoomMap = hubworldReflectionMap;
+                intensity = hubworldReflectionProbeIntensity;
             }
             else
             {
                 nextRoomMap = mapOrder[nextRoom].portalViewMat;
+                intensity = mapOrder[nextRoom].probeIntensityLevel;
             }
 
-
-            currentRoom.Init(nextRoomMap);
+            currentRoom.Init(nextRoomMap, intensity);
         }
 
         // If at secret room depth, load that too
