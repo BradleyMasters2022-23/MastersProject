@@ -216,8 +216,8 @@ public class CrystalSlotScreen : MonoBehaviour
     public void RequestApplyChanges()
     {
         // Try to get box if null
-        if(confirmBox == null)
-            confirmBox = FindObjectOfType<ConfirmationBox>(true);
+        if (confirmBox == null)
+            confirmBox = PlayerTarget.p.GetComponentInChildren<ConfirmationBox>(true);
 
         // If failed to get box, or no crystal will be replaced, just apply the new change
         if (confirmBox == null)

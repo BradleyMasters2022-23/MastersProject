@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 7197688024548056736}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 9190282065216066552}
@@ -69,7 +69,7 @@ VisualEffect:
       - m_Value: 1
         m_Name: Cloud Size
         m_Overridden: 1
-      - m_Value: 2
+      - m_Value: 5
         m_Name: Flash Size
         m_Overridden: 1
     m_Vector2f:
@@ -78,7 +78,7 @@ VisualEffect:
       m_Array: []
     m_Vector4f:
       m_Array:
-      - m_Value: {x: 1, y: 0.019365946, z: 0, w: 0}
+      - m_Value: {x: 1, y: 0.12504618, z: 0.107547104, w: 0}
         m_Name: Cloud Color
         m_Overridden: 1
       - m_Value: {x: 1, y: 0.54269624, z: 0, w: 0}
@@ -168,6 +168,7 @@ MonoBehaviour:
   fastForwardTime: 0.5
   lifetime: 1
   keepReserved: 0
+  alwaysFastForward: 0
 --- !u!1 &9190282065216066553
 GameObject:
   m_ObjectHideFlags: 0
@@ -282,11 +283,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetLayers:
     serializedVersion: 2
-    m_Bits: 320
+    m_Bits: 524608
   instantDetoante: 1
   VFX: {fileID: 2084103834189661254}
   VFXDuration: 5
-  effectScalingRate: 1.08
+  effectScalingRate: 1.8
   explosionSound: {fileID: 11400000, guid: 737ecf3f1baa2f54f86d7d7d335b802e, type: 2}
   affectedByTimestop: 1
   solidInTimetop: 0

@@ -19,7 +19,7 @@ public class TargetSelfDestruct : MonoBehaviour
         // if timer done, kill target
         if(t.TimerDone())
         {
-            GetComponent<Target>().RegisterEffect(9999);
+            GetComponent<Target>().RegisterEffect(9999, transform.position);
             this.enabled= false;
         }
     }

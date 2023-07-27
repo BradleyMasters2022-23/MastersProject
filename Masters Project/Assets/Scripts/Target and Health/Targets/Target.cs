@@ -94,6 +94,15 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
     [SerializeField] protected List<DroppableQuantity> dropList;
 
     /// <summary>
+    /// the origin direction of the last attack
+    /// </summary>
+    protected Vector3 lastDamageOrigin;
+    /// <summary>
+    /// The damage taken last frame, scaled via timestop
+    /// </summary>
+    protected float damageLastFrame;
+
+    /// <summary>
     /// Audiosource for this target
     /// </summary>
     protected AudioSource audioSource;
@@ -113,20 +122,28 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
         }
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         // scale health manager and shield manager if it exists
         _healthManager.timeScale = Timescale;
-    }
 
+        // if time isnt stopped, reset damage since last frame
+        if (!Slowed && !_killed)
+        {
+            damageLastFrame = 0;
+        }
+    }
 
     /// <summary>
     /// Register an effect against this target.
     /// </summary>
     /// <param name="dmg">PLACEHOLDER - pass damage to deal to this target</param>
-    public virtual void RegisterEffect(float dmg)
+    public virtual void RegisterEffect(float dmg, Vector3 origin)
     {
         if(!AffectedByAttacks()) return;
+
+        damageLastFrame += dmg;
+        lastDamageOrigin = origin;
 
         if (!_killed)
         {
@@ -149,7 +166,7 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
             
     }
 
-    public virtual void RegisterEffect(TeamDamage data, float dmgMultiplier = 1)
+    public virtual void RegisterEffect(TeamDamage data, Vector3 origin, float dmgMultiplier = 1)
     {
         if(!AffectedByAttacks() || data == null) return;
 
@@ -158,14 +175,14 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
         if (profile == null || profile.team != _team || !profile.active) return;
 
         // pass in the damage
-        RegisterEffect(profile.damage*dmgMultiplier);
+        RegisterEffect(profile.damage*dmgMultiplier, origin);
     }
 
     /// <summary>
     /// Whether or not this target can be affected by attacks
     /// </summary>
     /// <returns></returns>
-    protected bool AffectedByAttacks()
+    protected virtual bool AffectedByAttacks()
     {
         // if a shield is enabled, dont take damage
         if (invincibilityShield != null && invincibilityShield.isActiveAndEnabled)
@@ -274,8 +291,7 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
         {
             return;
         }
-            
-
+           
         // make sure knockback can be applied
         if (immuneToKnockback || _rb == null || _rb.isKinematic || (force + verticalForce <= 0))
         {
@@ -283,7 +299,10 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
         }
 
         // Calculate force vector, draw for debug reasons
-        Vector3 forceVector = (_center.position - origin).normalized * force;
+        Vector3 forceVector = (_center.position - origin);
+        forceVector.y = 0;
+        forceVector = forceVector.normalized;
+        forceVector *= force;
         forceVector += Vector3.up * verticalForce;
         forceVector *= knockbackModifier;
         // Clamp max knockback
@@ -301,8 +320,6 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
         {
             // Zero current velocity, apply new force
             _rb.velocity = Vector3.zero;
-            //_rb.AddForce(forceVector, ForceMode.Impulse);
-            //_rb.AddTorque(Vector3.left * 50f, ForceMode.Impulse);
             _rb.AddForceAtPosition(forceVector, _center.position, ForceMode.Impulse);
         }
     }

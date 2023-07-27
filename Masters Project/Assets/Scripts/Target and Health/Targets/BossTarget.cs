@@ -70,11 +70,11 @@ public class BossTarget : Target
         base.KillTarget();
     }
 
-    public override void RegisterEffect(float dmg)
+    public override void RegisterEffect(float dmg, Vector3 origin)
     {
         onDamagedEvents?.Invoke();
 
-        base.RegisterEffect(dmg);
+        base.RegisterEffect(dmg, origin);
     }
 
     protected override void DestroyObject()

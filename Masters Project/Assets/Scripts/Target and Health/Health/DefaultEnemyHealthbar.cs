@@ -36,7 +36,7 @@ public class DefaultEnemyHealthbar : ResourceBarUI
     /// <summary>
     /// Reference to target to hide UI from
     /// </summary>
-    [SerializeField] private Transform target;
+    private Transform target;
     /// <summary>
     /// Range to load within
     /// </summary>
@@ -48,11 +48,15 @@ public class DefaultEnemyHealthbar : ResourceBarUI
     /// <summary>
     /// Reference to player gun
     /// </summary>
-    [SerializeField] private PlayerGunController gunRef;
+    private PlayerGunController gunRef;
+
+    [SerializeField] protected bool preserveOffset = true;
+    float verticalOffset;
 
     protected override void Awake()
     {
         base.Awake();
+        verticalOffset = transform.localPosition.y;
 
         timer = new ScaledTimer(onDamagedDuration, false);
     }
@@ -71,6 +75,14 @@ public class DefaultEnemyHealthbar : ResourceBarUI
         CheckDistance();
         CheckRecentlyDamaged();
 
+
+        if(_targetData != null && _targetData.IsEmptied())
+        {
+            if (coreReference.gameObject.activeInHierarchy)
+                coreReference.gameObject.SetActive(false);
+            return;
+        }
+
         if(hideOutOfRange)
         {
             if(enableShowOnDamaged)
@@ -81,6 +93,13 @@ public class DefaultEnemyHealthbar : ResourceBarUI
             {
                 coreReference.gameObject.SetActive(inRange);
             }
+        }
+
+        // keep upright around its center
+        if(preserveOffset && coreReference.gameObject.activeInHierarchy)
+        {
+            Vector3 pos = transform.parent.position + Vector3.up * verticalOffset;
+            transform.position = pos;
         }
     }
 

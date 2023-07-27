@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8202916462975817256}
   - component: {fileID: 8914265181843142029}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Flicker OFF SFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 6771995579699728973}
   - component: {fileID: 6771995579699728974}
   - component: {fileID: 3167796835618190213}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Invulnerable Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,35 +96,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allButtons: []
-  shield: {fileID: 6771995580043977514}
-  maintainButtonActivation: 0
+  shield: {fileID: 6771995580043977515}
+  maintainButtonActivation: 1
   shieldRebootSFX: {fileID: 11400000, guid: ff66aef57f6b3674a8e87f68fbc783f8, type: 2}
   powerOffIndicators:
   - {fileID: 8914265181843142029}
   powerOnIndicators:
   - {fileID: 5190750882424363958}
-  flickerPhaseData:
-  - flicker: 0
-    downtimeIntervals: []
-    uptimeIntervals: []
-  - flicker: 1
-    downtimeIntervals:
-    - 0.8
-    - 0.8
-    - 1.2
-    uptimeIntervals:
-    - 1.2
-    - 1.2
-    - 1.8
-  - flicker: 1
-    downtimeIntervals:
-    - 0.1
-    - 0.1
-    - 0.5
-    uptimeIntervals:
-    - 1
-    - 1
-    - 2
+  shieldAnimator:
+  - {fileID: 7313714769602635465}
+  - {fileID: 955593299238365108}
+  - {fileID: 7766416224860040362}
+  - {fileID: 153806468012234147}
 --- !u!82 &3167796835618190213
 AudioSource:
   m_ObjectHideFlags: 0
@@ -232,7 +215,6 @@ GameObject:
   - component: {fileID: 6771995580043977504}
   - component: {fileID: 6771995580043977519}
   - component: {fileID: 6771995580043977518}
-  - component: {fileID: 6771995580043977517}
   - component: {fileID: 6771995580043977516}
   - component: {fileID: 6771995580043977515}
   m_Layer: 20
@@ -311,20 +293,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &6771995580043977517
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6771995580043977514}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!114 &6771995580043977516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -386,7 +354,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7812528996610168681}
   - component: {fileID: 5190750882424363958}
-  m_Layer: 0
+  m_Layer: 20
   m_Name: Flicker ON SFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -492,10 +460,71 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3334499237882049257, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
       propertyPath: m_Name
-      value: Boss Shield Segment (1)
+      value: Boss Shield Segment
+      objectReference: {fileID: 0}
+    - target: {fileID: 3334499237882049257, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
+      propertyPath: m_Layer
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
+--- !u!1 &3906706604276677012 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3334499237882049257, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
+  m_PrefabInstance: {fileID: 1761450161744137085}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &7574045407246656121
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3906706604276677012}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 8069118810349461097, guid: f6f7854ea1d93c845adcbd5cc75ab5a1, type: 3}
+--- !u!95 &7766416224860040362
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3906706604276677012}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 88e685da81f795442bce359e4ad1c928, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2645293080324365270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3906706604276677012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 384ec51a44cd4064888d3d5eec775d25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
 --- !u!4 &4430618828621554478 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2669884502913149011, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
@@ -572,8 +601,69 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boss Shield Segment
       objectReference: {fileID: 0}
+    - target: {fileID: 3334499237882049257, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
+      propertyPath: m_Layer
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
+--- !u!1 &5051323076401704065 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3334499237882049257, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
+  m_PrefabInstance: {fileID: 7520838689949032040}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &7126468771942315941
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5051323076401704065}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 8069118810349461097, guid: f6f7854ea1d93c845adcbd5cc75ab5a1, type: 3}
+--- !u!95 &153806468012234147
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5051323076401704065}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 88e685da81f795442bce359e4ad1c928, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &692425929600975222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5051323076401704065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 384ec51a44cd4064888d3d5eec775d25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
 --- !u!4 &5571576435754694203 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2669884502913149011, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
@@ -648,10 +738,71 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3334499237882049257, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
       propertyPath: m_Name
-      value: Boss Shield Segment (3)
+      value: Boss Shield Segment
+      objectReference: {fileID: 0}
+    - target: {fileID: 3334499237882049257, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
+      propertyPath: m_Layer
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
+--- !u!1 &5858879215145384751 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3334499237882049257, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
+  m_PrefabInstance: {fileID: 9153688258648852934}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &4343998698473123483
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5858879215145384751}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 8069118810349461097, guid: f6f7854ea1d93c845adcbd5cc75ab5a1, type: 3}
+--- !u!95 &7313714769602635465
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5858879215145384751}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 88e685da81f795442bce359e4ad1c928, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2249246497883902750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5858879215145384751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 384ec51a44cd4064888d3d5eec775d25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
 --- !u!4 &6486655942922903957 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2669884502913149011, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
@@ -726,10 +877,71 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3334499237882049257, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
       propertyPath: m_Name
-      value: Boss Shield Segment (2)
+      value: Boss Shield Segment
+      objectReference: {fileID: 0}
+    - target: {fileID: 3334499237882049257, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
+      propertyPath: m_Layer
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
+--- !u!1 &5894501104691380683 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3334499237882049257, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}
+  m_PrefabInstance: {fileID: 9190717528958186274}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1070593511377827560
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5894501104691380683}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 8069118810349461097, guid: f6f7854ea1d93c845adcbd5cc75ab5a1, type: 3}
+--- !u!95 &955593299238365108
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5894501104691380683}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 88e685da81f795442bce359e4ad1c928, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &6748768681905894126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5894501104691380683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 384ec51a44cd4064888d3d5eec775d25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
 --- !u!4 &6523087110897359729 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2669884502913149011, guid: 598e0e3ced864e14f87e546fafe6c97c, type: 3}

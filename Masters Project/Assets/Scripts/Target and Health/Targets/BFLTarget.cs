@@ -37,6 +37,8 @@ public class BFLTarget : Target
 
         _killed = true;
 
+        DropAllObjs();
+
         controller?.Inturrupt();
         controller?.DisableBFL();
         _healthManager.ToggleGodmode(true);

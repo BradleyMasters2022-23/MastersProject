@@ -66,7 +66,7 @@ public class DamageField : MonoBehaviour
                 {
                     entity.Value.ResetTimer();
 
-                    entity.Key.RegisterEffect(tickDamageProfiles);
+                    entity.Key.RegisterEffect(tickDamageProfiles, transform.position);
                     entity.Key.Knockback(tickDamageProfiles, transform.position);
                 }
             }
@@ -95,7 +95,7 @@ public class DamageField : MonoBehaviour
             // If not already registered...
             else
             {
-                newTar.RegisterEffect(initialDamageProfiles);
+                newTar.RegisterEffect(initialDamageProfiles, transform.position);
                 newTar.Knockback(initialDamageProfiles, transform.position);
 
                 // If an enemy, make it not take tick damage in timestop

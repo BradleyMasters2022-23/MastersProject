@@ -26,14 +26,14 @@ public class WorldTarget : Target
         triggerRegistered= true;
     }
 
-    public override void RegisterEffect(float dmg)
+    public override void RegisterEffect(float dmg, Vector3 origin)
     {
         if (dmg <= 0) return;
 
         if (onDamageTrigger != null)
             onDamageTrigger.Activate();
 
-        base.RegisterEffect(dmg);
+        base.RegisterEffect(dmg, origin);
     }
 
     public bool IsTriggerRegistered()

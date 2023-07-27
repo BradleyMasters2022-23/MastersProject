@@ -40,9 +40,9 @@ public class TargetHitbox : MonoBehaviour, IDamagable
     /// Register an effect to the main target, applying any modifier
     /// </summary>
     /// <param name="dmg"></param>
-    public void RegisterEffect(float dmg)
+    public void RegisterEffect(float dmg, Vector3 origin)
     {
-        target?.RegisterEffect(dmg * damageMultiplier);
+        target?.RegisterEffect(dmg * damageMultiplier, origin);
     }
 
     /// <summary>
@@ -50,9 +50,9 @@ public class TargetHitbox : MonoBehaviour, IDamagable
     /// </summary>
     /// <param name="data">Team data to use</param>
     /// <param name="dmgMultiplier">multiplier to add</param>
-    public void RegisterEffect(TeamDamage data, float dmgMultiplier = 1)
+    public void RegisterEffect(TeamDamage data, Vector3 origin, float dmgMultiplier = 1)
     {
-        target?.RegisterEffect(data, dmgMultiplier + damageMultiplier);
+        target?.RegisterEffect(data, origin, dmgMultiplier + damageMultiplier);
     }
 
     /// <summary>

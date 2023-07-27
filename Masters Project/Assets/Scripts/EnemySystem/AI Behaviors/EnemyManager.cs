@@ -230,7 +230,7 @@ public class EnemyManager : TimeAffectedEntity, TimeObserver
             // calculate distance if needed
             float distToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
-            bool lineOfSight = transform.HasLineOfSight(player.transform, visionLayer);
+            bool lineOfSight = transform.HasLineOfSight(player.transform, visionLayer, 1.5f);
 
             // determine line of sight
             if (noLineOfSightDelay > 0 && lineOfSight)
@@ -475,18 +475,24 @@ public class EnemyManager : TimeAffectedEntity, TimeObserver
         return DeltaTime;
     }
 
+    public void HaltAI()
+    {
+        StopAllCoroutines();
+    }
+
+    Vector3 lastKnownPlayerPos;
+    float loseTargetMinDist = 5f;
+
     public void OnStop()
     {
-        //if (agent != null)
-        //{
-        //    agent.isStopped = true;
-        //}
+        lastKnownPlayerPos = player.transform.position;
     }
     public void OnResume()
     {
-        //if(agent != null)
-        //{
-        //    agent.isStopped = false;
-        //}
+        if (Vector3.Distance(player.transform.position, lastKnownPlayerPos) > loseTargetMinDist
+            && !transform.InVisionCone(player.transform, 20))
+        {
+            //Debug.Log("Enemy should lose target now");
+        }
     }
 }
