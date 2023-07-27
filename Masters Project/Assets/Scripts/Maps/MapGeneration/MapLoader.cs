@@ -65,6 +65,8 @@ public class MapLoader : MonoBehaviour
     [Tooltip("Channel called when any scene change happens. Used to tell poolers to reset.")]
     [SerializeField] ChannelVoid onSceneChange;
 
+    [SerializeField] Cubemap hubworldReflectionMap;
+
     /// <summary>
     /// Navmesh for overall map
     /// </summary>
@@ -224,7 +226,7 @@ public class MapLoader : MonoBehaviour
         DontDestroyOnLoad(PlayerTarget.p);
 
         // Debug.Log("[MAPLOADER] Map arrangement prepared, order can be viewed in inspector");
-        startingRoomInitializer.Init();
+        startingRoomInitializer.Init(mapOrder[portalDepth+1].portalViewMat);
 
         loadState = LoadState.Done;
         loadingScreen.SetActive(false);
@@ -376,7 +378,19 @@ public class MapLoader : MonoBehaviour
         }
         else
         {
-            currentRoom.Init();
+            Cubemap nextRoomMap = null;
+            int nextRoom = portalDepth + 1;
+            if (nextRoom >= mapOrder.Count)
+            {
+                nextRoomMap = hubworldReflectionMap;
+            }
+            else
+            {
+                nextRoomMap = mapOrder[nextRoom].portalViewMat;
+            }
+
+
+            currentRoom.Init(nextRoomMap);
         }
 
         // If at secret room depth, load that too
@@ -384,7 +398,6 @@ public class MapLoader : MonoBehaviour
         {
             currentRoom.ChooseRandomSecretProp();
             yield return StartCoroutine(LoadSecretRoom());
-
             //FindObjectOfType<SecretPortalInstance>(true).Init();
         }
 
@@ -456,7 +469,7 @@ public class MapLoader : MonoBehaviour
 
     public void EndRoomEncounter()
     {
-        Debug.Log("End room encounter called");
+        //Debug.Log("End room encounter called");
 
         //Debug.Log($"Phew! You won it all good jorb {roomIndex+1}!");
         //loadedMap[roomIndex+1].GetComponent<DoorManager>().UnlockExit();
@@ -468,7 +481,7 @@ public class MapLoader : MonoBehaviour
         //    LinearSpawnManager.instance.IncrementDifficulty();
         //}
 
-        WarningText.instance.Play("ANOMALY SUBSIDED, ROOM UNLOCKED", false);
+        WarningText.instance.Play("ANOMALY SUBSIDED, PORTAL DETECTED", false);
         LinearSpawnManager.instance.IncrementDifficulty();
 
         onEncounterComplete?.Invoke();

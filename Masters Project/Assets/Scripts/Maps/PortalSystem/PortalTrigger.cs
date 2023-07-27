@@ -29,6 +29,9 @@ public class PortalTrigger : MonoBehaviour, Interactable
 
     [SerializeField] ChannelVoid onSceneLoadChannel;
 
+    [Tooltip("Reflection probe showing the next room")]
+    [SerializeField] ReflectionProbe nextRoomProbe;
+
     [Header("VFX/SFX Indicators")]
 
     [Tooltip("Ambient SFX for the portal")]
@@ -198,6 +201,18 @@ public class PortalTrigger : MonoBehaviour, Interactable
         
         playerRef.position = exitPoint.position;
         playerRef.rotation = exitPoint.rotation;
+    }
+
+    /// <summary>
+    /// Load a new cubemap into the renderer
+    /// </summary>
+    /// <param name="newMap"></param>
+    public void LoadNewCubemap(Cubemap newMap)
+    {
+        if (newMap != null)
+        {
+            nextRoomProbe.customBakedTexture = newMap;
+        }
     }
 
     public void AssignSecretRef(SecretPortalInstance s)

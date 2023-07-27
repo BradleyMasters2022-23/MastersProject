@@ -24,6 +24,8 @@ public class MapSegmentSO : ScriptableObject
     [Tooltip("Name of the scene this level has")]
     public string sceneName;
 
+    public Cubemap portalViewMat;
+
     [Tooltip("Does this room have a depth requirement")]
     public bool depthRequirement = true;
 

@@ -35,7 +35,7 @@ public class SecretPortalInstance : MonoBehaviour
     {
         yield return new WaitUntil(() => SecretRoomInitializer.instance != null);
 
-        SecretRoomInitializer.instance.Init();
+        SecretRoomInitializer.instance.Init(null);
         LinkToSecretRoom(SecretRoomInitializer.instance);
         secretPortalRef.DismissPortal();
         secretRoomPortal.SummonPortal();

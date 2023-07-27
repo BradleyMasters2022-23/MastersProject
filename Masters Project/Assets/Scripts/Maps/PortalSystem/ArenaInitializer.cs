@@ -17,11 +17,11 @@ public class ArenaInitializer : RoomInitializer
     /// </summary>
     [ShowInInspector, ReadOnly] private SpawnPoint[] allSpawnpoints;
 
-    public override void Init()
+    public override void Init(Cubemap nextCubemap)
     {
         allSpawnpoints = FindObjectsOfType<SpawnPoint>(false);
 
-        base.Init();
+        base.Init(nextCubemap);
 
         StartCoroutine(WaitForInput());
     }
