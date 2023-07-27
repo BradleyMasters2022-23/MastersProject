@@ -354,7 +354,8 @@ public class GameManager : MonoBehaviour
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
 
-                    ControllerCursor.instance.SetUIState(false);
+                    if (ControllerCursor.instance != null)
+                        ControllerCursor.instance.SetUIState(false);
                     break;
                 }
             case States.GAMEPLAY:
@@ -362,7 +363,8 @@ public class GameManager : MonoBehaviour
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
 
-                    ControllerCursor.instance.SetUIState(false);
+                    if(ControllerCursor.instance != null)
+                        ControllerCursor.instance.SetUIState(false);
                     break;
                 }
             default:
@@ -372,7 +374,8 @@ public class GameManager : MonoBehaviour
                     Cursor.visible = true;
                     Cursor.lockState = CursorLockMode.Confined;
 
-                    ControllerCursor.instance.SetUIState(true);
+                    if (ControllerCursor.instance != null)
+                        ControllerCursor.instance.SetUIState(true);
                     break;
                 }
         }

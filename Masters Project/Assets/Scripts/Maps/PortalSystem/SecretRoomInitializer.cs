@@ -14,7 +14,7 @@ using Sirenix.OdinInspector;
 public class SecretRoomInitializer : RoomInitializer
 {
     [Tooltip("Portal within the secret room itself")]
-    [SerializeField] private PortalTrigger secretRoomPortalRef;
+    [SerializeField] private SecretPortalTrigger secretRoomPortalRef;
 
     /// <summary>
     /// Initializer for the current secret room
@@ -44,13 +44,13 @@ public class SecretRoomInitializer : RoomInitializer
     /// <summary>
     /// The portal to return to when leaving
     /// </summary>
-    [SerializeField, ReadOnly] private PortalTrigger returnPortal;
+    [SerializeField, ReadOnly] private SecretPortalTrigger returnPortal;
 
     /// <summary>
     /// Link this secret room to a return portal
     /// </summary>
     /// <param name="p">Return portal to teleport to on exit</param>
-    public PortalTrigger LinkPortals(PortalTrigger p)
+    public SecretPortalTrigger LinkPortals(SecretPortalTrigger p)
     {
         returnPortal = p;
         return secretRoomPortalRef;
