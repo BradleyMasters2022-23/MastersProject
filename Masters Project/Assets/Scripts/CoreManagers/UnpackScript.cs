@@ -37,7 +37,7 @@ public class UnpackScript : MonoBehaviour
     [Tooltip("Whether this gameobject should be destroyed after this executes.")]
     [SerializeField] private bool selfDestruct;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         // Delete marked items
         for(int i = itemsToDelete.Length-1; i >= 0; i--)

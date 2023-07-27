@@ -14,6 +14,7 @@ public class FinalRoomLoader : RoomInitializer
 
     public override void Init()
     {
+        Debug.Log("Boss room init");
         base.Init();
         foreach(var obj in stuffToDisable)
         {

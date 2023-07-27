@@ -180,6 +180,9 @@ public class PlayerTarget : Target
     {
         base.OnDisable();
 
+        // dont do disable funcs if not the instanced version
+        if (p != this) return;
+
         if (p == this)
         {
             godCheat.performed -= ToggleGodmode;
