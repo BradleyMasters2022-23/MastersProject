@@ -62,11 +62,6 @@ public class PortalTrigger : MonoBehaviour, Interactable
     /// The max amount of change that can be applied to a scale in one frame
     /// </summary>
     private float maxScaleChange = 0.02f;
-
-    /// <summary>
-    /// reference to the secret portal
-    /// </summary>
-    private SecretPortalInstance secretRef;
     /// <summary>
     /// cooldown tracker for interaction
     /// </summary>
@@ -215,13 +210,5 @@ public class PortalTrigger : MonoBehaviour, Interactable
         }
     }
 
-    public void AssignSecretRef(SecretPortalInstance s)
-    {
-        secretRef = s;
-    }
-    public void GoToSecretRoom()
-    {
-        MapLoader.instance.PlaySecretPortalSFX();
-        secretRef?.GoToSecretRoom();
-    }
+    
 }

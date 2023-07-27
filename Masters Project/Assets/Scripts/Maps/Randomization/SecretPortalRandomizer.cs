@@ -15,8 +15,9 @@ public class SecretPortalRandomizer : LayoutRandomizer
         base.Randomize();
 
         initializer = GetComponent<SecretPortalInstance>();
+
         // Debug.Log($"Chosen index: {chosenIndex} of {layouts.Length}");
-        PortalTrigger selectedPortal = layouts[chosenIndex].layoutRoot.GetComponentInChildren<PortalTrigger>(true);
+        SecretPortalTrigger selectedPortal = layouts[chosenIndex].layoutRoot.GetComponentInChildren<SecretPortalTrigger>(true);
         DistortedProp selectedProp = layouts[chosenIndex].layoutRoot.GetComponentInChildren<DistortedProp>(true);
         if (selectedPortal != null)
         {

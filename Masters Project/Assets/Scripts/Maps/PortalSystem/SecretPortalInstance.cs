@@ -15,14 +15,14 @@ using Sirenix.OdinInspector;
 public class SecretPortalInstance : MonoBehaviour
 {
     [Tooltip("Portal within the level that leads to the secret room")]
-    [SerializeField] private PortalTrigger secretPortalRef;
-
-    [SerializeField, ReadOnly] private PortalTrigger secretRoomPortal;
+    [SerializeField, ReadOnly] private SecretPortalTrigger secretPortalRef;
+    [Tooltip("Portal within the secret room that leads back to the level")]
+    [SerializeField, ReadOnly] private SecretPortalTrigger secretRoomPortal;
 
     /// <summary>
-    /// If there is a secret room loaded, then initialize and link with it\
+    /// If there is a secret room loaded, then initialize and link with it
     /// </summary>
-    public void Init(PortalTrigger portal)
+    public void Init(SecretPortalTrigger portal)
     {
         secretPortalRef = portal;
         StartCoroutine(WaitToLoad());
@@ -37,6 +37,17 @@ public class SecretPortalInstance : MonoBehaviour
 
         SecretRoomInitializer.instance.Init(null);
         LinkToSecretRoom(SecretRoomInitializer.instance);
+
+        // load in next room previews
+        MapSegmentSO secretRm = MapLoader.instance.GetCurrentSecretRoom();
+        MapSegmentSO currentRm = MapLoader.instance.GetRoomData();
+
+        secretPortalRef.LoadNewCubemap(secretRm.portalViewMat);
+
+        Debug.Log((secretRoomPortal != null) + " | " + (currentRm != null));
+        secretRoomPortal.LoadNewCubemap(currentRm.portalViewMat);
+
+        // keep secret room portal summon but dismiss the one in the level itself until its found
         secretPortalRef.DismissPortal();
         secretRoomPortal.SummonPortal();
     }
@@ -73,6 +84,7 @@ public class SecretPortalInstance : MonoBehaviour
     /// <param name="secretRoom"></param>
     private void LinkToSecretRoom(SecretRoomInitializer secretRoom)
     {
+        Debug.Log("Linking to secret room");
         secretRoomPortal = secretRoom.LinkPortals(secretPortalRef);
     }
 }
