@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class AimController : MonoBehaviour
+public class AimController : MonoBehaviour, IDifficultyObserver
 {
     [Header("---Camera---")]
 
@@ -123,12 +123,15 @@ public class AimController : MonoBehaviour
         UpdateInputSettings(InputManager.CurrControlScheme);
     }
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         // search for a new target if assist is enabled
-        if(assist)
+        if (assist)
             SearchForTarget();
+    }
 
+    private void LateUpdate()
+    {
         // Update camera
         ManageCamera();
     }
@@ -224,8 +227,8 @@ public class AimController : MonoBehaviour
         if (assist && targetCenter != null && assistMag > 0)
         {
             // calculate the mag modifier based on the % of the dot, getting stronger the more center it is
-            float distBasedMag = 1 - assistConeThreshold;
-            distBasedMag = (targetDot - assistConeThreshold) / distBasedMag;
+            float distBasedMag = 1 - GetAssistCone();
+            distBasedMag = (targetDot - GetAssistCone()) / distBasedMag;
             distBasedMag = accuracyToAssist.Evaluate(distBasedMag);
             assistMag *= distBasedMag;
 
@@ -233,14 +236,16 @@ public class AimController : MonoBehaviour
             Quaternion tgtRot = Quaternion.LookRotation(targetCenter.position - cameraLook.position);
             //Debug.DrawLine(cameraLook.position, cameraLook.position + (targetCenter.position - cameraLook.position), Color.green);
 
+            float strength = assistStrength * assistMag * Time.deltaTime * difficultyAimAssistMod;
+
             // make sure its only applying horizontal rotation
-            Vector3 tempEuler = Quaternion.Slerp(transform.rotation, tgtRot, assistStrength * assistMag * horizontalAssistModifier * Time.deltaTime).eulerAngles;
+            Vector3 tempEuler = Quaternion.Slerp(transform.rotation, tgtRot, strength * horizontalAssistModifier).eulerAngles;
             tempEuler.x = 0;
             tempEuler.z = 0;
             transform.rotation = Quaternion.Euler(tempEuler);
 
             // do same for vertical rotation using the correct pivot
-            tempEuler = Quaternion.Slerp(newVerticalRot, tgtRot, assistStrength * assistMag * verticalAsssitModifier * Time.deltaTime).eulerAngles;
+            tempEuler = Quaternion.Slerp(newVerticalRot, tgtRot, strength * verticalAsssitModifier).eulerAngles;
             tempEuler.y = 0;
             tempEuler.z = 0;
             newVerticalRot = Quaternion.Euler(tempEuler);
@@ -270,6 +275,8 @@ public class AimController : MonoBehaviour
         onSceneChangeChannel.OnEventRaised += ResetLook;
 
         onControllerSwap.OnEventRaised += UpdateInputSettings;
+
+        GlobalDifficultyManager.instance.Subscribe(this, difficultyAimAssistKey);
     }
 
     /// <summary>
@@ -286,6 +293,8 @@ public class AimController : MonoBehaviour
         onSceneChangeChannel.OnEventRaised -= ResetLook;
 
         onControllerSwap.OnEventRaised -= UpdateInputSettings;
+
+        GlobalDifficultyManager.instance.Unsubscribe(this, difficultyAimAssistKey);
 
         if (aim.enabled)
             aim.Disable();
@@ -313,7 +322,10 @@ public class AimController : MonoBehaviour
         cameraLook.transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
+    #region Aim Assist
+
     private List<Target> aimAssistOptions;
+
     /// <summary>
     /// search for an aim assist target
     /// </summary>
@@ -329,12 +341,12 @@ public class AimController : MonoBehaviour
         if (allTargets.Length > 0) // if targets found, determine the most 'centered' target
         {
             // prepare comparison variables
-            float highestDot = assistConeThreshold;
+            float highestDot = GetAssistCone();
             Vector3 forwardDir = cameraLook.forward.normalized;
 
             // first, filter each raycast hit into target references. Prevents multi-target options
             aimAssistOptions.Clear();
-            foreach(var tgt in allTargets)
+            foreach (var tgt in allTargets)
             {
                 // check for a direct reference
                 Target t = tgt.collider.GetComponent<Target>();
@@ -350,7 +362,7 @@ public class AimController : MonoBehaviour
                 // make sure no dupes in list and that its alive
                 if (!t.Killed() && !aimAssistOptions.Contains(t))
                     aimAssistOptions.Add(t);
-            }    
+            }
 
             // check each target. Make sure its a target and if so, utilize its center transform
             foreach (var tgt in aimAssistOptions)
@@ -358,7 +370,7 @@ public class AimController : MonoBehaviour
                 // get dot product of normalized directions.
                 // target with the highest DOT product is the most 'center'  
                 float newDot = Vector3.Dot(forwardDir, (tgt.Center.position - cameraLook.position).normalized);
-                if (newDot > highestDot && newDot > assistConeThreshold)
+                if (newDot > highestDot && newDot > GetAssistCone())
                 {
                     // check for direct line of site using blocker layers. only thing it should hit is the target
                     RaycastHit blockCheck;
@@ -388,4 +400,35 @@ public class AimController : MonoBehaviour
             targetDot = 0;
         }
     }
+
+    /// <summary>
+    /// Get the cone assist value, adjusted for difficulty
+    /// </summary>
+    /// <returns>Adjusted cone target</returns>
+    private float GetAssistCone()
+    {
+        float diff = 1 - assistConeThreshold;
+        diff *= difficultyAimAssistMod;
+        return 1 - diff;
+    }
+
+    #endregion
+
+    #region Difficulty - Aim Assist Strength
+
+    /// <summary>
+    /// Difficulty modifier to apply to healing sources
+    /// </summary>
+    private float difficultyAimAssistMod = 1;
+    /// <summary>
+    /// Key for looking up healing modifier setting
+    /// </summary>
+    private const string difficultyAimAssistKey = "AimAssistStrength";
+
+    public void UpdateDifficulty(float newModifier)
+    {
+        difficultyAimAssistMod = newModifier;
+    }
+
+    #endregion
 }

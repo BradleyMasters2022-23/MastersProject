@@ -146,11 +146,10 @@ public class GlobalDifficultyManager : MonoBehaviour
     }
 
     /// <summary>
-    /// U&nsubscribe to difficulty manager to recieve updates from difficulty manager.
-    /// Will revert its modifier to 1.
+    /// Unsubscribe fromm the manager to be unaffected by difficulty. WIll reset its modifier to 1
     /// </summary>
-    /// <param name="o">Observer to unsubscribe</param>
-    /// <param name="settingKey">Difficulty setting to use</param>
+    /// <param name="o">Object unsubscribing</param>
+    /// <param name="settingKey">Difficulty key to check</param>
     public void Unsubscribe(IDifficultyObserver o, string settingKey)
     {
         if (difficulties.ContainsKey(settingKey) && difficulties[settingKey].Contains(o))
