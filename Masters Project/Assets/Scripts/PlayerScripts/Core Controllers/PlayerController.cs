@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDifficultyObserver
 {
     public enum PlayerState
     {
@@ -633,6 +633,7 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         onSceneChangeChannel.OnEventRaised += GroundPlayer;
+        GlobalDifficultyManager.instance.Subscribe(this, difficultyTimeRecoveryKey);
     }
 
     /// <summary>
@@ -643,6 +644,8 @@ public class PlayerController : MonoBehaviour
         jump.performed -= Jump;
         qInput.performed-= ActivateQAbility;
         onSceneChangeChannel.OnEventRaised -= GroundPlayer;
+        GlobalDifficultyManager.instance.Unsubscribe(this, difficultyTimeRecoveryKey);
+
     }
 
     /// <summary>
@@ -651,6 +654,25 @@ public class PlayerController : MonoBehaviour
     private void GroundPlayer()
     {
         rb.velocity = Vector3.zero;
+    }
+
+    #endregion
+
+    #region Difficulty - Time regeneration (Grenade)
+
+    /// <summary>
+    /// Difficulty modifier to apply to time recovery sources
+    /// </summary>
+    private float difficultyTimeRecoveryMod = 1;
+    /// <summary>
+    /// Key for looking up time recovery setting
+    /// </summary>
+    private const string difficultyTimeRecoveryKey = "TimeReplenishRate";
+
+    public void UpdateDifficulty(float newModifier)
+    {
+        difficultyTimeRecoveryMod = newModifier;
+        QAbility.SetCooldownModifier(difficultyTimeRecoveryMod);
     }
 
     #endregion

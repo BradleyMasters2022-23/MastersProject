@@ -49,7 +49,7 @@ public class PlayerHealthManager : HealthManager, IDifficultyObserver
         float healingPot = 0;
         foreach (HealthOrb o in healingBuffer.ToArray())
         {
-            healingPot += o.GetAmt();
+            healingPot += o.GetAmt() * difficultyHealingMod;
         }
 
         return (CurrentHealth(0) + healingPot) >= MaxHealth(0);

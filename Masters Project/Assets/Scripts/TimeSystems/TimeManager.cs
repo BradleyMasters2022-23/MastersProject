@@ -17,7 +17,7 @@ using Sirenix.OdinInspector;
 /// <summary>
 /// Manages player-controlled time abilities
 /// </summary>
-public class TimeManager : MonoBehaviour
+public class TimeManager : MonoBehaviour, IDifficultyObserver
 {
     public enum TimeGaugeState
     {
@@ -139,7 +139,7 @@ public class TimeManager : MonoBehaviour
     /// <summary>
     /// Current amount of slow gauge
     /// </summary>
-    [SerializeField] private float currSlowGauge;
+    private float currSlowGauge;
     /// <summary>
     /// Current amount of slow gauge
     /// </summary>
@@ -252,14 +252,21 @@ public class TimeManager : MonoBehaviour
     private void OnEnable()
     {
         onStateChangeChannel.OnEventRaised += ToggleInputs;
+
+        GlobalDifficultyManager.instance.Subscribe(this, difficultyTimeRecoveryKey);
     }
 
     private void OnDisable()
     {
         onStateChangeChannel.OnEventRaised -= ToggleInputs;
 
-        slowInput.started -= ToggleSlow;
-        slowInput.canceled -= ToggleSlow;
+        if (instance == this)
+        {
+            slowInput.started -= ToggleSlow;
+            slowInput.canceled -= ToggleSlow;
+        }
+        
+        GlobalDifficultyManager.instance.Unsubscribe(this, difficultyTimeRecoveryKey);
     }
 
     private void FixedUpdate()
@@ -344,7 +351,6 @@ public class TimeManager : MonoBehaviour
             case TimeGaugeState.RECHARGING:
                 {
                     TryResume();
-                    RefillGauge();
                     break;
                 }
             case TimeGaugeState.FROZEN:
@@ -493,27 +499,6 @@ public class TimeManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Refill the slow time gauge
-    /// </summary>
-    private void RefillGauge()
-    {
-        // Calculate how much to replenish
-        float maxGauge = slowDuration.Current * FixedUpdateCalls;
-        float replenishAmount = (maxGauge / replenishTime.Current) / FixedUpdateCalls;
-
-        // Replenish the gauge, determine if state should change
-        if (currSlowGauge + replenishAmount >= maxGauge)
-        {
-            currSlowGauge = maxGauge;
-            ChangeState(TimeGaugeState.IDLE);
-        }
-        else
-        {
-            currSlowGauge += replenishAmount;
-        }
-    }
-
     public void SetCheatMode(bool cheat)
     {
         cheatMode = cheat;
@@ -529,6 +514,8 @@ public class TimeManager : MonoBehaviour
         // If Idle, or filled, then dont use
         if(currentState == TimeGaugeState.IDLE)
             return false;
+
+        amount *= difficultyTimeRecoveryMod;
 
         float maxGauge = slowDuration.Current * FixedUpdateCalls;
 
@@ -679,10 +666,28 @@ public class TimeManager : MonoBehaviour
         float healingPot = 0;
         foreach (TimeOrb o in timeOrbBuffer.ToArray())
         {
-            healingPot += o.GetAmt();
+            healingPot += o.GetAmt() * difficultyTimeRecoveryMod;
         }
 
         return (currSlowGauge + healingPot) >= (slowDuration.Current * FixedUpdateCalls);
+    }
+
+    #endregion
+
+    #region Difficulty - Time Orb Efficiency
+
+    /// <summary>
+    /// Difficulty modifier to apply to time recovery sources
+    /// </summary>
+    private float difficultyTimeRecoveryMod = 1;
+    /// <summary>
+    /// Key for looking up time recovery setting
+    /// </summary>
+    private const string difficultyTimeRecoveryKey = "TimeReplenishRate";
+
+    public void UpdateDifficulty(float newModifier)
+    {
+        difficultyTimeRecoveryMod = newModifier;
     }
 
     #endregion
