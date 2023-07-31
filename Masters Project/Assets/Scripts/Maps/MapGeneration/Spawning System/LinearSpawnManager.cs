@@ -108,7 +108,7 @@ public class LinearSpawnManager : MonoBehaviour, IDifficultyObserver
         // Get the budget on the wave based on combat room count
         int budget = difficulty.GetBudget(MapLoader.instance.PortalDepth(), globalDepthScalingBuff);
         budget = Mathf.RoundToInt(budget * difficultyEnemyBudgetMod);
-        Debug.Log($"Budget for wave is : {budget}");
+        //Debug.Log($"Budget for wave is : {budget}");
 
         // Create buffer lists, useful to reduce iterations later
         List<EnemySO> usableEnemies = spawnableEnemies.ToList();
