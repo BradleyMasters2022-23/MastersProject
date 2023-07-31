@@ -197,6 +197,7 @@ public class CutsceneManager : MonoBehaviour
         // Request a continue input before proceeding
         cont.Enable();
         continuePressed = false;
+        promptText.gameObject.SetActive(true);
         promptText.CrossFadeAlpha(1, 0.5f, true);
         yield return new WaitUntil(() => continuePressed);
 
@@ -214,6 +215,7 @@ public class CutsceneManager : MonoBehaviour
 
         // By now, video has stopped, close screen
         yield return StartCoroutine(LoadScreen(false, fadeOutTime));
+        promptText.gameObject.SetActive(false);
 
         onCutsceneFadeFinishEvents?.Invoke();
 
