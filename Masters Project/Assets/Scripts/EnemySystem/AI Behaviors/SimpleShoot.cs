@@ -12,12 +12,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using Masters.AI;
 
-public class SimpleShoot : AttackTarget
+public class SimpleShoot : AttackTarget, IDifficultyObserver    
 {
     [Header("=== Ranged Attack Data ===")]
 
     [Tooltip("The projectile prefab to use")]
     public GameObject projectile;
+
+    [Tooltip("Damage modifier applied to this attack's projectiles. Multiplicative.")]
+    [SerializeField] private float internalDamageMod = 1;
+    [Tooltip("Speed modifier applied to this attack's projectiles. Multiplicative.")]
+    [SerializeField] private float internalSpeedMod = 1;
+    [Tooltip("Max range for this attack's projectiles.")]
+    [SerializeField] private float projectileRange = 50;
+
     [Tooltip("All barrels for this enemy to shoot")]
     [SerializeField] private Transform[] shootPoints;
     [Tooltip("Number of shots to do. Each shot is per-barrel" +
@@ -301,18 +309,6 @@ public class SimpleShoot : AttackTarget
         // If target in vision, aim at target first
         if (transform.InVisionCone(target, leadConeRadius))
         {
-            //RangeAttack temp = spawnedProjectiles[0].GetComponent<RangeAttack>();
-
-            //// Determine lead strength
-            //float travelTime = (targetPos - transform.position).magnitude / temp.Speed;
-            //float strength = Random.Range(leadStrength.x, leadStrength.y);
-            //Vector3 targetVel = target.GetComponent<Rigidbody>().velocity;
-
-            //targetVel.y = 0;
-
-            //Vector3 leadPos = target.GetComponent<PlayerController>().CenterMass.position
-            //    + (targetVel * travelTime * strength);
-
             float strength = Random.Range(leadStrength.x, leadStrength.y);
             Vector3 leadPos = GetLeadedPosition(target.GetComponent<PlayerController>().CenterMass, strength);
 
@@ -331,7 +327,13 @@ public class SimpleShoot : AttackTarget
         foreach (GameObject shot in spawnedProjectiles)
         {
             shot.transform.rotation = Quaternion.Euler(aimRotation);
-            shot.GetComponent<RangeAttack>().Activate();
+
+            shot.GetComponent<RangeAttack>().Initialize(
+                internalDamageMod,
+                internalSpeedMod * diffEnemyProjSpdMod,
+                projectileRange,
+                gameObject);
+            //shot.GetComponent<RangeAttack>().Activate();
         }
 
         shootSFX.PlayClip(transform);
@@ -377,4 +379,39 @@ public class SimpleShoot : AttackTarget
 
         return leadPos;
     }
+
+    #region Difficulty - Enemy Proj Speed
+
+    /// <summary>
+    /// The difficulty modifier to apply to projectile speed
+    /// </summary>
+    private float diffEnemyProjSpdMod = 1;
+    /// <summary>
+    /// The key used to lookup enemy projectile speed setting
+    /// </summary>
+    private const string diffEnemyProjSpdSettingKey = "EnemyProjectileSpeed";
+
+    private void OnEnable()
+    {
+        GlobalDifficultyManager.instance.Subscribe(this, diffEnemyProjSpdSettingKey);
+
+    }
+
+    private void OnDisable()
+    {
+        GlobalDifficultyManager.instance.Unsubscribe(this, diffEnemyProjSpdSettingKey);
+
+    }
+
+    /// <summary>
+    /// Update the difficulty modifier
+    /// </summary>
+    /// <param name="newModifier">New modifier to utilize</param>
+    public void UpdateDifficulty(float newModifier)
+    {
+        // invert the modifier since this is saved as enemy health modifier
+        diffEnemyProjSpdMod = newModifier;
+    }
+
+    #endregion
 }

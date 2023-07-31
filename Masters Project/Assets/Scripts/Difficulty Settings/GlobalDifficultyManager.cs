@@ -44,6 +44,8 @@ public class GlobalDifficultyManager : MonoBehaviour
 
     /// <summary>
     /// List of settings available for use
+    /// note: Changing these involves changing the UI setting ref AND ref used by 
+    /// concrete implementation of these settings
     /// </summary>
     private readonly string[] settingKeys = 
     {
@@ -138,7 +140,7 @@ public class GlobalDifficultyManager : MonoBehaviour
             difficulties[settingKey].Add(o);
 
             // on subscribe, give it the current difficulty setting so its not out of date
-            float modifier = 1 + (PlayerPrefs.GetFloat(settingKey, 0) / 100);
+            float modifier = (PlayerPrefs.GetFloat(settingKey, 0) / 100);
             o.UpdateDifficulty(modifier);
         }
     }
