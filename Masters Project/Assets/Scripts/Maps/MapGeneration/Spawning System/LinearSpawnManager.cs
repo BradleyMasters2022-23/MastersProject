@@ -40,7 +40,7 @@ public struct EncounterDifficulty
     }
 }
 
-public class LinearSpawnManager : MonoBehaviour
+public class LinearSpawnManager : MonoBehaviour, IDifficultyObserver
 {
     public static LinearSpawnManager instance;
 
@@ -107,7 +107,8 @@ public class LinearSpawnManager : MonoBehaviour
 
         // Get the budget on the wave based on combat room count
         int budget = difficulty.GetBudget(MapLoader.instance.PortalDepth(), globalDepthScalingBuff);
-        // Debug.Log($"Budget for wave is : {budget}");
+        budget = Mathf.RoundToInt(budget * difficultyEnemyBudgetMod);
+        Debug.Log($"Budget for wave is : {budget}");
 
         // Create buffer lists, useful to reduce iterations later
         List<EnemySO> usableEnemies = spawnableEnemies.ToList();
@@ -222,4 +223,37 @@ public class LinearSpawnManager : MonoBehaviour
     {
         return combatRoomCount;
     }
+
+
+    #region Difficulty
+
+    /// <summary>
+    /// Budget modifier applied when building waves
+    /// </summary>
+    private float difficultyEnemyBudgetMod = 1;
+    /// <summary>
+    /// Key for the enemy budget setting
+    /// </summary>
+    private const string difficultyEnemyBudgetModSettingKey = "EnemyBudget";
+
+    /// <summary>
+    /// Update enemy budget modifier
+    /// </summary>
+    /// <param name="newModifier">New damage taken modifier</param>
+    public void UpdateDifficulty(float newModifier)
+    {
+        difficultyEnemyBudgetMod = newModifier;
+    }
+
+    private void OnEnable()
+    {
+        GlobalDifficultyManager.instance.Subscribe(this, difficultyEnemyBudgetModSettingKey);
+    }
+    private void OnDisable()
+    {
+        GlobalDifficultyManager.instance.Unsubscribe(this, difficultyEnemyBudgetModSettingKey);
+
+    }
+
+    #endregion
 }

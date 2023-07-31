@@ -402,7 +402,13 @@ public class PlayerGunController : TimeAffectedEntity, TimeObserver, IDifficulty
 
     #region Difficulty
 
+    /// <summary>
+    /// player damage modifier, managed by difficulty settings
+    /// </summary>
     private float difficultyPlayerDamageMod = 1;
+    /// <summary>
+    /// Player damage mod setting key
+    /// </summary>
     private const string playerDamageModSettingKey = "PlayerDamage";
 
     /// <summary>
