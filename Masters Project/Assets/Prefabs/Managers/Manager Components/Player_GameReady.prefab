@@ -202,7 +202,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3275549730010603225}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.005001, z: 0}
+  m_LocalPosition: {x: 0, y: 2.0049992, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -418,7 +418,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3912768570946259478}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.005001, z: 0}
+  m_LocalPosition: {x: 0, y: 2.0049992, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -994,6 +994,7 @@ GameObject:
   - component: {fileID: 2702772752586940428}
   - component: {fileID: 2718933415222955262}
   - component: {fileID: 6810719271911296605}
+  - component: {fileID: 4164057607948256163}
   m_Layer: 6
   m_Name: Player_GameReady
   m_TagString: Player
@@ -1084,6 +1085,10 @@ MonoBehaviour:
   deathSound: {fileID: 0}
   damagedSoundCooldown: 0.2
   dropList: []
+  onPlayerDeathChannel: {fileID: 11400000, guid: 8409c772b571f374994fe6f1a93c02f7, type: 2}
+  playerDeathAnimator: {fileID: 4164057607948256163}
+  playerGunController: {fileID: 177586797024885423}
+  aimController: {fileID: 8810997313966297009}
   impulseRanges:
   - minDamage: 0
     maxDamage: 5
@@ -1556,6 +1561,26 @@ MonoBehaviour:
     m_DissipationDistance: 100
     m_PropagationSpeed: 343
   m_DefaultVelocity: {x: 0, y: -0.1, z: -0.5}
+--- !u!95 &4164057607948256163
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8810997313966297016}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 27c2dfce952611a4589e458e794b1528, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 2
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8810997314044839443
 GameObject:
   m_ObjectHideFlags: 0
@@ -1875,6 +1900,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd4294e392450ef4fafab65bbf075ccd, type: 3}
+--- !u!95 &177586797024885423 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 838651348008844798, guid: cd4294e392450ef4fafab65bbf075ccd, type: 3}
+  m_PrefabInstance: {fileID: 708638222276593489}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &431311187433873145 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 876448790602209704, guid: cd4294e392450ef4fafab65bbf075ccd, type: 3}

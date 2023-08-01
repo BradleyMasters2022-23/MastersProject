@@ -39,6 +39,14 @@ public class PlayerTarget : Target, IDifficultyObserver
     private Canvas mainUI;
     public Canvas MainUI { get { return mainUI; }}
 
+    [Header("Death State")]
+    [Tooltip("Animator controlling player death animation")]
+    [SerializeField] Animator playerDeathAnimator;
+    [Tooltip("Animator controlling player gun. Needed for start of death animation.")]
+    [SerializeField] Animator playerGunController;
+    [Tooltip("Channel used to reset player look on death")]
+    [SerializeField] AimController aimController;
+
     [Header("Player Damage Flinch")]
     [Tooltip("Lookup table for damages and impulse strength")]
     [SerializeField] DamageToImpulse[] impulseRanges;
@@ -93,7 +101,7 @@ public class PlayerTarget : Target, IDifficultyObserver
     /// </summary>
     private void LateUpdate()
     {
-        if(frameDamage > 0 && impulseCD.TimerDone())
+        if(frameDamage > 0 && impulseCD.TimerDone() && !_killed)
         {
             ApplyDamageImpulse(frameDamage);
             impulseCD.ResetTimer();
@@ -102,14 +110,34 @@ public class PlayerTarget : Target, IDifficultyObserver
 
     }
 
+    #region Player Death
+
     /// <summary>
     /// On kill, go into game over state
     /// </summary>
     protected override void KillTarget()
     {
+        _killed = true;
+
+        InputManager.Controls.PlayerGameplay.Disable();
+
+        playerGunController.enabled = false;
+        _rb.velocity = Vector3.zero;
+        
+        playerDeathAnimator.enabled = true;
+        aimController.ResetLook();
+    }
+
+    /// <summary>
+    /// Call the game to game over. Called via player animator
+    /// </summary>
+    protected virtual void CallGameOver()
+    {
         GlobalStatsManager.data.playerDeaths++;
         GameManager.instance.ChangeState(GameManager.States.GAMEOVER);
     }
+
+    #endregion
 
     /// <summary>
     /// Add offset to the player before knockback to make it work
