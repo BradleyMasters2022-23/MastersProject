@@ -138,7 +138,7 @@ public class HealthManager : MonoBehaviour
     /// </summary>
     /// <param name="dmg">Amount of damage to deal</param>
     /// <returns>Whether ran entity runs out of health</returns>
-    public bool Damage(float dmg)
+    public virtual bool Damage(float dmg)
     {
         // Exit the game 
         if (_invulnerable || _godMode)
@@ -188,13 +188,13 @@ public class HealthManager : MonoBehaviour
     /// </summary>
     /// <param name="healthType">Type of healthbar trying to be healed</param>
     /// <returns>Whether the target can heal</returns>
-    public bool CanHeal(BarType healthType)
+    public virtual bool CanHeal(BarType healthType)
     {
         // Check each healthbar of this type, see if any of them are empty
         for (int i = 0; i < _healthbars.Length; i++)
         {
             //Debug.Log($"Comparing healthbar index {i} | Type : {_healthbars[i].Type()} | Can heal : {!_healthbars[i].IsFull()}");
-            if (_healthbars[i].Type() == healthType && !BufferFull())
+            if (_healthbars[i].Type() == healthType)
             {
                 return true;
             }
@@ -202,52 +202,7 @@ public class HealthManager : MonoBehaviour
         return false;
     }
 
-    #region Healing Buffer
-
-    /// <summary>
-    /// Current buffer of incoming health
-    /// </summary>
-    private List<HealthOrb> healingBuffer = new List<HealthOrb>();
-
-    /// <summary>
-    /// Add an orb to potential healing buffer
-    /// </summary>
-    /// <param name="orb">Orb to add to buffer</param>
-    public void AddToBuffer(HealthOrb orb)
-    {
-        if (!healingBuffer.Contains(orb))
-        {
-            healingBuffer.Add(orb);
-        }
-            
-    }
-    /// <summary>
-    /// Remove orb from potential healing buffer
-    /// </summary>
-    /// <param name="orb">Orb to remove from buffer</param>
-    public void RemoveFromBuffer(HealthOrb orb)
-    {
-        if (healingBuffer.Contains(orb))
-        {
-            healingBuffer.Remove(orb);
-        }
-            
-    }
-    /// <summary>
-    /// Check if the healing potential is above the necessary to fully heal
-    /// </summary>
-    private bool BufferFull()
-    {
-        float healingPot = 0;
-        foreach(HealthOrb o in healingBuffer.ToArray())
-        {
-            healingPot += o.GetAmt();
-        }
-
-        return (CurrentHealth(0) + healingPot) >= MaxHealth(0);
-    }
-
-    #endregion
+    
 
     /// <summary>
     /// Heal this entity's lowest healthbar
@@ -255,7 +210,7 @@ public class HealthManager : MonoBehaviour
     /// <param name="hp">Amount of HP to restore</param>
     /// <param name="healthType">The type of bar this healing applies to</param>
     /// <return>Whether any healing was done</return>
-    public bool Heal(float hp, BarType healthType = BarType.NA)
+    public virtual bool Heal(float hp, BarType healthType = BarType.NA)
     {
         float healPool = hp;
 
@@ -363,6 +318,7 @@ public class HealthManager : MonoBehaviour
 
     public void IncreaseMaxHealth(float increment, int healthbarIndex = 0)
     {
+        Debug.Log("Upgrading health");
         _healthbars[healthbarIndex].IncreaseMax(increment, true);
     }
 

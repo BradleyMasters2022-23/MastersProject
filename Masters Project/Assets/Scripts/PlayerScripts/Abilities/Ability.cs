@@ -168,6 +168,19 @@ public abstract class Ability : MonoBehaviour
     }
 
     /// <summary>
+    /// Set a new cooldown recovery modifier for this ability. % based.
+    /// Higher this is, the faster the cooldown recovers
+    /// </summary>
+    /// <param name="newMod">New mod. 1 = 100%</param>
+    public void SetCooldownModifier(float newMod)
+    {
+        cooldownSpeedModifier = newMod;
+
+        if(cooldownTimer != null)
+            cooldownTimer.SetModifier(cooldownSpeedModifier);
+    }
+
+    /// <summary>
     /// Set cooldown to nothing when in cheat mode
     /// </summary>
     /// <param name="cheat">whether to enable cheat mode</param>

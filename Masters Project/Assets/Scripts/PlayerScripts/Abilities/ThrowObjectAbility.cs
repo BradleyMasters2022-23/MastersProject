@@ -87,47 +87,4 @@ public class ThrowObjectAbility : Ability
             rot.z + Random.Range(-throwInaccuracy, throwInaccuracy));
     }
 
-    // Line projection stuff
-    /*
-    protected virtual void Trajectory(Vector3 launchVector, Rigidbody projRB, Vector3 startPoint)
-    {
-        // if not loading in, then dont bother
-        if (!trajectoryArc.enabled)
-            return;
-
-        Vector3 startVelocity = (launchVector / projRB.mass);
-
-        int i = 0;
-        trajectoryArc.positionCount = Mathf.CeilToInt(trajectoryStepCount / timeBetweenPoints) + 1;
-        trajectoryArc.SetPosition(i, startPoint);
-
-        for (float time = 0; time < trajectoryStepCount; time += timeBetweenPoints)
-        {
-            i++;
-            Vector3 point = startPoint + time * startVelocity;
-            point.y = startPoint.y + startVelocity.y * time + (Physics.gravity.y / 2f * time * time);
-            trajectoryArc.SetPosition(i, point);
-        }
-    }
-
-    private void ShowLine()
-    {
-        if (trajectoryArc != null)
-            trajectoryArc.enabled = true;
-    }
-    private void HideLine()
-    {
-        if (trajectoryArc != null)
-            trajectoryArc.enabled = false;
-    }
-
-    public override void OnHold()
-    {
-        ShowLine();
-    }
-    public override void Cancel()
-    {
-        HideLine();
-    }
-    */
 }
