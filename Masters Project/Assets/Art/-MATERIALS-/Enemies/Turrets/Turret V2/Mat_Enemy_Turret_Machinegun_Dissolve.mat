@@ -7,29 +7,29 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mat_EnemyBasic_Ranged_Barrel_Dissolve
+  m_Name: Mat_Enemy_Turret_Machinegun_Dissolve
   m_Shader: {fileID: -6465566751694194690, guid: 5f97cba3f33f94f4f9bd7c60a7ad9047, type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
-  m_LightmapFlags: 4
+  m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2450
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
     - _Albedo:
-        m_Texture: {fileID: 2800000, guid: a7046d366d74261489958892da18818e, type: 3}
+        m_Texture: {fileID: 2800000, guid: d26a93e38ba4a894a99df51ce4e9b49b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: a7046d366d74261489958892da18818e, type: 3}
+        m_Texture: {fileID: 2800000, guid: d26a93e38ba4a894a99df51ce4e9b49b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: ac451693f0e610c439cd144d8e4065d0, type: 3}
+        m_Texture: {fileID: 2800000, guid: 180e9f79cd3986244ab29b030545ae2d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -44,28 +44,24 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Emission:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _EmissionMap:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 8a0a7cb2f98f1824ebdd9bc4fa7d9606, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: a7046d366d74261489958892da18818e, type: 3}
+        m_Texture: {fileID: 2800000, guid: d26a93e38ba4a894a99df51ce4e9b49b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Metalic:
-        m_Texture: {fileID: 2800000, guid: 3f8766f2f8e2aff46bd373f964d8510c, type: 3}
+        m_Texture: {fileID: 2800000, guid: 67d803fb2d642c149ac617508d2f9690, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
-        m_Texture: {fileID: 2800000, guid: 3f8766f2f8e2aff46bd373f964d8510c, type: 3}
+        m_Texture: {fileID: 2800000, guid: 67d803fb2d642c149ac617508d2f9690, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Normal:
-        m_Texture: {fileID: 2800000, guid: ac451693f0e610c439cd144d8e4065d0, type: 3}
+        m_Texture: {fileID: 2800000, guid: 180e9f79cd3986244ab29b030545ae2d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -77,7 +73,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Roughness:
-        m_Texture: {fileID: 2800000, guid: 3f8766f2f8e2aff46bd373f964d8510c, type: 3}
+        m_Texture: {fileID: 2800000, guid: 67d803fb2d642c149ac617508d2f9690, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -99,11 +95,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaClip: 0
-    - _BUILTIN_QueueControl: -1
-    - _BUILTIN_QueueOffset: 0
     - _Blend: 0
     - _BumpScale: 1
-    - _CastShadows: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -113,12 +106,12 @@ Material:
     - _Dissolve: -0.1
     - _Dissolve_Scale: 50
     - _DstBlend: 0
-    - _Edge_Width: 0.015
+    - _Edge_Width: 0.1
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Metalic_Strength: 0.97
+    - _Metalic_Strength: 1
     - _Metallic: 0
     - _Normal_Strength: 0
     - _OcclusionStrength: 1
@@ -126,24 +119,22 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Roughness_Strength: 0.4
+    - _Roughness_Strength: 0.5
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
     - _WorkflowMode: 1
-    - _ZTest: 4
     - _ZWrite: 1
-    - _ZWriteControl: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _Edge_Color: {r: 1, g: 0.18431373, b: 0, a: 0}
-    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Edge_Color: {r: 1, g: 0.2787747, b: 0, a: 0}
+    - _EmissionColor: {r: 1.4980392, g: 0.08627451, b: 0.08627451, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &3192766191710433894
+--- !u!114 &3255809191278212227
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
