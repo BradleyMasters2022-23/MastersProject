@@ -86,9 +86,9 @@ public abstract class UIMenu : MonoBehaviour
     {
         openMenu.PlayClip(source);
 
-        if (animator != null && animator.HasStateStr("Open"))
+        if (animator != null)
         {
-            animator.StartPlayback();
+            animator.enabled = true;
             animator.SetBool("Open", true);
         }
     }
@@ -118,7 +118,6 @@ public abstract class UIMenu : MonoBehaviour
             }
             else // Otherwise, close it and stop its playback now
             {
-                animator.StopPlayback();
                 CloseFunctionality();
             }
             
