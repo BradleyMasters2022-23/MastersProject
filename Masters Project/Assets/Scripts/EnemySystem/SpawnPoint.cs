@@ -112,6 +112,7 @@ public class SpawnPoint : MonoBehaviour
 
         if(spawnParticles!= null)
         {
+            spawnParticles.enabled = true;
             spawnParticles.Stop();
             spawnParticles.playRate *= VFXSpeedScalar;
         }
