@@ -389,6 +389,9 @@ MonoBehaviour:
   target: {fileID: 0}
   lineOfSightOrigin: {fileID: 0}
   projectile: {fileID: 4730330725648419445, guid: bc0db40fa9d44ec42b8e524e2668b0b0, type: 3}
+  internalDamageMod: 1
+  internalSpeedMod: 1
+  projectileRange: 50
   shootPoints:
   - {fileID: 4950283643612849701}
   numOfShots: 1
@@ -846,6 +849,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d28f445b256e2734e910314e650fd7bf, type: 3}
+--- !u!1 &2118748927909049648 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2118748928570269516, guid: d28f445b256e2734e910314e650fd7bf, type: 3}
+  m_PrefabInstance: {fileID: 1743366780}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1344896930073928565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118748927909049648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 331ac01e693182d4cb57d2d61e11ff1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
+  fastForwardTime: 0.5
+  lifetime: 5
+  keepReserved: 1
+  alwaysFastForward: 0
 --- !u!2083052967 &2118748927909049654 stripped
 VisualEffect:
   m_CorrespondingSourceObject: {fileID: 2118748928570269514, guid: d28f445b256e2734e910314e650fd7bf, type: 3}
