@@ -112,7 +112,7 @@ public class TooltipManager : MonoBehaviour
         if (checkWithSave && saveData.LimitReached(data))
         {
             // Verify it has not exceeded its display count max
-            Debug.Log("Tooltip " + data.titleText + " reached max limit");
+            //Debug.Log("Tooltip " + data.titleText + " reached max limit");
             yield break;
         }
 
