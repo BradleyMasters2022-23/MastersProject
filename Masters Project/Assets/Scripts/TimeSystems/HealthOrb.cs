@@ -2,7 +2,7 @@
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - November 4th, 2022
- * Last Edited - November 4th, 2022 by Ben Schuster
+ * Last Edited - July 31st, 2023 by Ben Schuster
  * Description - Manages the concrete behavior of a time orb
  * ================================================================================================
  */
@@ -20,7 +20,7 @@ public class HealthOrb : PickupOrb, IPoolable
     /// <summary>
     /// player time manager
     /// </summary>
-    private HealthManager playerHealth;
+    private PlayerHealthManager playerHealth;
 
     /// <summary>
     /// If this object cannot be picked up during time, modify the colliders
@@ -29,7 +29,7 @@ public class HealthOrb : PickupOrb, IPoolable
     {
         if (playerHealth == null)
         {
-            playerHealth = player.root.GetComponent<HealthManager>();
+            playerHealth = player.root.GetComponent<PlayerHealthManager>();
             return;
         }
 

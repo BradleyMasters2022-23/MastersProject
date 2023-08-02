@@ -1044,24 +1044,6 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
             ""id"": ""2b1f035f-fb43-44da-af60-3dd84a119d74"",
             ""actions"": [
                 {
-                    ""name"": ""Pause"",
-                    ""type"": ""Button"",
-                    ""id"": ""b30a7176-6a96-4165-8e8e-b6d0aafa11c2"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Any"",
-                    ""type"": ""Value"",
-                    ""id"": ""8f276b82-006d-4552-9a10-4a9717dfd544"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""Continue"",
                     ""type"": ""Button"",
                     ""id"": ""ef4e9c45-0392-4502-b0dc-579deeb00453"",
@@ -1069,152 +1051,18 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""FastForward"",
+                    ""type"": ""Button"",
+                    ""id"": ""ec8329f2-ffd3-43cd-903c-a9524015064b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""e3d48124-c485-456f-8745-67f48e46271e"",
-                    ""path"": ""<Keyboard>/escape"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard;KeyboardMouse"",
-                    ""action"": ""Pause"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""13324b04-ced9-437a-8391-af4c469d0f68"",
-                    ""path"": ""<Gamepad>/start"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Controller;Gamepad"",
-                    ""action"": ""Pause"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""881e12fa-8eb2-4eaa-90b1-6146024377d0"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Pause"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""840218c1-53fa-446b-9a60-f8d4c70d24a8"",
-                    ""path"": ""<Keyboard>/anyKey"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard;KeyboardMouse"",
-                    ""action"": ""Any"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e2ec6fbd-ebda-4958-b309-d8ef9cf5af89"",
-                    ""path"": ""<Mouse>/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
-                    ""action"": ""Any"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""afbb1c1a-e017-4585-931c-e30b0af9ee7b"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
-                    ""action"": ""Any"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""fa9d1c5f-7ab1-4173-bb25-8034c108303a"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""KeyboardMouse"",
-                    ""action"": ""Any"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""84e9a4e9-55e1-4518-abf9-2eccef5b9ac0"",
-                    ""path"": ""<Gamepad>/buttonNorth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Controller;Gamepad"",
-                    ""action"": ""Any"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""7fffb8db-1a20-4e02-8571-997ce58bd93e"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Controller;Gamepad"",
-                    ""action"": ""Any"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e6e43eb1-a3ee-4f18-8069-5a0a39ef07a2"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Controller;Gamepad"",
-                    ""action"": ""Any"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""3f68bc68-2115-4652-b86d-72b0551434e1"",
-                    ""path"": ""<Gamepad>/buttonWest"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Controller;Gamepad"",
-                    ""action"": ""Any"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""fb996a50-e7ae-4fdf-9146-fd45138352f4"",
-                    ""path"": ""<Gamepad>/leftStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Any"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f0fe7364-f897-43b2-bc4b-72272b933eca"",
-                    ""path"": ""<Gamepad>/rightStick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Any"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""10a6cc35-ed84-4f23-90c5-91a73780d641"",
@@ -1234,6 +1082,61 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Continue"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d413157c-1c79-481a-8033-69e7870fbb96"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FastForward"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7e29d888-87d7-4edc-ad2a-248bc6346e08"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FastForward"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3341e83f-c578-4b04-95ec-b3a99666261c"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FastForward"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""98a9ce10-7bfe-4287-b072-3ec5c5b4b100"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FastForward"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b02b3c07-e978-417b-84fe-38df5619a955"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""FastForward"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1315,9 +1218,8 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_Dialogue_Advance = m_Dialogue.FindAction("Advance", throwIfNotFound: true);
         // Cutscene
         m_Cutscene = asset.FindActionMap("Cutscene", throwIfNotFound: true);
-        m_Cutscene_Pause = m_Cutscene.FindAction("Pause", throwIfNotFound: true);
-        m_Cutscene_Any = m_Cutscene.FindAction("Any", throwIfNotFound: true);
         m_Cutscene_Continue = m_Cutscene.FindAction("Continue", throwIfNotFound: true);
+        m_Cutscene_FastForward = m_Cutscene.FindAction("FastForward", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1708,16 +1610,14 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     // Cutscene
     private readonly InputActionMap m_Cutscene;
     private ICutsceneActions m_CutsceneActionsCallbackInterface;
-    private readonly InputAction m_Cutscene_Pause;
-    private readonly InputAction m_Cutscene_Any;
     private readonly InputAction m_Cutscene_Continue;
+    private readonly InputAction m_Cutscene_FastForward;
     public struct CutsceneActions
     {
         private @GameControls m_Wrapper;
         public CutsceneActions(@GameControls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Pause => m_Wrapper.m_Cutscene_Pause;
-        public InputAction @Any => m_Wrapper.m_Cutscene_Any;
         public InputAction @Continue => m_Wrapper.m_Cutscene_Continue;
+        public InputAction @FastForward => m_Wrapper.m_Cutscene_FastForward;
         public InputActionMap Get() { return m_Wrapper.m_Cutscene; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1727,28 +1627,22 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         {
             if (m_Wrapper.m_CutsceneActionsCallbackInterface != null)
             {
-                @Pause.started -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnPause;
-                @Pause.performed -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnPause;
-                @Pause.canceled -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnPause;
-                @Any.started -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnAny;
-                @Any.performed -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnAny;
-                @Any.canceled -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnAny;
                 @Continue.started -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnContinue;
                 @Continue.performed -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnContinue;
                 @Continue.canceled -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnContinue;
+                @FastForward.started -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnFastForward;
+                @FastForward.performed -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnFastForward;
+                @FastForward.canceled -= m_Wrapper.m_CutsceneActionsCallbackInterface.OnFastForward;
             }
             m_Wrapper.m_CutsceneActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Pause.started += instance.OnPause;
-                @Pause.performed += instance.OnPause;
-                @Pause.canceled += instance.OnPause;
-                @Any.started += instance.OnAny;
-                @Any.performed += instance.OnAny;
-                @Any.canceled += instance.OnAny;
                 @Continue.started += instance.OnContinue;
                 @Continue.performed += instance.OnContinue;
                 @Continue.canceled += instance.OnContinue;
+                @FastForward.started += instance.OnFastForward;
+                @FastForward.performed += instance.OnFastForward;
+                @FastForward.canceled += instance.OnFastForward;
             }
         }
     }
@@ -1814,8 +1708,7 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     }
     public interface ICutsceneActions
     {
-        void OnPause(InputAction.CallbackContext context);
-        void OnAny(InputAction.CallbackContext context);
         void OnContinue(InputAction.CallbackContext context);
+        void OnFastForward(InputAction.CallbackContext context);
     }
 }
