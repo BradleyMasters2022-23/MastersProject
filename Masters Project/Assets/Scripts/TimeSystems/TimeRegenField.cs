@@ -42,7 +42,7 @@ public class TimeRegenField : TooltipHolder
         // Check if target is player and dont regen while slowing
         if(other.CompareTag("Player") && timeGauge.CurrState != TimeManager.TimeGaugeState.SLOWING)
         {
-            timeGauge.AddGauge(timePerSecond);
+            timeGauge.AddGauge(timePerSecond / 50);
         }
     }
 

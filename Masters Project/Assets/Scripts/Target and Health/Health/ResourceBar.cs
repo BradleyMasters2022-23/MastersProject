@@ -341,16 +341,9 @@ public class ResourceBar
         // ensure that low health players won't instantly die on removing a crystal that increases max health
         // done because just allowing them to keep the hp opens up exploits
         // eg equipping and dequipping the crystal many times in a row to heal
-        if (_currAmount - decrement <= 0)
-        {
-            _currAmount = 1;
-        } else
-        {
-            _currAmount -= decrement;
-        }
-        
-        
 
+        _currAmount = Mathf.Clamp(_currAmount, 1, _maxAmount);
+        
         NonRegenStateCheck();
     }
 

@@ -2,7 +2,7 @@
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 17th, 2022
- * Last Edited - November 4th, 2022 by Ben Schuster
+ * Last Edited - August 2nd, 2023 by Ben Schuster
  * Description - Manages the global time value with player controls
  * ================================================================================================
  */
@@ -327,7 +327,11 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
             case TimeGaugeState.SLOWING:
                 {
                     TrySlow();
-                    DrainGauge();
+
+                    if(!cheatMode)
+                    {
+                        DrainGauge();
+                    }
                     break;
                 }
             case TimeGaugeState.RECHARGING:
@@ -340,10 +344,10 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
                     TryResume();
 
                     // If timer is up, begin recharging
-                    if (replenishDelayTimer.TimerDone())
-                    {
-                        ChangeState(TimeGaugeState.RECHARGING);
-                    }
+                    //if (replenishDelayTimer.TimerDone())
+                    //{
+                    //    ChangeState(TimeGaugeState.RECHARGING);
+                    //}
 
                     break;
                 }
@@ -352,10 +356,10 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
                     TryResume();
 
                     // If timer is up, begin recharging
-                    if (emptiedDelayTimer.TimerDone())
-                    {
-                        ChangeState(TimeGaugeState.FROZEN);
-                    }
+                    //if (emptiedDelayTimer.TimerDone())
+                    //{
+                    //    ChangeState(TimeGaugeState.FROZEN);
+                    //}
 
                     break;
                 }
@@ -409,7 +413,7 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
             case TimeGaugeState.EMPTIED:
                 {
                     // If entering emptied state, reset timer
-                    emptiedDelayTimer.ResetTimer();
+                    //emptiedDelayTimer.ResetTimer();
 
                     //Debug.Log("Playing to resume time");
 
@@ -489,6 +493,10 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
     public void SetCheatMode(bool cheat)
     {
         cheatMode = cheat;
+        if (cheatMode)
+        {
+            AddGauge(999);
+        }
     }
 
     /// <summary>
@@ -627,13 +635,14 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
     //}
     public void UpgradeIncrementMaxTimeGauge(float increment)
     {
-        //Debug.Log("New max is " + newMax);
+        Debug.Log("New increment is " + increment);
         //slowDuration.ChangeVal(newMax);
+        increment *= FixedUpdateCalls;
 
         if(increment >= 0)
             currSlowGauge.IncreaseMax(increment, true);
         else
-            currSlowGauge.DecreaseMax(increment);
+            currSlowGauge.DecreaseMax(increment * -1);
 
         currentState = TimeGaugeState.RECHARGING;
     }

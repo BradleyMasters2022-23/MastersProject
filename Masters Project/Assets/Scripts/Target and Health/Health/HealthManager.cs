@@ -318,14 +318,12 @@ public class HealthManager : MonoBehaviour
 
     public void IncreaseMaxHealth(float increment, int healthbarIndex = 0)
     {
-        Debug.Log("Upgrading health");
         _healthbars[healthbarIndex].IncreaseMax(increment, true);
     }
 
     public void DecreaseMaxHealth(float decrement, int healthbarIndex = 0)
     {
         _healthbars[healthbarIndex].DecreaseMax(decrement);
-
     }
 
     #endregion
