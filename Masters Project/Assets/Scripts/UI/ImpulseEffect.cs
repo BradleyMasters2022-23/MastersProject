@@ -61,6 +61,7 @@ public class ImpulseEffect : MonoBehaviour
         if(routine!= null)
         {
             StopCoroutine(routine);
+            imgRef.color = new Color(0, 0, 0, 0);
         }
 
         if (targetColor.a <= 0)

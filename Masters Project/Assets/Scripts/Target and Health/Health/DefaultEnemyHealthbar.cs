@@ -53,9 +53,8 @@ public class DefaultEnemyHealthbar : ResourceBarUI
     [SerializeField] protected bool preserveOffset = true;
     float verticalOffset;
 
-    protected override void Awake()
+    protected void Awake()
     {
-        base.Awake();
         verticalOffset = transform.localPosition.y;
 
         timer = new ScaledTimer(onDamagedDuration, false);
