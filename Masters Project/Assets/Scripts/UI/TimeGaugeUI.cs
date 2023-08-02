@@ -19,6 +19,7 @@ public class TimeGaugeUI : ResourceBarUI
     [Header("Time Gauge")]
 
     [Tooltip("The color to flash the bar")]
+    [SerializeField] private RawImage dividerImage;
     [SerializeField] private Color flashColor;
     [SerializeField] private Image flashImage;
 

@@ -87,7 +87,6 @@ public class ResourceBarUI : MonoBehaviour
         }
 
         pixelsPerHealth = coreReference.sizeDelta.x / _mainSlider.maxValue;
-        Debug.Log("Pixel per point: " + pixelsPerHealth);
     }
     protected virtual void LateUpdate()
     {
@@ -98,11 +97,10 @@ public class ResourceBarUI : MonoBehaviour
         UpdateCurrVal();
     }
 
-    private void UpdateCoreSlider()
+    protected virtual void UpdateCoreSlider()
     {
         if (_mainSlider.maxValue != _targetData.MaxValue())
         {
-            Debug.Log("Max change detected");
             _mainSlider.maxValue = _targetData.MaxValue();
             coreReference.sizeDelta = new Vector2(pixelsPerHealth * _mainSlider.maxValue, coreReference.sizeDelta.y);
         }
