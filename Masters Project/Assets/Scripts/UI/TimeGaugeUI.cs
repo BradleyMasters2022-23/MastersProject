@@ -95,4 +95,13 @@ public class TimeGaugeUI : ResourceBarUI
         // Apply new color
         flashImage.color = c;
     }
+
+    protected override void UpdateCoreSlider()
+    {
+        base.UpdateCoreSlider();
+
+        Rect rect = dividerImage.uvRect;
+        rect.width = (_mainSlider.maxValue / 50);
+        dividerImage.uvRect = rect;
+    }
 }

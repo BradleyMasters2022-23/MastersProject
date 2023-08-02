@@ -93,17 +93,18 @@ public class ResourceBarUI : MonoBehaviour
         if (!initialized)
             return;
 
-        UpdateCoreSlider();
+        if (_mainSlider.maxValue != _targetData.MaxValue())
+        {
+            UpdateCoreSlider();
+        }
+        
         UpdateCurrVal();
     }
 
     protected virtual void UpdateCoreSlider()
     {
-        if (_mainSlider.maxValue != _targetData.MaxValue())
-        {
-            _mainSlider.maxValue = _targetData.MaxValue();
-            coreReference.sizeDelta = new Vector2(pixelsPerHealth * _mainSlider.maxValue, coreReference.sizeDelta.y);
-        }
+        _mainSlider.maxValue = _targetData.MaxValue();
+        coreReference.sizeDelta = new Vector2(pixelsPerHealth * _mainSlider.maxValue, coreReference.sizeDelta.y);
     }
 
     protected virtual void UpdateCurrVal()
