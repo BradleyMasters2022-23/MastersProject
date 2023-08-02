@@ -94,7 +94,9 @@ public class PlayerHealthbarUI : ResourceBarUI
     
     [Header("Critical Mode")]
 
+    [Tooltip("Whether this healthbar should use a critical state")]
     [SerializeField] bool useCriticalState;
+    [Tooltip("Threshold used for critical state. % based"), Range(0, 100)]
     [SerializeField] float criticalThreshold;
 
     [SerializeField] Color criticalColor;
@@ -141,14 +143,16 @@ public class PlayerHealthbarUI : ResourceBarUI
 
         if(useCriticalState)
         {
+            float currPercent = (_targetData.CurrentValue() / _mainSlider.maxValue) * 100;
+
             // check if exiting crit state
-            if (inCritState && (_targetData.CurrentValue() > criticalThreshold))
+            if (inCritState && (currPercent > criticalThreshold))
             {
                 inCritState = false;
                 onNormalState.Invoke();
             }
             // check if entering crit state
-            else if (!inCritState && (_targetData.CurrentValue() <= criticalThreshold))
+            else if (!inCritState && (currPercent <= criticalThreshold))
             {
                 inCritState = true;
                 onCriticalState.Invoke();
