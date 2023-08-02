@@ -24,6 +24,11 @@ public class MapSegmentSO : ScriptableObject
     [Tooltip("Name of the scene this level has")]
     public string sceneName;
 
+    [Tooltip("Render probe map to use in the portal to display this room")]
+    public Cubemap portalViewMat;
+    [Tooltip("What to set the probe intensity (brightness) as")]
+    public float probeIntensityLevel;
+
     [Tooltip("Does this room have a depth requirement")]
     public bool depthRequirement = true;
 
