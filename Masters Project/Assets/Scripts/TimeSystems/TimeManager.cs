@@ -519,7 +519,10 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
         {
             ChangeState(TimeGaugeState.IDLE);
         }
-
+        else if (remainder == 0 && currentState == TimeGaugeState.EMPTIED)
+        {
+            ChangeState(TimeGaugeState.FROZEN);
+        }
         // Replenish the gauge, determine if state should change
         //if (currSlowGauge.CurrentValue() + amount >= currSlowGauge.MaxValue())
         //{
