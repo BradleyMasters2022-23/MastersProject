@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class TimeGaugeUI : MonoBehaviour
+public class TimeGaugeUI : ResourceBarUI
 {
     /// <summary>
     /// Player to track time of

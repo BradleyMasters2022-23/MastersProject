@@ -25,7 +25,6 @@ public class TimeOrb : PickupOrb, IPoolable
     private void Start()
     {
         playerTime = FindObjectOfType<TimeManager>();
-        refillAmount *= 50;
     }
 
     /// <summary>

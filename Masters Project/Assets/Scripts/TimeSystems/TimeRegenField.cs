@@ -32,7 +32,6 @@ public class TimeRegenField : TooltipHolder
     private WarningText warningText;
 
     
-
     private void Awake()
     {
         timeGauge = TimeManager.instance;
@@ -43,7 +42,6 @@ public class TimeRegenField : TooltipHolder
         // Check if target is player and dont regen while slowing
         if(other.CompareTag("Player") && timeGauge.CurrState != TimeManager.TimeGaugeState.SLOWING)
         {
-            // As this function is called every physics frame, no need for conversion!
             timeGauge.AddGauge(timePerSecond);
         }
     }

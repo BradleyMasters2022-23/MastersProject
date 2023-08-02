@@ -125,27 +125,18 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
     [Header("=== Gauge Values ===")]
 
     [Tooltip("Duration the player can slow time for with full gauge. Input in seconds.")]
-    [SerializeField, Space(3)] private UpgradableFloat slowDuration;
-
-    [Tooltip("Time it takes for this gauge take to replenish.")]
-    [SerializeField, Space(3)] private UpgradableFloat replenishTime;
-
-    [Tooltip("How long does it take before time gauge begins refilling?")]
-    [SerializeField, Space(3)] private UpgradableFloat replenishDelay;
-
-    [Tooltip("When gauge is fully depleted, how long before player can use this gauge again?")]
-    [SerializeField, Space(3)] private UpgradableFloat emptiedDelay;
+    [SerializeField, Space(3)] private ResourceBarSO timeGaugeCoreData;
 
     /// <summary>
     /// Current amount of slow gauge
     /// </summary>
-    private float currSlowGauge;
+    private ResourceBar currSlowGauge;
     /// <summary>
     /// Current amount of slow gauge
     /// </summary>
     public float CurrSlowGauge
     {
-        get { return currSlowGauge; }
+        get { return currSlowGauge.CurrentValue(); }
     }
 
     /// <summary>
@@ -219,19 +210,10 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
         worldTimeScale = NormalTime;
         stoppedThreshold = timeStoppedThreshold;
 
-        slowDuration.Initialize();
-        replenishTime.Initialize();
-        replenishDelay.Initialize();
-        emptiedDelay.Initialize();
+        currSlowGauge = new ResourceBar();
+        currSlowGauge.Init(timeGaugeCoreData, FixedUpdateCalls);
 
-        replenishDelayTimer = new ScaledTimer(replenishDelay.Current, false);
-        emptiedDelayTimer = new ScaledTimer(emptiedDelay.Current, false);
-
-        // Multiply slow duration seconds by update calls per second
-        baseDuration = slowDuration.Current;
-        currSlowGauge = slowDuration.Current * FixedUpdateCalls;
-
-        source = gameObject.AddComponent<AudioSource>();
+        source = gameObject.GetComponent<AudioSource>();
     }
 
     private IEnumerator InitializeControls()
@@ -414,7 +396,7 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
             case TimeGaugeState.FROZEN:
                 {
                     // If entering frozen state, reset timer
-                    replenishDelayTimer.ResetTimer(replenishDelay.Current);
+                    //replenishDelayTimer.ResetTimer(replenishDelay.Current);
 
                     if (source != null)
                         source.Stop();
@@ -487,16 +469,21 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
         if (cheatMode)
             return;
 
-        // Drain the gauge, determine if state should change
-        if(currSlowGauge - DepleteAmount <= 0)
-        {
-            currSlowGauge = 0;
+        // Reduce main gauge. If theres any remainder, than its empty
+        float remainder = currSlowGauge.Decrease(DepleteAmount);
+        if(remainder >0)
             ChangeState(TimeGaugeState.EMPTIED);
-        }
-        else
-        {
-            currSlowGauge -= DepleteAmount;
-        }
+
+        // Drain the gauge, determine if state should change
+        //if (currSlowGauge.CurrentValue() - DepleteAmount <= 0)
+        //{
+        //    currSlowGauge = 0;
+        //    ChangeState(TimeGaugeState.EMPTIED);
+        //}
+        //else
+        //{
+        //    currSlowGauge -= DepleteAmount;
+        //}
     }
 
     public void SetCheatMode(bool cheat)
@@ -507,7 +494,7 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
     /// <summary>
     /// Add more energy to the time gauge
     /// </summary>
-    /// <param name="amount">amount to add</param>
+    /// <param name="amount">amount to add, in seconds</param>
     /// <returns>Whether anything was added</returns>
     public bool AddGauge(float amount)
     {
@@ -515,20 +502,26 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
         if(currentState == TimeGaugeState.IDLE)
             return false;
 
-        amount *= difficultyTimeRecoveryMod;
+        // adjust amount from readable value to system value
+        amount *= FixedUpdateCalls * difficultyTimeRecoveryMod;
+        float remainder = currSlowGauge.Increase(amount);
 
-        float maxGauge = slowDuration.Current * FixedUpdateCalls;
-
-        // Replenish the gauge, determine if state should change
-        if (currSlowGauge + amount >= maxGauge)
+        // if any remainder, then its maxed and should change state
+        if (remainder > 0)
         {
-            currSlowGauge = maxGauge;
             ChangeState(TimeGaugeState.IDLE);
         }
-        else
-        {
-            currSlowGauge += amount;
-        }
+
+        // Replenish the gauge, determine if state should change
+        //if (currSlowGauge.CurrentValue() + amount >= currSlowGauge.MaxValue())
+        //{
+        //    currSlowGauge = maxGauge;
+        //    ChangeState(TimeGaugeState.IDLE);
+        //}
+        //else
+        //{
+        //    currSlowGauge += amount;
+        //}
 
         // Since some was used, return true
         return true;
@@ -563,9 +556,8 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
     public void DrainGauge(float amountInTime)
     {
         float amt = amountInTime * FixedUpdateCalls;
-        currSlowGauge = Mathf.Clamp(currSlowGauge - amt, 0, MaxGauge());
+        currSlowGauge.Decrease(amt);
         ChangeState(TimeGaugeState.FROZEN);
-
     }
 
     #region Observer Stuff
@@ -623,21 +615,32 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
 
     public float MaxGauge()
     {
-        return slowDuration.Current * FixedUpdateCalls;
+        return currSlowGauge.MaxValue();
     }
     public float GetBaseMax()
     {
-        return baseDuration;
+        return timeGaugeCoreData._maxValue;
     }
-    public float UpgradeMaxGauge()
-    {
-        return slowDuration.Current;
-    }
-    public void UpgradeSetGaugeMax(float newMax)
+    //public float UpgradeMaxGauge()
+    //{
+    //    return slowDuration.Current;
+    //}
+    public void UpgradeIncrementMaxTimeGauge(float increment)
     {
         //Debug.Log("New max is " + newMax);
-        slowDuration.ChangeVal(newMax);
+        //slowDuration.ChangeVal(newMax);
+
+        if(increment >= 0)
+            currSlowGauge.IncreaseMax(increment, true);
+        else
+            currSlowGauge.DecreaseMax(increment);
+
         currentState = TimeGaugeState.RECHARGING;
+    }
+
+    public ResourceBar GetDataRef()
+    {
+        return currSlowGauge;
     }
 
     #endregion
@@ -663,13 +666,13 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
 
     private bool BufferFull()
     {
-        float healingPot = 0;
+        float recoveryPot = 0;
         foreach (TimeOrb o in timeOrbBuffer.ToArray())
         {
-            healingPot += o.GetAmt() * difficultyTimeRecoveryMod;
+            recoveryPot += o.GetAmt() * FixedUpdateCalls * difficultyTimeRecoveryMod;
         }
 
-        return (currSlowGauge + healingPot) >= (slowDuration.Current * FixedUpdateCalls);
+        return (currSlowGauge.CurrentValue() + recoveryPot) >= (currSlowGauge.MaxValue());
     }
 
     #endregion
