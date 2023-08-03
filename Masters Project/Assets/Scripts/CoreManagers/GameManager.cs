@@ -46,6 +46,13 @@ public class GameManager : MonoBehaviour
     {
         get { return currentState; }
     }
+    /// <summary>
+    /// Previous state of the manager
+    /// </summary>
+    public States LastState 
+    { 
+        get { return lastState; } 
+    }
 
     [Header("===== Scene Management Info =====")]
 
