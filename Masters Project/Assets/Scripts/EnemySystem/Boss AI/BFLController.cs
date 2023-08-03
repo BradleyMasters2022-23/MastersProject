@@ -12,6 +12,7 @@ public class BFLController : MonoBehaviour
     private BFLTarget target;
 
     [Header("Status")]
+    [SerializeField] private Animator animator;
     [SerializeField, ReadOnly] private bool onCooldown = false;
     [SerializeField, ReadOnly] private bool currentAttackActive = false;
     [SerializeField, ReadOnly] private bool activeThisPhase = false;
@@ -139,5 +140,20 @@ public class BFLController : MonoBehaviour
     public bool CurrentlyAttacking()
     {
         return (currentAttackActive && !disabled);
+    }
+
+    /// <summary>
+    /// Tell animator to summon the BFL 
+    /// </summary>
+    public void PhaseSummon()
+    {
+        animator.SetBool("Active", true);
+    }
+    /// <summary>
+    /// Tell animator to dismiss the BFL
+    /// </summary>
+    public void PhaseDismiss()
+    {
+        animator.SetBool("Active", false);
     }
 }
