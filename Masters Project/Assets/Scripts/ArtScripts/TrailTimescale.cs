@@ -15,7 +15,6 @@ public class TrailTimescale : MonoBehaviour, TimeObserver
     }
     public void OnResume()
     {
-        Debug.Log("New time: " + Time.time + " - " + pauseTime + " = " + (Time.time - pauseTime + trailTime));
         ren.time = (Time.time - pauseTime) + trailTime;
         ren.emitting = true;
     }

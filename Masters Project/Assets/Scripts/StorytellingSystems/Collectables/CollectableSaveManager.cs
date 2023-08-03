@@ -165,15 +165,22 @@ public class CollectableSaveManager : SaveDataContainer
         baseChance += data.savedBonusLuck;
         bool success = Random.Range(0.00001f, 100f) <= baseChance;
 
-        // reset luck on success, increment on fail.
-        // TODO - move reset luck to pickup instead to not punish missing them
-        if (success)
-            data.ResetLuck();
-        else
+        // If fail, then quickly add to bonus luck
+        if (!success)
             data.AddLuck(bonusLuckOnFail);
+            
         SaveData();
 
         return success;
+    }
+
+    /// <summary>
+    /// Reset the bonus luck for collectables
+    /// </summary>
+    public void ResetLuck()
+    {
+        data.ResetLuck();
+        SaveData();
     }
 
     public void ClearDataCheat(InputAction.CallbackContext c)
