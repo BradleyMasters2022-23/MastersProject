@@ -4,21 +4,20 @@ using UnityEngine;
 
 public class TrailTimescale : MonoBehaviour, TimeObserver
 {
-    private TrailRenderer ren;
-    private float trailTime;
-    private float pauseTime;
-
-    public void OnResume()
-    {
-        ren.time = (Time.time - pauseTime) + trailTime;
-        ren.emitting = true;
-    }
-
+    [SerializeField] private TrailRenderer ren;
+    [SerializeField] private float trailTime;
+    [SerializeField] private float pauseTime;
     public void OnStop()
     {
         pauseTime = Time.time;
         ren.time = Mathf.Infinity;
         ren.emitting = false;
+    }
+    public void OnResume()
+    {
+        Debug.Log("New time: " + Time.time + " - " + pauseTime + " = " + (Time.time - pauseTime + trailTime));
+        ren.time = (Time.time - pauseTime) + trailTime;
+        ren.emitting = true;
     }
 
     private void Awake()
@@ -29,13 +28,4 @@ public class TrailTimescale : MonoBehaviour, TimeObserver
 
         trailTime = ren.time;
     }
-
-    //private void OnEnable()
-    //{
-    //    TimeManager.instance.Subscribe(this);
-    //}
-    //private void OnDisable()
-    //{
-    //    TimeManager.instance.UnSubscribe(this);
-    //}
 }
