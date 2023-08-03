@@ -112,6 +112,10 @@ public class PlayerTarget : Target, IDifficultyObserver
 
     #region Player Death
 
+    [SerializeField] AudioClipSO immediateDeathSound;
+    [SerializeField] AudioClipSO deathHitGroundSound;
+    [SerializeField] AmbientSFXSource playerWeaponSoundManager;
+
     /// <summary>
     /// On kill, go into game over state
     /// </summary>
@@ -135,6 +139,28 @@ public class PlayerTarget : Target, IDifficultyObserver
     {
         GlobalStatsManager.data.playerDeaths++;
         GameManager.instance.ChangeState(GameManager.States.GAMEOVER);
+    }
+
+    private void PlayDeathAudio(int stage)
+    {
+        switch (stage)
+        {
+            case 0:
+                {
+                    immediateDeathSound.PlayClip(audioSource);
+                    break;
+                }
+            case 1:
+                {
+                    deathHitGroundSound.PlayClip(audioSource);
+                    break;
+                }
+            case 2:
+                {
+                    playerWeaponSoundManager.Play();
+                    break;
+                }
+        }
     }
 
     #endregion
