@@ -30,12 +30,12 @@ public class TrailTimescale : MonoBehaviour, TimeObserver
         trailTime = ren.time;
     }
 
-    private void OnEnable()
-    {
-        TimeManager.instance.Subscribe(this);
-    }
-    private void OnDisable()
-    {
-        TimeManager.instance.UnSubscribe(this);
-    }
+    //private void OnEnable()
+    //{
+    //    TimeManager.instance.Subscribe(this);
+    //}
+    //private void OnDisable()
+    //{
+    //    TimeManager.instance.UnSubscribe(this);
+    //}
 }

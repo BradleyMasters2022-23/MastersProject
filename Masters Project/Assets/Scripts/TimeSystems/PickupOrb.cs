@@ -51,6 +51,8 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
 
     [Tooltip("The collider for the actual core collider")]
     [SerializeField] protected Collider realCollider;
+    [Tooltip("The collider for the one interacting with the ground")]
+    [SerializeField] protected Collider physicsCollider;
     [Tooltip("Sound when orb is collected")]
     [SerializeField] protected AudioClipSO OrbCollect;
 
@@ -134,9 +136,15 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
 
                     // if hit the float distance, freeze
                     if (Physics.Raycast(transform.position, Vector3.down, floatHeight, groundMask))
+                    {
+                        physicsCollider.enabled = false;
                         rb.constraints = RigidbodyConstraints.FreezeAll;
+                    }
                     else
+                    {
                         rb.constraints = RigidbodyConstraints.None;
+                        physicsCollider.enabled = true;
+                    }
 
                     // check if it should be dewspawning
                     CheckDespawnStatus();
@@ -158,6 +166,7 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
                 {
                     // When spawning, set trail to nothing
                     trail.Clear();
+                    physicsCollider.enabled = true;
 
                     break;
                 }
@@ -165,6 +174,7 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
                 {
                     // switch to kinematic for chasing reasons
                     rb.isKinematic = true;
+                    physicsCollider.enabled = false;
 
                     // Set animator to chasing
                     anim.SetBool("isChasing", true);
