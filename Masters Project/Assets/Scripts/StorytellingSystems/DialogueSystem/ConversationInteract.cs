@@ -12,24 +12,50 @@ using UnityEngine;
 
 public class ConversationInteract : MonoBehaviour, Interactable
 {
+    /// <summary>
+    /// Call manager that handles saving/choosing calls
+    /// </summary>
     private CallManager calls;
-    // eventually, should instead pull up a screen with a list of characters & info about them
-    // when a conversation is available, screen should blink; eventually, screen & contact both blink
+    /// <summary>
+    /// Bulk UI manager controlling the 3 main convo screens
+    /// </summary>
     private ConvoRefManager ui;
 
+    #region Incoming Call Indicator Variables
+
+    [Tooltip("Source of the ringtone")]
+    [SerializeField] protected AudioSource ringtonePlayer;
+
+    [Tooltip("Renderer that flashes with new call")]
     [SerializeField] private MeshRenderer flashRenderer;
+    /// <summary>
+    /// Original color of the flashing screen
+    /// </summary>
     private Color original;
+    /// <summary>
+    /// Timer used to track flash intervals
+    /// </summary>
     private ScaledTimer timer;
+    /// <summary>
+    /// Time inbetween each flash
+    /// </summary>
     public float flashTime;
+
+    [Tooltip("Waypoint that enables when call available")]
+    [SerializeField] private GameObject waypointAnchor;
+
+    #endregion
 
     // Delegate for any special functions to use
     // used by tooltip system to close tooltip when its used
     public delegate void OnInteraction();
     public OnInteraction onStartCall;
 
+    private bool inCall;
 
-    [SerializeField] private GameObject waypointAnchor;
-
+    /// <summary>
+    /// Initialize functions and get any references needed
+    /// </summary>
     private void Start()
     {
         ui = ConvoRefManager.instance;
@@ -44,6 +70,9 @@ public class ConversationInteract : MonoBehaviour, Interactable
         timer = new ScaledTimer(flashTime);
     }
 
+    /// <summary>
+    /// If a call is available, make sure the current call can be used
+    /// </summary>
     public void Update()
     {
         if (flashRenderer == null)
@@ -54,8 +83,18 @@ public class ConversationInteract : MonoBehaviour, Interactable
             waypointAnchor.SetActive((calls.HasAvailable() && CanInteract()));
 
         // if calls are available, flash
-        if(calls.HasAvailable())
+        // Stop loop if in game menu
+        if(GameManager.instance.CurrentState != GameManager.States.GAMEMENU
+            && calls.HasAvailable())
         {
+            // make sure ringtone is playing
+            if (ringtonePlayer != null && !ringtonePlayer.isPlaying)
+            {
+                AudioClipSO ringtone = calls.GetAvailableRingtone();
+                ringtone.PlayClip(ringtonePlayer);
+            }
+
+            // flash if time is up
             if (timer.TimerDone())
             {
                 if (flashRenderer.material.color == Color.red)
@@ -73,15 +112,19 @@ public class ConversationInteract : MonoBehaviour, Interactable
         // otherwise, revert back to normal
         else
         {
+            if (ringtonePlayer != null && ringtonePlayer.isPlaying)
+                ringtonePlayer.Stop();
+
             if (flashRenderer.material.color == Color.red)
             {
                 flashRenderer.material.color = original;
             }
         }
-
-        
     }
 
+    /// <summary>
+    /// On interact, open the UI
+    /// </summary>
     public virtual void OnInteract()
     {
         if (ui == null)
@@ -99,6 +142,9 @@ public class ConversationInteract : MonoBehaviour, Interactable
         {
             ui.OpenScreen();
         }
+
+        if (ringtonePlayer != null && ringtonePlayer.isPlaying)
+            ringtonePlayer.Stop();
 
         // call any subscribed functions to the caller
         onStartCall?.Invoke();

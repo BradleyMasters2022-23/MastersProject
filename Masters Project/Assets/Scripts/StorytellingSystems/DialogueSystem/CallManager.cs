@@ -121,6 +121,7 @@ public class CallManager : SaveDataContainer
             }
             else
             {
+                Debug.Log("Random failsafe utilized");
                 return ultimateGenericFailsafe;
             }
 
@@ -209,5 +210,17 @@ public class CallManager : SaveDataContainer
             return 0;
 
         return availableConversations.Count;
+    }
+
+    public AudioClipSO GetAvailableRingtone()
+    {
+        if (availableConversations.Count > 0) // If new chats available, get first ringtone
+        {
+            return availableConversations[0].nonPennyCharacter.ringtone;
+        }
+        else // otherwise, return null
+        {
+            return null;
+        }
     }
 }
