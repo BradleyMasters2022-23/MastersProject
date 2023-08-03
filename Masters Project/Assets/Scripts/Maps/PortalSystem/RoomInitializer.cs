@@ -27,7 +27,7 @@ public class RoomInitializer : MonoBehaviour
     /// <summary>
     /// Initialize any objects in the world
     /// </summary>
-    public virtual void Init()
+    public virtual void Init(Cubemap nextCubemap, float intensity)
     {
         if(randomizedRoot != null)
         {
@@ -60,6 +60,11 @@ public class RoomInitializer : MonoBehaviour
         if(automaticallyEnd)
         {
             MapLoader.instance.ActivatePortal();
+        }
+
+        foreach(var p in exitPortalList.weightedList)
+        {
+            p.option.LoadNewCubemap(nextCubemap, intensity);
         }
     }
 

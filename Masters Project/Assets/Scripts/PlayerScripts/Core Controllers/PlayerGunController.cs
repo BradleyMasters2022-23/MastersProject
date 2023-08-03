@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-public class PlayerGunController : TimeAffectedEntity, TimeObserver
+public class PlayerGunController : TimeAffectedEntity, TimeObserver, IDifficultyObserver
 {
     [Header("---Game Flow---")]
     [SerializeField] private ChannelGMStates onStateChangeChannel;
@@ -261,7 +261,7 @@ public class PlayerGunController : TimeAffectedEntity, TimeObserver
                 newShot.transform.LookAt(shootCam.TargetPos);
                 newShot.transform.eulerAngles = ApplySpread(newShot.transform.eulerAngles);
 
-                newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current, maxRange, gameObject, true);
+                newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current * difficultyPlayerDamageMod, speedMultiplier.Current, maxRange, gameObject, true);
                 currBloom = Mathf.Clamp(currBloom + bloomPerShot, baseBloom, maxBloom);
             }
         }
@@ -293,7 +293,7 @@ public class PlayerGunController : TimeAffectedEntity, TimeObserver
 
                 // Aim to center screen, apply inaccuracy bonuses
                 newShot.transform.LookAt(shootCam.TargetPos);
-                newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current, speedMultiplier.Current * enhancedSpeedMultiplier, maxRange, gameObject, true);
+                newShot.GetComponent<RangeAttack>().Initialize(damageMultiplier.Current * difficultyPlayerDamageMod, speedMultiplier.Current * enhancedSpeedMultiplier, maxRange, gameObject, true);
 
             }
         }
@@ -354,6 +354,8 @@ public class PlayerGunController : TimeAffectedEntity, TimeObserver
     {
         shoot.started -= ToggleTrigger;
         shoot.canceled -= ToggleTrigger;
+
+        GlobalDifficultyManager.instance.Unsubscribe(this, playerDamageModSettingKey);
     }
 
     public float GetDamageMultiplier() {
@@ -397,4 +399,34 @@ public class PlayerGunController : TimeAffectedEntity, TimeObserver
     {
         return defaultMaxRange;
     }
+
+    #region Difficulty
+
+    /// <summary>
+    /// player damage modifier, managed by difficulty settings
+    /// </summary>
+    private float difficultyPlayerDamageMod = 1;
+    /// <summary>
+    /// Player damage mod setting key
+    /// </summary>
+    private const string playerDamageModSettingKey = "PlayerDamage";
+
+    /// <summary>
+    /// Update player damage modifier
+    /// </summary>
+    /// <param name="newModifier">New damage taken modifier</param>
+    public void UpdateDifficulty(float newModifier)
+    {
+        // invert the modifier since this is saved as enemy health modifier
+        newModifier = 1 / newModifier;
+
+        difficultyPlayerDamageMod = newModifier;
+    }
+
+    private void OnEnable()
+    {
+        GlobalDifficultyManager.instance.Subscribe(this, playerDamageModSettingKey);
+    }
+
+    #endregion
 }

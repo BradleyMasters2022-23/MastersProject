@@ -985,7 +985,7 @@ GameObject:
   - component: {fileID: 8810997313966297021}
   - component: {fileID: 8810997313966297010}
   - component: {fileID: 6435311145722770108}
-  - component: {fileID: 7777382438063799731}
+  - component: {fileID: 8502422771617394287}
   - component: {fileID: 8810997313966297009}
   - component: {fileID: 8810997313966297022}
   - component: {fileID: 8810997313966297015}
@@ -994,6 +994,7 @@ GameObject:
   - component: {fileID: 2702772752586940428}
   - component: {fileID: 2718933415222955262}
   - component: {fileID: 6810719271911296605}
+  - component: {fileID: 2621111177248261717}
   m_Layer: 6
   m_Name: Player_GameReady
   m_TagString: Player
@@ -1077,13 +1078,16 @@ MonoBehaviour:
   _unkillable: 0
   immuneToKnockback: 0
   knockbackModifier: 10
-  maxKnockback: 250
+  maxKnockback: 750
   invincibilityShield: {fileID: 0}
   _deathVFX: {fileID: 0}
   damagedSound: {fileID: 11400000, guid: 888e30f4deedc974c8f52b772e9d5290, type: 2}
   deathSound: {fileID: 0}
   damagedSoundCooldown: 0.2
   dropList: []
+  playerDeathAnimator: {fileID: 2621111177248261717}
+  playerGunController: {fileID: 177586797024885423}
+  aimController: {fileID: 8810997313966297009}
   impulseRanges:
   - minDamage: 0
     maxDamage: 5
@@ -1107,7 +1111,7 @@ MonoBehaviour:
   timestop: {fileID: 0}
   grenadeAbility: {fileID: 2702772752586940428}
   tieDyeMat: {fileID: 2100000, guid: 90c5255719e1c3d43b414c121a0bbe10, type: 2}
---- !u!114 &7777382438063799731
+--- !u!114 &8502422771617394287
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1116,7 +1120,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8810997313966297016}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df5a001e63515124d9fff01548e22564, type: 3}
+  m_Script: {fileID: 11500000, guid: d0aafb8a47ba8d3489bedc8e9d57d0c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _healthbarData:
@@ -1269,7 +1273,7 @@ MonoBehaviour:
   jumpForce: 180
   jumpMultiplier:
     startingValue: 1
-    lowerLimit: 0.33
+    lowerLimit: 0.5
     upperLimit: 100
   jumpCooldown: 0.5
   kyoteTime: 0.25
@@ -1283,8 +1287,8 @@ MonoBehaviour:
     m_Bits: 2056
   groundCheck: {fileID: 8810997314421572952}
   groundCheckRadius: 0.2
-  maxAngle: 40
-  slopeStickForce: 130
+  maxAngle: 45
+  slopeStickForce: 140
   QAbility: {fileID: 2702772752586940428}
 --- !u!114 &8810997313966297015
 MonoBehaviour:
@@ -1556,6 +1560,26 @@ MonoBehaviour:
     m_DissipationDistance: 100
     m_PropagationSpeed: 343
   m_DefaultVelocity: {x: 0, y: -0.1, z: -0.5}
+--- !u!95 &2621111177248261717
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8810997313966297016}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2f15cbc5bc3bf7546bd907c730090717, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8810997314044839443
 GameObject:
   m_ObjectHideFlags: 0
@@ -1875,6 +1899,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd4294e392450ef4fafab65bbf075ccd, type: 3}
+--- !u!95 &177586797024885423 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 838651348008844798, guid: cd4294e392450ef4fafab65bbf075ccd, type: 3}
+  m_PrefabInstance: {fileID: 708638222276593489}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &431311187433873145 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 876448790602209704, guid: cd4294e392450ef4fafab65bbf075ccd, type: 3}

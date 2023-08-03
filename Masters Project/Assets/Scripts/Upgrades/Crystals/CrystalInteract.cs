@@ -46,7 +46,7 @@ public class CrystalInteract : MonoBehaviour, Interactable
 
         // apply new level, clamp it to make sure its above 1
         par = Mathf.Clamp(newPar * parMod, 1, 9999);
-
+        
         // loads crystal
         if (crystalManagerInstance != null && crystal == null)
         {

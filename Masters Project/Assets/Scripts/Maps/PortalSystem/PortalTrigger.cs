@@ -29,6 +29,9 @@ public class PortalTrigger : MonoBehaviour, Interactable
 
     [SerializeField] ChannelVoid onSceneLoadChannel;
 
+    [Tooltip("Reflection probe showing the next room")]
+    [SerializeField] ReflectionProbe nextRoomProbe;
+
     [Header("VFX/SFX Indicators")]
 
     [Tooltip("Ambient SFX for the portal")]
@@ -59,11 +62,6 @@ public class PortalTrigger : MonoBehaviour, Interactable
     /// The max amount of change that can be applied to a scale in one frame
     /// </summary>
     private float maxScaleChange = 0.02f;
-
-    /// <summary>
-    /// reference to the secret portal
-    /// </summary>
-    private SecretPortalInstance secretRef;
     /// <summary>
     /// cooldown tracker for interaction
     /// </summary>
@@ -200,13 +198,20 @@ public class PortalTrigger : MonoBehaviour, Interactable
         playerRef.rotation = exitPoint.rotation;
     }
 
-    public void AssignSecretRef(SecretPortalInstance s)
+    /// <summary>
+    /// Load a new cubemap into the renderer
+    /// </summary>
+    /// <param name="newMap"></param>
+    public void LoadNewCubemap(Cubemap newMap, float intensity)
     {
-        secretRef = s;
+        if (newMap != null)
+        {
+            nextRoomProbe.customBakedTexture = newMap;
+            nextRoomProbe.intensity = intensity;
+        }
+        else
+            nextRoomProbe.intensity = 1;
     }
-    public void GoToSecretRoom()
-    {
-        MapLoader.instance.PlaySecretPortalSFX();
-        secretRef?.GoToSecretRoom();
-    }
+
+    
 }

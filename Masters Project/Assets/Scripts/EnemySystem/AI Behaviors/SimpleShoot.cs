@@ -12,12 +12,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using Masters.AI;
 
-public class SimpleShoot : AttackTarget
+public class SimpleShoot : AttackTarget, IDifficultyObserver    
 {
     [Header("=== Ranged Attack Data ===")]
 
     [Tooltip("The projectile prefab to use")]
     public GameObject projectile;
+
+    [Tooltip("Damage modifier applied to this attack's projectiles. Multiplicative.")]
+    [SerializeField] private float internalDamageMod = 1;
+    [Tooltip("Speed modifier applied to this attack's projectiles. Multiplicative.")]
+    [SerializeField] private float internalSpeedMod = 1;
+    [Tooltip("Max range for this attack's projectiles.")]
+    [SerializeField] private float projectileRange = 50;
+
     [Tooltip("All barrels for this enemy to shoot")]
     [SerializeField] private Transform[] shootPoints;
     [Tooltip("Number of shots to do. Each shot is per-barrel" +
@@ -59,7 +67,7 @@ public class SimpleShoot : AttackTarget
 
     [Tooltip("The object holding the VFX for player indicator")]
     [SerializeField, AssetsOnly] private GameObject indicatorVFXPrefab;
-    [SerializeField] private float indicatorScale = 1; 
+    [SerializeField] private float indicatorScale = 1;
     [Tooltip("VFX that plays on each shoot point when a projectile is fired")]
     [SerializeField, AssetsOnly] private GameObject shootVFXPrefab;
     [SerializeField] private float shootVFXScale = 1;
@@ -96,7 +104,7 @@ public class SimpleShoot : AttackTarget
         base.Awake();
 
         // Spawn in indicator and set scale, but then disable until use
-        if (indicatorVFXPrefab!= null )
+        if (indicatorVFXPrefab != null)
         {
             indicators = new GameObject[shootPoints.Length];
             for (int i = 0; i < shootPoints.Length; i++)
@@ -132,12 +140,12 @@ public class SimpleShoot : AttackTarget
         if (projectile == null)
             yield break;
 
-        for(int i = 0; i < numOfShots; i++)
+        for (int i = 0; i < numOfShots; i++)
         {
             // Apply first shot accuracy instead
-            if(i == 0)
+            if (i == 0)
             {
-                Shoot(target, 
+                Shoot(target,
                     firstShotAccuracy.x, firstShotAccuracy.y);
             }
             else
@@ -151,7 +159,7 @@ public class SimpleShoot : AttackTarget
                 break;
 
             shotTimer.ResetTimer();
-            while(!shotTimer.TimerDone())
+            while (!shotTimer.TimerDone())
             {
 
                 yield return null;
@@ -162,16 +170,16 @@ public class SimpleShoot : AttackTarget
     protected override void IndicatorUpdateFunctionality()
     {
         // This only tracks rotation. So if don't rotate, just exit
-        if(!rotateDuringIndication)
+        if (!rotateDuringIndication)
         {
             return;
         }
 
         // if not alreadys stunned...
-        if(!indicatorStunned)
+        if (!indicatorStunned)
         {
             // If in vision, track
-            if(transform.InVisionCone(target, indicatorTrackConeRange))
+            if (transform.InVisionCone(target, indicatorTrackConeRange))
             {
                 Vector3 leadPos = GetLeadedPosition(target, averageLead);
                 // reduce lead on Y for just looking
@@ -200,7 +208,7 @@ public class SimpleShoot : AttackTarget
     protected override void DamageUpdateFunctionality()
     {
         // If the target is in vision, keep rotating. Otherwise, stop
-        if(rotateDuringAttack && 
+        if (rotateDuringAttack &&
             transform.InVisionCone(target, attackTrackConeRange))
         {
             Vector3 leadPos = GetLeadedPosition(target, averageLead);
@@ -216,7 +224,7 @@ public class SimpleShoot : AttackTarget
         }
 
         indicatorSFX.PlayClip(transform);
-            
+
         // Tell each one to start
         foreach (GameObject indicator in indicators)
         {
@@ -228,7 +236,7 @@ public class SimpleShoot : AttackTarget
             }
 
         }
-        
+
     }
 
     protected override void HideIndicator()
@@ -253,7 +261,7 @@ public class SimpleShoot : AttackTarget
 
     private void Shoot(Transform target, float minSpread, float maxSpread)
     {
-        if(projectile == null)
+        if (projectile == null)
         {
             return;
         }
@@ -275,10 +283,10 @@ public class SimpleShoot : AttackTarget
             {
                 o = Instantiate(projectile, barrel.position, projectile.transform.rotation);
             }
-            
+
             spawnedProjectiles.Add(o);
 
-            if(shootVFXPrefab != null)
+            if (shootVFXPrefab != null)
             {
                 GameObject vfx;
                 if (VFXPooler.instance != null && VFXPooler.instance.HasPool(shootVFXPrefab))
@@ -295,24 +303,12 @@ public class SimpleShoot : AttackTarget
                 vfx.transform.localScale *= shootVFXScale;
             }
         }
-        
+
         Vector3 aimRotation;
 
         // If target in vision, aim at target first
         if (transform.InVisionCone(target, leadConeRadius))
         {
-            //RangeAttack temp = spawnedProjectiles[0].GetComponent<RangeAttack>();
-
-            //// Determine lead strength
-            //float travelTime = (targetPos - transform.position).magnitude / temp.Speed;
-            //float strength = Random.Range(leadStrength.x, leadStrength.y);
-            //Vector3 targetVel = target.GetComponent<Rigidbody>().velocity;
-
-            //targetVel.y = 0;
-
-            //Vector3 leadPos = target.GetComponent<PlayerController>().CenterMass.position
-            //    + (targetVel * travelTime * strength);
-
             float strength = Random.Range(leadStrength.x, leadStrength.y);
             Vector3 leadPos = GetLeadedPosition(target.GetComponent<PlayerController>().CenterMass, strength);
 
@@ -326,12 +322,18 @@ public class SimpleShoot : AttackTarget
         }
 
         aimRotation = ApplySpread(aimRotation, minSpread, maxSpread);
-        
+
         // Aim shot at target position, activate
         foreach (GameObject shot in spawnedProjectiles)
         {
             shot.transform.rotation = Quaternion.Euler(aimRotation);
-            shot.GetComponent<RangeAttack>().Activate();
+
+            shot.GetComponent<RangeAttack>().Initialize(
+                internalDamageMod,
+                internalSpeedMod * diffEnemyProjSpdMod,
+                projectileRange,
+                gameObject);
+            //shot.GetComponent<RangeAttack>().Activate();
         }
 
         shootSFX.PlayClip(transform);
@@ -363,7 +365,7 @@ public class SimpleShoot : AttackTarget
             // Debug.Log("No lead strenght, setting to target position at: " + target.position);
             return target.position;
         }
-            
+
 
         RangeAttack temp = projectile.GetComponent<RangeAttack>();
 
@@ -377,4 +379,39 @@ public class SimpleShoot : AttackTarget
 
         return leadPos;
     }
+
+    #region Difficulty - Enemy Proj Speed
+
+    /// <summary>
+    /// The difficulty modifier to apply to projectile speed
+    /// </summary>
+    private float diffEnemyProjSpdMod = 1;
+    /// <summary>
+    /// The key used to lookup enemy projectile speed setting
+    /// </summary>
+    private const string diffEnemyProjSpdSettingKey = "EnemyProjectileSpeed";
+
+    private void OnEnable()
+    {
+        GlobalDifficultyManager.instance.Subscribe(this, diffEnemyProjSpdSettingKey);
+
+    }
+
+    private void OnDisable()
+    {
+        GlobalDifficultyManager.instance.Unsubscribe(this, diffEnemyProjSpdSettingKey);
+
+    }
+
+    /// <summary>
+    /// Update the difficulty modifier
+    /// </summary>
+    /// <param name="newModifier">New modifier to utilize</param>
+    public void UpdateDifficulty(float newModifier)
+    {
+        // invert the modifier since this is saved as enemy health modifier
+        diffEnemyProjSpdMod = newModifier;
+    }
+
+    #endregion
 }

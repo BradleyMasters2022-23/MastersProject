@@ -46,16 +46,18 @@ public class ResourceBar
 
     private float timescale;
 
-    public void Init(ResourceBarSO barInfo)
+    public void Init(ResourceBarSO barInfo, float hpModifier = 1)
     {
         timescale = 1;
         _barData = barInfo;
         _type = barInfo._type;
-        _maxAmount = barInfo._maxValue;
+
+        _maxAmount = barInfo._maxValue * hpModifier;
         _currAmount= _maxAmount;
+
         _regen = barInfo._regen;
         _affectedByTimestop = barInfo._affectedByTimestop;
-        _regenRate = barInfo._regenRate;
+        _regenRate = barInfo._regenRate * hpModifier;
         _regenDelay= barInfo._regenDelay;
 
         if (_regen)
@@ -64,14 +66,6 @@ public class ResourceBar
         // Set current state
         NonRegenStateCheck();
     }
-
-    //private void FixedUpdate()
-    //{
-    //    if (_currState == State.UNINITIALIZED)
-    //        return;
-
-    //    StateUpdateFunction();
-    //}
 
     #region State Functionality
 
@@ -347,16 +341,9 @@ public class ResourceBar
         // ensure that low health players won't instantly die on removing a crystal that increases max health
         // done because just allowing them to keep the hp opens up exploits
         // eg equipping and dequipping the crystal many times in a row to heal
-        if (_currAmount - decrement <= 0)
-        {
-            _currAmount = 1;
-        } else
-        {
-            _currAmount -= decrement;
-        }
-        
-        
 
+        _currAmount = Mathf.Clamp(_currAmount, 1, _maxAmount);
+        
         NonRegenStateCheck();
     }
 

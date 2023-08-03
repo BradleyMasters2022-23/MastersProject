@@ -26,17 +26,26 @@ public struct DamageToImpulse
     }
 }
 
-public class PlayerTarget : Target
+public class PlayerTarget : Target, IDifficultyObserver
 {
     /// <summary>
     /// Current player instance
     /// </summary>
     public static PlayerTarget p;
+
     /// <summary>
     /// Main UI canvas being used
     /// </summary>
     private Canvas mainUI;
     public Canvas MainUI { get { return mainUI; }}
+
+    [Header("Death State")]
+    [Tooltip("Animator controlling player death animation")]
+    [SerializeField] Animator playerDeathAnimator;
+    [Tooltip("Animator controlling player gun. Needed for start of death animation.")]
+    [SerializeField] Animator playerGunController;
+    [Tooltip("Channel used to reset player look on death")]
+    [SerializeField] AimController aimController;
 
     [Header("Player Damage Flinch")]
     [Tooltip("Lookup table for damages and impulse strength")]
@@ -47,6 +56,9 @@ public class PlayerTarget : Target
     /// The damage taken in the last frame
     /// </summary>
     private float frameDamage;
+    /// <summary>
+    /// Cooldown tracker for impulse
+    /// </summary>
     private ScaledTimer impulseCD;
 
     /// <summary>
@@ -89,7 +101,7 @@ public class PlayerTarget : Target
     /// </summary>
     private void LateUpdate()
     {
-        if(frameDamage > 0 && impulseCD.TimerDone())
+        if(frameDamage > 0 && impulseCD.TimerDone() && !_killed)
         {
             ApplyDamageImpulse(frameDamage);
             impulseCD.ResetTimer();
@@ -98,14 +110,34 @@ public class PlayerTarget : Target
 
     }
 
+    #region Player Death
+
     /// <summary>
     /// On kill, go into game over state
     /// </summary>
     protected override void KillTarget()
     {
+        _killed = true;
+
+        InputManager.Controls.PlayerGameplay.Disable();
+
+        playerGunController.enabled = false;
+        _rb.velocity = Vector3.zero;
+        
+        playerDeathAnimator.enabled = true;
+        aimController.ResetLook();
+    }
+
+    /// <summary>
+    /// Call the game to game over. Called via player animator
+    /// </summary>
+    protected virtual void CallGameOver()
+    {
         GlobalStatsManager.data.playerDeaths++;
         GameManager.instance.ChangeState(GameManager.States.GAMEOVER);
     }
+
+    #endregion
 
     /// <summary>
     /// Add offset to the player before knockback to make it work
@@ -120,7 +152,6 @@ public class PlayerTarget : Target
             return;
         }
             
-
         // kick the player up a tiny bit to reduce any ground drag
         transform.position += Vector3.up * 0.5f;
         base.Knockback(force, verticalForce, origin + Vector3.up * 0.5f);
@@ -133,9 +164,9 @@ public class PlayerTarget : Target
     public override void RegisterEffect(float dmg, Vector3 origin)
     {
         // log damage taken to damage taken this frame
+        dmg *= difficultyPlayerDamageMod;
         frameDamage += dmg;
         base.RegisterEffect(dmg, origin);
-
     }
 
     /// <summary>
@@ -183,15 +214,14 @@ public class PlayerTarget : Target
         // dont do disable funcs if not the instanced version
         if (p != this) return;
 
-        if (p == this)
-        {
-            godCheat.performed -= ToggleGodmode;
-            healCheat.performed -= CheatHeal;
-            damageCheat.performed -= CheatDamage;
-            tiedye.performed -= Tiedye;
-        }
+        godCheat.performed -= ToggleGodmode;
+        healCheat.performed -= CheatHeal;
+        damageCheat.performed -= CheatDamage;
+        tiedye.performed -= Tiedye;
 
         p = null;
+
+        GlobalDifficultyManager.instance.Unsubscribe(this, difficultyPlayerVulnerabilityMod);
     }
 
     private void ToggleGodmode(InputAction.CallbackContext ctx = default)
@@ -240,6 +270,34 @@ public class PlayerTarget : Target
         {
             ren.material = tieDyeMat;
         }
+    }
+
+    #endregion
+
+    #region Difficulty Settings
+
+    /// <summary>
+    /// player damage modifier managed by difficulty
+    /// </summary>
+    private float difficultyPlayerDamageMod = 1;
+    /// <summary>
+    /// key used to lookup difficulty setting
+    /// </summary>
+    private const string difficultyPlayerVulnerabilityMod = "PlayerDamageVulnerability";
+
+    /// <summary>
+    /// Update player damage modifier
+    /// </summary>
+    /// <param name="newModifier">New damage taken modifier</param>
+    public void UpdateDifficulty(float newModifier)
+    {
+        difficultyPlayerDamageMod = newModifier;
+    }
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        GlobalDifficultyManager.instance.Subscribe(this, difficultyPlayerVulnerabilityMod);
     }
 
     #endregion

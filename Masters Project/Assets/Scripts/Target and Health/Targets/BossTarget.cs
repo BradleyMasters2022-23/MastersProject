@@ -201,7 +201,7 @@ public class BossTarget : Target
 
         if(t != null)
         {
-            t.Knockback(500, 500, _center.position);
+            t.Knockback(300, 65, _center.position);
         }
     }
 }

@@ -78,6 +78,8 @@ public class BossManager : TimeAffectedEntity
 
             BossAttack chosenAttack = null;
 
+            Debug.Log("Boss attack tick");
+
             // Try attacking on cooldown 
             if (cooldownTracker.TimerDone() && !disabled)
             {
