@@ -116,7 +116,7 @@ public class GlobalDifficultyManager : MonoBehaviour
         }
         
         // get ref to subscribers
-        float newModifier = (PlayerPrefs.GetFloat(modifiedSetting, 0)/100);
+        float newModifier = (PlayerPrefs.GetFloat(modifiedSetting, 100)/100);
         List<IDifficultyObserver> group = difficulties[modifiedSetting];
         Debug.Log($"Updating Setting {modifiedSetting} to {newModifier}");
 
@@ -140,7 +140,7 @@ public class GlobalDifficultyManager : MonoBehaviour
             difficulties[settingKey].Add(o);
 
             // on subscribe, give it the current difficulty setting so its not out of date
-            float modifier = (PlayerPrefs.GetFloat(settingKey, 0) / 100);
+            float modifier = (PlayerPrefs.GetFloat(settingKey, 100) / 100);
             o.UpdateDifficulty(modifier);
         }
     }
