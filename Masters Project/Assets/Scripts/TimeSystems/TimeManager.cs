@@ -150,24 +150,9 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
     private const float DepleteAmount = 1;
 
     /// <summary>
-    /// Timer for tracking replenish delay [FROZEN state]
-    /// </summary>
-    private ScaledTimer replenishDelayTimer;
-
-    /// <summary>
-    /// Timer for tracking emptied delay [EMPTIED state]
-    /// </summary>
-    private ScaledTimer emptiedDelayTimer;
-
-    /// <summary>
     /// Whether or not the player is in a regen field
     /// </summary>
     public bool inRegenField;
-
-    /// <summary>
-    /// base duration for duration
-    /// </summary>
-    private float baseDuration;
 
     private List<TimeOrb> timeOrbBuffer = new List<TimeOrb>();
 
@@ -515,7 +500,7 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
         float remainder = currSlowGauge.Increase(amount);
 
         // if any remainder, then its maxed and should change state
-        if (remainder > 0)
+        if (remainder > 0 && currentState != TimeGaugeState.SLOWING)
         {
             ChangeState(TimeGaugeState.IDLE);
         }
