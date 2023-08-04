@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3346125190911049606}
   - component: {fileID: -8289629726387147129}
   m_Layer: 0
-  m_Name: Vfx_Enemy_DeathExplosion_Ranged
+  m_Name: Vfx_Enemy_DeathExplosion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -132,6 +132,8 @@ MonoBehaviour:
   secondaryTimescale: 1
   fastForwardTime: 0.15
   lifetime: 2
+  keepReserved: 0
+  alwaysFastForward: 0
 --- !u!1 &7428150281643535732
 GameObject:
   m_ObjectHideFlags: 0
@@ -159,7 +161,7 @@ Transform:
   m_GameObject: {fileID: 7428150281643535732}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 7428150280865193491}
@@ -182,42 +184,63 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 20
+      - m_Value: 1
         m_Name: Cloud Amount
-        m_Overridden: 0
+        m_Overridden: 1
       - m_Value: 0.2
         m_Name: Cloud Life Min
         m_Overridden: 0
-      - m_Value: 0.5
+      - m_Value: 0.2
         m_Name: Cloud Life Max
-        m_Overridden: 0
+        m_Overridden: 1
       - m_Value: 1
         m_Name: Cloud Speed
         m_Overridden: 0
       - m_Value: 1
         m_Name: Cloud Size
         m_Overridden: 0
-      - m_Value: 5
+      - m_Value: 3
         m_Name: Flash Size
-        m_Overridden: 0
-      - m_Value: 20
+        m_Overridden: 1
+      - m_Value: 40
         m_Name: Spark Amount
-        m_Overridden: 0
-      - m_Value: 20
+        m_Overridden: 1
+      - m_Value: 0
         m_Name: Smoke Amount
-        m_Overridden: 0
+        m_Overridden: 1
+      - m_Value: 8
+        m_Name: Spark Length
+        m_Overridden: 1
+      - m_Value: 2
+        m_Name: Spark Speed
+        m_Overridden: 1
+      - m_Value: 0.1
+        m_Name: Spark Size
+        m_Overridden: 1
+      - m_Value: 0.3
+        m_Name: Spark Life Max
+        m_Overridden: 1
+      - m_Value: 0.1
+        m_Name: Spark Life Min
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
       m_Array: []
     m_Vector4f:
       m_Array:
-      - m_Value: {x: 1, y: 0.5851397, z: 0, w: 0}
+      - m_Value: {x: 0.40943396, y: 0.98263615, z: 1, w: 0}
         m_Name: Cloud Emmisive
-        m_Overridden: 0
-      - m_Value: {x: 1, y: 0.5851397, z: 0, w: 0}
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 0.16745448, z: 1, w: 0}
         m_Name: Cloud Color
-        m_Overridden: 0
+        m_Overridden: 1
+      - m_Value: {x: 0, y: 5.3403134, z: 2.4286556, w: 0}
+        m_Name: Flash Color
+        m_Overridden: 1
+      - m_Value: {x: 2.9576871, y: 11.875563, z: 9.490659, w: 0}
+        m_Name: Spark Color
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:

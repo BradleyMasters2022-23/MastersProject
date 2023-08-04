@@ -284,9 +284,10 @@ MonoBehaviour:
   _unkillable: 0
   immuneToKnockback: 0
   knockbackModifier: 4
-  maxKnockback: 120
+  maxKnockback: 100
   invincibilityShield: {fileID: 0}
-  _deathVFX: {fileID: 0}
+  _deathVFX: {fileID: 7428150280865193490, guid: 6e221f18ca47d5547a8bd26d21fd46a8, type: 3}
+  _deathVFXScaleMod: 1
   damagedSound: {fileID: 11400000, guid: 4ba21dac44b2634469d022e7027035df, type: 2}
   deathSound: {fileID: 11400000, guid: e9eb6a05acbfe4b4a9897c4a09a84f2b, type: 2}
   damagedSoundCooldown: 0.1
@@ -299,12 +300,13 @@ MonoBehaviour:
   flinchRecoveryRate: 3
   flinchSensitivity: 0.3
   deathAnimator: {fileID: 678639303}
-  deathSpeedMinMax: {x: 1, y: 1}
-  deathFlingSpeedMod: 0.5
+  deathSpeedMinMax: {x: 1.1, y: 1.5}
+  deathFlingSpeedMod: 0.4
+  instantDeathPopForce: 11
   deathStateDamageThreshold: 80
-  deathStateHorKnockback: 0.2
-  deathStateVerKnockback: 0.15
-  instantImpactThreshold: 5
+  deathStateHorKnockback: 0.25
+  deathStateVerKnockback: 0.2
+  instantImpactThreshold: 999
   deathStateSFX: {fileID: 0}
   minKnockbackDuration: 0.5
   groundMask:
@@ -1295,6 +1297,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AlertContainer
       objectReference: {fileID: 0}
+    - target: {fileID: 3524068267789458469, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
 --- !u!4 &4483423766565695316 stripped
@@ -1447,6 +1453,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3990662660081987154}
     m_Modifications:
+    - target: {fileID: 158573494906440604, guid: fb508180db179684aab13560ae54f22d, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 240285545299132128, guid: fb508180db179684aab13560ae54f22d, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1053376474052666777, guid: fb508180db179684aab13560ae54f22d, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -1455,6 +1469,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 9adf65ce614f1ca43a61e378829195b3, type: 2}
+    - target: {fileID: 3143277076560698749, guid: fb508180db179684aab13560ae54f22d, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3322318622342498218, guid: fb508180db179684aab13560ae54f22d, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -1483,6 +1501,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 735874a228f5fa34c958bcee4d57ddf1, type: 2}
+    - target: {fileID: 5517242517274521595, guid: fb508180db179684aab13560ae54f22d, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5975139983149250506, guid: fb508180db179684aab13560ae54f22d, type: 3}
       propertyPath: m_Name
       value: Glow Disable

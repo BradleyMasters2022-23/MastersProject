@@ -135,6 +135,8 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
     [SerializeField] Vector2 deathSpeedMinMax;
     [Tooltip("Speed modifier applied to the enemy when entering the death fling state")]
     [SerializeField] float deathFlingSpeedMod;
+    [Tooltip("If the enemy dies on the spot, how much vertical force is applied")]
+    [SerializeField] float instantDeathPopForce;
     [Tooltip("Minimum damage to take in a short time to go into death state instead of instantly dying")]
     [SerializeField] float deathStateDamageThreshold;
     [Tooltip("For each damage taken in frame entering death state, how much horizontal knockback is applied")]
@@ -159,8 +161,8 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
     {
         if (inDeathState && _rb.velocity.magnitude >= instantImpactThreshold)
         {
-            //StopCoroutine(DeathState());
-            //DestroyEnemy();
+            StopCoroutine(DeathState());
+            DestroyEnemy();
         }
         else if (inKnockbackState && _rb.velocity.magnitude >= impactSoundVelocity)
         {
@@ -210,6 +212,9 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
     /// <returns></returns>
     protected IEnumerator DeathState()
     {
+        if(Affected)
+            yield return new WaitUntil(() => !Slowed);
+
         // drop before being launched
         _managerRef.HaltAI();
 
@@ -226,11 +231,18 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
         inKnockbackState = true;
         DisableAI();
 
+        // if enough damage for launch state, do that
         if (damageLastFrame >= deathStateDamageThreshold)
         {
             speedMod *= deathFlingSpeedMod;
             base.Knockback(damageLastFrame * deathStateHorKnockback, damageLastFrame * deathStateVerKnockback, lastDamageOrigin);
         }
+        // otherwise, do a vertical pop
+        else
+        {
+            base.Knockback(0, instantDeathPopForce, _center.position);
+        }
+
         deathAnimator.SetFloat("SpeedMod", speedMod);
         deathAnimator.SetTrigger("Dissolve");
         DeathEffects();
