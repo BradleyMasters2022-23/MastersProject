@@ -5,6 +5,8 @@ using Sirenix.OdinInspector;
 
 public class BFLController : MonoBehaviour
 {
+    [SerializeField] bool summonedOnStart;
+
     [Header("Attack Info")]
     [SerializeField] private GenericWeightedList<BaseBossAttack> attacks;
     [SerializeField] private List<Vector2> stageCooldowns;
@@ -15,7 +17,6 @@ public class BFLController : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField, ReadOnly] private bool onCooldown = false;
     [SerializeField, ReadOnly] private bool currentAttackActive = false;
-    [SerializeField, ReadOnly] private bool activeThisPhase = false;
     [SerializeField, ReadOnly] private bool disabled;
     /// <summary>
     /// cooldown tracker 
@@ -44,6 +45,12 @@ public class BFLController : MonoBehaviour
         target = GetComponent<BFLTarget>();
         cooldown = new ScaledTimer(0);
         GoToCooldown();
+
+        if (summonedOnStart)
+        {
+            animator.SetBool("Active", true);
+            animator.Play("BFL Default");
+        }
     }
 
     private void Update()
@@ -115,9 +122,15 @@ public class BFLController : MonoBehaviour
         disabled = true;
         mainUnit.SetActive(false);
         deactivatedUnit.SetActive(true);
-        attacks.Pull().RotateToDisabledState();
+        //attacks.Pull().RotateToDisabledState();
 
         target.SetHealthbarStatus(false);
+    }
+
+    public void DamagedState()
+    {
+        DisableBFL();
+        attacks.Pull().RotateToDisabledState();
     }
 
     public void EnableBFL()
@@ -126,15 +139,6 @@ public class BFLController : MonoBehaviour
         mainUnit.SetActive(true);
         deactivatedUnit.SetActive(false);
         target.SetHealthbarStatus(true);
-    }
-
-    public void SetPhaseStatus(bool active)
-    {
-        activeThisPhase = active;
-    }
-    public bool EnabledThisPhase()
-    {
-        return activeThisPhase;
     }
 
     public bool CurrentlyAttacking()
@@ -154,6 +158,7 @@ public class BFLController : MonoBehaviour
     /// </summary>
     public void PhaseDismiss()
     {
-        animator.SetBool("Active", false);
+        DisableBFL();
+        attacks.Pull().RotateToEnabledState(() => animator.SetBool("Active", false));
     }
 }
