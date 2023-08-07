@@ -46,6 +46,8 @@ public class PlayerTarget : Target, IDifficultyObserver
     [SerializeField] Animator playerGunController;
     [Tooltip("Channel used to reset player look on death")]
     [SerializeField] AimController aimController;
+    [Tooltip("Channel called when the player immediately dies")]
+    [SerializeField] ChannelVoid onPlayerKilled;
 
     [Header("Player Damage Flinch")]
     [Tooltip("Lookup table for damages and impulse strength")]
@@ -130,6 +132,14 @@ public class PlayerTarget : Target, IDifficultyObserver
         
         playerDeathAnimator.enabled = true;
         aimController.ResetLook();
+    }
+
+    /// <summary>
+    /// Call channel that player died. Called by animator.
+    /// </summary>
+    protected void CallPlayerKilled()
+    {
+        onPlayerKilled.RaiseEvent();
     }
 
     /// <summary>

@@ -15,7 +15,14 @@ public class PlaythroughSaveData
     public int runsCompleted = 0;
     public int playerDeaths = 0;
     public int crystalsCollected = 0;
-    
+
+    /// <summary>
+    /// Which boss did the player die to last
+    /// -1 means they didnt die to a boxx
+    /// otherwise, set to boss index
+    /// </summary>
+    public int killedByBossLastRun = -1;
+
     public PlaythroughSaveData()
     {
         runsAttempted = 0;
@@ -44,6 +51,7 @@ public class PlaythroughSaveData
         return !(runsAttempted == 0
             && runsCompleted == 0
             && playerDeaths == 0
-            && crystalsCollected == 0);
+            && crystalsCollected == 0
+            && killedByBossLastRun == -1);
     }
 }

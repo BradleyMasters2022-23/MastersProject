@@ -40,7 +40,7 @@ public class BFLTarget : Target
         DropAllObjs();
 
         controller?.Inturrupt();
-        controller?.DisableBFL();
+        controller?.DamagedState();
         _healthManager.ToggleGodmode(true);
         recoveryRoutine = StartCoroutine(Recover());
     }
