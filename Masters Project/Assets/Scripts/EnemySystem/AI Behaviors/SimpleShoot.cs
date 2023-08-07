@@ -336,7 +336,7 @@ public class SimpleShoot : AttackTarget, IDifficultyObserver
             //shot.GetComponent<RangeAttack>().Activate();
         }
 
-        shootSFX.PlayClip(transform, source);
+        shootSFX.PlayClip(transform);
 
     }
 
