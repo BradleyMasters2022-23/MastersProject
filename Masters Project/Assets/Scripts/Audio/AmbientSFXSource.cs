@@ -29,9 +29,20 @@ public class AmbientSFXSource : MonoBehaviour
     [Tooltip("Should this player begin on start"), Space(5)]
     [SerializeField] bool playOnStart;
 
+    [Tooltip("Should this player begin once enabled"), Space(5)]
+    [SerializeField] bool playOnEnable;
+
     private void Awake()
     {
         source = GetComponent<AudioSource>();
+    }
+
+    private void OnEnable()
+    {
+        if(playOnEnable)
+        {
+            Play();
+        }
     }
 
     private void Start()

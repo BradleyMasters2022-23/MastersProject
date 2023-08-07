@@ -17,11 +17,17 @@ public class SecretConversationInteract : ConversationInteract
     [Tooltip("How much stronger than the current depth should the crystal spawn at")]
     [SerializeField] private int crystalBuff;
     [SerializeField] private CrystalInteract crystal;
+    [SerializeField] private MoveTo orbRef;
 
     [SerializeField] private Animator anim;
     [SerializeField] private RandomCallUI newCallUI;
 
     private bool available = true;
+
+    private void Awake()
+    {
+        newCallUI.InitRandomCall();
+    }
 
     /// <summary>
     /// On interact, open the menu
@@ -51,14 +57,15 @@ public class SecretConversationInteract : ConversationInteract
     public void OnCallComplete()
     {
         available = false;
-        SpawnNewCrystal();
+        //SpawnNewCrystal();
+        orbRef.Move();
         SetOffline();
     }
 
     /// <summary>
     /// Spawn a new crystal at a stronger level than normal
     /// </summary>
-    private void SpawnNewCrystal()
+    public void SpawnNewCrystal()
     {
         crystal.RandomizeCrystalSetStats(MapLoader.instance.PortalDepth() + crystalBuff);
         crystal.gameObject.SetActive(true);

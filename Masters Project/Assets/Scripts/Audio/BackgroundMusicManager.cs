@@ -33,7 +33,7 @@ public class BackgroundMusicManager : MonoBehaviour
     [SerializeField, Required] private AudioSource mainMusicSource;
     [SerializeField, Required] private AudioSource secondaryMusicSource;
 
-    private Music currentlyLoaded;
+    private AudioClipSO currentlyLoaded;
     private Coroutine transitionRoutine;
 
     /// <summary>
@@ -59,22 +59,12 @@ public class BackgroundMusicManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Set the music type and transition to it
+    /// Set the music type and transition to it. Useful for common themes
     /// </summary>
     /// <param name="type">Type of music to play</param>
     /// <param name="transitionTime">How fast the transition should be</param>
     public void SetMusic(Music type, float transitionTime = 1f)
     {
-        // dont transition if its already playing, otherwise record the new type
-        if (currentlyLoaded == type)
-            return;
-        else
-            currentlyLoaded = type;
-
-        if (transitionRoutine != null)
-            StopCoroutine(transitionRoutine);
-
-        // Select music
         AudioClipSO chosenMusic;
         switch (type)
         {
@@ -104,7 +94,30 @@ public class BackgroundMusicManager : MonoBehaviour
                     break;
                 }
         }
-        if (chosenMusic == null)
+
+        SetMusic(chosenMusic, transitionTime);
+    }
+
+    /// <summary>
+    /// Pass in new music to play
+    /// </summary>
+    /// <param name="music">Music data to utilize</param>
+    /// <param name="transitionTime">time to transition between</param>
+    public void SetMusic(AudioClipSO music, float transitionTime = 1f)
+    {
+        Debug.Log("Trying to play music " + music.name);
+
+        // Select music
+        // dont transition if its already playing, otherwise record the new type
+        if (currentlyLoaded == music && (mainMusicSource.isPlaying || secondaryMusicSource.isPlaying))
+            return;
+        else
+            currentlyLoaded = music;
+
+        if (transitionRoutine != null)
+            StopCoroutine(transitionRoutine);
+
+        if (currentlyLoaded == null)
         {
             StopMusic();
             return;
@@ -112,7 +125,7 @@ public class BackgroundMusicManager : MonoBehaviour
 
         // Determine which music player to transition out of and into
         AudioSource oldSource, newSource;
-        if(mainMusicSource.isPlaying)
+        if (mainMusicSource.isPlaying)
         {
             oldSource = mainMusicSource;
             newSource = secondaryMusicSource;
@@ -124,13 +137,13 @@ public class BackgroundMusicManager : MonoBehaviour
         }
 
         // check for error
-        if(oldSource == null || newSource == null)
+        if (oldSource == null || newSource == null)
         {
             Debug.LogError("[BackgroundMusicManager] Error playing music! Either main or secondary sources not set!");
         }
 
         // Prepare new music into the buffer
-        chosenMusic.PlayClip(newSource);
+        currentlyLoaded.PlayClip(newSource);
 
         // transition from old source to new source
         transitionRoutine = StartCoroutine(Transition(transitionTime, oldSource, newSource));
@@ -145,9 +158,6 @@ public class BackgroundMusicManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator Transition(float transitionTime, AudioSource oldSource, AudioSource newSource)
     {
-        // get timer for smooth scaling using its timer progress func
-        ScaledTimer timer = new ScaledTimer(transitionTime, false);
-
         // get original volume settings to scale
         float oldOriginalVol = oldSource.volume;
         float newOriginalVol = newSource.volume;
@@ -155,11 +165,12 @@ public class BackgroundMusicManager : MonoBehaviour
         newSource.volume = 0;
         newSource.Play();
 
-        while(!timer.TimerDone())
+        float t = 0;
+        while(t < transitionTime)
         {
-            oldSource.volume = (1 - timer.TimerProgress()) * oldOriginalVol;
-            newSource.volume = (timer.TimerProgress()) * newOriginalVol;
-
+            oldSource.volume = (1 - (t / transitionTime)) * oldOriginalVol;
+            newSource.volume = (t / transitionTime) * newOriginalVol;
+            t += Time.unscaledDeltaTime;
             yield return null;
         }
 
@@ -194,5 +205,13 @@ public class BackgroundMusicManager : MonoBehaviour
         secondaryMusicSource.Stop();
 
         yield return null;
+    }
+
+    /// <summary>
+    /// Resume the music player from whatever it was previously
+    /// </summary>
+    public void ResumePlayer()
+    {
+        SetMusic(currentlyLoaded);
     }
 }

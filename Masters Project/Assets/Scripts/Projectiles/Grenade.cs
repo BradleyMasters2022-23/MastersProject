@@ -83,9 +83,7 @@ public class Grenade : Throwable, TimeObserver
             rb.velocity = temp;
         }
             
-
-        GameObject rootTgt = collision.transform.root.gameObject;
-        if (instantDetonateTags.Contains(rootTgt.tag) && !triggered)
+        if (instantDetonateTags.Contains(collision.gameObject.tag) && !triggered)
         {
             Activate();
         }
@@ -101,8 +99,7 @@ public class Grenade : Throwable, TimeObserver
 
     private void OnTriggerEnter(Collider other)
     {
-        GameObject rootTgt = other.transform.root.gameObject;
-        if (instantDetonateTags.Contains(rootTgt.tag) && !triggered)
+        if (instantDetonateTags.Contains(other.tag) && !triggered)
         {
             triggered = true;
             triggerGrenade.PlayClip(transform);

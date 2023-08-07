@@ -2,28 +2,24 @@
  * ================================================================================================
  * Author - Ben Schuster
  * Date Created - October 26th, 2022
- * Last Edited - April 26th, 2022 by Ben Schuster
+ * Last Edited - August 2nd, 2023 by Ben Schuster
  * Description - Observe player time and update timeBar
  * ================================================================================================
  */
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
-public class TimeGaugeUI : MonoBehaviour
+public class TimeGaugeUI : ResourceBarUI
 {
     /// <summary>
     /// Player to track time of
     /// </summary>
     private TimeManager time;
-    /// <summary>
-    /// Slider of timeBar
-    /// </summary>
-    private Slider timeBar;
+
+    [Header("Time Gauge")]
 
     [Tooltip("The color to flash the bar")]
+    [SerializeField] private RawImage dividerImage;
     [SerializeField] private Color flashColor;
     [SerializeField] private Image flashImage;
 
@@ -45,27 +41,21 @@ public class TimeGaugeUI : MonoBehaviour
     private void Awake()
     {
         time = FindObjectOfType<TimeManager>(true);
-        timeBar = GetComponentInChildren<Slider>();
+
+        _targetData = time.GetDataRef();
+
         flashTimer = new ScaledTimer(0.7f, false);
     }
 
-    // Start is called before the first frame update
-    private void Start()
+    protected override void LateUpdate()
     {
-        // As time starts max
-        timeBar.maxValue = time.MaxGauge();
-        timeBar.value = time.CurrSlowGauge;
-    }
-    private void Update()
-    {
-        if (timeBar != null)
-            timeBar.value = time.CurrSlowGauge;
+        base.LateUpdate();
 
         // Determine conditions for flashing
-        flashing = (timeBar.value == timeBar.maxValue) || (time.inRegenField && time.CurrState != TimeManager.TimeGaugeState.SLOWING);
+        flashing = (_mainSlider.value == _mainSlider.maxValue) || (time.inRegenField && time.CurrState != TimeManager.TimeGaugeState.SLOWING);
 
         // If flashing, enable the image (if not already done) and update flash
-        if(flashing)
+        if (flashing)
         {
             if (!flashImage.enabled)
             {
@@ -76,16 +66,10 @@ public class TimeGaugeUI : MonoBehaviour
             FlashColor();
         }
         // Otherwise, make sure the flashing image is disabled
-        else if(flashImage.enabled)
+        else if (flashImage.enabled)
         {
             flashImage.enabled = false;
-
         }
-    }
-
-    public void ResetMaxValue()
-    {
-        timeBar.maxValue = time.MaxGauge();
     }
 
     private void FlashColor()
@@ -110,5 +94,14 @@ public class TimeGaugeUI : MonoBehaviour
 
         // Apply new color
         flashImage.color = c;
+    }
+
+    protected override void UpdateCoreSlider()
+    {
+        base.UpdateCoreSlider();
+
+        Rect rect = dividerImage.uvRect;
+        rect.width = (_mainSlider.maxValue / 50);
+        dividerImage.uvRect = rect;
     }
 }

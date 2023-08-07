@@ -15,7 +15,9 @@ public class UIThreatIndicator : MonoBehaviour
 {
     [SerializeField] private GameObject arrow;
 
-    private List<GameObject> enemyList;
+    private EnemyPooler enemyPooler;
+
+    private List<EnemyTarget> enemyList;
 
     public RectTransform indicatorDisplay;
 
@@ -23,7 +25,7 @@ public class UIThreatIndicator : MonoBehaviour
 
     private void Awake()
     {
-        enemyList = new List<GameObject>();
+        enemyList = new List<EnemyTarget>();
     }
 
     private void Update()
@@ -31,25 +33,29 @@ public class UIThreatIndicator : MonoBehaviour
         // Check for null references or deactivated (killed enemies), remove them
         for (int i = enemyList.Count - 1; i >= 0; i--)
         {
-            if (enemyList[i] == null || !enemyList[i].gameObject.activeInHierarchy)
+            if (enemyList[i] == null || enemyList[i].Killed())
             {
                 enemyList.RemoveAt(i);
             }
         }
-        enemyList.TrimExcess();
 
         // get enemies
-        EnemyTarget[] enemies = FindObjectsOfType<EnemyTarget>();
+        if (enemyPooler == null)
+        {
+            enemyPooler = EnemyPooler.instance;
+            return;
+        }
+        EnemyTarget[] enemies = enemyPooler.GetComponentsInChildren<EnemyTarget>();
 
         // Check list for new enemies. Add new pointers for each new enemy
         foreach (EnemyTarget enemy in enemies)
         {
-            if (!enemyList.Contains(enemy.gameObject)
-                && enemy.gameObject.activeInHierarchy)
+            if (!enemyList.Contains(enemy)
+                && !enemy.Killed())
             {
-                enemyList.Add(enemy.gameObject);
+                enemyList.Add(enemy);
                 GameObject a = Instantiate(arrow, indicatorDisplay);
-                a.GetComponent<UIEnemyPointer>().SetTarget(enemy.Center.gameObject, 
+                a.GetComponent<UIEnemyPointer>().SetTarget(enemy, 
                     indicatorDisplay.sizeDelta.y / 2, maxDistance);
             }
         }

@@ -23,26 +23,23 @@ public class RandomCallUI : MonoBehaviour
     [SerializeField] private FlashProtocol flashOverlay;
 
     private AudioClipSO ringtone;
-    AudioSource ringtoneSource;
+    [SerializeField] AudioSource ringtoneSource;
 
-    /// <summary>
-    /// On enable, initialize it and load in data
-    /// </summary>
-    private void OnEnable()
+   /// <summary>
+   /// Initialize and get random data
+   /// </summary>
+    public void InitRandomCall()
     {
-        if(ringtoneSource == null)
-            ringtoneSource= GetComponent<AudioSource>();
-
         // Try to get conversation. If it fails, close immediately
         if (loadedConveration == null)
         {
             loadedConveration = GetConversation();
-            Debug.Log("Conversation loaded");
+            //Debug.Log("Conversation loaded");
         }
         if (loadedConveration == null)
         {
             GetComponent<GameObjectMenu>().CloseButton();
-            Debug.Log("failed to load conversation");
+            //Debug.Log("failed to load conversation");
             return;
         }
 
@@ -57,6 +54,7 @@ public class RandomCallUI : MonoBehaviour
         // Begin flashing 
         flashOverlay.BeginFlash();
     }
+
     /// <summary>
     /// Stop flashing when turned off
     /// </summary>
@@ -70,9 +68,9 @@ public class RandomCallUI : MonoBehaviour
     /// </summary>
     public void PlayConversation()
     {
+        ringtoneSource.Stop();
         GetComponent<GameObjectMenu>().CloseButton();
         ConvoRefManager.instance.GetCallUI().OpenScreen(loadedConveration, interactRef.OnCallComplete);
-        ringtoneSource.Stop();
     }
 
     /// <summary>

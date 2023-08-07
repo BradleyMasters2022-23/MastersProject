@@ -37,7 +37,7 @@ public class PlayerTargetTutorial : PlayerTarget
     /// <summary>
     /// On death, initiate the tutorial sequence
     /// </summary>
-    protected override void KillTarget()
+    protected override void CallGameOver()
     {
         StartCoroutine(TutorialDeathSequence());
     }

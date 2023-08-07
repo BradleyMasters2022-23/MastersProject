@@ -62,20 +62,20 @@ public class FragmentInteract : MonoBehaviour, Interactable
         // If no fragment assigned but note assigned, get a random fragment from that note
         else if(noteOverride != null)
         {
-            Debug.Log("Checking logic for note override");
+            //Debug.Log("Checking logic for note override");
             note = noteOverride;
 
             // If the override note is already complete, destroy fragment
             // can be changed later to give repeats?
             if (AllNotesManager.instance.CheckNoteComplete(noteOverride))
             {
-                Debug.Log("Note set to complete, trying to get fragment");
+                //Debug.Log("Note set to complete, trying to get fragment");
                 DestroyFrag();
                 return;
             }
             else
             {
-                Debug.Log("Trying to get lost fragment from overriden note");
+                //Debug.Log("Trying to get lost fragment from overriden note");
                 fragment = noteOverride.GetRandomLostFragment();
             }
         }
@@ -93,7 +93,7 @@ public class FragmentInteract : MonoBehaviour, Interactable
         // If it failed to get a new one, destroy it
         if (fragment == null)
         {
-            Debug.Log("No fragment found, destroying frag instead");
+            //Debug.Log("No fragment found, destroying frag instead");
             DestroyFrag();
         }
 
@@ -105,7 +105,7 @@ public class FragmentInteract : MonoBehaviour, Interactable
     {
         if (GameManager.instance.CurrentState != GameManager.States.GAMEPLAY && GameManager.instance.CurrentState != GameManager.States.HUB)
         {
-            Debug.Log("Not in a state where the player can interact with this object");
+            //Debug.Log("Not in a state where the player can interact with this object");
             return;
         }
 

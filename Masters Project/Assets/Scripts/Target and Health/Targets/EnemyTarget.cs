@@ -129,8 +129,14 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
 
     [Header("Death State")]
 
+    [Tooltip("Animator controlling this enemy's death state")]
+    [SerializeField] Animator deathAnimator;
     [Tooltip("Range of time the enemy stays in the death state")]
-    [SerializeField] Vector2 deathStateDuration;
+    [SerializeField] Vector2 deathSpeedMinMax;
+    [Tooltip("Speed modifier applied to the enemy when entering the death fling state")]
+    [SerializeField] float deathFlingSpeedMod;
+    [Tooltip("If the enemy dies on the spot, how much vertical force is applied")]
+    [SerializeField] float instantDeathPopForce;
     [Tooltip("Minimum damage to take in a short time to go into death state instead of instantly dying")]
     [SerializeField] float deathStateDamageThreshold;
     [Tooltip("For each damage taken in frame entering death state, how much horizontal knockback is applied")]
@@ -140,9 +146,6 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
     [Tooltip("On collision with an object at this velocity, detonate instantly")]
     [SerializeField] float instantImpactThreshold;
 
-    [Tooltip("VFX that plays when entering the death state")]
-    [SerializeField] VisualEffect deathStateVFX;
-    [SerializeField] float deathStateVFXSpeed = 1;
     [Tooltip("SFX that plays when entering the death state")]
     [SerializeField] AudioClipSO deathStateSFX;
     /// <summary>
@@ -161,13 +164,12 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
             StopCoroutine(DeathState());
             DestroyEnemy();
         }
+        else if (inKnockbackState && _rb.velocity.magnitude >= impactSoundVelocity)
+        {
+            impactSoundSFX.PlayClip(audioSource, true);
+        }
     }
 
-
-    /// <summary>
-    /// Timer tracking death state
-    /// </summary>
-    LocalTimer deathTimer;
     /// <summary>
     /// original isKinematic setting without any tampering
     /// </summary>
@@ -210,53 +212,41 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
     /// <returns></returns>
     protected IEnumerator DeathState()
     {
+        if(Affected)
+            yield return new WaitUntil(() => !Slowed);
+
         // drop before being launched
         _managerRef.HaltAI();
 
         DropAllObjs();
+        inDeathState = true;
+
         yield return new WaitForEndOfFrame();
+        float speedMod = Random.Range(deathSpeedMinMax.x, deathSpeedMinMax.y);
 
-        if(damageLastFrame >= deathStateDamageThreshold)
+        _rb.isKinematic = false;
+        immuneToKnockback = false;
+        deathStateSFX.PlayClip(audioSource);
+
+        inKnockbackState = true;
+        DisableAI();
+
+        // if enough damage for launch state, do that
+        if (damageLastFrame >= deathStateDamageThreshold)
         {
-            inDeathState = true;
-
-            _rb.isKinematic = false;
-            immuneToKnockback = false;
-
-            if (deathStateVFX != null)
-            {
-                deathStateVFX.gameObject.SetActive(true);
-                deathStateVFX.playRate = deathStateVFXSpeed;
-                deathStateVFX.Play();
-            }
-
-            deathStateSFX.PlayClip(audioSource);
-
-            inKnockbackState = true;
-            DisableAI();
+            speedMod *= deathFlingSpeedMod;
             base.Knockback(damageLastFrame * deathStateHorKnockback, damageLastFrame * deathStateVerKnockback, lastDamageOrigin);
-            float dur = Random.Range(deathStateDuration.x, deathStateDuration.y);
-
-            // prepare timer
-            if (deathTimer == null)
-                deathTimer = GetTimer(dur);
-            else
-                deathTimer.ResetTimer(dur);
-
-            // go for the entire death effect
-            yield return new WaitUntil(deathTimer.TimerDone);
-
-            if (deathStateVFX != null)
-            {
-                deathStateVFX.Stop();
-                deathStateVFX.gameObject.SetActive(false);
-            }
-
-            _rb.isKinematic = originalKinematicSetting;
-            immuneToKnockback = originalKnockbackImmunitySetting;
+        }
+        // otherwise, do a vertical pop
+        else
+        {
+            base.Knockback(0, instantDeathPopForce, _center.position);
         }
 
-        DestroyEnemy();
+        deathAnimator.SetFloat("SpeedMod", speedMod);
+        deathAnimator.SetTrigger("Dissolve");
+        DeathEffects();
+        //DestroyEnemy();
     }
 
     protected void DestroyEnemy()
@@ -268,8 +258,11 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
             // Debug.Log($"Target {name} told manager to die!");
         }
 
+        _rb.isKinematic = originalKinematicSetting;
+        immuneToKnockback = originalKnockbackImmunitySetting;
+
         // do full death effects
-        DeathEffects();
+        
         DestroyObject();
     }
 
@@ -279,9 +272,15 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
     protected override void DestroyObject()
     {
         if (EnemyPooler.instance != null)
+        {
             EnemyPooler.instance.Return(gameObject);
+
+        }
         else
+        {
+            //Debug.Log("No pooler detected, destroying self");
             Destroy(gameObject);
+        }
     }
 
     #endregion
@@ -300,16 +299,39 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
     [Header("Knockback")]
 
     [ShowIf("@this.immuneToKnockback == false")]
+    [Tooltip("Minimum time to stay in the knockback state")]
     [SerializeField] private float minKnockbackDuration = 0.5f;
     [ShowIf("@this.immuneToKnockback == false")]
+    [Tooltip("Ground layers to use for checking grounded status")]
     [SerializeField] private LayerMask groundMask;
-    private float groundDist;
+    [Tooltip("Minimum time to remain on ground after being knocked down")]
     [SerializeField] private float onGroundTime = 1f;
 
+    [Tooltip("SFX to play when hitting something in knockback state")]
+    [SerializeField] private AudioClipSO impactSoundSFX;
+    [Tooltip("Minimum velocity to play on impact sound")]
+    [SerializeField] private float impactSoundVelocity;
+
+    /// <summary>
+    /// internal tracker for distance from ground
+    /// </summary>
+    private float groundDist;
+    /// <summary>
+    /// Whether currently in knockback state
+    /// </summary>
     private bool inKnockbackState;
+    /// <summary>
+    /// The velocity currently stored
+    /// </summary>
     private Vector3 storedVelocity;
 
+    /// <summary>
+    /// Routine tracker for knockback
+    /// </summary>
     private Coroutine knockbackRoutine;
+    /// <summary>
+    /// Timer tracking knockdown state
+    /// </summary>
     private LocalTimer knockdownTracker;
 
     /// <summary>
@@ -547,12 +569,6 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
         immuneToKnockback = originalKnockbackImmunitySetting;
 
         audioSource.Stop();
-
-        if (deathStateVFX != null)
-        {
-            deathStateVFX.Stop();
-            deathStateVFX.gameObject.SetActive(false);
-        }
 
         if (knockbackRoutine != null)
         {

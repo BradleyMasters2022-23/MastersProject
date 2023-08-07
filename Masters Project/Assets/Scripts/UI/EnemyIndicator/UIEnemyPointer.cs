@@ -9,7 +9,7 @@ public class UIEnemyPointer : MonoBehaviour
 {
     private CameraShoot cameraRef;
     private RectTransform t;
-    private Transform target;
+    private EnemyTarget target;
     private Transform player;
     private bool initialized;
     [SerializeField] private GameObject indicatorGraphic;
@@ -39,7 +39,7 @@ public class UIEnemyPointer : MonoBehaviour
         if (!initialized)
             return;
 
-        if(target == null || !target.gameObject.activeInHierarchy)
+        if(target == null || target.Killed())
         {
             Destroy(gameObject);
             return;
@@ -64,7 +64,7 @@ public class UIEnemyPointer : MonoBehaviour
         if (!useDistance)
             return;
 
-        float currDist = Mathf.Abs(Vector3.Distance(player.position, target.position));
+        float currDist = Mathf.Abs(Vector3.Distance(player.position, target.Center.position));
 
         float newPix =  Mathf.Clamp01((currDist / maxDistance)) * radarRadius;
         distRect.y = newPix;
@@ -93,7 +93,7 @@ public class UIEnemyPointer : MonoBehaviour
         {
             if (cameraRef != null)
             {
-                if (cameraRef.InCamVision(target.position))
+                if (cameraRef.InCamVision(target.Center.position))
                 {
                     if (indicatorGraphic.activeSelf)
                     {
@@ -113,7 +113,7 @@ public class UIEnemyPointer : MonoBehaviour
 
     private void RotateToTargetFlat()
     {
-        Vector3 direction = target.position - player.position;
+        Vector3 direction = target.Center.position - player.position;
 
         Quaternion r = Quaternion.LookRotation(direction);
         r.z = -r.y;
@@ -130,9 +130,9 @@ public class UIEnemyPointer : MonoBehaviour
     /// Set the target enemy
     /// </summary>
     /// <param name="target"></param>
-    public void SetTarget(GameObject _target, float rad = 0, float maxDist = 0)
+    public void SetTarget(EnemyTarget _target, float rad = 0, float maxDist = 0)
     {
-        target = _target.transform;
+        target = _target;
         //indicatorGraphic = transform.GetChild(0).gameObject;
         cameraRef = Camera.main.GetComponent<CameraShoot>();
 

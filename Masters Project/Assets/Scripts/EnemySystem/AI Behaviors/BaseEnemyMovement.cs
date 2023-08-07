@@ -172,8 +172,10 @@ public abstract class BaseEnemyMovement : MonoBehaviour
             agent.ResetPath();
             return;
         }
-
-        agent.SetDestination(target);
+        if (agent.destination != target)
+        {
+            agent.SetDestination(target);
+        }
 
     }
 
@@ -370,9 +372,7 @@ public abstract class BaseEnemyMovement : MonoBehaviour
     {
         // Debug.DrawRay(transform.position, dir, Color.red, 1f);
 
-        RaycastHit hit;
-
-        if(Physics.Raycast(transform.position+Vector3.up, dir, out hit, dir.magnitude, collisionLayers))
+        if(Physics.Raycast(transform.position+Vector3.up, dir, dir.magnitude, collisionLayers))
         {
             //Debug.Log($"{name} hit detected at {hit.collider.name}!");
             return true;

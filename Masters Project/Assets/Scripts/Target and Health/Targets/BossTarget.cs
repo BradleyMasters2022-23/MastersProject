@@ -43,6 +43,12 @@ public class BossTarget : Target
     [Tooltip("Reference to the invulnerable shield")]
     [SerializeField] private ShieldGenerator shieldManager;
 
+    [SerializeField] private ChannelVoid playerKilledChannel;
+
+    [SerializeField] private AudioClipSO bossStartNormalLine;
+    [SerializeField] private AudioClipSO bossStartKilledPlayerLine;
+    [SerializeField] private AudioClipSO playerKilledLine;
+
     /// <summary>
     /// List of events that occur when this target takes damage
     /// </summary>
@@ -65,6 +71,7 @@ public class BossTarget : Target
         if (delayedRoutine != null)
             StopCoroutine(delayedRoutine);
 
+        playerKilledChannel.OnEventRaised -= OnPlayerKilled;
         _healthManager.onHealthbarLostEvents -= CallTransition;
         onDamagedEvents?.RemoveAllListeners();
         base.KillTarget();
@@ -106,6 +113,19 @@ public class BossTarget : Target
         //Debug.Log("Starting boss encounter");
         onDamagedEvents = new UnityEvent();
 
+        // if player was killed last run, play unique hook
+        // this is the first boss, so check boss killed index 0
+        if (GlobalStatsManager.data.killedByBossLastRun == 0)
+        {
+            bossStartKilledPlayerLine.PlayClip(audioSource);
+        }
+        // otherwise, play normal line
+        else
+        {
+            bossStartNormalLine.PlayClip(audioSource);
+        }
+
+        playerKilledChannel.OnEventRaised += OnPlayerKilled;
         _healthManager.onHealthbarLostEvents += CallTransition;
         phaseIndex = -1;
         CallTransition();
@@ -117,6 +137,15 @@ public class BossTarget : Target
     public void CallTransition()
     {
         StartCoroutine(Transition());
+    }
+
+    /// <summary>
+    /// when player dies, play special line
+    /// </summary>
+    private void OnPlayerKilled()
+    {
+        playerKilledChannel.OnEventRaised -= OnPlayerKilled;
+        playerKilledLine.PlayClip(audioSource);
     }
 
     /// <summary>
@@ -201,7 +230,7 @@ public class BossTarget : Target
 
         if(t != null)
         {
-            t.Knockback(500, 500, _center.position);
+            t.Knockback(300, 65, _center.position);
         }
     }
 }

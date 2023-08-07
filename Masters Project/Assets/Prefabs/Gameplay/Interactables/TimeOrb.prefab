@@ -147,6 +147,7 @@ MonoBehaviour:
   chaseRadius: 13.5
   chaseSpeed: 22
   realCollider: {fileID: 6739573261697533126}
+  physicsCollider: {fileID: 1182620399953240878}
   OrbCollect: {fileID: 11400000, guid: a3e01f5f3e14cc94e8532864e3536f16, type: 2}
   pickupWhileSlowing: 0
   startDespawnTime: 8
@@ -216,7 +217,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.08
+  m_Time: 0.5
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -303,6 +304,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be66c8bccf0de47409ec68ebffd3e181, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ren: {fileID: 0}
+  trailTime: 0
+  pauseTime: 0
 --- !u!1 &6971633172659470057
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,7 +348,7 @@ SphereCollider:
   m_GameObject: {fileID: 6971633172659470057}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.14989561
   m_Center: {x: 0, y: 0, z: 0}

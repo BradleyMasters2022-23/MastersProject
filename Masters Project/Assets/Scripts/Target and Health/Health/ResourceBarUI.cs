@@ -33,38 +33,11 @@ public class ResourceBarUI : MonoBehaviour
 
     [SerializeField] protected RectTransform coreReference;
 
-    [SerializeField] private Image fillArea;
-    [SerializeField] private Image emptyArea;
-    [SerializeField] private bool scaleWithMax;
+    [SerializeField] protected Image fillArea;
+    [SerializeField] protected Image emptyArea;
+    [SerializeField] protected bool scaleWithMax;
     
-    private float pixelsPerHealth;
-
-    
-    [Header("Event HUD Impulse Effects")]
-    [SerializeField] private ImpulseEffect effectSource;
-    [HideIf("@this.effectSource == null")]
-    [SerializeField] private Color replenishColor;
-    [HideIf("@this.effectSource == null")]
-    [SerializeField] private Color decreaseColor;
-    [HideIf("@this.effectSource == null")]
-    [SerializeField] private Color fullColor;
-    [HideIf("@this.effectSource == null")]
-    [SerializeField] private Color emptyColor;
-
-    [Tooltip("Sound while bar is recharging"), HideIf("@this.effectSource == null")]
-    [SerializeField] private AudioClipSO barRefill;
-    [Tooltip("Sound when bar is full"), HideIf("@this.effectSource == null")]
-    [SerializeField] private AudioClipSO barFull;
-    [Tooltip("Sound while bar is reduced"), HideIf("@this.effectSource == null")]
-    [SerializeField] private AudioClipSO barReduce;
-    [Tooltip("Sound when bar is emptied"), HideIf("@this.effectSource == null")]
-    [SerializeField] private AudioClipSO barEmpty;
-    private AudioSource source;
-
-    protected virtual void Awake()
-    {
-        source = gameObject.AddComponent<AudioSource>();
-    }
+    protected float pixelsPerHealth;
 
     protected virtual void OnEnable()
     {
@@ -72,7 +45,7 @@ public class ResourceBarUI : MonoBehaviour
             StartCoroutine(TryInitialize());
     }
 
-    private IEnumerator TryInitialize()
+    protected IEnumerator TryInitialize()
     {
         int i = 0;
         while(_targetData == null)
@@ -120,80 +93,26 @@ public class ResourceBarUI : MonoBehaviour
         if (!initialized)
             return;
 
-        UpdateCoreSlider();
+        if (_mainSlider.maxValue != _targetData.MaxValue())
+        {
+            UpdateCoreSlider();
+        }
+        
         UpdateCurrVal();
     }
 
-    private void UpdateCurrVal()
+    protected virtual void UpdateCoreSlider()
+    {
+        _mainSlider.maxValue = _targetData.MaxValue();
+        coreReference.sizeDelta = new Vector2(pixelsPerHealth * _mainSlider.maxValue, coreReference.sizeDelta.y);
+    }
+
+    protected virtual void UpdateCurrVal()
     {
         if (_targetData.CurrentValue() != _mainSlider.value)
         {
             lastVal = _mainSlider.value;
             _mainSlider.value = _targetData.CurrentValue();
-
-            if (_mainSlider.value <= 0)
-                OnDeplete();
-            else if (_mainSlider.value >= _mainSlider.maxValue)
-                OnFull();
-            else if (_mainSlider.value <= lastVal)
-                OnDecrease();
-            else if (_mainSlider.value > lastVal)
-                OnIncrease();
         }
     }
-
-    private void UpdateCoreSlider()
-    {
-        if(_mainSlider.maxValue != _targetData.MaxValue())
-        {
-            _mainSlider.maxValue = _targetData.MaxValue();
-            coreReference.sizeDelta = new Vector2(pixelsPerHealth * _mainSlider.maxValue, coreReference.sizeDelta.y);
-        }
-    }
-
-    public void OnDecrease()
-    {
-        // Do any other visual representation when the value decreases
-        if (effectSource!=null && decreaseColor!=null)
-        {
-            effectSource.ActivateImpulse(decreaseColor);
-        }
-
-        barReduce.PlayClip(source);
-    }
-
-    public void OnIncrease()
-    {
-        // Do any other visual representation when the value increases
-        if (effectSource != null && replenishColor != null)
-        {
-            effectSource.ActivateImpulse(replenishColor);
-        }
-
-        barRefill.PlayClip(source);
-    }
-
-    public void OnFull()
-    {
-        // Do any other visual representation on fill
-        if (effectSource != null && fullColor != null)
-        {
-            effectSource.ActivateImpulse(fullColor);
-        }
-
-        barFull.PlayClip(source);
-    }
-
-    public void OnDeplete()
-    {
-        // Do any other visual representation on deplete
-        if(effectSource!=null && emptyColor!=null)
-        {
-            effectSource.ActivateImpulse(emptyColor);
-        }
-
-        barEmpty.PlayClip(source);
-    }
-
-    
 }

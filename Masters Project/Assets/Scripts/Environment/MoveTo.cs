@@ -45,7 +45,7 @@ public class MoveTo : MonoBehaviour
         yield return new WaitForSeconds(startDelay);
         onStartEvents.Invoke();
 
-        ScaledTimer temp = new ScaledTimer(10, false);
+        ScaledTimer temp = new ScaledTimer(5, false);
 
         // Continually go towards target. Currently just a straight shot
         while(currDist >= 0.1f)

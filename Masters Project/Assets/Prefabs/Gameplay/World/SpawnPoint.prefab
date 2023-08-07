@@ -54,7 +54,7 @@ MonoBehaviour:
   distanceRange: {x: 18, y: 110}
   spawnParticles: {fileID: 3078549860310524237}
   VFXSpeedScalar: 1
-  spawnSound: {fileID: 11400000, guid: d816907793921e042b32b14e5f66993a, type: 2}
+  spawnSoundManager: {fileID: 8564994577411529234}
   enemyWhitelist: []
   enemyBlacklist: []
   spawnMesh: {fileID: 3645588719955141433}
@@ -168,7 +168,9 @@ GameObject:
   - component: {fileID: 1948457033}
   - component: {fileID: 3078549860310524237}
   - component: {fileID: 3130288200223245908}
-  - component: {fileID: 7846522269631489115}
+  - component: {fileID: 6918340496433593682}
+  - component: {fileID: 8564994577411529234}
+  - component: {fileID: 5233431803250869737}
   m_Layer: 0
   m_Name: SpawnContainer
   m_TagString: Untagged
@@ -247,7 +249,7 @@ VisualEffect:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7877848123248416308}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Asset: {fileID: 8926484042661614526, guid: 458bcad561cb8c243ab90a7eb91b1f13, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
@@ -285,7 +287,7 @@ VFXRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7877848123248416308}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -317,7 +319,120 @@ VFXRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &7846522269631489115
+--- !u!82 &6918340496433593682
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7877848123248416308}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &8564994577411529234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7877848123248416308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad4842cda8c8ccd4e8ccae3e336af40a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ambientSFX: {fileID: 11400000, guid: c7aff7e822c88434e98ad16d4d7603b3, type: 2}
+  ambientStartSFX: {fileID: 11400000, guid: 45b77e9706d3bcc4da108ffa567fd7ec, type: 2}
+  ambientEndSFX: {fileID: 11400000, guid: b866b71b2bdf85a4e93fe71b2fe35b7c, type: 2}
+  playOnStart: 0
+  playOnEnable: 0
+--- !u!114 &5233431803250869737
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

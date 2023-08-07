@@ -39,6 +39,16 @@ public class PlayerTarget : Target, IDifficultyObserver
     private Canvas mainUI;
     public Canvas MainUI { get { return mainUI; }}
 
+    [Header("Death State")]
+    [Tooltip("Animator controlling player death animation")]
+    [SerializeField] Animator playerDeathAnimator;
+    [Tooltip("Animator controlling player gun. Needed for start of death animation.")]
+    [SerializeField] Animator playerGunController;
+    [Tooltip("Channel used to reset player look on death")]
+    [SerializeField] AimController aimController;
+    [Tooltip("Channel called when the player immediately dies")]
+    [SerializeField] ChannelVoid onPlayerKilled;
+
     [Header("Player Damage Flinch")]
     [Tooltip("Lookup table for damages and impulse strength")]
     [SerializeField] DamageToImpulse[] impulseRanges;
@@ -93,7 +103,7 @@ public class PlayerTarget : Target, IDifficultyObserver
     /// </summary>
     private void LateUpdate()
     {
-        if(frameDamage > 0 && impulseCD.TimerDone())
+        if(frameDamage > 0 && impulseCD.TimerDone() && !_killed)
         {
             ApplyDamageImpulse(frameDamage);
             impulseCD.ResetTimer();
@@ -102,14 +112,69 @@ public class PlayerTarget : Target, IDifficultyObserver
 
     }
 
+    #region Player Death
+
+    [SerializeField] AudioClipSO immediateDeathSound;
+    [SerializeField] AudioClipSO deathHitGroundSound;
+    [SerializeField] AmbientSFXSource playerWeaponSoundManager;
+
     /// <summary>
     /// On kill, go into game over state
     /// </summary>
     protected override void KillTarget()
     {
+        _killed = true;
+
+        InputManager.Controls.PlayerGameplay.Disable();
+
+        playerGunController.enabled = false;
+        _rb.velocity = Vector3.zero;
+        
+        playerDeathAnimator.enabled = true;
+        aimController.ResetLook();
+    }
+
+    /// <summary>
+    /// Call channel that player died. Called by animator.
+    /// </summary>
+    protected void CallPlayerKilled()
+    {
+        onPlayerKilled.RaiseEvent();
+    }
+
+    /// <summary>
+    /// Call the game to game over. Called via player animator
+    /// </summary>
+    protected virtual void CallGameOver()
+    {
         GlobalStatsManager.data.playerDeaths++;
         GameManager.instance.ChangeState(GameManager.States.GAMEOVER);
+        Time.timeScale = 0;
     }
+
+    private void PlayDeathAudio(int stage)
+    {
+        switch (stage)
+        {
+            case 0:
+                {
+                    immediateDeathSound.PlayClip(audioSource);
+                    break;
+                }
+            case 1:
+                {
+                    deathHitGroundSound.PlayClip(audioSource);
+                    break;
+                }
+            case 2:
+                {
+                    playerWeaponSoundManager.Play();
+                    break;
+                }
+        }
+    }
+
+    #endregion
 
     /// <summary>
     /// Add offset to the player before knockback to make it work

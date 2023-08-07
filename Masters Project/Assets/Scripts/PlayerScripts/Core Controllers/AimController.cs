@@ -317,7 +317,7 @@ public class AimController : MonoBehaviour, IDifficultyObserver
         }
     }
 
-    private void ResetLook()
+    public void ResetLook()
     {
         cameraLook.transform.rotation = Quaternion.Euler(0, 0, 0);
     }

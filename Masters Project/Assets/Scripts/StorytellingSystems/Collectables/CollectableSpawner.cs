@@ -190,7 +190,8 @@ public class CollectableSpawner : MonoBehaviour, Interactable
         // TODO - zoom to player instead of just deleting
         collected = true;
         CollectableSaveManager.instance.SaveNewFragment(chosenCollectable, chosenFragmentIndex);
-        
+        CollectableSaveManager.instance.ResetLuck();
+
         CollectableViewUI ui = PlayerTarget.p.GetComponentInChildren<CollectableViewUI>(true);
         ui.OpenUI(chosenCollectable, chosenFragmentIndex);
 
