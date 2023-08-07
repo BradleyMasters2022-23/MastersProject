@@ -223,7 +223,7 @@ public class SimpleShoot : AttackTarget, IDifficultyObserver
             return;
         }
 
-        indicatorSFX.PlayClip(transform);
+        indicatorSFX.PlayClip(transform, source);
 
         // Tell each one to start
         foreach (GameObject indicator in indicators)
@@ -336,7 +336,7 @@ public class SimpleShoot : AttackTarget, IDifficultyObserver
             //shot.GetComponent<RangeAttack>().Activate();
         }
 
-        shootSFX.PlayClip(transform);
+        shootSFX.PlayClip(transform, source);
 
     }
 
