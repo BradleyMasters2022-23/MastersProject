@@ -747,12 +747,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1016154953112930011}
     - target: {fileID: 5068463566486402512, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
+      propertyPath: criticalHealthSFX
+      value: 
+      objectReference: {fileID: 11400000, guid: 2a6a784d0c42610448729b2e595567d2, type: 2}
+    - target: {fileID: 5068463566486402512, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
       propertyPath: onNormalState.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5068463566486402512, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
       propertyPath: onCriticalState.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5068463566486402512, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
       propertyPath: onNormalState.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -763,6 +767,10 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5068463566486402512, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
+      propertyPath: onCriticalState.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068463566486402512, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
       propertyPath: onNormalState.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1018763439724844537}
@@ -771,12 +779,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1018763439724844537}
     - target: {fileID: 5068463566486402512, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
+      propertyPath: onCriticalState.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 154286542209559756}
+    - target: {fileID: 5068463566486402512, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
       propertyPath: onNormalState.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SetActive
       objectReference: {fileID: 0}
     - target: {fileID: 5068463566486402512, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
       propertyPath: onCriticalState.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SetActive
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068463566486402512, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
+      propertyPath: onCriticalState.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: PlayCriticalHealthSFX
       objectReference: {fileID: 0}
     - target: {fileID: 5068463566486402512, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
       propertyPath: onNormalState.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -787,8 +803,16 @@ PrefabInstance:
       value: UnityEngine.GameObject, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5068463566486402512, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
+      propertyPath: onCriticalState.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: PlayerHealthbarUI, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068463566486402512, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
       propertyPath: onCriticalState.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5068463566486402512, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
+      propertyPath: onCriticalState.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5095610691557042090, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
       propertyPath: m_AnchorMax.x
@@ -844,6 +868,17 @@ PrefabInstance:
       objectReference: {fileID: 3023598398861553528}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
+--- !u!114 &154286542209559756 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5068463566486402512, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
+  m_PrefabInstance: {fileID: 4932266261853264156}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6d63d86c70f809439e525692a8e1d3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1018763439724844537 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5355257123743468773, guid: 2962be29f0bd06642ae3d6e198d0d869, type: 3}
@@ -1480,7 +1515,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3211141667700331353, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
       propertyPath: m_RootOrder
-      value: 10
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3396451906776591557, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
       propertyPath: m_Layer
@@ -1512,7 +1547,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4183241308193468667, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4331826529899253143, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
       propertyPath: sway
@@ -1553,6 +1588,10 @@ PrefabInstance:
     - target: {fileID: 5470991744263128481, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5480080494213795430, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
+      propertyPath: m_RootOrder
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 5834384292680052401, guid: afc457026f8a00949b359d0f9fcfed1d, type: 3}
       propertyPath: m_Layer

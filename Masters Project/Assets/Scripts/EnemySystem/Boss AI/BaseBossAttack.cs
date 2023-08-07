@@ -221,7 +221,7 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInf
             yield return new WaitUntil(tracker.TimerDone);
         }
 
-        LocalTimer maxTime = GetTimer(1f);
+        LocalTimer maxTime = GetTimer(1.7f);
 
         // Return to resting position
         while (!maxTime.TimerDone())
@@ -245,14 +245,14 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInf
 
     #endregion
 
-    public void OnStop()
+    public virtual void OnStop()
     {
         originalPosVector = target.Center.position;
 
         BonusStop();
     }
 
-    public void OnResume()
+    public virtual void OnResume()
     {
         if(state == AttackState.Attacking)
         {

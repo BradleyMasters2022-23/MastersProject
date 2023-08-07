@@ -249,7 +249,7 @@ public class SpawnManager : MonoBehaviour
                 yield return null;
             }
 
-            if(backup >= 250)
+            if(backup >= 90)
             {
                 Debug.Log("ERROR");
                 break;
@@ -415,7 +415,7 @@ public class SpawnManager : MonoBehaviour
 
     private IEnumerator CheckCount()
     {
-        backupTimer = new ScaledTimer(4f, false);
+        backupTimer = new ScaledTimer(5f, false);
         // Consistantly check if a wave is finished every few seconds
         WaitForSeconds delay = new WaitForSeconds(1f);
         while (!finished)
@@ -430,10 +430,10 @@ public class SpawnManager : MonoBehaviour
     private void FailsafeCheck()
     {
         // If a living enemy is found, reset timer
-        EnemyTarget[] alive = FindObjectsOfType<EnemyTarget>(false);
+        EnemyTarget[] alive = EnemyPooler.instance.GetComponentsInChildren<EnemyTarget>(false);
         foreach (EnemyTarget e in alive)
         {
-            if (e.Killable() && !e.Killed())
+            if (e.Killable())
             {
                 backupTimer.ResetTimer();
                 return;

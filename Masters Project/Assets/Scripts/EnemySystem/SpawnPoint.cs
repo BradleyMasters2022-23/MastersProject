@@ -70,12 +70,9 @@ public class SpawnPoint : MonoBehaviour
     /// Transform of the player object
     /// </summary>
     private Transform player;
-    /// <summary>
-    /// Audio source player
-    /// </summary>
-    private AudioSource s;
+
     [Tooltip("Sound that plays while spawning enemy")]
-    [SerializeField] private AudioClipSO spawnSound;
+    [SerializeField] private AmbientSFXSource spawnSoundManager;
 
     [Tooltip("What enemies are allowed to spawn on this spawnpoint. Drag enemy prefabs here.")]
     [SerializeField] private List<EnemySO> enemyWhitelist;
@@ -99,7 +96,6 @@ public class SpawnPoint : MonoBehaviour
         // Initialize timers
         spawnDelayTimer = new ScaledTimer(spawnDelay);
         spawnOverrideTimer = new ScaledTimer(spawnOverrideDelay);
-        s = GetComponent<AudioSource>();
     }
 
     /// <summary>
@@ -197,7 +193,7 @@ public class SpawnPoint : MonoBehaviour
         return (dist >= distanceRange.x && dist <= distanceRange.y);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!spawning && IsLoaded() && spawnOverrideTimer.TimerDone() && spawnManager!=null)
         {
@@ -294,7 +290,10 @@ public class SpawnPoint : MonoBehaviour
             spawnParticles.Play();
 
         // start spawn effects, wait for them to finish spawning
-        spawnSound.PlayClip(s);
+        if (spawnSoundManager != null)
+        {
+            spawnSoundManager.Play();
+        }
         spawnEffectController.StartSpawning(enemy.playbackSpeedModifier, () => spawnComplete = true);
         yield return new WaitUntil(() => spawnComplete);
 
@@ -316,7 +315,11 @@ public class SpawnPoint : MonoBehaviour
         if(spawnParticles != null)
             spawnParticles.Stop();
 
-        s.Stop();
+        // start spawn effects, wait for them to finish spawning
+        if (spawnSoundManager != null)
+        {
+            spawnSoundManager.Stop();
+        }
 
         spawning = false;
         
@@ -347,7 +350,11 @@ public class SpawnPoint : MonoBehaviour
         if (spawnParticles != null)
             spawnParticles.Stop();
 
-        s.Stop();
+        // start spawn effects, wait for them to finish spawning
+        if (spawnSoundManager != null)
+        {
+            spawnSoundManager.Stop();
+        }
 
         spawning = false;
 

@@ -195,7 +195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 2783499131424098863}
   damageMultiplier: 1.1
-  impactVFX: {fileID: 0}
+  impactVFX: {fileID: 4806199407329216484, guid: 400c18ce31b06944ca781991e22741af, type: 3}
 --- !u!1 &978491405701371576
 GameObject:
   m_ObjectHideFlags: 0
@@ -312,6 +312,53 @@ Transform:
   m_Father: {fileID: 2594099354691722710}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1054211224806108942
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 798770538102982963}
+  - component: {fileID: 32857117847535616}
+  m_Layer: 0
+  m_Name: Buildup SFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &798770538102982963
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1054211224806108942}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4990055574022226414}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &32857117847535616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1054211224806108942}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 778dad9583167fa438f228f2890b45c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundEffect: {fileID: 11400000, guid: aecd3409610a5d54f9217999f81d2b52, type: 2}
+  source: {fileID: 8707300298393838528}
+  overlap: 0
 --- !u!1 &1831487471029486108
 GameObject:
   m_ObjectHideFlags: 0
@@ -676,6 +723,7 @@ Transform:
   m_Children:
   - {fileID: 5709931602014905113}
   - {fileID: 261587647080676878}
+  - {fileID: 719165560202463547}
   m_Father: {fileID: 1752576230841229807}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -725,6 +773,53 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   VFXPrefab: {fileID: 1552065595262604136, guid: 817905fd3fc7a0c4396ea5c8215240db, type: 3}
   scale: 1
+--- !u!1 &3199616749123487561
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7154592516268217946}
+  - component: {fileID: 3618567747424123441}
+  m_Layer: 0
+  m_Name: Buildup SFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7154592516268217946
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3199616749123487561}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 935571382848000926}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3618567747424123441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3199616749123487561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 778dad9583167fa438f228f2890b45c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundEffect: {fileID: 11400000, guid: 035a28f32749a0a4a81b97b9a0e47c58, type: 2}
+  source: {fileID: 8707300298393838528}
+  overlap: 0
 --- !u!1 &3285546567289745804
 GameObject:
   m_ObjectHideFlags: 0
@@ -883,7 +978,54 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 2783499131424098863}
   damageMultiplier: 0.5
-  impactVFX: {fileID: 0}
+  impactVFX: {fileID: 5028213672476139401, guid: f86612e1349e5d2429164cb8341b2733, type: 3}
+--- !u!1 &4645876963178776022
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 719165560202463547}
+  - component: {fileID: 5593782117656619237}
+  m_Layer: 0
+  m_Name: Buildup SFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &719165560202463547
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4645876963178776022}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1494051890980711697}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5593782117656619237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4645876963178776022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 778dad9583167fa438f228f2890b45c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundEffect: {fileID: 11400000, guid: 15cc670f76be40e43802661f0cfc63f8, type: 2}
+  source: {fileID: 8707300298393838528}
+  overlap: 0
 --- !u!1 &4695307324438622773
 GameObject:
   m_ObjectHideFlags: 0
@@ -1212,6 +1354,7 @@ Transform:
   m_Children:
   - {fileID: 4751035438133774359}
   - {fileID: 525999596493557907}
+  - {fileID: 798770538102982963}
   m_Father: {fileID: 1752576230841229807}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1831,6 +1974,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2922618048916373001}
+  - {fileID: 7154592516268217946}
   m_Father: {fileID: 1752576230841229807}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1845,7 +1989,7 @@ GameObject:
   - component: {fileID: 2922618048916373001}
   - component: {fileID: 1099414168829488698}
   m_Layer: 0
-  m_Name: Buildup
+  m_Name: Buildup VFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2268,7 +2412,7 @@ MonoBehaviour:
       executeTime: 0
   phaseChangeEvents:
   - stageName: Stage 1 (START)
-    eventAudio: {fileID: 0}
+    eventAudio: {fileID: 11400000, guid: cccfb66dc4670c046ade5e8caf85bcf0, type: 2}
     OnTriggerEvent:
     - action:
         m_PersistentCalls:
@@ -2503,7 +2647,7 @@ MonoBehaviour:
             m_CallState: 2
       executeTime: 0
   - stageName: Stage 2
-    eventAudio: {fileID: 0}
+    eventAudio: {fileID: 11400000, guid: ca890c81c52e4d54f985400f9c2be313, type: 2}
     OnTriggerEvent:
     - action:
         m_PersistentCalls:
@@ -2702,7 +2846,7 @@ MonoBehaviour:
             m_CallState: 2
       executeTime: 0
   - stageName: Stage 3
-    eventAudio: {fileID: 0}
+    eventAudio: {fileID: 11400000, guid: 43799952a06c56b44a4e52da82e77ff3, type: 2}
     OnTriggerEvent:
     - action:
         m_PersistentCalls:
@@ -2926,7 +3070,7 @@ MonoBehaviour:
       executeTime: 0
   onDeathEvents:
     stageName: On Death Event
-    eventAudio: {fileID: 0}
+    eventAudio: {fileID: 11400000, guid: 93b4bc3ceb1e01342a080699bea1a70e, type: 2}
     OnTriggerEvent:
     - action:
         m_PersistentCalls:
@@ -3309,6 +3453,7 @@ MonoBehaviour:
   prefireIndicator:
   - {fileID: 7966107060312633823}
   - {fileID: 1139893744152594931}
+  - {fileID: 32857117847535616}
   shootVFXPrefab: {fileID: 9110516864071591092, guid: ec203b2698600254f98a117f8e27f2e4, type: 3}
   shootVFXScale: 10
   indicatorSFX: {fileID: 11400000, guid: fe9d9dd416d226648ac1310b201c960e, type: 2}
@@ -3353,6 +3498,7 @@ MonoBehaviour:
   rotateDuringAttack: 1
   prefireIndicator:
   - {fileID: 1099414168829488698}
+  - {fileID: 3618567747424123441}
   shootVFXPrefab: {fileID: 9110516864071591092, guid: ec203b2698600254f98a117f8e27f2e4, type: 3}
   shootVFXScale: 10
   indicatorSFX: {fileID: 11400000, guid: fe9d9dd416d226648ac1310b201c960e, type: 2}
@@ -3397,6 +3543,7 @@ MonoBehaviour:
   rotateDuringAttack: 1
   prefireIndicator:
   - {fileID: 7429987650493221063}
+  - {fileID: 5593782117656619237}
   shootVFXPrefab: {fileID: 9110516864071591092, guid: ec203b2698600254f98a117f8e27f2e4, type: 3}
   shootVFXScale: 10
   indicatorSFX: {fileID: 11400000, guid: fe9d9dd416d226648ac1310b201c960e, type: 2}
