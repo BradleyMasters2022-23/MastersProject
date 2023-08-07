@@ -263,6 +263,7 @@ public class SpawnPoint : MonoBehaviour
     /// </summary>
     private IEnumerator SpawnEnemy(EnemySO enemy, SpawnTriggerField sendTo = null)
     {
+        Debug.Log($"{name} trying to spawn enemy");
         // immediately spawn the enemy, but disable it temporarily
         lastSpawnedEnemy = EnemyPooler.instance.RequestEnemy(enemy.enemyPrefab);
         // just incase it fails, return it

@@ -272,9 +272,16 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
     protected override void DestroyObject()
     {
         if (EnemyPooler.instance != null)
+        {
             EnemyPooler.instance.Return(gameObject);
+
+        }
         else
+        {
+            Debug.Log("No pooler detected, destroying self");
             Destroy(gameObject);
+
+        }
     }
 
     #endregion
