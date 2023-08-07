@@ -71,6 +71,7 @@ public class BossTarget : Target
         if (delayedRoutine != null)
             StopCoroutine(delayedRoutine);
 
+        GlobalStatsManager.data.killedByBossLastRun = -1;
         playerKilledChannel.OnEventRaised -= OnPlayerKilled;
         _healthManager.onHealthbarLostEvents -= CallTransition;
         onDamagedEvents?.RemoveAllListeners();
@@ -145,6 +146,7 @@ public class BossTarget : Target
     private void OnPlayerKilled()
     {
         playerKilledChannel.OnEventRaised -= OnPlayerKilled;
+        GlobalStatsManager.data.killedByBossLastRun = 0;
         playerKilledLine.PlayClip(audioSource);
     }
 
