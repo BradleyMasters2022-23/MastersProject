@@ -17,6 +17,7 @@ public class SecretConversationInteract : ConversationInteract
     [Tooltip("How much stronger than the current depth should the crystal spawn at")]
     [SerializeField] private int crystalBuff;
     [SerializeField] private CrystalInteract crystal;
+    [SerializeField] private MoveTo orbRef;
 
     [SerializeField] private Animator anim;
     [SerializeField] private RandomCallUI newCallUI;
@@ -51,14 +52,15 @@ public class SecretConversationInteract : ConversationInteract
     public void OnCallComplete()
     {
         available = false;
-        SpawnNewCrystal();
+        //SpawnNewCrystal();
+        orbRef.Move();
         SetOffline();
     }
 
     /// <summary>
     /// Spawn a new crystal at a stronger level than normal
     /// </summary>
-    private void SpawnNewCrystal()
+    public void SpawnNewCrystal()
     {
         crystal.RandomizeCrystalSetStats(MapLoader.instance.PortalDepth() + crystalBuff);
         crystal.gameObject.SetActive(true);

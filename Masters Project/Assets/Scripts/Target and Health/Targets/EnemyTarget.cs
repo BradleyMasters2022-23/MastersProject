@@ -161,6 +161,10 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
             StopCoroutine(DeathState());
             DestroyEnemy();
         }
+        else if (inKnockbackState && _rb.velocity.magnitude >= impactSoundVelocity)
+        {
+            impactSoundSFX.PlayClip(audioSource, true);
+        }
     }
 
 
@@ -300,16 +304,39 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
     [Header("Knockback")]
 
     [ShowIf("@this.immuneToKnockback == false")]
+    [Tooltip("Minimum time to stay in the knockback state")]
     [SerializeField] private float minKnockbackDuration = 0.5f;
     [ShowIf("@this.immuneToKnockback == false")]
+    [Tooltip("Ground layers to use for checking grounded status")]
     [SerializeField] private LayerMask groundMask;
-    private float groundDist;
+    [Tooltip("Minimum time to remain on ground after being knocked down")]
     [SerializeField] private float onGroundTime = 1f;
 
+    [Tooltip("SFX to play when hitting something in knockback state")]
+    [SerializeField] private AudioClipSO impactSoundSFX;
+    [Tooltip("Minimum velocity to play on impact sound")]
+    [SerializeField] private float impactSoundVelocity;
+
+    /// <summary>
+    /// internal tracker for distance from ground
+    /// </summary>
+    private float groundDist;
+    /// <summary>
+    /// Whether currently in knockback state
+    /// </summary>
     private bool inKnockbackState;
+    /// <summary>
+    /// The velocity currently stored
+    /// </summary>
     private Vector3 storedVelocity;
 
+    /// <summary>
+    /// Routine tracker for knockback
+    /// </summary>
     private Coroutine knockbackRoutine;
+    /// <summary>
+    /// Timer tracking knockdown state
+    /// </summary>
     private LocalTimer knockdownTracker;
 
     /// <summary>
