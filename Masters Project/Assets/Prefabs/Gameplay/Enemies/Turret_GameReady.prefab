@@ -560,6 +560,8 @@ GameObject:
   - component: {fileID: 891694777}
   - component: {fileID: 1794628268212698115}
   - component: {fileID: 7031348770677665391}
+  - component: {fileID: 615560269}
+  - component: {fileID: 615560270}
   m_Layer: 8
   m_Name: Turret_GameReady
   m_TagString: Enemy
@@ -628,7 +630,8 @@ MonoBehaviour:
   knockbackModifier: 0.9
   maxKnockback: 150
   invincibilityShield: {fileID: 1877889653686987640}
-  _deathVFX: {fileID: 7428150280865193490, guid: 33bdfb6bb241c1448997c3b2718813a5, type: 3}
+  _deathVFX: {fileID: 7428150280865193490, guid: 6e221f18ca47d5547a8bd26d21fd46a8, type: 3}
+  _deathVFXScaleMod: 1.65
   damagedSound: {fileID: 11400000, guid: 4ba21dac44b2634469d022e7027035df, type: 2}
   deathSound: {fileID: 11400000, guid: e9eb6a05acbfe4b4a9897c4a09a84f2b, type: 2}
   damagedSoundCooldown: 0.1
@@ -640,13 +643,14 @@ MonoBehaviour:
   flinchRoot: {fileID: 8514885714139926861}
   flinchRecoveryRate: 4
   flinchSensitivity: 0.2
-  deathStateDuration: {x: 0.5, y: 1.3}
+  deathAnimator: {fileID: 615560269}
+  deathSpeedMinMax: {x: 0.8, y: 1}
+  deathFlingSpeedMod: 0.8
+  instantDeathPopForce: 30
   deathStateDamageThreshold: 150
   deathStateHorKnockback: 0.25
   deathStateVerKnockback: 0.3
-  instantImpactThreshold: 0
-  deathStateVFX: {fileID: 0}
-  deathStateVFXSpeed: 1
+  instantImpactThreshold: 999
   deathStateSFX: {fileID: 11400000, guid: 4e76cd7bec31acd4ea7535f31d74d06e, type: 2}
   minKnockbackDuration: 0.5
   groundMask:
@@ -909,6 +913,44 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &615560269
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7307720276574085364}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 65b0fcf36af963e4d9fb879f085b56a3, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &615560270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7307720276574085364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 384ec51a44cd4064888d3d5eec775d25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
 --- !u!1 &7493228699578692454
 GameObject:
   m_ObjectHideFlags: 0

@@ -193,7 +193,7 @@ public class SpawnPoint : MonoBehaviour
         return (dist >= distanceRange.x && dist <= distanceRange.y);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!spawning && IsLoaded() && spawnOverrideTimer.TimerDone() && spawnManager!=null)
         {

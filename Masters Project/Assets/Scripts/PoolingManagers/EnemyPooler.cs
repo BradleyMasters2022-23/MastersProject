@@ -110,6 +110,7 @@ public class EnemyPooler : MonoBehaviour
 
         if(pool.ContainsKey(enemyID))
         {
+            //Debug.Log($"Enemy {enemyReturn.name} returned to pool");
             // do other funcs when being returned
             //enemyReturn.GetComponent<EnemyTarget>().ReturnToPool();
             pool[enemyID].Return(enemyReturn);
