@@ -278,9 +278,8 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
         }
         else
         {
-            Debug.Log("No pooler detected, destroying self");
+            //Debug.Log("No pooler detected, destroying self");
             Destroy(gameObject);
-
         }
     }
 
