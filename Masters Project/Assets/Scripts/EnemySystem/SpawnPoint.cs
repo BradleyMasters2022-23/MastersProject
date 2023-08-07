@@ -193,7 +193,7 @@ public class SpawnPoint : MonoBehaviour
         return (dist >= distanceRange.x && dist <= distanceRange.y);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (!spawning && IsLoaded() && spawnOverrideTimer.TimerDone() && spawnManager!=null)
         {
@@ -263,7 +263,6 @@ public class SpawnPoint : MonoBehaviour
     /// </summary>
     private IEnumerator SpawnEnemy(EnemySO enemy, SpawnTriggerField sendTo = null)
     {
-        Debug.Log($"{name} trying to spawn enemy");
         // immediately spawn the enemy, but disable it temporarily
         lastSpawnedEnemy = EnemyPooler.instance.RequestEnemy(enemy.enemyPrefab);
         // just incase it fails, return it
