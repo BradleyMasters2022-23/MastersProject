@@ -67,16 +67,7 @@ public class ConversationInteract : MonoBehaviour, Interactable
         calls = CallManager.instance;
         calls.IncrementConvoTicks();
 
-        if(flashRenderer == null)
-        {
-            flashRenderer = gameObject.GetComponent<MeshRenderer>();
-        }
-        if(flashRenderer != null)
-            original = flashRenderer.material.color;
-
         timer = new ScaledTimer(flashTime);
-
-        
     }
 
     /// <summary>
