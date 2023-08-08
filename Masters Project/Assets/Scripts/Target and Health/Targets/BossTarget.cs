@@ -49,6 +49,10 @@ public class BossTarget : Target
     [SerializeField] private AudioClipSO bossStartKilledPlayerLine;
     [SerializeField] private AudioClipSO playerKilledLine;
 
+
+    [SerializeField] private AudioClipSO BFL1Stolen;
+    [SerializeField] private AudioClipSO BFL1Summoned;
+
     /// <summary>
     /// List of events that occur when this target takes damage
     /// </summary>
@@ -234,5 +238,15 @@ public class BossTarget : Target
         {
             t.Knockback(300, 65, _center.position);
         }
+    }
+
+
+    public void PlayBFLStolenAudio()
+    {
+        BFL1Stolen.PlayClip(audioSource);
+    }
+    public void PlayBFLSummonedAudio()
+    {
+        BFL1Summoned.PlayClip(audioSource);
     }
 }
