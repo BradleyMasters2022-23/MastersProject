@@ -11,7 +11,7 @@ public class TargetHitbox : MonoBehaviour, IDamagable
     [Header("Impact VFX")]
     [SerializeField] private GameObject impactVFX;
 
-    private void Awake()
+    private void Start()
     {
         if (target == null)
         {

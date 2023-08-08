@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8189551511233556226}
   - component: {fileID: 5434540937082100161}
-  m_Layer: 7
+  m_Layer: 13
   m_Name: WorldCol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -192,6 +192,7 @@ MonoBehaviour:
   chaseRadius: 13.5
   chaseSpeed: 22
   realCollider: {fileID: 6739573261697533126}
+  physicsCollider: {fileID: 5434540937082100161}
   OrbCollect: {fileID: 11400000, guid: a3e01f5f3e14cc94e8532864e3536f16, type: 2}
   pickupWhileSlowing: 1
   startDespawnTime: 4
@@ -261,7 +262,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 0.08
+  m_Time: 0.5
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -348,3 +349,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be66c8bccf0de47409ec68ebffd3e181, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ren: {fileID: 0}
+  trailTime: 0
+  pauseTime: 0

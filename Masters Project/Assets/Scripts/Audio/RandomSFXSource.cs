@@ -74,7 +74,8 @@ public class RandomSFXSource : TimeAffectedEntity
             // play clip, wait for it to finish. Do length instead if isplaying since its overlapping
             // and may be sharing a source
             audioClip.PlayClip(source, true);
-            yield return new WaitForSeconds(audioClip.GetClip().length);
+            if(audioClip.GetClip() != null)
+                yield return new WaitForSeconds(audioClip.GetClip().length);
             yield return null;
         }
     }

@@ -149,6 +149,7 @@ public class PlayerTarget : Target, IDifficultyObserver
     {
         GlobalStatsManager.data.playerDeaths++;
         GameManager.instance.ChangeState(GameManager.States.GAMEOVER);
+        Time.timeScale = 0;
     }
 
     private void PlayDeathAudio(int stage)

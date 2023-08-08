@@ -79,6 +79,7 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
     [Header("Core Visual Info")]
 
     [SerializeField, AssetsOnly] protected GameObject _deathVFX;
+    [SerializeField] protected float _deathVFXScaleMod;
 
     [Tooltip("Damage made when this target is damaged")]
     [SerializeField] protected AudioClipSO damagedSound;
@@ -223,7 +224,10 @@ public abstract class Target : TimeAffectedEntity, IDamagable, TimeObserver
         deathSound.PlayClip(_center);
 
         if (_deathVFX != null)
-            Instantiate(_deathVFX, _center.position, Quaternion.identity);
+        {
+            GameObject o = Instantiate(_deathVFX, _center.position, Quaternion.identity);
+            o.transform.localScale *= _deathVFXScaleMod;
+        }
     }
 
     /// <summary>

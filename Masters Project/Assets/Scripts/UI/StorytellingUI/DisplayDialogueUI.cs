@@ -66,6 +66,9 @@ public class DisplayDialogueUI : MonoBehaviour
         if (GameManager.instance.CurrentState != GameManager.States.GAMEMENU)
             GameManager.instance.ChangeState(GameManager.States.GAMEMENU);
 
+
+        BackgroundMusicManager.instance.SetMusic(c.nonPennyCharacter.characterTheme);
+
         loadedFinishFunc = onFinishFunc;
         conversation = c;
         activeLineIndex = 0;
@@ -141,6 +144,7 @@ public class DisplayDialogueUI : MonoBehaviour
 
         activeLineIndex++;
     }
+
     /// <summary>
     /// Close the screen after it finishes the entire dialogue
     /// </summary>
@@ -148,5 +152,17 @@ public class DisplayDialogueUI : MonoBehaviour
     {
         click.Disable();
         GameManager.instance.CloseTopMenu();
+    }
+
+    public void ReturnToPrevMusic()
+    {
+        if (GameManager.instance.LastState == GameManager.States.HUB)
+        {
+            BackgroundMusicManager.instance.SetMusic(Music.Hub);
+        }
+        else
+        {
+            BackgroundMusicManager.instance.SetMusic(Music.NonCombat);
+        }
     }
 }

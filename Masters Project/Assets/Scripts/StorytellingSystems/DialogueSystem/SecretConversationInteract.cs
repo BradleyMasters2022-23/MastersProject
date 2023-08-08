@@ -24,6 +24,11 @@ public class SecretConversationInteract : ConversationInteract
 
     private bool available = true;
 
+    private void Awake()
+    {
+        newCallUI.InitRandomCall();
+    }
+
     /// <summary>
     /// On interact, open the menu
     /// </summary>

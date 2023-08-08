@@ -194,6 +194,8 @@ GameObject:
   - component: {fileID: 4939085670605044502}
   - component: {fileID: 5617857952634112433}
   - component: {fileID: 8452023684772447732}
+  - component: {fileID: 678639303}
+  - component: {fileID: 523536518177242945}
   m_Layer: 8
   m_Name: BasicEnemy_Ranger_GameReady
   m_TagString: Enemy
@@ -282,9 +284,10 @@ MonoBehaviour:
   _unkillable: 0
   immuneToKnockback: 0
   knockbackModifier: 4
-  maxKnockback: 120
+  maxKnockback: 100
   invincibilityShield: {fileID: 0}
   _deathVFX: {fileID: 7428150280865193490, guid: 6e221f18ca47d5547a8bd26d21fd46a8, type: 3}
+  _deathVFXScaleMod: 1
   damagedSound: {fileID: 11400000, guid: 4ba21dac44b2634469d022e7027035df, type: 2}
   deathSound: {fileID: 11400000, guid: e9eb6a05acbfe4b4a9897c4a09a84f2b, type: 2}
   damagedSoundCooldown: 0.1
@@ -296,13 +299,14 @@ MonoBehaviour:
   flinchRoot: {fileID: 3990662660081987154}
   flinchRecoveryRate: 3
   flinchSensitivity: 0.3
-  deathStateDuration: {x: 0.3, y: 1}
+  deathAnimator: {fileID: 678639303}
+  deathSpeedMinMax: {x: 1.1, y: 1.5}
+  deathFlingSpeedMod: 0.4
+  instantDeathPopForce: 11
   deathStateDamageThreshold: 80
-  deathStateHorKnockback: 0.2
-  deathStateVerKnockback: 0.15
-  instantImpactThreshold: 0
-  deathStateVFX: {fileID: 0}
-  deathStateVFXSpeed: 1
+  deathStateHorKnockback: 0.25
+  deathStateVerKnockback: 0.2
+  instantImpactThreshold: 999
   deathStateSFX: {fileID: 0}
   minKnockbackDuration: 0.5
   groundMask:
@@ -405,7 +409,7 @@ MonoBehaviour:
   rotationSpeed: 3
   attackConeRadius: 15
   lineOfSightReq: 1
-  lineOfSightWidth: 1.5
+  lineOfSightWidth: 1
   autoLoopAttack: 0
   target: {fileID: 0}
   lineOfSightOrigin: {fileID: 8900093909637964389}
@@ -635,7 +639,7 @@ MonoBehaviour:
   rotationSpeed: 3
   attackConeRadius: 45
   lineOfSightReq: 1
-  lineOfSightWidth: 1.5
+  lineOfSightWidth: 1
   autoLoopAttack: 0
   target: {fileID: 0}
   lineOfSightOrigin: {fileID: 8900093909637964389}
@@ -798,6 +802,44 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &678639303
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6621528852895871808}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f96fda79867921b4dbc1dd1e55c17665, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &523536518177242945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6621528852895871808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 384ec51a44cd4064888d3d5eec775d25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
 --- !u!1 &6779240194960685962
 GameObject:
   m_ObjectHideFlags: 0
@@ -1255,6 +1297,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AlertContainer
       objectReference: {fileID: 0}
+    - target: {fileID: 3524068267789458469, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
 --- !u!4 &4483423766565695316 stripped
@@ -1407,6 +1453,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3990662660081987154}
     m_Modifications:
+    - target: {fileID: 158573494906440604, guid: fb508180db179684aab13560ae54f22d, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 240285545299132128, guid: fb508180db179684aab13560ae54f22d, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1053376474052666777, guid: fb508180db179684aab13560ae54f22d, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -1415,6 +1469,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 9adf65ce614f1ca43a61e378829195b3, type: 2}
+    - target: {fileID: 3143277076560698749, guid: fb508180db179684aab13560ae54f22d, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3322318622342498218, guid: fb508180db179684aab13560ae54f22d, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -1427,6 +1485,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 7bb0dc8ccd27f8b4d806a820456d38ae, type: 2}
+    - target: {fileID: 3825674339851801203, guid: fb508180db179684aab13560ae54f22d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4116129659510232693, guid: fb508180db179684aab13560ae54f22d, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -1439,6 +1501,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 735874a228f5fa34c958bcee4d57ddf1, type: 2}
+    - target: {fileID: 5517242517274521595, guid: fb508180db179684aab13560ae54f22d, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5975139983149250506, guid: fb508180db179684aab13560ae54f22d, type: 3}
       propertyPath: m_Name
       value: Glow Disable
@@ -1507,7 +1573,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prefab_T_EnemyBasic_Ranged
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4549495231208406011, guid: fb508180db179684aab13560ae54f22d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: fb508180db179684aab13560ae54f22d, type: 3}
 --- !u!4 &3962037356537622020 stripped
 Transform:

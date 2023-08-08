@@ -53,6 +53,7 @@ public class RepositionBehavior : BaseEnemyMovement
 
     public void BeginStrafe(Transform t)
     {
+        //Debug.Log("Begining strafe");
         complete = false;
         target = t;
         agent.stoppingDistance = 0;
@@ -126,7 +127,7 @@ public class RepositionBehavior : BaseEnemyMovement
 
         } while (!NavMesh.SamplePosition(temp, out hit, 1f, agent.areaMask));
 
-        Debug.DrawLine(hit.position, hit.position + Vector3.up, Color.red, 10f);
+        //Debug.DrawLine(hit.position, hit.position + Vector3.up, Color.red, 10f);
 
         return hit.position;
     }
