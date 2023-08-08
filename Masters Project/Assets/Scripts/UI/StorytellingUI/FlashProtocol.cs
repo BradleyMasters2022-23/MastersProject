@@ -52,7 +52,8 @@ public class FlashProtocol : MonoBehaviour
 
         preActivationStatus = gameObject.activeInHierarchy;
         gameObject.SetActive(true);
-        flashRoutine = StartCoroutine(Flash());
+        if(gameObject.activeInHierarchy)
+            flashRoutine = StartCoroutine(Flash());
     }
     /// <summary>
     /// Repeatedly flash through all colors
