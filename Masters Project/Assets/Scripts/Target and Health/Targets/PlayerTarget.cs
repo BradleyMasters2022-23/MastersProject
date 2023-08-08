@@ -63,6 +63,8 @@ public class PlayerTarget : Target, IDifficultyObserver
     /// </summary>
     private ScaledTimer impulseCD;
 
+
+
     /// <summary>
     /// Init instance, apply cheat inputs
     /// </summary>
