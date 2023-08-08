@@ -105,6 +105,7 @@ public class PlayerHealthbarUI : ResourceBarUI
     [SerializeField] UnityEvent onNormalState;
     bool inCritState = false;
 
+
     /// <summary>
     /// Update the color to the critical state
     /// </summary>
