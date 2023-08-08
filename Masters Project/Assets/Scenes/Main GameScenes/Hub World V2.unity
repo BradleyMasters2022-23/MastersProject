@@ -54977,7 +54977,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 183611568357124112, guid: 383d2e27071de084bb4dc87afdb37fe2, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 742910227516655143, guid: 383d2e27071de084bb4dc87afdb37fe2, type: 3}
       propertyPath: m_Name
@@ -54993,7 +54993,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: f8bc78363e5043840807dda3a1979de2, type: 2}
     - target: {fileID: 2153189866545594766, guid: 383d2e27071de084bb4dc87afdb37fe2, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2595658512549816777, guid: 383d2e27071de084bb4dc87afdb37fe2, type: 3}
       propertyPath: m_Size.x
@@ -55061,16 +55061,6 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: f8bc78363e5043840807dda3a1979de2, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 383d2e27071de084bb4dc87afdb37fe2, type: 3}
---- !u!23 &472369143428232862 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 8119734904141630571, guid: 383d2e27071de084bb4dc87afdb37fe2, type: 3}
-  m_PrefabInstance: {fileID: 472369143428232861}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &472369143428232863 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 4682440914735549061, guid: 383d2e27071de084bb4dc87afdb37fe2, type: 3}
-  m_PrefabInstance: {fileID: 472369143428232861}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &543450651745724612 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6063566234809593394, guid: 1e1de7f4a8f80ef48befae22036aef61, type: 3}
@@ -56126,12 +56116,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ringtonePlayer: {fileID: 7112942112689743608}
-  flashScreenRenderers:
-  - {fileID: 472369143428232863}
-  - {fileID: 472369143428232862}
-  flashColors:
-  - {r: 0.6255607, g: 0.8679245, b: 0.8264388, a: 1}
-  - {r: 0.8207547, g: 0.51066613, b: 0.49864718, a: 1}
+  flashScreenRenderers: []
+  flashColors: []
   flashTime: 0.75
   waypointAnchor: {fileID: 1478768105}
 --- !u!65 &7112942112689743607
