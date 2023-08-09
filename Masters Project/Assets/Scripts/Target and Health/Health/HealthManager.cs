@@ -59,7 +59,7 @@ public class HealthManager : MonoBehaviour
     public OnBarTransition onHealthbarLostEvents;
 
     public UnityAction onDamagedEvent;
-
+    public UnityAction onHealEvent;
     public float timeScale;
 
     public bool Init()
@@ -144,7 +144,7 @@ public class HealthManager : MonoBehaviour
         if (_invulnerable || _godMode)
             return false;
 
-        onDamagedEvent?.Invoke();
+        
 
         // activate invulnerability 
         InvulnerabilityDuration(_damagedInvulnerabilityDuration);
@@ -178,6 +178,8 @@ public class HealthManager : MonoBehaviour
                 break;
             }
         }
+
+        onDamagedEvent?.Invoke();
 
         // whether or not this entity is dead
         return _healthbars[0].IsEmptied();
@@ -234,6 +236,7 @@ public class HealthManager : MonoBehaviour
                 break;
             }
         }
+        onHealEvent?.Invoke();
 
         return hp != healPool;
     }

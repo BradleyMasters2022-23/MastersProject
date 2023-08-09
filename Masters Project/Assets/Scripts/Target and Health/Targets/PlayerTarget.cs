@@ -33,10 +33,8 @@ public class PlayerTarget : Target, IDifficultyObserver
     /// </summary>
     public static PlayerTarget p;
 
-    /// <summary>
-    /// Main UI canvas being used
-    /// </summary>
-    private Canvas mainUI;
+    [Tooltip("The main UI for this player object. Should be in children")]
+    [SerializeField] private Canvas mainUI;
     public Canvas MainUI { get { return mainUI; }}
 
     [Header("Death State")]
@@ -71,7 +69,6 @@ public class PlayerTarget : Target, IDifficultyObserver
         if (p == null)
         {
             p = this;
-            mainUI = GetComponentInChildren<Canvas>();
         }
         else
         {
