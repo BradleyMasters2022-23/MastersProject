@@ -51,7 +51,7 @@ public class CallManager : SaveDataContainer
         backslash.performed += ResetCalls;
         backslash.Enable();
         forwardSlash = controls.PlayerGameplay.IncrementConvs;
-        forwardSlash.performed += IncrementRuns;
+        forwardSlash.performed += IncrementConvoTicks;
         forwardSlash.Enable();
 
         if (instance == null)
@@ -154,14 +154,14 @@ public class CallManager : SaveDataContainer
     /// <summary>
     /// Increment the runs of conversations and save
     /// </summary>
-    public void IncrementRuns(InputAction.CallbackContext c = default)
+    public void IncrementConvoTicks(InputAction.CallbackContext c = default)
     {
         GlobalStatsManager.data.runsAttempted++;
-        saveData?.IncrementRuns();
+        saveData?.IncrementConvoTicks();
         bool s = DataManager.instance.Save(saveFileName, saveData);
         UpdateCalls();
         //saveData.SeeAllReads();
-        //Debug.Log($"Increment runs saved successfully : {s}");
+        //Debug.Log($"Incrementing convos");
     }
 
     /// <summary>
