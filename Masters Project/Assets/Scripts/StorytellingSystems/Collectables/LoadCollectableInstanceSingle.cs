@@ -15,7 +15,7 @@ public class LoadCollectableInstanceSingle : LoadCollectableInstance
 {
     public override void OnInteract()
     {
-        CollectableViewUI ui = FindObjectOfType<CollectableViewUI>(true);
+        CollectableViewUI ui = CollectableScreenInstance.instance.UI;
         ui.OpenUI(collectableData, 0);
     }
 }
