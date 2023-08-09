@@ -23,15 +23,20 @@ public class ConversationInteract : MonoBehaviour, Interactable
 
     #region Incoming Call Indicator Variables
 
+    /// <summary>
+    /// Whether this is currently flashing
+    /// </summary>
+    private bool flashing;
+
     [Tooltip("Source of the ringtone")]
     [SerializeField] protected AudioSource ringtonePlayer;
 
     [Tooltip("Renderer that flashes with new call")]
-    [SerializeField] private MeshRenderer flashRenderer;
-    /// <summary>
-    /// Original color of the flashing screen
-    /// </summary>
-    private Color original;
+    [SerializeField] private MeshRenderer[] flashScreenRenderers;
+
+    [Tooltip("Set of colors to loop through while flashing incoming call")]
+    [SerializeField] private Color[] flashColors;
+
     /// <summary>
     /// Timer used to track flash intervals
     /// </summary>
@@ -60,13 +65,6 @@ public class ConversationInteract : MonoBehaviour, Interactable
     {
         ui = ConvoRefManager.instance;
         calls = CallManager.instance;
-        if(flashRenderer == null)
-        {
-            flashRenderer = gameObject.GetComponent<MeshRenderer>();
-        }
-        if(flashRenderer != null)
-            original = flashRenderer.material.color;
-
         timer = new ScaledTimer(flashTime);
     }
 
@@ -75,9 +73,6 @@ public class ConversationInteract : MonoBehaviour, Interactable
     /// </summary>
     public void Update()
     {
-        if (flashRenderer == null)
-            return;
-
         // keep the anchor on if calls are available
         if(waypointAnchor != null)
             waypointAnchor.SetActive((calls.HasAvailable() && CanInteract()));
@@ -85,40 +80,24 @@ public class ConversationInteract : MonoBehaviour, Interactable
         // if calls are available, flash
         // Stop loop if in game menu
         if(GameManager.instance.CurrentState != GameManager.States.GAMEMENU
-            && calls.HasAvailable())
+            && calls.HasAvailable() && !flashing)
         {
-            // make sure ringtone is playing
-            if (ringtonePlayer != null && !ringtonePlayer.isPlaying)
-            {
-                AudioClipSO ringtone = calls.GetAvailableRingtone();
-                ringtone.PlayClip(ringtonePlayer);
-            }
+            BeginFlash();
 
-            // flash if time is up
-            if (timer.TimerDone())
-            {
-                if (flashRenderer.material.color == Color.red)
-                {
-                    flashRenderer.material.color = original;
-                    timer.ResetTimer();
-                }
-                else
-                {
-                    flashRenderer.material.color = Color.red;
-                    timer.ResetTimer();
-                }
-            }
+            // make sure ringtone is playing
+            //if (ringtonePlayer != null && !ringtonePlayer.isPlaying)
+            //{
+            //    AudioClipSO ringtone = calls.GetAvailableRingtone();
+            //    ringtone.PlayClip(ringtonePlayer);
+            //}
         }
         // otherwise, revert back to normal
-        else
+        else if(flashing && (GameManager.instance.CurrentState == GameManager.States.GAMEMENU || !calls.HasAvailable()))
         {
-            if (ringtonePlayer != null && ringtonePlayer.isPlaying)
-                ringtonePlayer.Stop();
-
-            if (flashRenderer.material.color == Color.red)
-            {
-                flashRenderer.material.color = original;
-            }
+            //if (ringtonePlayer != null && ringtonePlayer.isPlaying)
+            //    ringtonePlayer.Stop();
+            
+            StopFlash();
         }
     }
 
@@ -143,8 +122,8 @@ public class ConversationInteract : MonoBehaviour, Interactable
             ui.OpenScreen();
         }
 
-        if (ringtonePlayer != null && ringtonePlayer.isPlaying)
-            ringtonePlayer.Stop();
+        //if (ringtonePlayer != null && ringtonePlayer.isPlaying)
+        //    ringtonePlayer.Stop();
 
         // call any subscribed functions to the caller
         onStartCall?.Invoke();
@@ -157,5 +136,62 @@ public class ConversationInteract : MonoBehaviour, Interactable
     public virtual bool CanInteract()
     {
         return true;
+    }
+
+    /// <summary>
+    /// Begin the flash routine
+    /// </summary>
+    private void BeginFlash()
+    {
+        foreach (var mesh in flashScreenRenderers)
+        {
+            mesh.enabled = true;
+        }
+
+        StartCoroutine(FlashRoutine());
+
+        AudioClipSO ringtone = calls.GetAvailableRingtone();
+        ringtone.PlayClip(ringtonePlayer);
+
+        flashing = true;
+    }
+
+    /// <summary>
+    /// Stop the flash routine. 
+    /// </summary>
+    private void StopFlash()
+    {
+        StopCoroutine(FlashRoutine());
+
+        foreach (var mesh in flashScreenRenderers)
+            mesh.enabled = false;
+
+        if (ringtonePlayer != null && ringtonePlayer.isPlaying)
+            ringtonePlayer.Stop();
+
+        flashing = false;
+    }
+
+    /// <summary>
+    /// Continually flash through colors on the designated renders
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator FlashRoutine()
+    {
+        int colorIdx = 0;
+        while (true)
+        {
+            // apply color to marked renderes
+            foreach(var mesh in flashScreenRenderers)
+                mesh.material.color = flashColors[colorIdx];
+
+            // iterate to next color, looping around if at the end of the array
+            colorIdx = (colorIdx + 1) % (flashColors.Length);
+
+            // wait for designated time
+            timer.ResetTimer();
+            yield return new WaitUntil(timer.TimerDone);
+            yield return null;
+        }
     }
 }
