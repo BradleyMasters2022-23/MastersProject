@@ -93,6 +93,7 @@ public class BossTarget : Target
     {
         // Instead of destroying object, do any events.
         // Actual death will happen inside of the events
+        onDeathEvents.eventAudio.PlayClip(audioSource);
         StartCoroutine("ExecuteEvents", onDeathEvents.OnTriggerEvent);
     }
 
@@ -169,12 +170,12 @@ public class BossTarget : Target
         if(phaseIndex < phaseChangeEvents.Length)
         {
             // perform standard events
-            standardPhaseChangeEvents.eventAudio.PlayClip(audioSource, true);
+            standardPhaseChangeEvents.eventAudio.PlayClip(audioSource);
             TimedEvent[] events = standardPhaseChangeEvents.OnTriggerEvent;
             yield return StartCoroutine(ExecuteEvents(events));
 
             // perform special changes
-            phaseChangeEvents[phaseIndex].eventAudio.PlayClip(audioSource);
+            phaseChangeEvents[phaseIndex].eventAudio.PlayClip(_center);
             events = phaseChangeEvents[phaseIndex].OnTriggerEvent;
             yield return StartCoroutine("ExecuteEvents", events);
         }
