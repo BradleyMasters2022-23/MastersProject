@@ -105,8 +105,6 @@ public class BackgroundMusicManager : MonoBehaviour
     /// <param name="transitionTime">time to transition between</param>
     public void SetMusic(AudioClipSO music, float transitionTime = 1f)
     {
-        Debug.Log("Trying to play music " + music.name);
-
         // Select music
         // dont transition if its already playing, otherwise record the new type
         if (currentlyLoaded == music && (mainMusicSource.isPlaying || secondaryMusicSource.isPlaying))
