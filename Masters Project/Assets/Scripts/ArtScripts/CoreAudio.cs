@@ -46,7 +46,7 @@ public static class CoreAudio
             if(origin != null)
                 container.transform.position = origin.transform.position;
             destination = container.AddComponent<AudioSource>();
-            destination.Stop();
+            //destination.Stop();
 
             if(!data.loop)
             {
@@ -61,7 +61,7 @@ public static class CoreAudio
             if (!overlap)
             {
                 //Debug.Log($"Calling source at {destination.gameObject.name} to stop");
-                destination.Stop();
+                //destination.Stop();
             }
                 
         }

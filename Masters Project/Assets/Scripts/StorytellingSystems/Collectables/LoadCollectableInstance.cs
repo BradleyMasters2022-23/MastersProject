@@ -67,7 +67,7 @@ public class LoadCollectableInstance : MonoBehaviour, Interactable
             if (fragmentProps[i].activeInHierarchy)
                 collectedFrags.Add(i);
         }
-        CollectableViewUI ui = PlayerTarget.p.GetComponentInChildren<CollectableViewUI>(true);
+        CollectableViewUI ui = CollectableScreenInstance.instance.UI;
         ui.OpenUI(collectableData, collectedFrags);
     }
 }
