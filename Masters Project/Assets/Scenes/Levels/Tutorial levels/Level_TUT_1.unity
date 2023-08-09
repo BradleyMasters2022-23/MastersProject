@@ -1525,6 +1525,7 @@ MonoBehaviour:
   maxKnockback: 175
   invincibilityShield: {fileID: 0}
   _deathVFX: {fileID: 0}
+  _deathVFXScaleMod: 0
   damagedSound: {fileID: 11400000, guid: 888e30f4deedc974c8f52b772e9d5290, type: 2}
   deathSound: {fileID: 0}
   damagedSoundCooldown: 0.1
@@ -1532,6 +1533,7 @@ MonoBehaviour:
   playerDeathAnimator: {fileID: 1433115696}
   playerGunController: {fileID: 1433115695}
   aimController: {fileID: 1433115694}
+  onPlayerKilled: {fileID: 0}
   impulseRanges:
   - minDamage: 0
     maxDamage: 5
@@ -1549,6 +1551,9 @@ MonoBehaviour:
     maxDamage: 999
     impulse: 3.5
   impulse: {fileID: 1433115693}
+  immediateDeathSound: {fileID: 0}
+  deathHitGroundSound: {fileID: 0}
+  playerWeaponSoundManager: {fileID: 0}
   godCheatNotification: {fileID: 1665267790}
   cheatDamage: 25
   cheatHeal: 25
@@ -5225,7 +5230,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ResetSaveChannel: {fileID: 11400000, guid: 6d02de22bc291144581e18d2e9e58200, type: 2}
   cutscenePlayer: {fileID: 947251077}
-  cutscene: {fileID: 32900000, guid: 2f9e1e906f31d8e45ad7c1da2718d8cd, type: 3}
+  cutscene: {fileID: 32900000, guid: 5a06de01cedee634db51141afb2c80c7, type: 3}
   onlyPlayOnce: 0
   playable: 0
   onVideoFinishEvents:

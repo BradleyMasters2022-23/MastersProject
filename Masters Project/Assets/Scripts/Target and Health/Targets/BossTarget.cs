@@ -49,6 +49,10 @@ public class BossTarget : Target
     [SerializeField] private AudioClipSO bossStartKilledPlayerLine;
     [SerializeField] private AudioClipSO playerKilledLine;
 
+
+    [SerializeField] private AudioClipSO BFL1Stolen;
+    [SerializeField] private AudioClipSO BFL1Summoned;
+
     /// <summary>
     /// List of events that occur when this target takes damage
     /// </summary>
@@ -71,6 +75,7 @@ public class BossTarget : Target
         if (delayedRoutine != null)
             StopCoroutine(delayedRoutine);
 
+        GlobalStatsManager.data.killedByBossLastRun = -1;
         playerKilledChannel.OnEventRaised -= OnPlayerKilled;
         _healthManager.onHealthbarLostEvents -= CallTransition;
         onDamagedEvents?.RemoveAllListeners();
@@ -88,6 +93,7 @@ public class BossTarget : Target
     {
         // Instead of destroying object, do any events.
         // Actual death will happen inside of the events
+        onDeathEvents.eventAudio.PlayClip(audioSource);
         StartCoroutine("ExecuteEvents", onDeathEvents.OnTriggerEvent);
     }
 
@@ -145,6 +151,7 @@ public class BossTarget : Target
     private void OnPlayerKilled()
     {
         playerKilledChannel.OnEventRaised -= OnPlayerKilled;
+        GlobalStatsManager.data.killedByBossLastRun = 0;
         playerKilledLine.PlayClip(audioSource);
     }
 
@@ -163,12 +170,12 @@ public class BossTarget : Target
         if(phaseIndex < phaseChangeEvents.Length)
         {
             // perform standard events
-            standardPhaseChangeEvents.eventAudio.PlayClip(audioSource, true);
+            standardPhaseChangeEvents.eventAudio.PlayClip(audioSource);
             TimedEvent[] events = standardPhaseChangeEvents.OnTriggerEvent;
             yield return StartCoroutine(ExecuteEvents(events));
 
             // perform special changes
-            phaseChangeEvents[phaseIndex].eventAudio.PlayClip(audioSource);
+            phaseChangeEvents[phaseIndex].eventAudio.PlayClip(_center);
             events = phaseChangeEvents[phaseIndex].OnTriggerEvent;
             yield return StartCoroutine("ExecuteEvents", events);
         }
@@ -232,5 +239,15 @@ public class BossTarget : Target
         {
             t.Knockback(300, 65, _center.position);
         }
+    }
+
+
+    public void PlayBFLStolenAudio()
+    {
+        BFL1Stolen.PlayClip(audioSource);
+    }
+    public void PlayBFLSummonedAudio()
+    {
+        BFL1Summoned.PlayClip(audioSource);
     }
 }

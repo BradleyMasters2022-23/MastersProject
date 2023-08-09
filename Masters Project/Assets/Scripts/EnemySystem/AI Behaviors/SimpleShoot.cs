@@ -92,7 +92,7 @@ public class SimpleShoot : AttackTarget, IDifficultyObserver
     /// <summary>
     /// whether the enemy is currently stunned in indicator state
     /// </summary>
-    [SerializeField] private bool indicatorStunned = false;
+    private bool indicatorStunned = false;
 
     private float averageLead;
 
@@ -140,18 +140,26 @@ public class SimpleShoot : AttackTarget, IDifficultyObserver
         if (projectile == null)
             yield break;
 
+        bool playShootSound = true;
+
         for (int i = 0; i < numOfShots; i++)
         {
             // Apply first shot accuracy instead
             if (i == 0)
             {
                 Shoot(target,
-                    firstShotAccuracy.x, firstShotAccuracy.y);
+                    firstShotAccuracy.x, firstShotAccuracy.y, playShootSound);
+
+                // if shotgun, only play sound once
+                if (numOfShots > 1 && delayBetweenShots <= 0)
+                {
+                    playShootSound = false;
+                }
             }
             else
             {
                 Shoot(target,
-                    normalAccuracyRange.x, normalAccuracyRange.y);
+                    normalAccuracyRange.x, normalAccuracyRange.y, playShootSound);
             }
 
             // dont go into cooldown after last shot
@@ -223,7 +231,7 @@ public class SimpleShoot : AttackTarget, IDifficultyObserver
             return;
         }
 
-        indicatorSFX.PlayClip(transform);
+        indicatorSFX.PlayClip(transform, source);
 
         // Tell each one to start
         foreach (GameObject indicator in indicators)
@@ -259,7 +267,7 @@ public class SimpleShoot : AttackTarget, IDifficultyObserver
         }
     }
 
-    private void Shoot(Transform target, float minSpread, float maxSpread)
+    private void Shoot(Transform target, float minSpread, float maxSpread, bool playSound)
     {
         if (projectile == null)
         {
@@ -336,7 +344,8 @@ public class SimpleShoot : AttackTarget, IDifficultyObserver
             //shot.GetComponent<RangeAttack>().Activate();
         }
 
-        shootSFX.PlayClip(transform);
+        if(playSound)
+            shootSFX.PlayClip(transform, source);
 
     }
 

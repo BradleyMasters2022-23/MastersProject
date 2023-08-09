@@ -192,7 +192,7 @@ public class CollectableSpawner : MonoBehaviour, Interactable
         CollectableSaveManager.instance.SaveNewFragment(chosenCollectable, chosenFragmentIndex);
         CollectableSaveManager.instance.ResetLuck();
 
-        CollectableViewUI ui = PlayerTarget.p.GetComponentInChildren<CollectableViewUI>(true);
+        CollectableViewUI ui = CollectableScreenInstance.instance.UI;
         ui.OpenUI(chosenCollectable, chosenFragmentIndex);
 
         DestroyCollectable();
