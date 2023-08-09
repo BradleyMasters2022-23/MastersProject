@@ -144,7 +144,9 @@ public class ConversationInteract : MonoBehaviour, Interactable
     private void BeginFlash()
     {
         foreach (var mesh in flashScreenRenderers)
-            mesh.gameObject.SetActive(true);
+        {
+            mesh.enabled = true;
+        }
 
         StartCoroutine(FlashRoutine());
 
@@ -162,7 +164,7 @@ public class ConversationInteract : MonoBehaviour, Interactable
         StopCoroutine(FlashRoutine());
 
         foreach (var mesh in flashScreenRenderers)
-            mesh.gameObject.SetActive(false);
+            mesh.enabled = false;
 
         if (ringtonePlayer != null && ringtonePlayer.isPlaying)
             ringtonePlayer.Stop();
