@@ -414,9 +414,9 @@ public class EnemyManager : TimeAffectedEntity, TimeObserver
             }
 
             c++;
-            if (c >= 1000)
+            if (c >= 100)
             {
-                Debug.LogError($"Strafing detected to get stuck!!!");
+                //Debug.LogError($"Strafing detected to get stuck!!!");
                 break;
             }
 
