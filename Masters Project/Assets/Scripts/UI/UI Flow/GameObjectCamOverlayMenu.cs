@@ -15,7 +15,6 @@ public class GameObjectCamOverlayMenu : GameObjectMenu
     {
         Camera.main.GetUniversalAdditionalCameraData().cameraStack.Add(renderCam);
         PlayerTarget.p.MainUI.enabled = false;
-
         base.OpenMenu();
     }
 
