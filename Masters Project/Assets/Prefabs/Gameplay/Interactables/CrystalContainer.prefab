@@ -66,12 +66,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 323891c5df373cf4494644567871dea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: {fileID: 654173103255755272}
-  gun: {fileID: 4809027157057517036}
-  time: {fileID: 7407421764631853331}
-  movement: {fileID: 1937161783705461691}
-  grenade: {fileID: 7824006034030907059}
-  shield: {fileID: 6211856109155545155}
+  key:
+  - group: 0
+    objectRepresentation: {fileID: 1937161783705461691}
+  - group: 1
+    objectRepresentation: {fileID: 654173103255755272}
+  - group: 2
+    objectRepresentation: {fileID: 7824006034030907059}
+  - group: 3
+    objectRepresentation: {fileID: 4809027157057517036}
+  - group: 4
+    objectRepresentation: {fileID: 7407421764631853331}
+  - group: 5
+    objectRepresentation: {fileID: 6211856109155545155}
+  allOptions:
+  - {fileID: 4809027157057517036}
+  - {fileID: 7824006034030907059}
+  - {fileID: 654173103255755272}
+  - {fileID: 1937161783705461691}
+  - {fileID: 6211856109155545155}
+  - {fileID: 7407421764631853331}
   parMod: 1
 --- !u!114 &7289325324838842381
 MonoBehaviour:
@@ -306,13 +320,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 890511153935000639, guid: d7c837037a11d1f4ebac6933b5c7a3a9, type: 3}
       propertyPath: m_Name
-      value: Prefab_T_Upgrade_Health
+      value: Prefab_T_Upgrade_Gun
       objectReference: {fileID: 0}
     - target: {fileID: 890511153935000639, guid: d7c837037a11d1f4ebac6933b5c7a3a9, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5910124402624030354, guid: d7c837037a11d1f4ebac6933b5c7a3a9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7333585058145090884, guid: d7c837037a11d1f4ebac6933b5c7a3a9, type: 3}
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
@@ -426,9 +444,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2109341398129069545}
     m_Modifications:
-    - target: {fileID: 4435349748483713408, guid: ec1463fcee5932146ab26c397865e5d5, type: 3}
+    - target: {fileID: 3822101601172098106, guid: ec1463fcee5932146ab26c397865e5d5, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4435349748483713408, guid: ec1463fcee5932146ab26c397865e5d5, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4712629643609569591, guid: ec1463fcee5932146ab26c397865e5d5, type: 3}
       propertyPath: m_RootOrder
@@ -593,6 +615,10 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8769395819593294403, guid: 75b64ff8ff5f7ba4b93ed31bf5dfdec3, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75b64ff8ff5f7ba4b93ed31bf5dfdec3, type: 3}
 --- !u!1 &6211856109155545155 stripped
@@ -614,11 +640,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3622024581694378543, guid: 5a003ef545d8f3647a3b9752989b3816, type: 3}
       propertyPath: m_Name
-      value: Prefab_T_Upgrade_Bullet
+      value: Prefab_T_Upgrade_Movement
       objectReference: {fileID: 0}
     - target: {fileID: 3622024581694378543, guid: 5a003ef545d8f3647a3b9752989b3816, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4111738657693501589, guid: 5a003ef545d8f3647a3b9752989b3816, type: 3}
       propertyPath: m_RootOrder
@@ -678,6 +704,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4111738657693501589, guid: 5a003ef545d8f3647a3b9752989b3816, type: 3}
       propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6870998287803372198, guid: 5a003ef545d8f3647a3b9752989b3816, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6870998287803372199, guid: 5a003ef545d8f3647a3b9752989b3816, type: 3}
+      propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7189254160369137559, guid: 5a003ef545d8f3647a3b9752989b3816, type: 3}
@@ -769,10 +803,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7558960515468469034, guid: 70cd1773a75397644bb21355fdf46d02, type: 3}
       propertyPath: m_Name
-      value: Prefab_T_Upgrade_Movement
+      value: Prefab_T_Upgrade_Health
       objectReference: {fileID: 0}
     - target: {fileID: 7558960515468469034, guid: 70cd1773a75397644bb21355fdf46d02, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7955111940032956854, guid: 70cd1773a75397644bb21355fdf46d02, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
