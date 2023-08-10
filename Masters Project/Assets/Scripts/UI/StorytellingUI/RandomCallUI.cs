@@ -49,7 +49,8 @@ public class RandomCallUI : MonoBehaviour
         if (nameBox != null)
             nameBox.text = loadedConveration.nonPennyCharacter.characterName;
         ringtone = loadedConveration.nonPennyCharacter.ringtone;
-        ringtone.PlayClip(ringtoneSource);
+        //Debug.Log($"Loading convo: {loadedConveration.nonPennyCharacter} ringtone named {ringtone.name}");
+        //ringtone.PlayClip(ringtoneSource);
 
         // Begin flashing 
         flashOverlay.BeginFlash();
@@ -68,7 +69,7 @@ public class RandomCallUI : MonoBehaviour
     /// </summary>
     public void PlayConversation()
     {
-        ringtoneSource.Stop();
+        //ringtoneSource.Stop();
         GetComponent<GameObjectMenu>().CloseButton();
         ConvoRefManager.instance.GetCallUI().OpenScreen(loadedConveration, interactRef.OnCallComplete);
     }
@@ -80,5 +81,10 @@ public class RandomCallUI : MonoBehaviour
     public Conversation GetConversation()
     {
         return CallManager.instance.GetRandomAvailableConversation();
+    }
+
+    public AudioClipSO GetLoadedRingtone()
+    {
+        return ringtone;
     }
 }
