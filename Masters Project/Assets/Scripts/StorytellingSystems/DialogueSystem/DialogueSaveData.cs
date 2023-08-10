@@ -66,7 +66,7 @@ public class DialogueSaveData
         if (c.dependencies.Length <= 0)
         {
             //Debug.Log($"No dependencies, comparing {c.runReq} <= {GlobalStatsManager.data.runsAttempted}");
-            return GlobalStatsManager.data.runsAttempted >= c.runReq;
+            return GlobalStatsManager.data.convoTicks >= c.runReq;
         }
         // otherwise, check if the number of ticks since all dependencies have been met
         else
