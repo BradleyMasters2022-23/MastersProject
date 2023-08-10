@@ -98,9 +98,8 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInf
 
     public bool AttackDone()
     {
-        return state == AttackState.Cooldown
-            || state == AttackState.Ready
-            || state == AttackState.Recovering;
+        return (state == AttackState.Cooldown
+            || state == AttackState.Ready);
     }
 
     #endregion
@@ -110,7 +109,7 @@ public abstract class BaseBossAttack : TimeAffectedEntity, TimeObserver, TimeInf
     /// </summary>
     public void Attack()
     {
-        state = AttackState.Ready;
+        state = AttackState.Preparing;
 
         currentRoutine = StartCoroutine(AttackRoutine());
     }

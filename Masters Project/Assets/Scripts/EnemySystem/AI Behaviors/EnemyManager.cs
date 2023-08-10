@@ -414,16 +414,15 @@ public class EnemyManager : TimeAffectedEntity, TimeObserver
             }
 
             c++;
-            if (c >= 1000)
+            if (c >= 70)
             {
-                Debug.LogError($"Strafing detected to get stuck!!!");
+                //Debug.LogError($"Strafing detected to get stuck!!!");
                 break;
             }
 
             attackReq = strafingAttack != null && !(strafingAttack.currentAttackState == AttackState.Cooldown || strafingAttack.currentAttackState == AttackState.Ready);
 
             yield return null;
-            yield return tick;
         }
 
         strafeBehavior.state = BaseEnemyMovement.MoveState.Standby;

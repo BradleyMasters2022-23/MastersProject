@@ -18,8 +18,10 @@ public class BossLaserAttack : TimeAffectedEntity
         phaseChangeCooldownTracker = GetTimer(phaseChangeCooldown);
     }
 
-    private void Update()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
+
         if(phaseChangeCooldownTracker.TimerDone())
         {
             if (phase1Cannon.CanAttack() && !phase2Cannon.CurrentlyAttacking())
