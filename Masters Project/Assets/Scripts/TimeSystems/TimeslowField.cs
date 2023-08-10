@@ -159,4 +159,15 @@ public class TimeslowField : MonoBehaviour, TimeInfluencer
     {
         return slowAmount;
     }
+
+    private void OnDestroy()
+    {
+        if (detectedTargets.Count > 0)
+        {
+            foreach (var t in detectedTargets.ToArray())
+            {
+                UnregisterTgt(t);
+            }
+        }
+    }
 }
