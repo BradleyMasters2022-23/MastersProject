@@ -90,8 +90,9 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
         floatHeight = Random.Range(floatHeightRange.x, floatHeightRange.y);
 
         transform.position += Vector3.up * 0.5f;
-        transform.rotation = Quaternion.Euler(angX, angY, 0);
-        rb.velocity = transform.forward * vel;
+        Vector3 launchDir = Vector3.up;
+        launchDir = Quaternion.Euler(angX, angY, 0) * launchDir;
+        rb.velocity = launchDir * vel;
     }
 
     #region State
@@ -142,7 +143,7 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
                     }
                     else
                     {
-                        rb.constraints = RigidbodyConstraints.None;
+                        rb.constraints = RigidbodyConstraints.FreezeRotation;
                         physicsCollider.enabled = true;
                     }
 
@@ -301,7 +302,7 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
     {
         // apply stored velocity
         realCollider.enabled = true;
-        rb.constraints = RigidbodyConstraints.None;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
         rb.velocity = freezeVel;
         realCollider.isTrigger = freezeTrigger;
     }
@@ -330,7 +331,7 @@ public abstract class PickupOrb : TimeAffectedEntity, IPoolable, TimeObserver
         startDespawnTracker.ResetTimer();
         currState = OrbState.Spawning;
         rb.isKinematic = false;
-        rb.constraints = RigidbodyConstraints.None;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
         Spawn();
         spawnTracker.ResetTimer();
     }

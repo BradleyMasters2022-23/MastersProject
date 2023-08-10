@@ -484,14 +484,14 @@ public class EnemyManager : TimeAffectedEntity, TimeObserver
 
     public void OnStop()
     {
-        lastKnownPlayerPos = player.transform.position;
+        //lastKnownPlayerPos = player.transform.position;
     }
     public void OnResume()
     {
-        if (Vector3.Distance(player.transform.position, lastKnownPlayerPos) > loseTargetMinDist
-            && !transform.InVisionCone(player.transform, 20))
-        {
-            //Debug.Log("Enemy should lose target now");
-        }
+        //if (Vector3.Distance(player.transform.position, lastKnownPlayerPos) > loseTargetMinDist
+        //    && !transform.InVisionCone(player.transform, 20))
+        //{
+        //    //Debug.Log("Enemy should lose target now");
+        //}
     }
 }

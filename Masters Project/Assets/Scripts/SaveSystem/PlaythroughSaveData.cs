@@ -15,6 +15,7 @@ public class PlaythroughSaveData
     public int runsCompleted = 0;
     public int playerDeaths = 0;
     public int crystalsCollected = 0;
+    public int convoTicks = 0;
 
     /// <summary>
     /// Which boss did the player die to last
@@ -29,6 +30,7 @@ public class PlaythroughSaveData
         runsCompleted = 0;
         playerDeaths = 0;
         crystalsCollected = 0;
+        convoTicks = 0;
     }
 
     /// <summary>
@@ -52,6 +54,7 @@ public class PlaythroughSaveData
             && runsCompleted == 0
             && playerDeaths == 0
             && crystalsCollected == 0
-            && killedByBossLastRun == -1);
+            && killedByBossLastRun == -1
+            && convoTicks == 0);
     }
 }

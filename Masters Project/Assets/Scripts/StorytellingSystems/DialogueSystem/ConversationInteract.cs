@@ -152,7 +152,7 @@ public class ConversationInteract : MonoBehaviour, Interactable
 
         StartCoroutine(FlashRoutine());
 
-        AudioClipSO ringtone = calls.GetAvailableRingtone();
+        AudioClipSO ringtone = GetRingtone();
         ringtone.PlayClip(ringtonePlayer);
 
         flashing = true;
@@ -195,5 +195,10 @@ public class ConversationInteract : MonoBehaviour, Interactable
             yield return new WaitUntil(timer.TimerDone);
             yield return null;
         }
+    }
+
+    protected virtual AudioClipSO GetRingtone()
+    {
+        return calls.GetAvailableRingtone();
     }
 }

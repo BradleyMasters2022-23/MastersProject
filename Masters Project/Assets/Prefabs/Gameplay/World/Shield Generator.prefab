@@ -381,6 +381,7 @@ MonoBehaviour:
   maxKnockback: 0
   invincibilityShield: {fileID: 0}
   _deathVFX: {fileID: 0}
+  _deathVFXScaleMod: 0
   damagedSound: {fileID: 0}
   deathSound: {fileID: 0}
   damagedSoundCooldown: 0.5
@@ -445,13 +446,16 @@ MonoBehaviour:
   - {fileID: 2352507119034605032}
   - {fileID: 4918636031232427021}
   - {fileID: 216712245501674843}
+  - {fileID: 2396877945517402950}
   generatorFixedIndicator:
   - {fileID: 5421654711737623741}
   - {fileID: 6945027904358535404}
+  - {fileID: 2396877945517402950}
   lockedIndicator:
   - {fileID: 8883999994074748302}
   - {fileID: 1187619108308425581}
   - {fileID: 2396877945517402950}
+  - {fileID: 3166473218027857215}
   permDeadIndicators:
   - {fileID: 6048897410970200492}
   - {fileID: 2396877945517402950}
@@ -1185,6 +1189,7 @@ MonoBehaviour:
   maxKnockback: 0
   invincibilityShield: {fileID: 0}
   _deathVFX: {fileID: 0}
+  _deathVFXScaleMod: 0
   damagedSound: {fileID: 0}
   deathSound: {fileID: 0}
   damagedSoundCooldown: 0.5
@@ -1314,6 +1319,10 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 6983741314443107899}
+    - target: {fileID: 5908373586433902745, guid: 76eef9d158f221146977c1f677753fc8, type: 3}
+      propertyPath: summonTime
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 6501544576201834045, guid: 76eef9d158f221146977c1f677753fc8, type: 3}
       propertyPath: m_Name
       value: Boss Summoning Effect
@@ -1325,6 +1334,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1927238402749371095, guid: 76eef9d158f221146977c1f677753fc8, type: 3}
   m_PrefabInstance: {fileID: 4515295062141613120}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3166473218027857215 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1538012751686799743, guid: 76eef9d158f221146977c1f677753fc8, type: 3}
+  m_PrefabInstance: {fileID: 4515295062141613120}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36029488bc65e76448e35dba872a1fec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8022967669629598937 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5908373586433902745, guid: 76eef9d158f221146977c1f677753fc8, type: 3}
@@ -1525,6 +1545,7 @@ MonoBehaviour:
   maxKnockback: 0
   invincibilityShield: {fileID: 0}
   _deathVFX: {fileID: 0}
+  _deathVFXScaleMod: 0
   damagedSound: {fileID: 0}
   deathSound: {fileID: 0}
   damagedSoundCooldown: 0.5
@@ -1865,6 +1886,7 @@ MonoBehaviour:
   maxKnockback: 0
   invincibilityShield: {fileID: 0}
   _deathVFX: {fileID: 0}
+  _deathVFXScaleMod: 0
   damagedSound: {fileID: 0}
   deathSound: {fileID: 0}
   damagedSoundCooldown: 0.5

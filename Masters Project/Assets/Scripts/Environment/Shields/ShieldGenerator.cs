@@ -62,6 +62,7 @@ public class ShieldGenerator : MonoBehaviour
         {
             active = false;
             DisableShield();
+            Debug.Log("shield gen set to power down");
             foreach(Animator a in shieldAnimator)
                 a.SetTrigger("PowerDown");
         }
@@ -69,6 +70,8 @@ public class ShieldGenerator : MonoBehaviour
         {
             active = true;
             EnableShield();
+            Debug.Log("shield gen set to power up");
+
             foreach (Animator a in shieldAnimator)
                 a.SetTrigger("PowerUp");
         }
