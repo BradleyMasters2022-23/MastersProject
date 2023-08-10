@@ -14,7 +14,7 @@ public class FinalRoomLoader : RoomInitializer
 
     public override void Init(Cubemap cubemap, float intensity)
     {
-        Debug.Log("Boss room init");
+        //Debug.Log("Boss room init");
         base.Init(cubemap, intensity);
         foreach(var obj in stuffToDisable)
         {
