@@ -62,8 +62,8 @@ public class PlayerWeaponDisplay : MonoBehaviour
                 break;
             }
         }
-        idx--;
 
+        idx = Mathf.Clamp(idx - 1, 0, mainImages.Length - 1);
         // apply new image if its not already set
         if (targetDisplay.sprite != mainImages[idx])
         {

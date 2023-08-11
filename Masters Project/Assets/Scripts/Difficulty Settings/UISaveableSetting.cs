@@ -59,6 +59,7 @@ public abstract class UISaveableSetting : MonoBehaviour, ISavableSetting
         // only save if something changed
         if (PlayerPrefs.GetFloat(settingKeyword) != currentValue)
         {
+            //Debug.Log("Saving setting " + settingKeyword);
             PlayerPrefs.SetFloat(settingKeyword, currentValue);
             onSettingChanged.RaiseEvent(settingKeyword);
         }

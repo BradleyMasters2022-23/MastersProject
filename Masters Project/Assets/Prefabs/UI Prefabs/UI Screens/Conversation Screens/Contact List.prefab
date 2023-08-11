@@ -635,10 +635,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d000aab3d0e8f364c8d476eb59c02d17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controllerDefault: {fileID: 7567356369213807916}
   openMenu: {fileID: 0}
   closable: 1
-  backButton: {fileID: 0}
+  onCloseActions:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &7946884613513364393
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -651,11 +652,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2fdd5323f65b7f448acfc2ca64bb379, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  contacts:
-  - {fileID: 11400000, guid: d6a34a5cdb6826b4ab37ce6ecc7e0e7c, type: 2}
-  - {fileID: 11400000, guid: 27c599b269573c54da68a4f0aab8c15e, type: 2}
-  - {fileID: 11400000, guid: 6ea46799be039014c8dd204f254e3848, type: 2}
-  - {fileID: 11400000, guid: e5d3796f845d57b4aab5b6862b887c60, type: 2}
   contactPrefab: {fileID: 2636580454128159061, guid: 4b699d24b0c4d1d47a20e3d1063616da, type: 3}
   scrollTrans: {fileID: 7200820864949173920}
   containerOverflowRatio: 1
@@ -767,10 +763,10 @@ RectTransform:
   m_Father: {fileID: 4999896045184410867}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 718.46173, y: -388.59097}
-  m_SizeDelta: {x: 1436.9235, y: 777.18195}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7273975488822514448
 MonoBehaviour:
@@ -1295,10 +1291,5 @@ PrefabInstance:
 --- !u!224 &977071864818197774 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 430342160513685565, guid: 77da07a13571f6f4aa8d98be1d20e83b, type: 3}
-  m_PrefabInstance: {fileID: 610132493144603955}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &7567356369213807916 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7021963679193751583, guid: 77da07a13571f6f4aa8d98be1d20e83b, type: 3}
   m_PrefabInstance: {fileID: 610132493144603955}
   m_PrefabAsset: {fileID: 0}

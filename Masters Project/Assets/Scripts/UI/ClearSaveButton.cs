@@ -10,7 +10,7 @@ public class ClearSaveButton : MonoBehaviour
     private void Start()
     {
         // check if theres any save data. This data should ALWAYS exist
-        if (GlobalStatsManager.data != null && GlobalStatsManager.data.convoTicks > 0)
+        if (DataManager.instance.hasSaveData)
             SetSaveData();
         else
             SetNoSaveData();
@@ -39,7 +39,7 @@ public class ClearSaveButton : MonoBehaviour
         ConfirmationBox b = FindObjectOfType<ConfirmationBox>(true);
 
         if(b != null)
-            b.RequestConfirmation(ClearData, "Clear save data? This cannot be undone");
+            b.RequestConfirmation(ClearData, "Clear save data? This cannot be undone.");
         else
             ClearData();
     }

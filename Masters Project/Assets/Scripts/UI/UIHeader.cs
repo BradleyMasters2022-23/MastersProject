@@ -6,11 +6,16 @@ public class UIHeader : MonoBehaviour
 {
     [SerializeField] GameObject[] sections;
     [SerializeField] int startingIndex = 0;
-    private int currentIndex;
+    private int currentIndex = -1;
 
     private void OnEnable()
     {
         GoToSection(0);
+    }
+
+    private void OnDisable()
+    {
+        currentIndex = -1;
     }
 
     /// <summary>
