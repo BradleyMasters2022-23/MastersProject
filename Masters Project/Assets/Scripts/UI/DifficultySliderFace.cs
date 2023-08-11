@@ -33,7 +33,7 @@ public class DifficultySliderFace : MonoBehaviour
         {
             if (newVal >= numberRange[idx].x && newVal < numberRange[idx].y) break;
         }
-
+        idx = Mathf.Clamp(idx, 0, icons.Length-1);
         if (renderImage.sprite != icons[idx])
         {
             renderImage.sprite = icons[idx];
