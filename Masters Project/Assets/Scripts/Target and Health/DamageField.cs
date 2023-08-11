@@ -10,7 +10,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using static UnityEngine.EventSystems.EventTrigger;
 
 public class DamageField : MonoBehaviour
 {
