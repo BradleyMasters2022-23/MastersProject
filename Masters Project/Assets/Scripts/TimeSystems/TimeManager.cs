@@ -623,7 +623,7 @@ public class TimeManager : MonoBehaviour, IDifficultyObserver
     //}
     public void UpgradeIncrementMaxTimeGauge(float increment)
     {
-        Debug.Log("New increment is " + increment);
+        //Debug.Log("New increment is " + increment);
         //slowDuration.ChangeVal(newMax);
         increment *= FixedUpdateCalls;
 
