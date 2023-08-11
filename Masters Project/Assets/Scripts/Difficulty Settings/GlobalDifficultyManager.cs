@@ -23,6 +23,20 @@ public interface IDifficultyObserver
     void UpdateDifficulty(float newModifier);
 }
 
+/// <summary>
+/// Difficulty Presets.
+/// </summary>
+[System.Serializable]
+public struct DifficultyPreset
+{
+    [Tooltip("Name for this difficulty. Pascal Case.")]
+    public string difficultyName;
+    [Tooltip("Values in the following order: " +
+        "Enemy Health, Enemy Damage, Projecitle Speed, Spawn Numbers, " +
+        "Health Efficiency, Time Efficiency, Aim Assist")]
+    public float[] defaultValues;
+}
+
 public class GlobalDifficultyManager : MonoBehaviour
 {
     /// <summary>
@@ -43,6 +57,20 @@ public class GlobalDifficultyManager : MonoBehaviour
     public ChannelString onDifficultySettingChange;
 
     /// <summary>
+    /// key used to look up difficulty version
+    /// </summary>
+    private const string difficultyVersionKey = "difficultyVersion";
+    /// <summary>
+    /// current version of the difficulty system.
+    /// Changing this will force an update on new builds, useful if the player prefs cause bugs
+    /// When saved in player prefs, this is hashed
+    /// 
+    /// FORMAT:
+    /// diff_#.#
+    /// </summary>
+    private const string difficultyVersion = "diff_1.0";
+
+    /// <summary>
     /// List of settings available for use
     /// note: Changing these involves changing the UI setting ref AND ref used by 
     /// concrete implementation of these settings
@@ -58,6 +86,8 @@ public class GlobalDifficultyManager : MonoBehaviour
         "AimAssistStrength"
     };
 
+    [SerializeField] DifficultyPreset[] difficultyModes;
+
     private void Awake()
     {
         if(instance == null)
@@ -72,8 +102,16 @@ public class GlobalDifficultyManager : MonoBehaviour
         }
 
         PrepareSettingLookup();
-    }
 
+        // if they do not have a version, or the version does not match, update it
+        if (!PlayerPrefs.HasKey(difficultyVersionKey)
+            || PlayerPrefs.GetInt(difficultyVersionKey) != difficultyVersion.GetHashCode())
+        {
+            PlayerPrefs.SetInt(difficultyVersionKey, difficultyVersion.GetHashCode());
+            SetDefaultDifficulties();
+            Debug.Log($"[DifficultyManager] New difficulty version detected: {difficultyVersion}, resetting difficulty settings");
+        }
+    }
 
     private void OnEnable()
     {
@@ -87,6 +125,46 @@ public class GlobalDifficultyManager : MonoBehaviour
         if (this != instance) return;
 
         onDifficultySettingChange.OnEventRaised -= UpdateSettings;
+    }
+
+    /// <summary>
+    /// Set all saved difficulty keys to default value of 100 (for 100%)
+    /// </summary>
+    private void SetDefaultDifficulties()
+    {
+        foreach (var setting in settingKeys)
+        {
+            PlayerPrefs.SetFloat(setting, 100f);
+        }
+    }
+    /// <summary>
+    /// Set the difficulty mode. 
+    /// </summary>
+    /// <param name="difficultyName">Name of difficulty to set. PascalCase</param>
+    public void SetDifficultyMode(string difficultyName)
+    {
+        // Do lookup to find the target difficulty mode
+        int diffIdx;
+        for (diffIdx = 0; diffIdx < difficultyModes.Length; diffIdx++)
+        {
+            if (difficultyModes[diffIdx].difficultyName == difficultyName)
+                break;
+        }
+        
+        // make sure one was found, otherwise throw an error and exit
+        // catches edge case of loop completing without finding a match
+        if (difficultyModes[diffIdx].difficultyName != difficultyName)
+        {
+            Debug.Log("[GlobalDifficultyManager] ERROR! An attempt to set difficulty mode {difficultyName} has failed!" +
+                "Please make sure it was spelled the same way it is in GlobalDifficultyManager's difficultyModes. It should be pascal case");
+            return;
+        }
+
+        // set settings appropriately
+        for(int i = 0; i < settingKeys.Length; i++)
+        {
+            PlayerPrefs.SetFloat(settingKeys[i], difficultyModes[diffIdx].defaultValues[i]);
+        }
     }
 
     /// <summary>
@@ -118,7 +196,7 @@ public class GlobalDifficultyManager : MonoBehaviour
         // get ref to subscribers
         float newModifier = (PlayerPrefs.GetFloat(modifiedSetting, 100)/100);
         List<IDifficultyObserver> group = difficulties[modifiedSetting];
-        Debug.Log($"Updating Setting {modifiedSetting} to {newModifier}");
+        //Debug.Log($"Updating Setting {modifiedSetting} to {newModifier}");
 
         // tell each subscriber to update its settings
         foreach (IDifficultyObserver observer in group)

@@ -49,4 +49,18 @@ public class SliderSetting : UISaveableSetting
             targetSlider.value = defaultValue;
         }
     }
+
+    /// <summary>
+    /// Directly set the value for this setting. Clamps within range and saves immediately.
+    /// </summary>
+    /// <param name="newVal">New value to apply</param>
+    public void SetValue(float newVal)
+    {
+        currentValue = Mathf.Clamp(newVal, valueRangeMinMax.x, valueRangeMinMax.y);
+        if (targetSlider != null && targetSlider.gameObject.activeInHierarchy)
+        {
+            targetSlider.value = currentValue;
+        }
+        SaveSetting();
+    }
 }
