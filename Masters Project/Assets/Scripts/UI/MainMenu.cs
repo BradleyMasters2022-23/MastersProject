@@ -26,8 +26,8 @@ public class MainMenu : MonoBehaviour
     /// <returns></returns>
     private IEnumerator DelayedStart()
     {
-        yield return null;
-        yield return null;
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForFixedUpdate();
 
         // player gets 1 convo tick on first go to hub post-tutorial, so check that
         if (GlobalStatsManager.data != null && GlobalStatsManager.data.convoTicks > 0)

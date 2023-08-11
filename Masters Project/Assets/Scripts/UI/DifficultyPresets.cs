@@ -6,17 +6,16 @@ using UnityEngine.UI;
 public class DifficultyPresets : MonoBehaviour
 {
     [SerializeField] string difficultyName;
-
-    [SerializeField] Slider[] difficultySliders;
-    [SerializeField] float[] difficultyValues;
-
+    [SerializeField] SliderSetting[] sliders;
     public void SetDifficultyPreset()
     {
-        for(int i = 0; i < difficultyValues.Length; i++)
-        {
-            if (i >= difficultySliders.Length) return;
+        // set new difficulty
+        GlobalDifficultyManager.instance.SetDifficultyMode(difficultyName);
 
-            difficultySliders[i].value = difficultyValues[i];
+        // tell sliders to update
+        foreach(var s in sliders)
+        {
+            s.LoadSetting();
         }
     }
 }
