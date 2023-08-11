@@ -93,7 +93,7 @@ public class BossTarget : Target
     {
         // Instead of destroying object, do any events.
         // Actual death will happen inside of the events
-        onDeathEvents.eventAudio.PlayClip(audioSource);
+        onDeathEvents.eventAudio.PlayClip(_center);
         StartCoroutine("ExecuteEvents", onDeathEvents.OnTriggerEvent);
     }
 

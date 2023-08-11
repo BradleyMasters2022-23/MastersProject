@@ -82,4 +82,9 @@ public class SecretConversationInteract : ConversationInteract
         // set the animator to play through the sequence of offline mode
         anim?.SetTrigger("play");
     }
+
+    protected override AudioClipSO GetRingtone()
+    {
+        return newCallUI.GetLoadedRingtone();
+    }
 }
