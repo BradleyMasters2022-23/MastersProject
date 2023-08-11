@@ -12,7 +12,7 @@ public class MainMenu : MonoBehaviour
 
     public void LoadToTutorial()
     {
-        GameManager.instance.GoToTutorial();
+        StartCoroutine(DelayedTutorial());
     }
 
     public void StartGame()
@@ -29,10 +29,15 @@ public class MainMenu : MonoBehaviour
         yield return new WaitForEndOfFrame();
         yield return new WaitForFixedUpdate();
 
-        // player gets 1 convo tick on first go to hub post-tutorial, so check that
-        if (GlobalStatsManager.data != null && GlobalStatsManager.data.convoTicks > 0)
-            GameManager.instance.GoToHub();
-        else
-            GameManager.instance.GoToTutorial();
+        GameManager.instance.GoToHub();
+    }
+
+    private IEnumerator DelayedTutorial()
+    {
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForFixedUpdate();
+
+        
+        GameManager.instance.GoToTutorial();
     }
 }
