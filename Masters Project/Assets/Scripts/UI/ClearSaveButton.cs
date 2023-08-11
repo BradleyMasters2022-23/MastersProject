@@ -10,7 +10,7 @@ public class ClearSaveButton : MonoBehaviour
     private void Start()
     {
         // check if theres any save data. This data should ALWAYS exist
-        if (GlobalStatsManager.data != null && GlobalStatsManager.data.convoTicks > 0)
+        if (DataManager.instance.hasSaveData)
             SetSaveData();
         else
             SetNoSaveData();
