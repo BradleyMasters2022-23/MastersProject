@@ -53,10 +53,10 @@ public class TimedButton : TimeAffectedEntity, ITriggerable
         gameObject.SetActive(true);
         summonEffect.transform.parent= null;
 
+        SetLock(true);
+
         summonEffect.gameObject.SetActive(true);
         summonEffect.Play();
-
-        SetLock(true);
     }
 
     private void OnEnable()
