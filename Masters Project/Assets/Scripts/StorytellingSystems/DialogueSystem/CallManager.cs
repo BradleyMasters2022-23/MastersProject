@@ -156,7 +156,7 @@ public class CallManager : SaveDataContainer
     /// </summary>
     public void IncrementConvoTicks(InputAction.CallbackContext c = default)
     {
-        GlobalStatsManager.data.runsAttempted++;
+        GlobalStatsManager.data.convoTicks++;
         saveData?.IncrementConvoTicks();
         bool s = DataManager.instance.Save(saveFileName, saveData);
         UpdateCalls();

@@ -17,7 +17,20 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
-        if(DataManager.instance.hasSaveData)
+        StartCoroutine(DelayedStart());
+    }
+
+    /// <summary>
+    /// add a minor delay for smoother transitions, and to allow difficulty settings to properly apply
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator DelayedStart()
+    {
+        yield return null;
+        yield return null;
+
+        // player gets 1 convo tick on first go to hub post-tutorial, so check that
+        if (GlobalStatsManager.data != null && GlobalStatsManager.data.convoTicks > 0)
             GameManager.instance.GoToHub();
         else
             GameManager.instance.GoToTutorial();

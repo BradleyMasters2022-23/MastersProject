@@ -115,6 +115,8 @@ public class MapLoader : MonoBehaviour
     [SerializeField] AudioClipSO secretPortalActivateSFX;
     #endregion
 
+    [SerializeField] bool incrementRunCount = false;
+
     #region Initialization Funcs
 
     /// <summary>
@@ -216,6 +218,10 @@ public class MapLoader : MonoBehaviour
         }
         InputManager.Instance.SetDirectControlscheme(scheme);
 
+        if (incrementRunCount)
+        {
+            GlobalStatsManager.data.runsAttempted++;
+        }
 
         yield return null;
     }
