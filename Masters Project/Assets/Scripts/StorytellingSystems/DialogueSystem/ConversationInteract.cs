@@ -65,6 +65,8 @@ public class ConversationInteract : MonoBehaviour, Interactable
     {
         ui = ConvoRefManager.instance;
         calls = CallManager.instance;
+        calls.IncrementConvoTicks();
+
         timer = new ScaledTimer(flashTime);
     }
 
@@ -79,7 +81,7 @@ public class ConversationInteract : MonoBehaviour, Interactable
 
         // if calls are available, flash
         // Stop loop if in game menu
-        if(GameManager.instance.CurrentState != GameManager.States.GAMEMENU
+        if(GameManager.instance.CurrentState != GameManager.States.GAMEMENU && GameManager.instance.CurrentState != GameManager.States.PAUSED
             && calls.HasAvailable() && !flashing)
         {
             BeginFlash();
@@ -92,7 +94,7 @@ public class ConversationInteract : MonoBehaviour, Interactable
             //}
         }
         // otherwise, revert back to normal
-        else if(flashing && (GameManager.instance.CurrentState == GameManager.States.GAMEMENU || !calls.HasAvailable()))
+        else if(flashing && (GameManager.instance.CurrentState == GameManager.States.GAMEMENU || GameManager.instance.CurrentState == GameManager.States.PAUSED || !calls.HasAvailable()))
         {
             //if (ringtonePlayer != null && ringtonePlayer.isPlaying)
             //    ringtonePlayer.Stop();
@@ -150,7 +152,7 @@ public class ConversationInteract : MonoBehaviour, Interactable
 
         StartCoroutine(FlashRoutine());
 
-        AudioClipSO ringtone = calls.GetAvailableRingtone();
+        AudioClipSO ringtone = GetRingtone();
         ringtone.PlayClip(ringtonePlayer);
 
         flashing = true;
@@ -193,5 +195,10 @@ public class ConversationInteract : MonoBehaviour, Interactable
             yield return new WaitUntil(timer.TimerDone);
             yield return null;
         }
+    }
+
+    protected virtual AudioClipSO GetRingtone()
+    {
+        return calls.GetAvailableRingtone();
     }
 }

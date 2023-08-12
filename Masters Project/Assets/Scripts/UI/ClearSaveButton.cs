@@ -39,7 +39,7 @@ public class ClearSaveButton : MonoBehaviour
         ConfirmationBox b = FindObjectOfType<ConfirmationBox>(true);
 
         if(b != null)
-            b.RequestConfirmation(ClearData, "Clear save data? This cannot be undone");
+            b.RequestConfirmation(ClearData, "Clear save data? This cannot be undone.");
         else
             ClearData();
     }

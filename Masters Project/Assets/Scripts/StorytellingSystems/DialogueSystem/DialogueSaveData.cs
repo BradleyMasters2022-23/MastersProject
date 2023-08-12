@@ -13,12 +13,12 @@ using UnityEngine;
 public class DialogueSaveData
 {
     /// <summary>
-    /// Dictionary of conversations and runs
+    /// Dictionary of conversations and conversation ticks
     /// 
     /// KEY - Conversation ID. 
     /// Use ID's as otherwise, we need to write our own JSON converter for SO's
     /// 
-    /// VALUE - Number of runs SINCE the conversation was read
+    /// VALUE - Number of conversation ticks SINCE the conversation was read
     /// </summary>
     public Dictionary<int, int> readConversations;
 
@@ -37,9 +37,9 @@ public class DialogueSaveData
     }
 
     /// <summary>
-    /// Increment all conversation runs
+    /// Increment all conversation ticks
     /// </summary>
-    public void IncrementRuns()
+    public void IncrementConvoTicks()
     {
         foreach (var c in readConversations.ToArray())
             readConversations[c.Key]++;
@@ -62,19 +62,18 @@ public class DialogueSaveData
     /// <returns>Whether or not dependencies have been satisfied</returns>
     public bool CheckDependencies(Conversation c)
     {
-        //Debug.Log($"Checking D's on conv {c.ID}");
         // If no natural dependencies, check number of runs
         if (c.dependencies.Length <= 0)
         {
             //Debug.Log($"No dependencies, comparing {c.runReq} <= {GlobalStatsManager.data.runsAttempted}");
-            return GlobalStatsManager.data.runsAttempted >= c.runReq;
+            return GlobalStatsManager.data.convoTicks >= c.runReq;
         }
-        // otherwise, check if the number of runs since all dependencies have been met
+        // otherwise, check if the number of ticks since all dependencies have been met
         else
         {
             foreach(Conversation reqConv in c.dependencies) 
             {
-                // If a dependency has not been read yet OR number of runs since read conversation
+                // If a dependency has not been read yet OR number of ticks since read conversation
                 // has not been met yet, then the conversation's dependencies have NOT been met
                 if (!readConversations.ContainsKey(reqConv.ID) || readConversations[reqConv.ID] < c.runReq)
                 {
@@ -96,7 +95,7 @@ public class DialogueSaveData
         Debug.Log($"All {readConversations.Count} conversations read: ");
         foreach (var c in readConversations)
         {
-            Debug.Log($"Conv ID {c} | {c.Value} runs ago");
+            Debug.Log($"Conv ID {c} | {c.Value} ticks ago");
         }
     }
 }

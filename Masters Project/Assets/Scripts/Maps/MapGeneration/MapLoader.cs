@@ -57,7 +57,6 @@ public class MapLoader : MonoBehaviour
     [Tooltip("Reference to the loading screen to use")]
     [SerializeField] GameObject loadingScreen;
 
-    [SerializeField] bool incrementSaveRuns = true;
     [SerializeField] bool enableControlsOnFinish = true;
     [Tooltip("Channel called when any scene change happens. Used to tell poolers to reset.")]
     [SerializeField] ChannelVoid onSceneChange;
@@ -89,8 +88,6 @@ public class MapLoader : MonoBehaviour
     [Tooltip("Reference to the loader the starting room uses")]
     [SerializeField] RoomInitializer startingRoomInitializer;
     
-    [SerializeField] MapSegmentSO preBossNeutralRoom;
-
     [SerializeField] AudioClipSO normalPortalUseSFX;
 
     /// <summary>
@@ -117,6 +114,8 @@ public class MapLoader : MonoBehaviour
     [SerializeField, ReadOnly] MapSegmentSO chosenSecretRoom;
     [SerializeField] AudioClipSO secretPortalActivateSFX;
     #endregion
+
+    [SerializeField] bool incrementRunCount = false;
 
     #region Initialization Funcs
 
@@ -219,12 +218,9 @@ public class MapLoader : MonoBehaviour
         }
         InputManager.Instance.SetDirectControlscheme(scheme);
 
-        // tell stat manager that a run has begun
-        if (incrementSaveRuns)
+        if (incrementRunCount)
         {
             GlobalStatsManager.data.runsAttempted++;
-            if (CallManager.instance != null)
-                CallManager.instance.IncrementRuns();
         }
 
         yield return null;

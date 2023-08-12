@@ -83,7 +83,7 @@ public class BFLController : MonoBehaviour
     {
         if (CanAttack())
         {
-            currentAttackActive= true;
+            currentAttackActive = true;
             currentAttack = attacks.Pull();
             currentAttack.Attack();
         }

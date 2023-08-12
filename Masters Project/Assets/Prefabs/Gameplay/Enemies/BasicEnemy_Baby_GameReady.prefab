@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4916498130281671921}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Glow Disable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,7 +42,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 793414667720240907}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Center
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -78,7 +78,7 @@ GameObject:
   - component: {fileID: 8074310070380963054}
   - component: {fileID: 7936580812240571145}
   - component: {fileID: 8207261448141904843}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Eyes (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,7 +162,7 @@ GameObject:
   - component: {fileID: 5056635963292760281}
   - component: {fileID: 7576509731180771120}
   - component: {fileID: 8998714408596403494}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Enemy Ambiance
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -330,7 +330,7 @@ GameObject:
   - component: {fileID: 6591102613264528252}
   - component: {fileID: 8193997935343555121}
   - component: {fileID: 8892838979768940013}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Vfx_Enemy_CrystalDust
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -471,7 +471,7 @@ GameObject:
   - component: {fileID: 4978035653433216423}
   - component: {fileID: 5711222732710543243}
   - component: {fileID: 102560710506105619}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Head inner (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -737,13 +737,13 @@ MonoBehaviour:
   deathStateHorKnockback: 0.5
   deathStateVerKnockback: 0.4
   instantImpactThreshold: 999
-  deathStateSFX: {fileID: 0}
+  deathStateSFX: {fileID: 11400000, guid: 9d1733c3abc671d48b567b178629e137, type: 2}
   minKnockbackDuration: 0.5
   groundMask:
     serializedVersion: 2
     m_Bits: 8
   onGroundTime: 0.7
-  impactSoundSFX: {fileID: 0}
+  impactSoundSFX: {fileID: 11400000, guid: 537f48aa159b0514296efd96583b0b9c, type: 2}
   impactSoundVelocity: 0
 --- !u!114 &6433282564666175865
 MonoBehaviour:
@@ -1044,7 +1044,6 @@ MonoBehaviour:
   shootVFXScale: 1
   indicatorSFX: {fileID: 11400000, guid: 538cb2ce3a321af4badfbb5fa814f52a, type: 2}
   shootSFX: {fileID: 11400000, guid: f06220cf5d4d1a141b9d3948ee80b909, type: 2}
-  indicatorStunned: 0
 --- !u!114 &5176151732030655657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1550,6 +1549,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AlertContainer
       objectReference: {fileID: 0}
+    - target: {fileID: 3524068267789458469, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4683e69ef94e78447b5cdeeeae07c7cf, type: 3}
 --- !u!4 &263875184771321609 stripped
@@ -1567,6 +1570,14 @@ PrefabInstance:
     - target: {fileID: 342884859790131228, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
       propertyPath: m_Name
       value: Prefab_T_Enemy_Small_OneUV
+      objectReference: {fileID: 0}
+    - target: {fileID: 342884859790131228, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 762022970433304547, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1119702346345405094, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
       propertyPath: m_RootOrder
@@ -1612,22 +1623,66 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1412813342128325463, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1464290745432728625, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1572579165219650150, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1922311357143690173, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 4121408397611903356, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: e5633b594c0356644b2dbbb8e1bfd9a7, type: 2}
+    - target: {fileID: 5145546526565720912, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6032370552587984911, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
       propertyPath: m_Name
       value: Eyes
+      objectReference: {fileID: 0}
+    - target: {fileID: 6032370552587984911, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6149774964494385722, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6168364599270634706, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
       propertyPath: m_Name
       value: Head inner
       objectReference: {fileID: 0}
+    - target: {fileID: 6168364599270634706, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7820317715957994370, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8061268174898419972, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: e5633b594c0356644b2dbbb8e1bfd9a7, type: 2}
+    - target: {fileID: 8303116242982742690, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8637999078165048829, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 54e72f889c1779e4d8ffe3e0ff3bcefe, type: 3}
 --- !u!4 &2744385730207128744 stripped
@@ -1694,6 +1749,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prefab_T_Enemy_FloatingEffect_Fire
       objectReference: {fileID: 0}
+    - target: {fileID: 4247118107833869642, guid: 1e8538809b4b3a346a7a9ac321080153, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 7262584287860564808, guid: 1e8538809b4b3a346a7a9ac321080153, type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.size
       value: 1
@@ -1722,6 +1781,10 @@ PrefabInstance:
     - target: {fileID: 671644478858017053, guid: deabab1230b973c428b02ce67c8bb042, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1766667182665044452, guid: deabab1230b973c428b02ce67c8bb042, type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2757878521360870048, guid: deabab1230b973c428b02ce67c8bb042, type: 3}
       propertyPath: _targetResource

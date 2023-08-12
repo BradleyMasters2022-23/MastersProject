@@ -62,6 +62,7 @@ public class ShieldGenerator : MonoBehaviour
         {
             active = false;
             DisableShield();
+            Debug.Log("shield gen set to power down");
             foreach(Animator a in shieldAnimator)
                 a.SetTrigger("PowerDown");
         }
@@ -69,6 +70,8 @@ public class ShieldGenerator : MonoBehaviour
         {
             active = true;
             EnableShield();
+            Debug.Log("shield gen set to power up");
+
             foreach (Animator a in shieldAnimator)
                 a.SetTrigger("PowerUp");
         }
@@ -133,14 +136,14 @@ public class ShieldGenerator : MonoBehaviour
 
     public void LockGenerators()
     {
-        Debug.Log("Locking all generators");
+        //Debug.Log("Locking all generators");
         foreach (var button in allButtons)
             button.SetLock(true);
     }
 
     public void UnlockGenerators()
     {
-        Debug.Log("Unlocking all generators");
+        //Debug.Log("Unlocking all generators");
         foreach (var button in allButtons)
             button.SetLock(false);
     }

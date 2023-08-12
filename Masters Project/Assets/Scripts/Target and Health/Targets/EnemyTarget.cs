@@ -212,24 +212,29 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
     /// <returns></returns>
     protected IEnumerator DeathState()
     {
-        if(Affected)
-            yield return new WaitUntil(() => !Slowed);
-
         // drop before being launched
         _managerRef.HaltAI();
-
         DropAllObjs();
         inDeathState = true;
 
         yield return new WaitForEndOfFrame();
         float speedMod = Random.Range(deathSpeedMinMax.x, deathSpeedMinMax.y);
 
-        _rb.isKinematic = false;
-        immuneToKnockback = false;
         deathStateSFX.PlayClip(audioSource);
+
+        deathAnimator.SetFloat("SpeedMod", speedMod);
+        deathAnimator.SetTrigger("Dissolve");
+        DeathEffects();
+
+        // wait for personal time to resume before lauching
+        if (Affected)
+            yield return new WaitUntil(() => !Slowed);
 
         inKnockbackState = true;
         DisableAI();
+        _rb.isKinematic = false;
+        immuneToKnockback = false;
+
 
         // if enough damage for launch state, do that
         if (damageLastFrame >= deathStateDamageThreshold)
@@ -242,11 +247,6 @@ public class EnemyTarget : Target, TimeObserver, IPoolable
         {
             base.Knockback(0, instantDeathPopForce, _center.position);
         }
-
-        deathAnimator.SetFloat("SpeedMod", speedMod);
-        deathAnimator.SetTrigger("Dissolve");
-        DeathEffects();
-        //DestroyEnemy();
     }
 
     protected void DestroyEnemy()

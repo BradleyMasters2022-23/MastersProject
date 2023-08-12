@@ -168,6 +168,11 @@ public class PlayerTarget : Target, IDifficultyObserver
                     playerWeaponSoundManager.Play();
                     break;
                 }
+                case 3:
+                {
+                    playerWeaponSoundManager.Stop();
+                    break;
+                }
         }
     }
 

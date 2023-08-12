@@ -12,14 +12,32 @@ public class MainMenu : MonoBehaviour
 
     public void LoadToTutorial()
     {
-        GameManager.instance.GoToTutorial();
+        StartCoroutine(DelayedTutorial());
     }
 
     public void StartGame()
     {
-        if(DataManager.instance.hasSaveData)
-            GameManager.instance.GoToHub();
-        else
-            GameManager.instance.GoToTutorial();
+        StartCoroutine(DelayedStart());
+    }
+
+    /// <summary>
+    /// add a minor delay for smoother transitions, and to allow difficulty settings to properly apply
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator DelayedStart()
+    {
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForFixedUpdate();
+
+        GameManager.instance.GoToHub();
+    }
+
+    private IEnumerator DelayedTutorial()
+    {
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForFixedUpdate();
+
+        
+        GameManager.instance.GoToTutorial();
     }
 }

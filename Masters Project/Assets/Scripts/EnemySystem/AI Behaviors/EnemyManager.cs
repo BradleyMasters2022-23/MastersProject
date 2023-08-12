@@ -414,16 +414,15 @@ public class EnemyManager : TimeAffectedEntity, TimeObserver
             }
 
             c++;
-            if (c >= 1000)
+            if (c >= 70)
             {
-                Debug.LogError($"Strafing detected to get stuck!!!");
+                //Debug.LogError($"Strafing detected to get stuck!!!");
                 break;
             }
 
             attackReq = strafingAttack != null && !(strafingAttack.currentAttackState == AttackState.Cooldown || strafingAttack.currentAttackState == AttackState.Ready);
 
             yield return null;
-            yield return tick;
         }
 
         strafeBehavior.state = BaseEnemyMovement.MoveState.Standby;
@@ -485,14 +484,14 @@ public class EnemyManager : TimeAffectedEntity, TimeObserver
 
     public void OnStop()
     {
-        lastKnownPlayerPos = player.transform.position;
+        //lastKnownPlayerPos = player.transform.position;
     }
     public void OnResume()
     {
-        if (Vector3.Distance(player.transform.position, lastKnownPlayerPos) > loseTargetMinDist
-            && !transform.InVisionCone(player.transform, 20))
-        {
-            //Debug.Log("Enemy should lose target now");
-        }
+        //if (Vector3.Distance(player.transform.position, lastKnownPlayerPos) > loseTargetMinDist
+        //    && !transform.InVisionCone(player.transform, 20))
+        //{
+        //    //Debug.Log("Enemy should lose target now");
+        //}
     }
 }
