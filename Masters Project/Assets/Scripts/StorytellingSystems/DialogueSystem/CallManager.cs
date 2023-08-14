@@ -57,7 +57,7 @@ public class CallManager : SaveDataContainer
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -70,7 +70,11 @@ public class CallManager : SaveDataContainer
         // Try to get save data
         saveData = DataManager.instance.Load<DialogueSaveData>(saveFileName);
         if (saveData == null)
+        {
             saveData = new DialogueSaveData();
+            Debug.Log("new save data created");
+        }
+            
 
         UpdateCalls();
     }
@@ -80,6 +84,7 @@ public class CallManager : SaveDataContainer
     /// </summary>
     private void UpdateCalls()
     {
+        Debug.Log("Save data found: " + (saveData != null));
         // loop through character conversations.
         foreach(Character character in characters.ToList())
         {
@@ -143,6 +148,8 @@ public class CallManager : SaveDataContainer
         // delete save data for conversaitons
         DataManager.instance.Delete(saveFileName);
         saveData = new DialogueSaveData();
+        Debug.Log("new save data created");
+
         saveData.SeeAllReads();
 
         availableConversations.Clear();
@@ -182,6 +189,8 @@ public class CallManager : SaveDataContainer
     public override void ResetData()
     {
         saveData = new DialogueSaveData();
+        Debug.Log("new save data created");
+
         UpdateCalls();
     }
 

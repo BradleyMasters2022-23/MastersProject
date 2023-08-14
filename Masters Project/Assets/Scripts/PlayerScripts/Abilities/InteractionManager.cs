@@ -51,6 +51,14 @@ public class InteractionManager : MonoBehaviour
         interact.Enable();
     }
 
+    private void OnDisable()
+    {
+        if (controller != null)
+        {
+            interact.performed -= Interact;
+        }
+    }
+
     #endregion
 
     private void Update()
@@ -66,12 +74,16 @@ public class InteractionManager : MonoBehaviour
     {
         RaycastHit hit;
 
+        Debug.Log("checking interact");
+
         if (Physics.SphereCast(Camera.main.transform.position, interactTolerance, Camera.main.transform.forward, out hit, interactDistance, detectableLayer))
         {
             currentInteract = hit.transform.GetComponent<Interactable>();
+            Debug.Log("hit something, trying to get interactable");
         }
         else // If nothing hit, then no interact
         {
+            Debug.Log("Cant find interact");
             currentInteract = null;
         }
 
