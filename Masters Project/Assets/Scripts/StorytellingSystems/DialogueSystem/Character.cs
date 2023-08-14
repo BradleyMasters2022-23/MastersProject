@@ -21,6 +21,7 @@ public class Character : ScriptableObject
     [Tooltip("Thumbnail for this character")]
     public Sprite characterThumbnail;
     public Sprite[] sprites;
+    public Sprite bg;
 
     [Header("Audio")]
     [Tooltip("The ringtone for this character. TBD")]
