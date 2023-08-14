@@ -487,7 +487,7 @@ public class InputManager : MonoBehaviour
     /// </summary>
     /// <param name="actionRef">Input action to lookup</param>
     /// <returns>String of the binding for the action</returns>
-    public string ActionKeybindLookup(InputActionReference actionRef)
+    public string ActionKeybindLookup(InputActionReference actionRef, bool simple = false)
     {
         // get the actual action
         InputAction action = Controls.FindAction(actionRef.action.id.ToString());
@@ -526,6 +526,9 @@ public class InputManager : MonoBehaviour
                     {
                         temp = action.GetBindingDisplayString(group: "KeyboardMouse");
                     }
+                    if(!simple)
+                        temp = "[" + temp.ToUpper() + "]";  
+
                     break;
                 }
             case ControlScheme.CONTROLLER:
