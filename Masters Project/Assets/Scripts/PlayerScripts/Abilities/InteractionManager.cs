@@ -51,6 +51,14 @@ public class InteractionManager : MonoBehaviour
         interact.Enable();
     }
 
+    private void OnDisable()
+    {
+        if (controller != null)
+        {
+            interact.performed -= Interact;
+        }
+    }
+
     #endregion
 
     private void Update()
