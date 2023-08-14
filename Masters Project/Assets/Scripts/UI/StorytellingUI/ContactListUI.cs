@@ -55,17 +55,17 @@ public class ContactListUI : MonoBehaviour
         }
 
         // Calculate the new spacing to fit all objects while maintaining spacing, add extra overflow
-        float objHeight = contactPrefab.GetComponent<RectTransform>().sizeDelta.y * optionsLoaded;
-        VerticalLayoutGroup layoutGp = scrollTrans.content.GetComponent<VerticalLayoutGroup>();
-        float spaceBuffer = layoutGp.spacing * optionsLoaded - 1;
-        spaceBuffer += layoutGp.padding.top + layoutGp.padding.bottom;
-        float newSpacing = (spaceBuffer + objHeight) * containerOverflowRatio;
+        //float objHeight = contactPrefab.GetComponent<RectTransform>().sizeDelta.y * optionsLoaded;
+        //VerticalLayoutGroup layoutGp = scrollTrans.content.GetComponent<VerticalLayoutGroup>();
+        //float spaceBuffer = layoutGp.spacing * optionsLoaded - 1;
+        //spaceBuffer += layoutGp.padding.top + layoutGp.padding.bottom;
+        //float newSpacing = (spaceBuffer + objHeight) * containerOverflowRatio;
 
-        // Only apply new size if its greater than the default size. Reset scroll bar
-        newSpacing = (newSpacing > scrollTrans.content.sizeDelta.y) ? newSpacing : scrollTrans.content.sizeDelta.y;
-        Vector2 sizeBuffer = new Vector2(scrollTrans.content.sizeDelta.x, newSpacing);
-        scrollTrans.content.sizeDelta = sizeBuffer;
-        StartCoroutine(SetScrollTop());
+        //// Only apply new size if its greater than the default size. Reset scroll bar
+        //newSpacing = (newSpacing > scrollTrans.content.sizeDelta.y) ? newSpacing : scrollTrans.content.sizeDelta.y;
+        //Vector2 sizeBuffer = new Vector2(scrollTrans.content.sizeDelta.x, newSpacing);
+        //scrollTrans.content.sizeDelta = sizeBuffer;
+        //StartCoroutine(SetScrollTop());
     }
 
     private IEnumerator SetScrollTop()
