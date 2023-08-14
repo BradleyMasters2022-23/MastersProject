@@ -57,6 +57,10 @@ public class CutsceneManager : MonoBehaviour
     /// Input for skipping to end of cutscene
     /// </summary>
     private InputAction fastForward;
+    /// <summary>
+    /// Input for clicking anything, trying to fast forwards
+    /// </summary>
+    private InputAction spamClick;
 
     /// <summary>
     /// events that execute once the video itself finishes
@@ -104,6 +108,9 @@ public class CutsceneManager : MonoBehaviour
         cont.performed += ContinueCutscene;
         fastForward = playerControls.Cutscene.FastForward;
         fastForward.performed += SkipCutscene;
+        spamClick = playerControls.Cutscene.Any;
+        spamClick.performed += ShowPrompt;
+
 
         playerControls.Cutscene.Disable();
     }
@@ -114,7 +121,12 @@ public class CutsceneManager : MonoBehaviour
     private void OnEnable()
     {
         StartCoroutine(InitializeControls());
+
+        promptText.gameObject.SetActive(true);
+        fastForwardPrompt.gameObject.SetActive(true);
+
         promptText.CrossFadeAlpha(0, 0, true);
+        fastForwardPrompt.CrossFadeAlpha(0, 0f, true);
     }
 
     /// <summary>
@@ -183,6 +195,7 @@ public class CutsceneManager : MonoBehaviour
         videoRenderImg.enabled = true;
         videoPlayer.playbackSpeed = playbackSpeed;
         fastForward.Enable();
+        spamClick.Enable();
 
         // wait for it to finish playing
         while (videoPlayer.isPlaying)
@@ -190,6 +203,13 @@ public class CutsceneManager : MonoBehaviour
             yield return null;
         }
         fastForward.Disable();
+        spamClick.Disable();
+
+        if (fastForwardRoutine != null)
+        {
+            StopCoroutine(fastForwardRoutine);
+            fastForwardPrompt.CrossFadeAlpha(0, 0f, true);
+        }
 
         // wait for end delay
         yield return new WaitForSecondsRealtime(endDelay);
@@ -198,19 +218,21 @@ public class CutsceneManager : MonoBehaviour
         cont.Enable();
         continuePressed = false;
         promptText.gameObject.SetActive(true);
-        promptText.CrossFadeAlpha(1, 0.5f, true);
+        promptText.CrossFadeAlpha(1, 1f, true);
         yield return new WaitUntil(() => continuePressed);
 
         // once continue is pressed, turn off cutscene manager
         promptText.CrossFadeAlpha(0, 0.5f, true);
         videoRenderImg.enabled = false;
-        
+
+        yield return new WaitForSecondsRealtime((fadeOutTime / 2));
+
         // Disable cutscene controls and reenable gameplay. 
         playerControls.Disable();
         playerControls.PlayerGameplay.Enable();
         playerControls.PlayerGameplay.Pause.Disable();
         playerControls.PlayerGameplay.Interact.Disable();
-        
+
         onVideoFinishEvents?.Invoke();
 
         // By now, video has stopped, close screen
@@ -272,6 +294,30 @@ public class CutsceneManager : MonoBehaviour
 
     #endregion
 
+    private Coroutine fastForwardRoutine;
+    [SerializeField] private TextMeshProUGUI fastForwardPrompt;
+
+    public void ShowPrompt(InputAction.CallbackContext c)
+    {
+        if (!videoPlayer.isPlaying) return;
+
+        if (fastForwardRoutine != null)
+        {
+            StopCoroutine(fastForwardRoutine);
+        }
+        fastForwardRoutine = StartCoroutine(FastForwardPrompt());
+    }
+
+    private IEnumerator FastForwardPrompt()
+    {
+        fastForwardPrompt.CrossFadeAlpha(1, 0.5f, true);
+
+        yield return new WaitForSecondsRealtime(2f);
+
+        fastForwardPrompt.CrossFadeAlpha(0, 0.5f, true);
+        fastForwardRoutine = null;
+    }
+
     /// <summary>
     /// Skip cutscene to the very end
     /// </summary>
@@ -280,6 +326,8 @@ public class CutsceneManager : MonoBehaviour
     {
         // skip video forward to end
         fastForward.Disable();
+        spamClick.Disable();
+
         // include offset as if you go over, the time will go to 0 instead
         videoPlayer.time = videoPlayer.length - 0.5f;
     }

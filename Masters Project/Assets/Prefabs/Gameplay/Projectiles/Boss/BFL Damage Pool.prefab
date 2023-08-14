@@ -137,8 +137,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4535842870128376353}
-  - component: {fileID: 7420414951637823017}
   - component: {fileID: 7667010260665077157}
+  - component: {fileID: 2535110469340927806}
   m_Layer: 18
   m_Name: BFL Damage Pool
   m_TagString: Untagged
@@ -164,39 +164,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7420414951637823017
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8869874275031778412}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c4d6b2b24e941249b7c0578067be477, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lifeDuration: 8
-  vanishTime: 1
-  affectedByTimestop: 1
-  initialDamageProfiles:
-    damageProfiles: []
-  tickDamageProfiles:
-    damageProfiles:
-    - team: 1
-      active: 1
-      damage: 0.1
-      verticalKnockback: 0
-      horizontalKnockback: 0
-      canKill: 1
-    - team: 2
-      active: 1
-      damage: 5
-      verticalKnockback: 0
-      horizontalKnockback: 0
-      canKill: 1
-  tickRate: 0
-  ambientSFX: {fileID: 11400000, guid: 8b20469af3fc9144584eebf97b27c964, type: 2}
 --- !u!82 &7667010260665077157
 AudioSource:
   m_ObjectHideFlags: 0
@@ -293,6 +260,40 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2535110469340927806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8869874275031778412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cd1d05e962ec3a4d9d4b359023c4b10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifeDuration: 8
+  vanishTime: 1
+  affectedByTimestop: 1
+  initialDamageProfiles:
+    damageProfiles: []
+  tickDamageProfiles:
+    damageProfiles:
+    - team: 1
+      active: 1
+      damage: 0.1
+      verticalKnockback: 0
+      horizontalKnockback: 0
+      canKill: 1
+    - team: 2
+      active: 1
+      damage: 5
+      verticalKnockback: 0
+      horizontalKnockback: 0
+      canKill: 1
+  tickRate: 0
+  ambientSFX: {fileID: 11400000, guid: 8b20469af3fc9144584eebf97b27c964, type: 2}
+  bossChannel: {fileID: 11400000, guid: 3b411a22db338514baf850c4e6e6f41a, type: 2}
 --- !u!1001 &1751705148938632597
 PrefabInstance:
   m_ObjectHideFlags: 0
