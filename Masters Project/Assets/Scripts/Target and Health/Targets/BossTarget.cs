@@ -44,6 +44,7 @@ public class BossTarget : Target
     [SerializeField] private ShieldGenerator shieldManager;
 
     [SerializeField] private ChannelVoid playerKilledChannel;
+    [SerializeField] private ChannelVoid bossKilledChannel;
 
     [SerializeField] private AudioClipSO bossStartNormalLine;
     [SerializeField] private AudioClipSO bossStartKilledPlayerLine;
@@ -95,6 +96,7 @@ public class BossTarget : Target
         // Actual death will happen inside of the events
         onDeathEvents.eventAudio.PlayClip(_center);
         StartCoroutine("ExecuteEvents", onDeathEvents.OnTriggerEvent);
+        bossKilledChannel.RaiseEvent();
     }
 
     #region Phase management
