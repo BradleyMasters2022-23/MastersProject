@@ -255,13 +255,14 @@ MonoBehaviour:
   dealDamage: 1
   damage: 6
   playerDamage: 3
-  spawnProjectileOnEnd: 0
-  onEndPrefab: {fileID: 0}
   knockback: 0
+  triggersKnockbackState: 0
   horizontalKnockback: 0
   verticalKnockback: 0
   playerHorizontalKnockback: 0
   playerVerticalKnockback: 0
+  spawnProjectileOnEnd: 0
+  onEndPrefab: {fileID: 0}
   shotByPlayer: 0
   hitLayers:
     serializedVersion: 2
@@ -328,7 +329,7 @@ TrailRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 25
   m_Time: 0.1
   m_Parameters:
     serializedVersion: 3
@@ -407,6 +408,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be66c8bccf0de47409ec68ebffd3e181, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ren: {fileID: 0}
+  trailTime: 0
+  pauseTime: 0
 --- !u!1 &7129514757178029563
 GameObject:
   m_ObjectHideFlags: 0
