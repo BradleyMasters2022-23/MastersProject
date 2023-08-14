@@ -72,7 +72,7 @@ public class CallManager : SaveDataContainer
         if (saveData == null)
         {
             saveData = new DialogueSaveData();
-            Debug.Log("new save data created");
+            //Debug.Log("new save data created");
         }
             
 
@@ -84,7 +84,7 @@ public class CallManager : SaveDataContainer
     /// </summary>
     private void UpdateCalls()
     {
-        Debug.Log("Save data found: " + (saveData != null));
+        //Debug.Log("Save data found: " + (saveData != null));
         // loop through character conversations.
         foreach(Character character in characters.ToList())
         {
@@ -114,19 +114,19 @@ public class CallManager : SaveDataContainer
     {
         if(availableConversations.Count > 0) // If new chats available, get this instead
         {
-            Debug.Log("Active call found, loading");
+            //Debug.Log("Active call found, loading");
             return availableConversations[Random.Range(0, availableConversations.Count)];
         }
         else // if no options, get a random final choice from list of complete characters
         {
-            Debug.Log("No call found, loading misc");
+            //Debug.Log("No call found, loading misc");
             if (randomChatOptions.Count > 0)
             {
                 return randomChatOptions[Random.Range(0, randomChatOptions.Count)].repeatableConversations.Pull();
             }
             else
             {
-                Debug.Log("Random failsafe utilized");
+                //Debug.Log("Random failsafe utilized");
                 return ultimateGenericFailsafe;
             }
 
@@ -148,7 +148,7 @@ public class CallManager : SaveDataContainer
         // delete save data for conversaitons
         DataManager.instance.Delete(saveFileName);
         saveData = new DialogueSaveData();
-        Debug.Log("new save data created");
+        //Debug.Log("new save data created");
 
         saveData.SeeAllReads();
 
@@ -189,7 +189,7 @@ public class CallManager : SaveDataContainer
     public override void ResetData()
     {
         saveData = new DialogueSaveData();
-        Debug.Log("new save data created");
+        //Debug.Log("new save data created");
 
         UpdateCalls();
     }

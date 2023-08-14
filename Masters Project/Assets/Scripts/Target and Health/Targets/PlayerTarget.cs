@@ -91,6 +91,12 @@ public class PlayerTarget : Target, IDifficultyObserver
         tiedye = c.PlayerGameplay.TieDye;
         tiedye.performed += Tiedye;
 
+        togglePennyGun = c.PlayerGameplay.NoPennyCheat;
+        togglePennyGun.performed += TogglePennyGun;
+
+        toggleUI = c.PlayerGameplay.NoUICheat;
+        toggleUI.performed += ToggleUI;
+
         if (godCheatNotification != null)
             godCheatNotification.SetActive(_healthManager.God);
     }
@@ -237,11 +243,17 @@ public class PlayerTarget : Target, IDifficultyObserver
     [SerializeField] protected TimeManager timestop;
     [SerializeField] private Ability grenadeAbility;
 
+    [SerializeField] private Camera firstPersonCam;
+    [SerializeField] private GameObject gameplayUI;
+
     private GameControls c;
     private InputAction godCheat;
     private InputAction damageCheat;
     private InputAction healCheat;
     private InputAction tiedye;
+
+    private InputAction togglePennyGun;
+    private InputAction toggleUI;
 
     public Material tieDyeMat;
 
@@ -257,6 +269,8 @@ public class PlayerTarget : Target, IDifficultyObserver
         healCheat.performed -= CheatHeal;
         damageCheat.performed -= CheatDamage;
         tiedye.performed -= Tiedye;
+        togglePennyGun.performed -= TogglePennyGun;
+        toggleUI.performed -= ToggleUI;
 
         p = null;
 
@@ -310,6 +324,17 @@ public class PlayerTarget : Target, IDifficultyObserver
             ren.material = tieDyeMat;
         }
     }
+
+    private void TogglePennyGun(InputAction.CallbackContext ctx = default)
+    {
+        firstPersonCam.enabled= !firstPersonCam.enabled;
+    }
+
+    private void ToggleUI(InputAction.CallbackContext ctx = default)
+    {
+        gameplayUI.SetActive(!gameplayUI.activeSelf);
+    }
+
 
     #endregion
 
