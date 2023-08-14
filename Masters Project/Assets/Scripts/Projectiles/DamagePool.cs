@@ -15,17 +15,17 @@ public class DamagePool : MonoBehaviour
     [SerializeField] protected float lifeDuration;
     [SerializeField] protected float vanishTime;
     [SerializeField] protected bool affectedByTimestop;
-    ScaledTimer lifeTracker;
-    bool vanishing = false;
+    protected ScaledTimer lifeTracker;
+    protected bool vanishing = false;
 
     [SerializeField] protected TeamDamage initialDamageProfiles;
     [SerializeField] protected TeamDamage tickDamageProfiles;
 
     [Tooltip("Time between each tick")]
-    [SerializeField] private float tickRate;
+    [SerializeField] protected float tickRate;
 
     [SerializeField] private AudioClipSO ambientSFX;
-    private DamageField targetField;
+    protected DamageField targetField;
     private AudioSource source;
 
     private void Start()
@@ -50,7 +50,7 @@ public class DamagePool : MonoBehaviour
         }
     }
 
-    private IEnumerator Vanish()
+    protected IEnumerator Vanish()
     {
         // get orignal position and position below current target
         Vector3 originalPos = transform.position;

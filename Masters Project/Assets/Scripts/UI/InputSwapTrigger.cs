@@ -19,7 +19,6 @@ public class InputSwapTrigger : MonoBehaviour
     [SerializeField] private UnityEvent onKeyboardScheme;
     [Tooltip("Events that execute when switching to a gamepad")]
     [SerializeField] private UnityEvent onControllerScheme;
-
     private void OnEnable()
     {
         onSchemeSwap.OnEventRaised += SwapControls;

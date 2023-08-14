@@ -10,6 +10,9 @@ public class InputTextSwap : MonoBehaviour
     [SerializeField, TextArea] string displayString;
     [SerializeField] TextMeshProUGUI displayArea;
 
+    [Tooltip("Should the prompt be simplified? Simplified text will remain normal case with no brackets")]
+    [SerializeField] private bool simplePrompt;
+
     [Tooltip("Action to reference")]
     [SerializeField] InputActionReference action;
     [Tooltip("Channel called when control scheme changes")]
@@ -38,7 +41,7 @@ public class InputTextSwap : MonoBehaviour
         {
             if (displayString[i] == InputManager.Instance.inputDelimiter)
             {
-                temp += InputManager.Instance.ActionKeybindLookup(action);
+                temp += InputManager.Instance.ActionKeybindLookup(action, simplePrompt);
                 //Debug.Log($"Retrieved input: {InputManager.Instance.ActionKeybindLookup(action)}");
             }
             else
