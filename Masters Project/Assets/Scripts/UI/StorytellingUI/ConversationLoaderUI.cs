@@ -25,7 +25,7 @@ public class ConversationLoaderUI : MonoBehaviour
         other = o;
 
         // update visuals
-        //background.sprite = data.background;
+        background.sprite = other.bg;
         if(pennySprite != null)
             pennySprite.sprite = pennyData.sprites[currData.pennySpriteID];
 
