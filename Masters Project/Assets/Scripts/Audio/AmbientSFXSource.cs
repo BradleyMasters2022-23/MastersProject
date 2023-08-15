@@ -32,6 +32,8 @@ public class AmbientSFXSource : MonoBehaviour
     [Tooltip("Should this player begin once enabled"), Space(5)]
     [SerializeField] bool playOnEnable;
 
+    [SerializeField] ChannelGMStates gameManagerChannel;
+
     private void Awake()
     {
         source = GetComponent<AudioSource>();
@@ -43,6 +45,15 @@ public class AmbientSFXSource : MonoBehaviour
         {
             Play();
         }
+
+        if(gameManagerChannel != null)
+            gameManagerChannel.OnEventRaised += TogglePause;
+    }
+
+    private void OnDisable()
+    {
+        if(gameManagerChannel != null)
+            gameManagerChannel.OnEventRaised -= TogglePause;
     }
 
     private void Start()
@@ -98,4 +109,24 @@ public class AmbientSFXSource : MonoBehaviour
         source.Stop();
     }
 
+    /// <summary>
+    /// Toggle pause based on game manager state 
+    /// </summary>
+    /// <param name="newState">new state being set to</param>
+    private void TogglePause(GameManager.States newState)
+    {
+        // dont do anything if not even playing
+        if (!source.isPlaying) return;
+
+        // If entering one of the gameplay scenes, unmute the source
+        if (newState == GameManager.States.GAMEPLAY || newState == GameManager.States.HUB)
+        {
+            source.mute = false;
+        }
+        // otherwise, its going to be a form of UI. Mute it.
+        else
+        {
+            source.mute = true;
+        }
+    }
 }
