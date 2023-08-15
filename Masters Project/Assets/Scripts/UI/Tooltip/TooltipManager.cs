@@ -243,6 +243,8 @@ public class TooltipManager : MonoBehaviour
     }
     private void OnDisable()
     {
+        if (instance != this) return;
+
         dismissTooltip.performed -= DismissCurrentTooltip;
         dismissTooltip.Disable();
 

@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 
-public class TimeRegenField : TooltipHolder
+public class TimeRegenField : MonoBehaviour
 {
     [Header("Gameplay")]
     [Tooltip("How much time given to the player every second they're in the field")]
@@ -59,13 +59,10 @@ public class TimeRegenField : TooltipHolder
         // Dont do anything if not the player
         if (!other.CompareTag("Player")) return;
 
-        if(WarningTextInit())
+        if(WarningTextInit() && (MapLoader.instance == null || MapLoader.instance.LoadState != LoadState.Loading))
         {
             warningText.Play(enterText, false);
         }
-
-        if (tooltip != null)
-            SubmitTooltip();
 
         timeGauge.inRegenField = true;
     }
