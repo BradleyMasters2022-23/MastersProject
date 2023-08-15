@@ -405,6 +405,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8826622064137789717}
+  - component: {fileID: 9021345232170895523}
   m_Layer: 0
   m_Name: Crystals Movement
   m_TagString: Untagged
@@ -432,6 +433,26 @@ Transform:
   m_Father: {fileID: 8193572764752551166}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9021345232170895523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2039936788994728744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7409d790651b04ea64f3e40f6657b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
+  spinSpeed: 0.4
+  spinAxis: 2
 --- !u!1 &2074444639463034433
 GameObject:
   m_ObjectHideFlags: 0
@@ -1055,8 +1076,9 @@ MonoBehaviour:
   ambientSFX: {fileID: 11400000, guid: 41b51c6e04f288143b3c78643c62f850, type: 2}
   ambientStartSFX: {fileID: 0}
   ambientEndSFX: {fileID: 0}
-  playOnStart: 1
+  playOnStart: 0
   playOnEnable: 1
+  gameManagerChannel: {fileID: 11400000, guid: 2770aed5fbc083e4d8279c944f0242e2, type: 2}
 --- !u!1 &3343534700880704251
 GameObject:
   m_ObjectHideFlags: 0
@@ -1149,6 +1171,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6161927522116432518}
+  - component: {fileID: 2769337404528322281}
   m_Layer: 0
   m_Name: Crystals Gun
   m_TagString: Untagged
@@ -1176,6 +1199,26 @@ Transform:
   m_Father: {fileID: 8193572764752551166}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2769337404528322281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3684852336625707768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7409d790651b04ea64f3e40f6657b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
+  spinSpeed: 0.4
+  spinAxis: 2
 --- !u!1 &3834620006445249248
 GameObject:
   m_ObjectHideFlags: 0
@@ -1600,6 +1643,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 784455270789067324}
+  - component: {fileID: 814056499001507080}
   m_Layer: 0
   m_Name: Crystals Health
   m_TagString: Untagged
@@ -1627,6 +1671,26 @@ Transform:
   m_Father: {fileID: 8193572764752551166}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &814056499001507080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5225435876270313928}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7409d790651b04ea64f3e40f6657b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
+  spinSpeed: 0.4
+  spinAxis: 2
 --- !u!1 &5323511394544004067
 GameObject:
   m_ObjectHideFlags: 0
@@ -1636,7 +1700,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8193572764752551166}
-  - component: {fileID: 7674427007261274419}
   m_Layer: 0
   m_Name: AllCrystals
   m_TagString: Untagged
@@ -1664,26 +1727,6 @@ Transform:
   m_Father: {fileID: 1764229234825309890}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7674427007261274419
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5323511394544004067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7409d790651b04ea64f3e40f6657b6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  affectedByTimestop: 1
-  minimumTimescale: 0
-  slowFieldLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  secondaryTimescale: 1
-  spinSpeed: 0.4
-  spinAxis: 2
 --- !u!1 &5568135578462247708
 GameObject:
   m_ObjectHideFlags: 0
@@ -1693,6 +1736,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6201180406128171851}
+  - component: {fileID: 1804402403743368505}
   m_Layer: 0
   m_Name: Crystals Time
   m_TagString: Untagged
@@ -1720,6 +1764,26 @@ Transform:
   m_Father: {fileID: 8193572764752551166}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1804402403743368505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5568135578462247708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7409d790651b04ea64f3e40f6657b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
+  spinSpeed: 0.4
+  spinAxis: 2
 --- !u!1 &6055758847647574751
 GameObject:
   m_ObjectHideFlags: 0
@@ -1729,6 +1793,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 445355139864140357}
+  - component: {fileID: 8170994004881418410}
   m_Layer: 0
   m_Name: Crystals Shield
   m_TagString: Untagged
@@ -1756,6 +1821,26 @@ Transform:
   m_Father: {fileID: 8193572764752551166}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8170994004881418410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6055758847647574751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7409d790651b04ea64f3e40f6657b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  affectedByTimestop: 1
+  minimumTimescale: 0
+  slowFieldLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  secondaryTimescale: 1
+  spinSpeed: 0.4
+  spinAxis: 2
 --- !u!1 &6437867758120709810
 GameObject:
   m_ObjectHideFlags: 0
@@ -2134,8 +2219,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.5126921
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 0.9518248
+  m_Center: {x: 0, y: 1.187274, z: 0}
 --- !u!114 &3226445538321085826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2716,6 +2801,18 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6415817739128581088, guid: 448c394d40c5f174280d6251f77a48c8, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6415817739128581088, guid: 448c394d40c5f174280d6251f77a48c8, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6415817739128581088, guid: 448c394d40c5f174280d6251f77a48c8, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6415817739128581088, guid: 448c394d40c5f174280d6251f77a48c8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.53
       objectReference: {fileID: 0}
@@ -2754,6 +2851,10 @@ PrefabInstance:
     - target: {fileID: 6415817739128581088, guid: 448c394d40c5f174280d6251f77a48c8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6415817739128581088, guid: 448c394d40c5f174280d6251f77a48c8, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 448c394d40c5f174280d6251f77a48c8, type: 3}

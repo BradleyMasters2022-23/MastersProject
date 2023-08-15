@@ -108,7 +108,7 @@ public class AimController : MonoBehaviour, IDifficultyObserver
 
     private void UpdateSettings()
     {
-        Debug.Log("Updating settings");
+        //Debug.Log("Updating settings");
         mouseSensitivity = Settings.mouseSensitivity;
         mouseXInverted = Settings.mouseInvertX;
         mouseYInverted = Settings.mouseInvertY;

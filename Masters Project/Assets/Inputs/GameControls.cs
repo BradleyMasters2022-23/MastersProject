@@ -179,6 +179,24 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""NoUICheat"",
+                    ""type"": ""Button"",
+                    ""id"": ""c7670370-503a-4212-ae1e-0e39049f1653"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""NoPennyCheat"",
+                    ""type"": ""Button"",
+                    ""id"": ""334def64-6d02-4a92-924a-3fd3fa6994cc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -509,6 +527,28 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""TieDye"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""603ddb77-270e-4d51-affa-51fa746a4de5"",
+                    ""path"": ""<Keyboard>/semicolon"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NoUICheat"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e761175f-7d2d-4929-a152-61da8fefc81e"",
+                    ""path"": ""<Keyboard>/l"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""NoPennyCheat"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1283,6 +1323,8 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         m_PlayerGameplay_IncrementConvs = m_PlayerGameplay.FindAction("IncrementConvs", throwIfNotFound: true);
         m_PlayerGameplay_ClearCollectionData = m_PlayerGameplay.FindAction("ClearCollectionData", throwIfNotFound: true);
         m_PlayerGameplay_TieDye = m_PlayerGameplay.FindAction("TieDye", throwIfNotFound: true);
+        m_PlayerGameplay_NoUICheat = m_PlayerGameplay.FindAction("NoUICheat", throwIfNotFound: true);
+        m_PlayerGameplay_NoPennyCheat = m_PlayerGameplay.FindAction("NoPennyCheat", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Back = m_UI.FindAction("Back", throwIfNotFound: true);
@@ -1383,6 +1425,8 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_PlayerGameplay_IncrementConvs;
     private readonly InputAction m_PlayerGameplay_ClearCollectionData;
     private readonly InputAction m_PlayerGameplay_TieDye;
+    private readonly InputAction m_PlayerGameplay_NoUICheat;
+    private readonly InputAction m_PlayerGameplay_NoPennyCheat;
     public struct PlayerGameplayActions
     {
         private @GameControls m_Wrapper;
@@ -1404,6 +1448,8 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         public InputAction @IncrementConvs => m_Wrapper.m_PlayerGameplay_IncrementConvs;
         public InputAction @ClearCollectionData => m_Wrapper.m_PlayerGameplay_ClearCollectionData;
         public InputAction @TieDye => m_Wrapper.m_PlayerGameplay_TieDye;
+        public InputAction @NoUICheat => m_Wrapper.m_PlayerGameplay_NoUICheat;
+        public InputAction @NoPennyCheat => m_Wrapper.m_PlayerGameplay_NoPennyCheat;
         public InputActionMap Get() { return m_Wrapper.m_PlayerGameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1464,6 +1510,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @TieDye.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTieDye;
                 @TieDye.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTieDye;
                 @TieDye.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnTieDye;
+                @NoUICheat.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnNoUICheat;
+                @NoUICheat.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnNoUICheat;
+                @NoUICheat.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnNoUICheat;
+                @NoPennyCheat.started -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnNoPennyCheat;
+                @NoPennyCheat.performed -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnNoPennyCheat;
+                @NoPennyCheat.canceled -= m_Wrapper.m_PlayerGameplayActionsCallbackInterface.OnNoPennyCheat;
             }
             m_Wrapper.m_PlayerGameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -1519,6 +1571,12 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
                 @TieDye.started += instance.OnTieDye;
                 @TieDye.performed += instance.OnTieDye;
                 @TieDye.canceled += instance.OnTieDye;
+                @NoUICheat.started += instance.OnNoUICheat;
+                @NoUICheat.performed += instance.OnNoUICheat;
+                @NoUICheat.canceled += instance.OnNoUICheat;
+                @NoPennyCheat.started += instance.OnNoPennyCheat;
+                @NoPennyCheat.performed += instance.OnNoPennyCheat;
+                @NoPennyCheat.canceled += instance.OnNoPennyCheat;
             }
         }
     }
@@ -1779,6 +1837,8 @@ public partial class @GameControls : IInputActionCollection2, IDisposable
         void OnIncrementConvs(InputAction.CallbackContext context);
         void OnClearCollectionData(InputAction.CallbackContext context);
         void OnTieDye(InputAction.CallbackContext context);
+        void OnNoUICheat(InputAction.CallbackContext context);
+        void OnNoPennyCheat(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

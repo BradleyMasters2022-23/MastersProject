@@ -27,6 +27,10 @@ public class GlobalStatsManager : SaveDataContainer
             Destroy(gameObject);
             return;
         }
+
+        data = DataManager.instance.Load<PlaythroughSaveData>(fileName);
+        if (data == null)
+            data = new PlaythroughSaveData();
     }
 
     /// <summary>
@@ -34,9 +38,7 @@ public class GlobalStatsManager : SaveDataContainer
     /// </summary>
     private void Start()
     {
-        data = DataManager.instance.Load<PlaythroughSaveData>(fileName);
-        if(data == null)
-            data = new PlaythroughSaveData();
+        
 
         // only print for testing reaons
         //data?.PrintData();
