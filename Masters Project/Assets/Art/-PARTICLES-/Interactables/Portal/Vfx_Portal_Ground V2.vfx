@@ -18,8 +18,8 @@ MonoBehaviour:
       serializedVersion: 2
       x: 648
       y: -101
-      width: 1824
-      height: 2862
+      width: 1822
+      height: 2848
     contents:
     - model: {fileID: 8926484042661614893}
       id: 0
@@ -90,6 +90,9 @@ MonoBehaviour:
     - model: {fileID: 8926484042661615858}
       id: 0
       isStickyNote: 0
+    - model: {fileID: 8926484042661615875}
+      id: 0
+      isStickyNote: 0
   - title: Pulling Lines
     position:
       serializedVersion: 2
@@ -143,7 +146,7 @@ MonoBehaviour:
   stickyNoteInfos: []
   categories:
   - name: Spinning Lines
-    collapsed: 1
+    collapsed: 0
   - name: Spinning Lines Trail
     collapsed: 0
   - name: Pulling Lines
@@ -152,8 +155,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 648
     y: -310
-    width: 4616
-    height: 3071
+    width: 4614
+    height: 3057
 --- !u!114 &114350483966674976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -218,6 +221,7 @@ MonoBehaviour:
   - {fileID: 8926484042661615854}
   - {fileID: 8926484042661615856}
   - {fileID: 8926484042661615858}
+  - {fileID: 8926484042661615875}
   m_UIPosition: {x: 0, y: 0}
   m_UICollapsed: 1
   m_UISuperCollapsed: 0
@@ -274,6 +278,20 @@ MonoBehaviour:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
       m_SerializableObject: 0.5
+    min: -Infinity
+    max: Infinity
+    enumValues: []
+    descendantCount: 0
+  - name: Spin Lines Velocity B Multiply
+    path: Spin Lines Velocity B Multiply
+    tooltip: 
+    sheetType: m_Float
+    realType: Single
+    defaultValue:
+      m_Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: -1
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -344,48 +362,6 @@ MonoBehaviour:
         m_SerializableType: UnityEngine.Vector2, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
       m_SerializableObject: '{"x":0.10000000149011612,"y":0.10000000149011612}'
-    min: -Infinity
-    max: Infinity
-    enumValues: []
-    descendantCount: 0
-  - name: Spin Lines Size Over Life
-    path: Spin Lines Size Over Life
-    tooltip: 
-    sheetType: m_AnimationCurve
-    realType: AnimationCurve
-    defaultValue:
-      m_Type:
-        m_SerializableType: UnityEngine.AnimationCurve, UnityEngine.CoreModule, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"frames":[{"time":0.0,"value":1.0,"inTangent":-1.0,"outTangent":-1.0,"tangentMode":0,"leftTangentMode":1,"rightTangentMode":1,"broken":false},{"time":1.0,"value":0.0,"inTangent":-1.0,"outTangent":-1.0,"tangentMode":0,"leftTangentMode":1,"rightTangentMode":1,"broken":false}],"preWrapMode":8,"postWrapMode":8,"version":1}'
-    min: -Infinity
-    max: Infinity
-    enumValues: []
-    descendantCount: 0
-  - name: Spin Lines Color
-    path: Spin Lines Color
-    tooltip: 
-    sheetType: m_Vector4f
-    realType: Color
-    defaultValue:
-      m_Type:
-        m_SerializableType: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"r":0.0,"g":1.0,"b":0.19120171666145326,"a":1.0}'
-    min: -Infinity
-    max: Infinity
-    enumValues: []
-    descendantCount: 0
-  - name: Spin Lines Color Over Life
-    path: Spin Lines Color Over Life
-    tooltip: 
-    sheetType: m_Gradient
-    realType: Gradient
-    defaultValue:
-      m_Type:
-        m_SerializableType: UnityEngine.Gradient, UnityEngine.CoreModule, Version=0.0.0.0,
-          Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"colorKeys":[{"color":{"r":0.0,"g":0.0,"b":0.0,"a":1.0},"time":0.0},{"color":{"r":1.0,"g":1.0,"b":1.0,"a":1.0},"time":0.3499961793422699},{"color":{"r":0.0,"g":0.0,"b":0.0,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":0.0,"time":0.0},{"alpha":0.7254902124404907,"time":0.3353017568588257},{"alpha":0.0,"time":0.9970549941062927}],"gradientMode":0}'
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -6915,7 +6891,7 @@ MonoBehaviour:
       inputSlot: {fileID: 8926484042661615127}
     - outputSlot: {fileID: 8926484042661615143}
       inputSlot: {fileID: 8926484042661615145}
-    position: {x: 1587.3334, y: 466}
+    position: {x: 1587, y: 466}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661615143
@@ -6970,7 +6946,7 @@ MonoBehaviour:
   m_Parent: {fileID: 114350483966674976}
   m_Children: []
   m_UIPosition: {x: 1813, y: 505}
-  m_UICollapsed: 1
+  m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
   - {fileID: 8926484042661615145}
@@ -7054,7 +7030,8 @@ MonoBehaviour:
       m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
         PublicKeyToken=b77a5c561934e089
   m_Direction: 0
-  m_LinkedSlots: []
+  m_LinkedSlots:
+  - {fileID: 8926484042661615876}
 --- !u!114 &8926484042661615147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7241,7 +7218,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661615474}
       inputSlot: {fileID: 8926484042661615085}
-    position: {x: 1532.6666, y: 1804}
+    position: {x: 1533, y: 1804}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661615474
@@ -7323,7 +7300,7 @@ MonoBehaviour:
       inputSlot: {fileID: 8926484042661614920}
     - outputSlot: {fileID: 8926484042661615478}
       inputSlot: {fileID: 8926484042661614921}
-    position: {x: 1555.3334, y: 571.3334}
+    position: {x: 1555, y: 571}
     expandedSlots:
     - {fileID: 8926484042661615476}
     expanded: 1
@@ -7475,7 +7452,7 @@ MonoBehaviour:
       inputSlot: {fileID: 8926484042661615089}
     - outputSlot: {fileID: 8926484042661615487}
       inputSlot: {fileID: 8926484042661615090}
-    position: {x: 1661.3334, y: 698}
+    position: {x: 1661, y: 698}
     expandedSlots:
     - {fileID: 8926484042661615485}
     expanded: 1
@@ -7627,7 +7604,7 @@ MonoBehaviour:
       inputSlot: {fileID: 8926484042661614995}
     - outputSlot: {fileID: 8926484042661615489}
       inputSlot: {fileID: 8926484042661615641}
-    position: {x: 1699.3334, y: 1306.6666}
+    position: {x: 1699, y: 1307}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661615489
@@ -7793,7 +7770,7 @@ MonoBehaviour:
       inputSlot: {fileID: 8926484042661614975}
     - outputSlot: {fileID: 8926484042661615497}
       inputSlot: {fileID: 8926484042661614976}
-    position: {x: 673.3333, y: 1796}
+    position: {x: 673, y: 1796}
     expandedSlots:
     - {fileID: 8926484042661615495}
     expanded: 1
@@ -8075,7 +8052,7 @@ MonoBehaviour:
   m_OutputSlots:
   - {fileID: 8926484042661615503}
   m_ExposedName: Spin Lines Size Over Life
-  m_Exposed: 1
+  m_Exposed: 0
   m_Order: 27
   m_Category: Spinning Lines
   m_Min:
@@ -8095,7 +8072,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661615503}
       inputSlot: {fileID: 8926484042661614929}
-    position: {x: 1648.6666, y: 2242}
+    position: {x: 1649, y: 2242}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661615503
@@ -8155,7 +8132,7 @@ MonoBehaviour:
   m_OutputSlots:
   - {fileID: 8926484042661615505}
   m_ExposedName: Spin Lines Color
-  m_Exposed: 1
+  m_Exposed: 0
   m_Order: 28
   m_Category: Spinning Lines
   m_Min:
@@ -8175,7 +8152,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661615505}
       inputSlot: {fileID: 8926484042661614998}
-    position: {x: 1696.6666, y: 2330}
+    position: {x: 1697, y: 2330}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661615505
@@ -8371,7 +8348,7 @@ MonoBehaviour:
   m_OutputSlots:
   - {fileID: 8926484042661615511}
   m_ExposedName: Spin Lines Color Over Life
-  m_Exposed: 1
+  m_Exposed: 0
   m_Order: 29
   m_Category: Spinning Lines
   m_Min:
@@ -8391,7 +8368,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661615511}
       inputSlot: {fileID: 8926484042661614931}
-    position: {x: 1690.6666, y: 2470}
+    position: {x: 1691, y: 2470}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661615511
@@ -12540,7 +12517,7 @@ MonoBehaviour:
     linkedSlots:
     - outputSlot: {fileID: 8926484042661615859}
       inputSlot: {fileID: 8926484042661615825}
-    position: {x: 1682.6666, y: 1889.3333}
+    position: {x: 1683, y: 1889}
     expandedSlots: []
     expanded: 0
 --- !u!114 &8926484042661615859
@@ -12578,3 +12555,83 @@ MonoBehaviour:
   m_Direction: 1
   m_LinkedSlots:
   - {fileID: 8926484042661615825}
+--- !u!114 &8926484042661615875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 330e0fca1717dde4aaa144f48232aa64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 114350483966674976}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_InputSlots: []
+  m_OutputSlots:
+  - {fileID: 8926484042661615876}
+  m_ExposedName: Spin Lines Velocity B Multiply
+  m_Exposed: 1
+  m_Order: 15
+  m_Category: Spinning Lines
+  m_Min:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_Max:
+    m_Type:
+      m_SerializableType: 
+    m_SerializableObject: 
+  m_IsOutput: 0
+  m_EnumValues: []
+  m_ValueFilter: 0
+  m_Tooltip: 
+  m_Nodes:
+  - m_Id: 0
+    linkedSlots:
+    - outputSlot: {fileID: 8926484042661615876}
+      inputSlot: {fileID: 8926484042661615146}
+    position: {x: 1468, y: 505}
+    expandedSlots: []
+    expanded: 0
+--- !u!114 &8926484042661615876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f780aa281814f9842a7c076d436932e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UIIgnoredErrors: []
+  m_Parent: {fileID: 0}
+  m_Children: []
+  m_UIPosition: {x: 0, y: 0}
+  m_UICollapsed: 1
+  m_UISuperCollapsed: 0
+  m_MasterSlot: {fileID: 8926484042661615876}
+  m_MasterData:
+    m_Owner: {fileID: 8926484042661615875}
+    m_Value:
+      m_Type:
+        m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+          PublicKeyToken=b77a5c561934e089
+      m_SerializableObject: -1
+    m_Space: 2147483647
+  m_Property:
+    name: o
+    m_serializedType:
+      m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+  m_Direction: 1
+  m_LinkedSlots:
+  - {fileID: 8926484042661615146}
